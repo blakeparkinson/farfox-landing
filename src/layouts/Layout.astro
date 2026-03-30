@@ -7,7 +7,7 @@ interface Props {
 }
 
 const {
-  title = 'FarFox — Stay Connected, No Matter the Distance',
+  title = 'Far Fox — Stay Connected, No Matter the Distance',
   description = 'The couples app for long-distance relationships. Share photos, love letters, daily questions, mood tracking, and more — all wrapped around your own little fox companion.',
 } = Astro.props;
 ---
@@ -33,7 +33,7 @@ const {
     <meta name="twitter:description" content={description} />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/fox-logo.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,7 +44,7 @@ const {
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
-      "name": "FarFox",
+      "name": "Far Fox",
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "iOS, Android, Web",
       "description": description,
