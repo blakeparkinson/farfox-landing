@@ -131,7 +131,6 @@ import Layout from '../layouts/Layout.astro';
       fox.vx = 0;
       fox.vy = 0;
       fox.chasing = false;
-      fox.trail = [];
       score = 0;
       combo = 0;
       gameStarted = false;
@@ -226,32 +225,6 @@ import Layout from '../layouts/Layout.astro';
 
       ctx.save();
       ctx.translate(x, y);
-
-      // Red/purple tint overlay on the fox — visible even at low damage
-      ctx.globalAlpha = 0.1 + b * 0.4;
-      ctx.fillStyle = '#8B0000';
-      ctx.beginPath();
-      ctx.arc(0, 0, size * 0.38, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Bruise spots — show early
-      if (b > 0.08) {
-        ctx.globalAlpha = Math.min(0.3 + b * 0.5, 0.7);
-        // Bruise 1 — left cheek
-        ctx.fillStyle = '#6B2FA0';
-        ctx.beginPath();
-        ctx.ellipse(-size * 0.15, size * 0.05, size * 0.1, size * 0.07, 0.3, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      if (b > 0.25) {
-        // Bruise 2 — right side
-        ctx.globalAlpha = Math.min(0.3 + (b - 0.2) * 0.6, 0.65);
-        ctx.fillStyle = '#4A1A7A';
-        ctx.beginPath();
-        ctx.ellipse(size * 0.12, -size * 0.08, size * 0.09, size * 0.06, -0.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
 
       // Band-aid at moderate damage
       if (b > 0.3) {
@@ -380,7 +353,6 @@ import Layout from '../layouts/Layout.astro';
       squash: 1,
       stretch: 1,
       bouncePhase: 0,
-      trail: [],
     };
 
     // Hearts
@@ -831,8 +803,6 @@ import Layout from '../layouts/Layout.astro';
         spawnWallParticles(wallX, wallY);
         flashAlpha = Math.max(flashAlpha, severity * 0.2);
 
-        // Clear trail on wall hit to prevent ghost frames
-        fox.trail = [];
 
         // Squash on impact
         fox.squash = 0.5;
@@ -856,21 +826,6 @@ import Layout from '../layouts/Layout.astro';
       }
 
       fox.bouncePhase += dt * 3;
-
-      // Fox trail — minimal, no ghost frames
-      fox.trail.push({ x: fox.x, y: fox.y, alpha: 0.25, size: fox.size * 0.5 });
-      if (fox.trail.length > 6) fox.trail.shift();
-
-      // Draw fox trail — very subtle
-      fox.trail.forEach((t, i) => {
-        t.alpha *= 0.85;
-        if (foxLoaded && t.alpha > 0.03) {
-          ctx.globalAlpha = t.alpha * 0.15;
-          const s = t.size * (i / fox.trail.length);
-          ctx.drawImage(foxImg, t.x - s/2, t.y - s/2, s, s);
-        }
-      });
-      ctx.globalAlpha = 1;
 
       // Draw fox
       const speed = Math.sqrt(fox.vx * fox.vx + fox.vy * fox.vy);
