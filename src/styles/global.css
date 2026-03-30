@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --color-fox-orange: #FF9A5C;
+  --color-fox-pink: #FF6B8A;
+  --color-fox-purple: #B76CFD;
+  --color-fox-bg: #FFF5F0;
+  --color-fox-text: #2D1B4E;
+  --color-fox-text-light: #6B5B7B;
+  --font-display: 'Nunito', sans-serif;
+}

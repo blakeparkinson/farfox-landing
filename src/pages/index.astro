@@ -1,0 +1,194 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const features = [
+  {
+    emoji: '📸',
+    title: 'Shared Photos',
+    description: 'Snap and share moments throughout your day. Build a private photo timeline together.',
+  },
+  {
+    emoji: '💌',
+    title: 'Love Letters',
+    description: 'Write heartfelt letters on beautiful stationery themes. Daily prompts keep the words flowing.',
+  },
+  {
+    emoji: '💬',
+    title: 'Daily Questions',
+    description: 'Answer fun and deep questions together. See each other\'s answers once you\'ve both responded.',
+  },
+  {
+    emoji: '🔥',
+    title: 'Would You Rather',
+    description: 'Play rounds of Would You Rather and see how well you match. Spoiler: it\'s never 100%.',
+  },
+  {
+    emoji: '🦊',
+    title: 'Your Fox Companion',
+    description: 'A little fox that grows with your relationship. It reacts to everything you do — pet it, feed it love.',
+  },
+  {
+    emoji: '🎯',
+    title: 'Challenges & Streaks',
+    description: 'Daily challenges that integrate with the app. Take a photo, write a letter, answer a question — earn XP.',
+  },
+  {
+    emoji: '🌙',
+    title: 'Mood & Presence',
+    description: 'Share how you\'re feeling. See when your partner is online and what timezone they\'re in.',
+  },
+  {
+    emoji: '📅',
+    title: 'Plans & Countdowns',
+    description: 'Track your next visit, anniversaries, and special dates. The countdown makes it real.',
+  },
+];
+---
+
+<Layout>
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl">🦊</span>
+        <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">
+          FarFox
+        </span>
+      </a>
+      <a
+        href="https://app.farfox.com"
+        class="px-5 py-2 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-700 text-sm hover:shadow-lg hover:shadow-fox-pink/25 transition-all duration-200 hover:-translate-y-0.5"
+      >
+        Open App
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="min-h-screen flex items-center justify-center pt-20 pb-16 px-6 relative overflow-hidden">
+    <!-- Subtle gradient orbs -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-fox-pink/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-fox-purple/10 rounded-full blur-3xl"></div>
+    <div class="absolute top-40 right-20 w-48 h-48 bg-fox-orange/15 rounded-full blur-3xl"></div>
+
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+      <div class="text-6xl mb-6">🦊</div>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-900 leading-tight tracking-tight mb-6">
+        Stay connected,
+        <br />
+        <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">
+          no matter the distance
+        </span>
+      </h1>
+      <p class="text-lg sm:text-xl text-fox-text-light max-w-xl mx-auto mb-10 leading-relaxed">
+        The couples app that makes long-distance feel a little closer.
+        Share photos, write love letters, answer daily questions, and grow
+        your own fox companion together.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href="https://app.farfox.com"
+          class="px-8 py-3.5 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-800 text-lg hover:shadow-xl hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
+        >
+          Try FarFox Free
+        </a>
+        <a
+          href="#features"
+          class="px-8 py-3.5 rounded-full border-2 border-fox-pink/20 text-fox-text font-700 text-lg hover:border-fox-pink/40 transition-all duration-200"
+        >
+          See Features
+        </a>
+      </div>
+
+      <!-- Social proof placeholder -->
+      <p class="mt-12 text-sm text-fox-text-light/60">
+        Built for couples who refuse to let distance win.
+      </p>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4">
+          Everything you need to
+          <span class="bg-gradient-to-r from-fox-pink to-fox-orange bg-clip-text text-transparent">stay close</span>
+        </h2>
+        <p class="text-fox-text-light text-lg max-w-lg mx-auto">
+          Not just another messaging app. FarFox is built from the ground up for couples who live apart.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {features.map((f) => (
+          <div class="group p-6 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1">
+            <div class="text-3xl mb-3">{f.emoji}</div>
+            <h3 class="font-800 text-lg mb-2">{f.title}</h3>
+            <p class="text-fox-text-light text-sm leading-relaxed">{f.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="py-24 px-6 bg-gradient-to-b from-fox-bg to-white">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-16">
+        Getting started is
+        <span class="bg-gradient-to-r from-fox-purple to-fox-pink bg-clip-text text-transparent">easy</span>
+      </h2>
+
+      <div class="flex flex-col gap-12">
+        <div class="flex flex-col items-center">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-fox-pink to-fox-purple flex items-center justify-center text-white font-900 text-xl mb-4">1</div>
+          <h3 class="font-800 text-xl mb-2">Create your account</h3>
+          <p class="text-fox-text-light max-w-sm">Sign up in seconds. Pick a name for your fox.</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-fox-orange to-fox-pink flex items-center justify-center text-white font-900 text-xl mb-4">2</div>
+          <h3 class="font-800 text-xl mb-2">Invite your partner</h3>
+          <p class="text-fox-text-light max-w-sm">Share a link. Once they join, your fox comes alive.</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-fox-purple to-fox-orange flex items-center justify-center text-white font-900 text-xl mb-4">3</div>
+          <h3 class="font-800 text-xl mb-2">Start your daily rituals</h3>
+          <p class="text-fox-text-light max-w-sm">Photos, letters, questions, challenges — make distance feel smaller every day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 px-6">
+    <div class="max-w-2xl mx-auto text-center">
+      <div class="text-5xl mb-6">🦊</div>
+      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4">
+        Your fox is waiting
+      </h2>
+      <p class="text-fox-text-light text-lg mb-10 max-w-md mx-auto">
+        Join couples who are making long-distance a little more bearable, one letter at a time.
+      </p>
+      <a
+        href="https://app.farfox.com"
+        class="inline-block px-10 py-4 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-800 text-lg hover:shadow-xl hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
+      >
+        Try FarFox Free
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 border-t border-fox-pink/10">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">🦊</span>
+        <span class="font-800 bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">FarFox</span>
+      </div>
+      <p class="text-sm text-fox-text-light/50">
+        &copy; {new Date().getFullYear()} FarFox. Made with love, from a distance.
+      </p>
+    </div>
+  </footer>
+</Layout>
