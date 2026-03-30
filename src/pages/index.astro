@@ -1,6 +1,33 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
+const faqs = [
+  {
+    question: 'Is Far Fox free?',
+    answer: 'Yes! Far Fox is free to use with all core features included — shared photos, love letters, daily questions, mood tracking, challenges, and your fox companion. No hidden paywalls.',
+  },
+  {
+    question: 'Does Far Fox work for military couples?',
+    answer: 'Absolutely. Far Fox was designed for any couple spending time apart — military deployments, studying abroad, work travel, or any long-distance situation. Features like timezone awareness and async daily questions work great across time zones.',
+  },
+  {
+    question: 'Do both partners need to sign up?',
+    answer: 'Yes, both partners create their own account and connect via an invite link. Once connected, you share a fox companion and can see each other\'s photos, letters, and question answers.',
+  },
+  {
+    question: 'What makes Far Fox different from texting or FaceTime?',
+    answer: 'Far Fox isn\'t a messaging app — it\'s a relationship app. Daily prompts, love letter stationery, shared challenges, mood tracking, and a fox that grows with your relationship create daily rituals that texting can\'t replicate.',
+  },
+  {
+    question: 'Is my data private?',
+    answer: 'Your content is shared only with your connected partner — no one else can see it. We don\'t sell data, run ads, or use third-party trackers. See our privacy policy for full details.',
+  },
+  {
+    question: 'What platforms does Far Fox support?',
+    answer: 'Far Fox works on the web (any browser), iOS, and Android. Your data syncs across all devices automatically.',
+  },
+];
+
 const features = [
   {
     emoji: '📸',
@@ -193,6 +220,44 @@ const features = [
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section class="py-24 px-6 bg-gradient-to-b from-fox-bg to-white">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-12 text-center">
+        Frequently asked
+        <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">questions</span>
+      </h2>
+
+      <div class="space-y-4">
+        {faqs.map((faq) => (
+          <details class="group rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 transition-all duration-200">
+            <summary class="flex items-center justify-between p-6 cursor-pointer font-800 text-lg list-none [&::-webkit-details-marker]:hidden">
+              {faq.question}
+              <span class="ml-4 text-fox-pink/40 group-open:rotate-45 transition-transform duration-200 text-2xl font-700">+</span>
+            </summary>
+            <div class="px-6 pb-6 text-fox-text-light leading-relaxed">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer,
+      },
+    })),
+  })} />
+
   <!-- CTA -->
   <section class="py-24 px-6 bg-gradient-to-b from-white to-fox-bg">
     <div class="max-w-2xl mx-auto text-center">
@@ -215,9 +280,11 @@ const features = [
   <footer class="py-12 px-6 border-t border-fox-pink/10">
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
-      <p class="text-sm text-fox-text-light/50">
-        &copy; {new Date().getFullYear()} Far Fox. Made with love, from a distance.
-      </p>
+      <div class="flex items-center gap-6 text-sm text-fox-text-light/50">
+        <a href="/privacy" class="hover:text-fox-pink transition-colors">Privacy</a>
+        <a href="/terms" class="hover:text-fox-pink transition-colors">Terms</a>
+        <span>&copy; {new Date().getFullYear()} Far Fox</span>
+      </div>
     </div>
   </footer>
 </Layout>

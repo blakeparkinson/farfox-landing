@@ -1,0 +1,126 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Privacy Policy — Far Fox" description="Far Fox privacy policy. Learn how we protect your data and respect your privacy.">
+  <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/fox-logo.png" alt="Far Fox" class="w-8 h-8" />
+        <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">
+          Far Fox
+        </span>
+      </a>
+      <a
+        href="https://app.lovefarfox.com"
+        class="px-5 py-2 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-700 text-sm hover:shadow-lg hover:shadow-fox-pink/25 transition-all duration-200 hover:-translate-y-0.5"
+      >
+        Open App
+      </a>
+    </div>
+  </nav>
+
+  <main class="pt-28 pb-24 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-900 tracking-tight mb-8">
+        Privacy <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Policy</span>
+      </h1>
+      <p class="text-fox-text-light text-sm mb-8">Last updated: March 30, 2026</p>
+
+      <div class="space-y-8 text-fox-text-light leading-relaxed">
+        <section>
+          <h2 class="text-xl font-800 text-fox-text mb-3">1. Information We Collect</h2>
+          <p>When you use Far Fox, we collect the following information:</p>
+          <ul class="list-disc pl-6 mt-2 space-y-1">
+            <li><strong>Account information:</strong> Email address and display name when you sign up.</li>
+            <li><strong>Content you create:</strong> Photos, letters, question answers, mood entries, and other content you share with your partner.</li>
+            <li><strong>Usage data:</strong> How you interact with the app, including features used, streaks, and challenge completions.</li>
+            <li><strong>Device information:</strong> Device type, operating system, and timezone for delivering a personalized experience.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-800 text-fox-text mb-3">2. How We Use Your Information</h2>
+          <p>We use your information to:</p>
+          <ul class="list-disc pl-6 mt-2 space-y-1">
+            <li>Provide and maintain the Far Fox app and its features.</li>
+            <li>Share your content with your connected partner (and only your partner).</li>
+            <li>Track streaks, XP, and fox companion progression.</li>
+            <li>Send notifications about partner activity and daily prompts.</li>
+            <li>Improve the app based on aggregated, anonymized usage patterns.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-800 text-fox-text mb-3">3. Data Sharing</h2>
+          <p>
+            Your content is shared only with your connected partner. We do not sell, rent, or share your personal data with third parties for marketing purposes. We may share data with:
+          </p>
+          <ul class="list-disc pl-6 mt-2 space-y-1">
+            <li><strong>Supabase:</strong> Our backend infrastructure provider, which hosts your data securely.</li>
+            <li><strong>Vercel:</strong> Our web hosting provider for the landing page and web app.</li>
+            <li><strong>Law enforcement:</strong> Only when required by law or to protect the safety of our users.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-800 text-fox-text mb-3">4. Data Storage & Security</h2>
+          <p>
+            Your data is stored securely using Supabase with row-level security policies. Photos and media are stored in encrypted cloud storage. We use HTTPS for all data transmission and require authentication for all API access.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-800 text-fox-text mb-3">5. Your Rights</h2>
+          <p>You have the right to:</p>
+          <ul class="list-disc pl-6 mt-2 space-y-1">
+            <li>Access and download your personal data.</li>
+            <li>Delete your account and all associated data.</li>
+            <li>Opt out of non-essential notifications.</li>
+            <li>Request correction of inaccurate data.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-800 text-fox-text mb-3">6. Cookies & Analytics</h2>
+          <p>
+            The Far Fox landing page uses Vercel Web Analytics, which collects anonymized page view data without cookies. The app itself does not use cookies or third-party tracking.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-800 text-fox-text mb-3">7. Children's Privacy</h2>
+          <p>
+            Far Fox is not intended for users under 13 years of age. We do not knowingly collect personal information from children under 13.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-800 text-fox-text mb-3">8. Changes to This Policy</h2>
+          <p>
+            We may update this privacy policy from time to time. We will notify users of significant changes through the app or via email.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-800 text-fox-text mb-3">9. Contact</h2>
+          <p>
+            If you have questions about this privacy policy or your data, reach out to us at
+            <a href="mailto:hello@lovefarfox.com" class="text-fox-pink hover:underline">hello@lovefarfox.com</a>.
+          </p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-12 px-6 border-t border-fox-pink/10">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
+      <div class="flex items-center gap-6 text-sm text-fox-text-light/50">
+        <a href="/privacy" class="hover:text-fox-pink transition-colors">Privacy</a>
+        <a href="/terms" class="hover:text-fox-pink transition-colors">Terms</a>
+        <span>&copy; {new Date().getFullYear()} Far Fox</span>
+      </div>
+    </div>
+  </footer>
+</Layout>
