@@ -355,6 +355,56 @@ import Layout from '../layouts/Layout.astro';
       bouncePhase: 0,
     };
 
+    function draw404Title() {
+      const centerY = Math.min(H * 0.28, 220);
+      ctx.save();
+      ctx.textAlign = 'center';
+
+      const fontSize404 = Math.min(Math.max(W * 0.15, 80), 160);
+      ctx.font = `900 ${fontSize404}px Nunito, sans-serif`;
+
+      const textGrad = ctx.createLinearGradient(W/2 - 150, centerY, W/2 + 150, centerY);
+      textGrad.addColorStop(0, '#FF6B8A');
+      textGrad.addColorStop(0.5, '#B76CFD');
+      textGrad.addColorStop(1, '#FF9A5C');
+      ctx.fillStyle = textGrad;
+      ctx.shadowColor = '#FF6B8A';
+      ctx.shadowBlur = 30;
+      ctx.fillText('404', W/2, centerY);
+      ctx.shadowBlur = 0;
+
+      const subSize = Math.min(Math.max(W * 0.025, 16), 28);
+      ctx.font = `800 ${subSize}px Nunito, sans-serif`;
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.shadowColor = 'rgba(0,0,0,0.5)';
+      ctx.shadowBlur = 8;
+      ctx.fillText('Lost in the distance', W/2, centerY + fontSize404 * 0.35);
+      ctx.shadowBlur = 0;
+
+      if (!gameStarted) {
+        const hintAlpha = 0.4 + Math.sin(time * 2) * 0.2;
+        ctx.globalAlpha = hintAlpha;
+        ctx.font = `700 ${Math.max(14, subSize * 0.7)}px Nunito, sans-serif`;
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.fillText('click anywhere to help your fox catch hearts', W/2, centerY + fontSize404 * 0.55);
+        ctx.globalAlpha = 1;
+      }
+
+      if (score > 0) {
+        const scoreSize = Math.min(Math.max(W * 0.02, 16), 24);
+        ctx.font = `800 ${scoreSize}px Nunito, sans-serif`;
+        ctx.textAlign = 'right';
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.shadowColor = '#FF6B8A';
+        ctx.shadowBlur = 10;
+        const scoreText = combo > 1 ? `${score} pts  ·  ${combo}x combo` : `${score} pts`;
+        ctx.fillText(scoreText, W - 24, 40);
+        ctx.shadowBlur = 0;
+      }
+
+      ctx.restore();
+    }
+
     // Hearts
     const hearts = [];
     const particles = [];
@@ -564,40 +614,41 @@ import Layout from '../layouts/Layout.astro';
 
       ctx.clearRect(0, 0, W, H);
 
-      // Background
-      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-      bgGrad.addColorStop(0, '#0f0a2e');
-      bgGrad.addColorStop(0.5, '#1a1145');
-      bgGrad.addColorStop(1, '#12082a');
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, W, H);
+      function drawBackground() {
+        const pad = 30; // extra padding to cover shake offsets
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+        bgGrad.addColorStop(0, '#0f0a2e');
+        bgGrad.addColorStop(0.5, '#1a1145');
+        bgGrad.addColorStop(1, '#12082a');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(-pad, -pad, W + pad * 2, H + pad * 2);
 
-      // Animated gradient orbs
-      bgOrbs.forEach(orb => {
-        orb.x += orb.vx;
-        orb.y += orb.vy;
-        if (orb.x < -0.2 || orb.x > 1.2) orb.vx *= -1;
-        if (orb.y < -0.2 || orb.y > 1.2) orb.vy *= -1;
-        const grad = ctx.createRadialGradient(orb.x * W, orb.y * H, 0, orb.x * W, orb.y * H, orb.radius);
-        grad.addColorStop(0, orb.color + Math.round(orb.alpha * 255).toString(16).padStart(2,'0'));
-        grad.addColorStop(1, orb.color + '00');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, W, H);
-      });
+        bgOrbs.forEach(orb => {
+          orb.x += orb.vx;
+          orb.y += orb.vy;
+          if (orb.x < -0.2 || orb.x > 1.2) orb.vx *= -1;
+          if (orb.y < -0.2 || orb.y > 1.2) orb.vy *= -1;
+          const grad = ctx.createRadialGradient(orb.x * W, orb.y * H, 0, orb.x * W, orb.y * H, orb.radius);
+          grad.addColorStop(0, orb.color + Math.round(orb.alpha * 255).toString(16).padStart(2,'0'));
+          grad.addColorStop(1, orb.color + '00');
+          ctx.fillStyle = grad;
+          ctx.fillRect(-pad, -pad, W + pad * 2, H + pad * 2);
+        });
 
-      // Stars
-      stars.forEach(s => {
-        const alpha = 0.3 + 0.7 * ((Math.sin(time * s.twinkleSpeed + s.twinkleOffset) + 1) / 2);
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = s.color;
-        ctx.beginPath();
-        ctx.arc(s.x * W, s.y * H, s.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      ctx.globalAlpha = 1;
+        stars.forEach(s => {
+          const alpha = 0.3 + 0.7 * ((Math.sin(time * s.twinkleSpeed + s.twinkleOffset) + 1) / 2);
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = s.color;
+          ctx.beginPath();
+          ctx.arc(s.x * W, s.y * H, s.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+      }
 
       // === EXPLOSION STATE ===
       if (exploding) {
+        drawBackground();
         explodeTimer -= dt * 1.2;
 
         // White flash at start
@@ -656,12 +707,14 @@ import Layout from '../layouts/Layout.astro';
         if (explodeTimer <= 0) {
           resetGame();
         }
+        // Draw 404 title during explosion too
+        draw404Title();
         return;
       }
 
       // === NORMAL GAME ===
 
-      // Screen shake
+      // Screen shake — apply transform then redraw background inside it
       let shaking = shakeAmount > 0.5;
       if (shaking) {
         ctx.save();
@@ -671,6 +724,7 @@ import Layout from '../layouts/Layout.astro';
         );
         shakeAmount *= 0.9;
       }
+      drawBackground();
 
       // Hearts
       hearts.forEach((h, i) => {
@@ -938,55 +992,7 @@ import Layout from '../layouts/Layout.astro';
         flashAlpha *= 0.85;
       }
 
-      // 404 Title
-      const centerY = Math.min(H * 0.28, 220);
-
-      ctx.save();
-      ctx.textAlign = 'center';
-
-      const fontSize404 = Math.min(Math.max(W * 0.15, 80), 160);
-      ctx.font = `900 ${fontSize404}px Nunito, sans-serif`;
-
-      const textGrad = ctx.createLinearGradient(W/2 - 150, centerY, W/2 + 150, centerY);
-      textGrad.addColorStop(0, '#FF6B8A');
-      textGrad.addColorStop(0.5, '#B76CFD');
-      textGrad.addColorStop(1, '#FF9A5C');
-      ctx.fillStyle = textGrad;
-      ctx.shadowColor = '#FF6B8A';
-      ctx.shadowBlur = 30;
-      ctx.fillText('404', W/2, centerY);
-      ctx.shadowBlur = 0;
-
-      const subSize = Math.min(Math.max(W * 0.025, 16), 28);
-      ctx.font = `800 ${subSize}px Nunito, sans-serif`;
-      ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.shadowColor = 'rgba(0,0,0,0.5)';
-      ctx.shadowBlur = 8;
-      ctx.fillText('Lost in the distance', W/2, centerY + fontSize404 * 0.35);
-      ctx.shadowBlur = 0;
-
-      if (!gameStarted) {
-        const hintAlpha = 0.4 + Math.sin(time * 2) * 0.2;
-        ctx.globalAlpha = hintAlpha;
-        ctx.font = `700 ${Math.max(14, subSize * 0.7)}px Nunito, sans-serif`;
-        ctx.fillStyle = 'rgba(255,255,255,0.7)';
-        ctx.fillText('click anywhere to help your fox catch hearts', W/2, centerY + fontSize404 * 0.55);
-        ctx.globalAlpha = 1;
-      }
-
-      if (score > 0) {
-        const scoreSize = Math.min(Math.max(W * 0.02, 16), 24);
-        ctx.font = `800 ${scoreSize}px Nunito, sans-serif`;
-        ctx.textAlign = 'right';
-        ctx.fillStyle = 'rgba(255,255,255,0.9)';
-        ctx.shadowColor = '#FF6B8A';
-        ctx.shadowBlur = 10;
-        const scoreText = combo > 1 ? `${score} pts  ·  ${combo}x combo` : `${score} pts`;
-        ctx.fillText(scoreText, W - 24, 40);
-        ctx.shadowBlur = 0;
-      }
-
-      ctx.restore();
+      draw404Title();
     }
 
     requestAnimationFrame(loop);
