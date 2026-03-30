@@ -44,6 +44,136 @@ import Layout from '../layouts/Layout.astro';
     let gameStarted = false;
     let titleAlpha = 1;
 
+    // Wall damage / glass crack system
+    let wallDamage = 0;
+    const maxDamage = 12;
+    let cracks = [];
+    let exploding = false;
+    let explodeTimer = 0;
+    let shatterPieces = [];
+
+    function addCrack(x, y, severity) {
+      const numBranches = 2 + Math.floor(severity * 2);
+      const crack = { x, y, branches: [], alpha: 1 };
+      for (let b = 0; b < numBranches; b++) {
+        const angle = Math.random() * Math.PI * 2;
+        const segments = [];
+        let cx = x, cy = y;
+        const segCount = 3 + Math.floor(Math.random() * 4);
+        for (let s = 0; s < segCount; s++) {
+          const len = 15 + Math.random() * 40 * severity;
+          const a = angle + (Math.random() - 0.5) * 1.2;
+          const nx = cx + Math.cos(a) * len;
+          const ny = cy + Math.sin(a) * len;
+          segments.push({ x1: cx, y1: cy, x2: nx, y2: ny });
+          cx = nx;
+          cy = ny;
+          // Sub-branch
+          if (Math.random() > 0.5 && severity > 0.3) {
+            const sa = a + (Math.random() - 0.5) * 1.5;
+            const sl = 10 + Math.random() * 20 * severity;
+            segments.push({ x1: cx, y1: cy, x2: cx + Math.cos(sa) * sl, y2: cy + Math.sin(sa) * sl });
+          }
+        }
+        crack.branches.push(segments);
+      }
+      cracks.push(crack);
+    }
+
+    function triggerExplosion() {
+      exploding = true;
+      explodeTimer = 1;
+      shatterPieces = [];
+      // Create shatter pieces from the canvas
+      const cols = 8, rows = 6;
+      const pw = W / cols, ph = H / rows;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cx = c * pw + pw / 2;
+          const cy = r * ph + ph / 2;
+          const angle = Math.atan2(cy - H/2, cx - W/2) + (Math.random() - 0.5) * 0.5;
+          const speed = 4 + Math.random() * 8;
+          shatterPieces.push({
+            x: c * pw, y: r * ph, w: pw, h: ph,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            rotation: 0,
+            rotSpeed: (Math.random() - 0.5) * 0.15,
+            alpha: 1,
+            gravity: 0.2 + Math.random() * 0.1,
+          });
+        }
+      }
+    }
+
+    function resetGame() {
+      exploding = false;
+      wallDamage = 0;
+      cracks = [];
+      shatterPieces = [];
+      fox.x = W / 2;
+      fox.y = H / 2;
+      fox.vx = 0;
+      fox.vy = 0;
+      fox.chasing = false;
+      fox.trail = [];
+      score = 0;
+      combo = 0;
+      hearts.length = 0;
+      particles.length = 0;
+      popups.length = 0;
+      for (let i = 0; i < 8; i++) {
+        hearts.push({
+          x: W * 0.15 + Math.random() * W * 0.7,
+          y: H * 0.15 + Math.random() * H * 0.6,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5,
+          size: 25 + Math.random() * 20,
+          color: ['#FF6B8A', '#B76CFD', '#FF9A5C', '#FFB6C1', '#F472B6', '#E879F9'][i % 6],
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.04,
+          wobblePhase: Math.random() * Math.PI * 2,
+          wobbleSpeed: 1 + Math.random() * 2,
+          pulsePhase: Math.random() * Math.PI * 2,
+          alive: true,
+        });
+      }
+    }
+
+    function drawCracks() {
+      if (cracks.length === 0) return;
+      ctx.save();
+      cracks.forEach(crack => {
+        crack.branches.forEach(segments => {
+          segments.forEach(seg => {
+            ctx.beginPath();
+            ctx.moveTo(seg.x1, seg.y1);
+            ctx.lineTo(seg.x2, seg.y2);
+            ctx.strokeStyle = `rgba(255,255,255,${0.5 * crack.alpha})`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            // Bright center line
+            ctx.beginPath();
+            ctx.moveTo(seg.x1, seg.y1);
+            ctx.lineTo(seg.x2, seg.y2);
+            ctx.strokeStyle = `rgba(200,220,255,${0.8 * crack.alpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          });
+        });
+      });
+      // Damage vignette — increases with damage
+      const damageRatio = wallDamage / maxDamage;
+      if (damageRatio > 0.2) {
+        const vignette = ctx.createRadialGradient(W/2, H/2, W * 0.2, W/2, H/2, W * 0.7);
+        vignette.addColorStop(0, 'rgba(0,0,0,0)');
+        vignette.addColorStop(1, `rgba(80,0,0,${damageRatio * 0.4})`);
+        ctx.fillStyle = vignette;
+        ctx.fillRect(0, 0, W, H);
+      }
+      ctx.restore();
+    }
+
     // Fox
     const fox = {
       x: 0, y: 0,
@@ -243,7 +373,6 @@ import Layout from '../layouts/Layout.astro';
     let lastFrame = performance.now();
 
     function loop(now) {
-      requestAnimationFrame(loop);
       const rawDt = (now - lastFrame) / 1000;
       const dt = Math.min(rawDt, 0.05);
       lastFrame = now;
@@ -284,8 +413,58 @@ import Layout from '../layouts/Layout.astro';
       });
       ctx.globalAlpha = 1;
 
+      // Explosion state — render shatter and skip normal game
+      if (exploding) {
+        explodeTimer -= dt * 0.8;
+        // Draw frozen background
+        const bgGrad2 = ctx.createLinearGradient(0, 0, 0, H);
+        bgGrad2.addColorStop(0, '#0f0a2e');
+        bgGrad2.addColorStop(0.5, '#1a1145');
+        bgGrad2.addColorStop(1, '#12082a');
+        ctx.fillStyle = bgGrad2;
+        ctx.fillRect(0, 0, W, H);
+
+        // White flash at start
+        if (explodeTimer > 0.7) {
+          ctx.globalAlpha = (explodeTimer - 0.7) * 3;
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, W, H);
+          ctx.globalAlpha = 1;
+        }
+
+        // Animate shatter pieces
+        shatterPieces.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += p.gravity;
+          p.rotation += p.rotSpeed;
+          p.alpha = Math.max(0, explodeTimer);
+
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.translate(p.x + p.w/2, p.y + p.h/2);
+          ctx.rotate(p.rotation);
+          // Draw piece as a glass-like shard
+          ctx.fillStyle = `rgba(${20 + Math.random()*20}, ${10 + Math.random()*15}, ${40 + Math.random()*20}, 0.9)`;
+          ctx.strokeStyle = 'rgba(200,220,255,0.6)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.rect(-p.w/2, -p.h/2, p.w, p.h);
+          ctx.fill();
+          ctx.stroke();
+          ctx.restore();
+        });
+
+        if (explodeTimer <= 0) {
+          resetGame();
+        }
+        requestAnimationFrame(loop);
+        return;
+      }
+
       // Screen shake
-      if (shakeAmount > 0.5) {
+      let shaking = shakeAmount > 0.5;
+      if (shaking) {
         ctx.save();
         ctx.translate(
           (Math.random() - 0.5) * shakeAmount,
@@ -406,9 +585,35 @@ import Layout from '../layouts/Layout.astro';
       fox.x += fox.vx;
       fox.y += fox.vy;
 
-      // Keep fox in bounds
-      fox.x = Math.max(40, Math.min(W - 40, fox.x));
-      fox.y = Math.max(40, Math.min(H - 120, fox.y));
+      // Keep fox in bounds — detect wall hits
+      let hitWall = false;
+      let wallX = fox.x, wallY = fox.y;
+      const impactSpeed = Math.sqrt(fox.vx * fox.vx + fox.vy * fox.vy);
+
+      if (fox.x < 40) { fox.x = 40; fox.vx *= -0.5; hitWall = true; wallX = 0; wallY = fox.y; }
+      if (fox.x > W - 40) { fox.x = W - 40; fox.vx *= -0.5; hitWall = true; wallX = W; wallY = fox.y; }
+      if (fox.y < 40) { fox.y = 40; fox.vy *= -0.5; hitWall = true; wallX = fox.x; wallY = 0; }
+      if (fox.y > H - 120) { fox.y = H - 120; fox.vy *= -0.5; hitWall = true; wallX = fox.x; wallY = H; }
+
+      if (hitWall && impactSpeed > 2 && !exploding) {
+        const severity = Math.min(impactSpeed / 8, 1);
+        wallDamage += severity;
+        shakeAmount = Math.max(shakeAmount, impactSpeed * 2);
+        addCrack(wallX, wallY, severity);
+        // Damage decay is slow
+        if (wallDamage >= maxDamage) {
+          triggerExplosion();
+        }
+      }
+
+      // Slowly heal cracks over time
+      if (wallDamage > 0 && !exploding) {
+        wallDamage -= dt * 0.15;
+        if (wallDamage < 0) wallDamage = 0;
+        // Fade old cracks
+        cracks.forEach(c => { c.alpha -= dt * 0.05; });
+        cracks = cracks.filter(c => c.alpha > 0.05);
+      }
 
       fox.bouncePhase += dt * 3;
 
@@ -521,7 +726,10 @@ import Layout from '../layouts/Layout.astro';
         if (p.life <= 0) popups.splice(i, 1);
       }
 
-      if (shakeAmount > 0.5) ctx.restore();
+      if (shaking) ctx.restore();
+
+      // Glass cracks overlay
+      drawCracks();
 
       // Flash effect
       if (flashAlpha > 0.01) {
@@ -589,6 +797,8 @@ import Layout from '../layouts/Layout.astro';
       }
 
       ctx.restore();
+
+      requestAnimationFrame(loop);
     }
 
     requestAnimationFrame(loop);
