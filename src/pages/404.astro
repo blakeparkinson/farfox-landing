@@ -1,0 +1,400 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404 — Lost in the Distance | Far Fox" description="This page doesn't exist. Your fox is waiting for you back home.">
+  <div id="scene-container"></div>
+
+  <div class="fixed inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
+    <div class="pointer-events-auto text-center px-6">
+      <p class="text-8xl sm:text-9xl font-900 bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent mb-2 select-none">
+        404
+      </p>
+      <h1 class="text-2xl sm:text-3xl font-800 text-white mb-3 drop-shadow-lg">
+        Lost in the distance
+      </h1>
+      <p class="text-white/70 text-lg mb-8 max-w-md mx-auto drop-shadow">
+        This page wandered off. Your fox is looking for you.
+      </p>
+      <a
+        href="/"
+        class="inline-block px-8 py-3.5 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-800 text-lg hover:shadow-xl hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
+      >
+        Take Me Home
+      </a>
+    </div>
+  </div>
+
+  <script is:inline>
+    // Three.js 404 scene — fox lost in a starfield with floating hearts
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    script.onload = () => init();
+    document.head.appendChild(script);
+
+    function init() {
+      const THREE = window.THREE;
+      const container = document.getElementById('scene-container');
+      container.style.cssText = 'position:fixed;inset:0;z-index:0;';
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 1000);
+      camera.position.z = 30;
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+      renderer.setSize(innerWidth, innerHeight);
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.setClearColor(0x1a1a3e);
+      container.appendChild(renderer.domElement);
+
+      // Starfield
+      const starCount = 1500;
+      const starGeo = new THREE.BufferGeometry();
+      const starPos = new Float32Array(starCount * 3);
+      const starSizes = new Float32Array(starCount);
+      for (let i = 0; i < starCount; i++) {
+        starPos[i * 3] = (Math.random() - 0.5) * 200;
+        starPos[i * 3 + 1] = (Math.random() - 0.5) * 200;
+        starPos[i * 3 + 2] = (Math.random() - 0.5) * 200;
+        starSizes[i] = Math.random() * 2 + 0.5;
+      }
+      starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+      starGeo.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+
+      const starMat = new THREE.ShaderMaterial({
+        uniforms: { uTime: { value: 0 } },
+        vertexShader: `
+          attribute float size;
+          uniform float uTime;
+          varying float vAlpha;
+          void main() {
+            vec3 pos = position;
+            pos.z = mod(pos.z + uTime * 8.0, 200.0) - 100.0;
+            vAlpha = smoothstep(-100.0, -20.0, pos.z) * (0.5 + 0.5 * sin(uTime * 2.0 + position.x * 0.1));
+            vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
+            gl_PointSize = size * (80.0 / -mvPos.z);
+            gl_Position = projectionMatrix * mvPos;
+          }
+        `,
+        fragmentShader: `
+          varying float vAlpha;
+          void main() {
+            float d = length(gl_PointCoord - 0.5);
+            if (d > 0.5) discard;
+            float glow = smoothstep(0.5, 0.0, d);
+            gl_FragColor = vec4(1.0, 1.0, 1.0, vAlpha * glow);
+          }
+        `,
+        transparent: true,
+        depthWrite: false,
+      });
+      scene.add(new THREE.Points(starGeo, starMat));
+
+      // Fox head — built from meshes
+      const foxGroup = new THREE.Group();
+      scene.add(foxGroup);
+
+      const foxOrange = 0xFF9A5C;
+      const foxPink = 0xFF6B8A;
+      const foxWhite = 0xFFFFFF;
+      const foxDark = 0x2D1B4E;
+
+      // Head (sphere)
+      const headGeo = new THREE.SphereGeometry(3, 32, 32);
+      const headMat = new THREE.MeshStandardMaterial({ color: foxOrange, roughness: 0.8 });
+      const head = new THREE.Mesh(headGeo, headMat);
+      foxGroup.add(head);
+
+      // Face patch (white circle)
+      const faceGeo = new THREE.SphereGeometry(2.3, 32, 32);
+      const faceMat = new THREE.MeshStandardMaterial({ color: foxWhite, roughness: 0.8 });
+      const face = new THREE.Mesh(faceGeo, faceMat);
+      face.position.z = 0.9;
+      foxGroup.add(face);
+
+      // Eyes
+      const eyeGeo = new THREE.SphereGeometry(0.5, 16, 16);
+      const eyeMat = new THREE.MeshStandardMaterial({ color: foxDark, roughness: 0.3 });
+      const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+      leftEye.position.set(-0.9, 0.3, 2.3);
+      foxGroup.add(leftEye);
+      const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+      rightEye.position.set(0.9, 0.3, 2.3);
+      foxGroup.add(rightEye);
+
+      // Eye highlights
+      const highlightGeo = new THREE.SphereGeometry(0.18, 8, 8);
+      const highlightMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+      const lh = new THREE.Mesh(highlightGeo, highlightMat);
+      lh.position.set(-0.7, 0.5, 2.7);
+      foxGroup.add(lh);
+      const rh = new THREE.Mesh(highlightGeo, highlightMat);
+      rh.position.set(1.1, 0.5, 2.7);
+      foxGroup.add(rh);
+
+      // Nose
+      const noseGeo = new THREE.SphereGeometry(0.25, 12, 12);
+      const noseMat = new THREE.MeshStandardMaterial({ color: foxDark, roughness: 0.3 });
+      const nose = new THREE.Mesh(noseGeo, noseMat);
+      nose.position.set(0, -0.3, 2.6);
+      nose.scale.set(1, 0.8, 0.8);
+      foxGroup.add(nose);
+
+      // Blush
+      const blushGeo = new THREE.SphereGeometry(0.45, 16, 16);
+      const blushMat = new THREE.MeshStandardMaterial({ color: foxPink, roughness: 0.9, transparent: true, opacity: 0.4 });
+      const leftBlush = new THREE.Mesh(blushGeo, blushMat);
+      leftBlush.position.set(-1.5, -0.3, 2.0);
+      leftBlush.scale.set(1, 0.6, 0.5);
+      foxGroup.add(leftBlush);
+      const rightBlush = new THREE.Mesh(blushGeo, blushMat);
+      rightBlush.position.set(1.5, -0.3, 2.0);
+      rightBlush.scale.set(1, 0.6, 0.5);
+      foxGroup.add(rightBlush);
+
+      // Ears
+      const earGeo = new THREE.ConeGeometry(1.2, 2.2, 4);
+      const earMat = new THREE.MeshStandardMaterial({ color: foxOrange, roughness: 0.8 });
+      const innerEarMat = new THREE.MeshStandardMaterial({ color: foxPink, roughness: 0.8 });
+
+      const leftEar = new THREE.Mesh(earGeo, earMat);
+      leftEar.position.set(-1.8, 2.8, 0);
+      leftEar.rotation.z = 0.3;
+      foxGroup.add(leftEar);
+
+      const leftInner = new THREE.Mesh(new THREE.ConeGeometry(0.6, 1.2, 4), innerEarMat);
+      leftInner.position.set(-1.8, 2.9, 0.3);
+      leftInner.rotation.z = 0.3;
+      foxGroup.add(leftInner);
+
+      const rightEar = new THREE.Mesh(earGeo, earMat);
+      rightEar.position.set(1.8, 2.8, 0);
+      rightEar.rotation.z = -0.3;
+      foxGroup.add(rightEar);
+
+      const rightInner = new THREE.Mesh(new THREE.ConeGeometry(0.6, 1.2, 4), innerEarMat);
+      rightInner.position.set(1.8, 2.9, 0.3);
+      rightInner.rotation.z = -0.3;
+      foxGroup.add(rightInner);
+
+      foxGroup.position.y = -1;
+
+      // Floating hearts
+      const hearts = [];
+      const heartShape = new THREE.Shape();
+      const x = 0, y = 0;
+      heartShape.moveTo(x, y + 0.5);
+      heartShape.bezierCurveTo(x, y + 0.5, x - 0.5, y, x - 0.5, y);
+      heartShape.bezierCurveTo(x - 0.5, y - 0.35, x, y - 0.7, x, y - 0.95);
+      heartShape.bezierCurveTo(x, y - 0.7, x + 0.5, y - 0.35, x + 0.5, y);
+      heartShape.bezierCurveTo(x + 0.5, y, x, y + 0.5, x, y + 0.5);
+
+      const heartGeo = new THREE.ExtrudeGeometry(heartShape, {
+        depth: 0.15, bevelEnabled: true, bevelThickness: 0.05,
+        bevelSize: 0.05, bevelSegments: 3,
+      });
+
+      for (let i = 0; i < 20; i++) {
+        const color = [0xFF6B8A, 0xB76CFD, 0xFF9A5C, 0xFFB6C1][Math.floor(Math.random() * 4)];
+        const mat = new THREE.MeshStandardMaterial({
+          color, roughness: 0.4, metalness: 0.1,
+          transparent: true, opacity: 0.7 + Math.random() * 0.3,
+        });
+        const heart = new THREE.Mesh(heartGeo, mat);
+        const scale = 0.3 + Math.random() * 0.7;
+        heart.scale.set(scale, scale, scale);
+        heart.position.set(
+          (Math.random() - 0.5) * 50,
+          (Math.random() - 0.5) * 30,
+          (Math.random() - 0.5) * 40 - 10,
+        );
+        heart.userData = {
+          baseY: heart.position.y,
+          speed: 0.3 + Math.random() * 0.7,
+          rotSpeed: (Math.random() - 0.5) * 2,
+          phase: Math.random() * Math.PI * 2,
+          drift: (Math.random() - 0.5) * 0.3,
+        };
+        scene.add(heart);
+        hearts.push(heart);
+      }
+
+      // Nebula clouds
+      const nebulaCount = 6;
+      for (let i = 0; i < nebulaCount; i++) {
+        const colors = [0xFF6B8A, 0xB76CFD, 0xFF9A5C];
+        const nebGeo = new THREE.SphereGeometry(8 + Math.random() * 12, 16, 16);
+        const nebMat = new THREE.MeshBasicMaterial({
+          color: colors[i % 3],
+          transparent: true,
+          opacity: 0.03 + Math.random() * 0.03,
+        });
+        const neb = new THREE.Mesh(nebGeo, nebMat);
+        neb.position.set(
+          (Math.random() - 0.5) * 80,
+          (Math.random() - 0.5) * 40,
+          -30 - Math.random() * 30,
+        );
+        scene.add(neb);
+      }
+
+      // Shooting stars
+      const shootingStars = [];
+      function createShootingStar() {
+        const geo = new THREE.BufferGeometry();
+        const positions = new Float32Array(60); // 20 trail points
+        const alphas = new Float32Array(20);
+        for (let i = 0; i < 20; i++) {
+          positions[i * 3] = 0;
+          positions[i * 3 + 1] = 0;
+          positions[i * 3 + 2] = 0;
+          alphas[i] = 1.0 - i / 20;
+        }
+        geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geo.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
+
+        const mat = new THREE.ShaderMaterial({
+          uniforms: {},
+          vertexShader: `
+            attribute float alpha;
+            varying float vAlpha;
+            void main() {
+              vAlpha = alpha;
+              gl_PointSize = alpha * 4.0;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            varying float vAlpha;
+            void main() {
+              float d = length(gl_PointCoord - 0.5);
+              if (d > 0.5) discard;
+              gl_FragColor = vec4(1.0, 0.85, 0.7, vAlpha * smoothstep(0.5, 0.0, d));
+            }
+          `,
+          transparent: true,
+          depthWrite: false,
+        });
+
+        const points = new THREE.Points(geo, mat);
+        points.userData = {
+          active: false,
+          x: 0, y: 0, z: 0,
+          vx: 0, vy: 0,
+          life: 0, trail: [],
+        };
+        scene.add(points);
+        return points;
+      }
+
+      for (let i = 0; i < 3; i++) {
+        shootingStars.push(createShootingStar());
+      }
+
+      function launchStar(star) {
+        const d = star.userData;
+        d.active = true;
+        d.x = (Math.random() - 0.5) * 60;
+        d.y = 15 + Math.random() * 15;
+        d.z = -20 - Math.random() * 20;
+        d.vx = (Math.random() - 0.3) * 1.5;
+        d.vy = -(0.8 + Math.random() * 0.8);
+        d.life = 0;
+        d.trail = [];
+      }
+
+      // Lighting
+      const ambient = new THREE.AmbientLight(0x6B5B7B, 0.6);
+      scene.add(ambient);
+      const key = new THREE.DirectionalLight(0xFFB6C1, 1.0);
+      key.position.set(5, 5, 10);
+      scene.add(key);
+      const rim = new THREE.PointLight(0xB76CFD, 0.8, 30);
+      rim.position.set(-5, 3, -5);
+      scene.add(rim);
+
+      // Mouse parallax
+      let mouseX = 0, mouseY = 0;
+      document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / innerHeight - 0.5) * 2;
+      });
+
+      // Resize
+      window.addEventListener('resize', () => {
+        camera.aspect = innerWidth / innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(innerWidth, innerHeight);
+      });
+
+      // Animate
+      const clock = new THREE.Clock();
+      let lastShoot = 0;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+        starMat.uniforms.uTime.value = t;
+
+        // Fox float & look at mouse
+        foxGroup.position.y = -1 + Math.sin(t * 0.8) * 0.5;
+        foxGroup.rotation.y = mouseX * 0.3 + Math.sin(t * 0.5) * 0.1;
+        foxGroup.rotation.x = -mouseY * 0.15;
+        foxGroup.rotation.z = Math.sin(t * 0.7) * 0.05;
+
+        // Ear wiggle
+        leftEar.rotation.z = 0.3 + Math.sin(t * 3) * 0.08;
+        rightEar.rotation.z = -0.3 + Math.sin(t * 3 + 1) * 0.08;
+        leftInner.rotation.z = leftEar.rotation.z;
+        rightInner.rotation.z = rightEar.rotation.z;
+
+        // Hearts float
+        hearts.forEach(h => {
+          const d = h.userData;
+          h.position.y = d.baseY + Math.sin(t * d.speed + d.phase) * 2;
+          h.position.x += d.drift * 0.01;
+          h.rotation.y += d.rotSpeed * 0.005;
+          h.rotation.z = Math.sin(t * d.speed * 0.5 + d.phase) * 0.3;
+          // Wrap around
+          if (h.position.x > 30) h.position.x = -30;
+          if (h.position.x < -30) h.position.x = 30;
+        });
+
+        // Shooting stars
+        if (t - lastShoot > 2 + Math.random() * 3) {
+          const inactive = shootingStars.find(s => !s.userData.active);
+          if (inactive) {
+            launchStar(inactive);
+            lastShoot = t;
+          }
+        }
+        shootingStars.forEach(star => {
+          const d = star.userData;
+          if (!d.active) return;
+          d.x += d.vx;
+          d.y += d.vy;
+          d.life++;
+          d.trail.unshift({ x: d.x, y: d.y, z: d.z });
+          if (d.trail.length > 20) d.trail.pop();
+          const pos = star.geometry.attributes.position.array;
+          for (let i = 0; i < 20; i++) {
+            const p = d.trail[i] || d.trail[d.trail.length - 1] || { x: 0, y: 0, z: 0 };
+            pos[i * 3] = p.x;
+            pos[i * 3 + 1] = p.y;
+            pos[i * 3 + 2] = p.z;
+          }
+          star.geometry.attributes.position.needsUpdate = true;
+          if (d.life > 80) d.active = false;
+        });
+
+        // Camera subtle drift
+        camera.position.x += (mouseX * 2 - camera.position.x) * 0.02;
+        camera.position.y += (-mouseY * 1.5 - camera.position.y) * 0.02;
+        camera.lookAt(0, 0, 0);
+
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+  </script>
+</Layout>
