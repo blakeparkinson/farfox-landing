@@ -1,0 +1,62 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+---
+
+<Layout title="Blog — Far Fox" description="Tips, ideas, and advice for long-distance couples. From date ideas to daily rituals that keep your relationship strong.">
+  <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/fox-logo.png" alt="Far Fox" class="w-8 h-8" />
+        <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">
+          Far Fox
+        </span>
+      </a>
+      <a
+        href="https://app.lovefarfox.com"
+        class="px-5 py-2 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-700 text-sm hover:shadow-lg hover:shadow-fox-pink/25 transition-all duration-200 hover:-translate-y-0.5"
+      >
+        Open App
+      </a>
+    </div>
+  </nav>
+
+  <main class="pt-28 pb-24 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4">
+        The Far Fox <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Blog</span>
+      </h1>
+      <p class="text-fox-text-light text-lg mb-12">
+        Tips, ideas, and advice for couples making long-distance work.
+      </p>
+
+      <div class="space-y-8">
+        {posts.map((post) => (
+          <a href={`/blog/${post.id}`} class="block group p-6 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1">
+            <p class="text-sm text-fox-text-light/60 mb-2">
+              {new Date(post.data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+            <h2 class="text-xl font-800 mb-2 group-hover:text-fox-pink transition-colors">{post.data.title}</h2>
+            <p class="text-fox-text-light leading-relaxed">{post.data.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-12 px-6 border-t border-fox-pink/10">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
+      <div class="flex items-center gap-6 text-sm text-fox-text-light/50">
+        <a href="/blog" class="hover:text-fox-pink transition-colors">Blog</a>
+        <a href="/privacy" class="hover:text-fox-pink transition-colors">Privacy</a>
+        <a href="/terms" class="hover:text-fox-pink transition-colors">Terms</a>
+        <span>&copy; {new Date().getFullYear()} Far Fox</span>
+      </div>
+    </div>
+  </footer>
+</Layout>
