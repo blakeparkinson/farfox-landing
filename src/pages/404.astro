@@ -42,37 +42,49 @@ import Layout from '../layouts/Layout.astro';
     let shakeAmount = 0;
     let flashAlpha = 0;
     let gameStarted = false;
-    let titleAlpha = 1;
 
     // Wall damage / glass crack system
     let wallDamage = 0;
-    const maxDamage = 12;
+    const maxDamage = 10;
     let cracks = [];
     let exploding = false;
     let explodeTimer = 0;
     let shatterPieces = [];
+    let foxBruises = 0; // 0-1 bruise level
+    let wallHitCooldown = 0; // prevent rapid-fire hits
 
     function addCrack(x, y, severity) {
-      const numBranches = 2 + Math.floor(severity * 2);
-      const crack = { x, y, branches: [], alpha: 1 };
+      // Spawn cracks at impact point, radiating inward toward screen center
+      const numBranches = 3 + Math.floor(severity * 3);
+      const crack = { branches: [], alpha: 1, age: 0 };
       for (let b = 0; b < numBranches; b++) {
-        const angle = Math.random() * Math.PI * 2;
+        // Angle generally toward screen center with spread
+        const toCenterAngle = Math.atan2(H/2 - y, W/2 - x);
+        const angle = toCenterAngle + (Math.random() - 0.5) * 2.5;
         const segments = [];
         let cx = x, cy = y;
-        const segCount = 3 + Math.floor(Math.random() * 4);
+        const segCount = 4 + Math.floor(Math.random() * 6 * severity);
         for (let s = 0; s < segCount; s++) {
-          const len = 15 + Math.random() * 40 * severity;
-          const a = angle + (Math.random() - 0.5) * 1.2;
+          const len = 20 + Math.random() * 60 * severity;
+          const a = angle + (Math.random() - 0.5) * 1.0;
           const nx = cx + Math.cos(a) * len;
           const ny = cy + Math.sin(a) * len;
           segments.push({ x1: cx, y1: cy, x2: nx, y2: ny });
           cx = nx;
           cy = ny;
-          // Sub-branch
-          if (Math.random() > 0.5 && severity > 0.3) {
-            const sa = a + (Math.random() - 0.5) * 1.5;
-            const sl = 10 + Math.random() * 20 * severity;
-            segments.push({ x1: cx, y1: cy, x2: cx + Math.cos(sa) * sl, y2: cy + Math.sin(sa) * sl });
+          // Sub-branches for complexity
+          if (Math.random() > 0.4 && severity > 0.3) {
+            const sa = a + (Math.random() > 0.5 ? 1 : -1) * (0.5 + Math.random() * 1.0);
+            const sl = 8 + Math.random() * 30 * severity;
+            const snx = cx + Math.cos(sa) * sl;
+            const sny = cy + Math.sin(sa) * sl;
+            segments.push({ x1: cx, y1: cy, x2: snx, y2: sny });
+            // Second-level sub-branch
+            if (Math.random() > 0.6) {
+              const sa2 = sa + (Math.random() - 0.5) * 1.2;
+              const sl2 = 5 + Math.random() * 15;
+              segments.push({ x1: snx, y1: sny, x2: snx + Math.cos(sa2) * sl2, y2: sny + Math.sin(sa2) * sl2 });
+            }
           }
         }
         crack.branches.push(segments);
@@ -82,25 +94,27 @@ import Layout from '../layouts/Layout.astro';
 
     function triggerExplosion() {
       exploding = true;
-      explodeTimer = 1;
+      explodeTimer = 2.0;
       shatterPieces = [];
-      // Create shatter pieces from the canvas
-      const cols = 8, rows = 6;
+      // Create irregular shatter shards
+      const cols = 10, rows = 7;
       const pw = W / cols, ph = H / rows;
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          const cx = c * pw + pw / 2;
-          const cy = r * ph + ph / 2;
-          const angle = Math.atan2(cy - H/2, cx - W/2) + (Math.random() - 0.5) * 0.5;
-          const speed = 4 + Math.random() * 8;
+          const cx = c * pw + pw / 2 + (Math.random() - 0.5) * pw * 0.3;
+          const cy = r * ph + ph / 2 + (Math.random() - 0.5) * ph * 0.3;
+          const angle = Math.atan2(cy - H/2, cx - W/2) + (Math.random() - 0.5) * 0.3;
+          const distFromCenter = Math.sqrt((cx - W/2)**2 + (cy - H/2)**2);
+          const speed = 3 + (distFromCenter / W) * 12 + Math.random() * 4;
           shatterPieces.push({
-            x: c * pw, y: r * ph, w: pw, h: ph,
+            x: c * pw, y: r * ph, w: pw + 2, h: ph + 2,
             vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed,
+            vy: Math.sin(angle) * speed - 2,
             rotation: 0,
-            rotSpeed: (Math.random() - 0.5) * 0.15,
-            alpha: 1,
-            gravity: 0.2 + Math.random() * 0.1,
+            rotSpeed: (Math.random() - 0.5) * 0.2,
+            gravity: 0.15 + Math.random() * 0.15,
+            // Each shard gets a crack line for glass look
+            crackAngle: Math.random() * Math.PI,
           });
         }
       }
@@ -109,6 +123,7 @@ import Layout from '../layouts/Layout.astro';
     function resetGame() {
       exploding = false;
       wallDamage = 0;
+      foxBruises = 0;
       cracks = [];
       shatterPieces = [];
       fox.x = W / 2;
@@ -119,6 +134,7 @@ import Layout from '../layouts/Layout.astro';
       fox.trail = [];
       score = 0;
       combo = 0;
+      gameStarted = false;
       hearts.length = 0;
       particles.length = 0;
       popups.length = 0;
@@ -140,38 +156,211 @@ import Layout from '../layouts/Layout.astro';
       }
     }
 
-    function drawCracks() {
-      if (cracks.length === 0) return;
-      ctx.save();
-      cracks.forEach(crack => {
-        crack.branches.forEach(segments => {
-          segments.forEach(seg => {
-            ctx.beginPath();
-            ctx.moveTo(seg.x1, seg.y1);
-            ctx.lineTo(seg.x2, seg.y2);
-            ctx.strokeStyle = `rgba(255,255,255,${0.5 * crack.alpha})`;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-            // Bright center line
-            ctx.beginPath();
-            ctx.moveTo(seg.x1, seg.y1);
-            ctx.lineTo(seg.x2, seg.y2);
-            ctx.strokeStyle = `rgba(200,220,255,${0.8 * crack.alpha})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+    function drawGlassOverlay() {
+      const damageRatio = wallDamage / maxDamage;
+
+      // Draw all cracks
+      if (cracks.length > 0) {
+        cracks.forEach(crack => {
+          crack.branches.forEach(segments => {
+            segments.forEach(seg => {
+              // Outer glow line
+              ctx.beginPath();
+              ctx.moveTo(seg.x1, seg.y1);
+              ctx.lineTo(seg.x2, seg.y2);
+              ctx.strokeStyle = `rgba(180,200,255,${0.15 * crack.alpha})`;
+              ctx.lineWidth = 4;
+              ctx.stroke();
+
+              // Main crack line
+              ctx.beginPath();
+              ctx.moveTo(seg.x1, seg.y1);
+              ctx.lineTo(seg.x2, seg.y2);
+              ctx.strokeStyle = `rgba(255,255,255,${0.7 * crack.alpha})`;
+              ctx.lineWidth = 1.5;
+              ctx.stroke();
+
+              // Bright inner line
+              ctx.beginPath();
+              ctx.moveTo(seg.x1, seg.y1);
+              ctx.lineTo(seg.x2, seg.y2);
+              ctx.strokeStyle = `rgba(220,240,255,${0.9 * crack.alpha})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            });
           });
         });
-      });
-      // Damage vignette — increases with damage
-      const damageRatio = wallDamage / maxDamage;
-      if (damageRatio > 0.2) {
-        const vignette = ctx.createRadialGradient(W/2, H/2, W * 0.2, W/2, H/2, W * 0.7);
+      }
+
+      // Glass sheen overlay — gets more visible with damage
+      if (damageRatio > 0.1) {
+        // Frosted glass effect near cracks
+        ctx.globalAlpha = damageRatio * 0.08;
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, W, H);
+        ctx.globalAlpha = 1;
+      }
+
+      // Damage vignette — red edges intensify
+      if (damageRatio > 0.15) {
+        const vignette = ctx.createRadialGradient(W/2, H/2, W * 0.15, W/2, H/2, W * 0.75);
         vignette.addColorStop(0, 'rgba(0,0,0,0)');
-        vignette.addColorStop(1, `rgba(80,0,0,${damageRatio * 0.4})`);
+        vignette.addColorStop(0.7, `rgba(60,0,0,${damageRatio * 0.3})`);
+        vignette.addColorStop(1, `rgba(100,0,0,${damageRatio * 0.5})`);
         ctx.fillStyle = vignette;
         ctx.fillRect(0, 0, W, H);
       }
+
+      // Warning pulse when close to breaking
+      if (damageRatio > 0.7) {
+        const pulse = Math.sin(time * 8) * 0.5 + 0.5;
+        ctx.globalAlpha = (damageRatio - 0.7) * pulse * 0.15;
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(0, 0, W, H);
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function drawFoxBruises(x, y, size) {
+      if (foxBruises <= 0) return;
+      const b = Math.min(foxBruises, 1);
+
+      ctx.save();
+      ctx.translate(x, y);
+
+      // Red/purple tint overlay on the fox
+      ctx.globalAlpha = b * 0.3;
+      ctx.fillStyle = '#8B0000';
+      ctx.beginPath();
+      ctx.arc(0, 0, size * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Bruise spots
+      if (b > 0.2) {
+        ctx.globalAlpha = Math.min(b * 0.6, 0.5);
+        // Bruise 1 — left cheek
+        ctx.fillStyle = '#6B2FA0';
+        ctx.beginPath();
+        ctx.ellipse(-size * 0.15, size * 0.05, size * 0.08 * b, size * 0.06 * b, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (b > 0.4) {
+        // Bruise 2 — right side
+        ctx.globalAlpha = Math.min((b - 0.2) * 0.6, 0.5);
+        ctx.fillStyle = '#4A1A7A';
+        ctx.beginPath();
+        ctx.ellipse(size * 0.12, -size * 0.08, size * 0.07 * b, size * 0.05 * b, -0.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Band-aid at higher damage
+      if (b > 0.5) {
+        ctx.globalAlpha = Math.min((b - 0.4) * 1.5, 0.9);
+        const bx = size * 0.18, by = -size * 0.2;
+        const bw = size * 0.2, bh = size * 0.07;
+        ctx.save();
+        ctx.translate(bx, by);
+        ctx.rotate(0.4);
+        // Band-aid body
+        ctx.fillStyle = '#F5D0A9';
+        ctx.strokeStyle = '#D4A574';
+        ctx.lineWidth = 1;
+        roundRect(-bw/2, -bh/2, bw, bh, 3);
+        ctx.fill();
+        ctx.stroke();
+        // Pad in center
+        ctx.fillStyle = '#E8C49A';
+        ctx.fillRect(-bw * 0.15, -bh/2, bw * 0.3, bh);
+        // Dots on band-aid
+        ctx.fillStyle = '#D4A574';
+        for (let d = -1; d <= 1; d += 2) {
+          ctx.beginPath();
+          ctx.arc(d * bw * 0.3, 0, 1, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      // Second band-aid at very high damage
+      if (b > 0.75) {
+        ctx.globalAlpha = Math.min((b - 0.7) * 2, 0.9);
+        const bx = -size * 0.12, by = size * 0.12;
+        const bw = size * 0.16, bh = size * 0.06;
+        ctx.save();
+        ctx.translate(bx, by);
+        ctx.rotate(-0.6);
+        ctx.fillStyle = '#F5D0A9';
+        ctx.strokeStyle = '#D4A574';
+        ctx.lineWidth = 1;
+        roundRect(-bw/2, -bh/2, bw, bh, 3);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#E8C49A';
+        ctx.fillRect(-bw * 0.15, -bh/2, bw * 0.3, bh);
+        ctx.restore();
+      }
+
+      // Scratch marks
+      if (b > 0.3) {
+        ctx.globalAlpha = Math.min((b - 0.2) * 0.8, 0.6);
+        ctx.strokeStyle = '#CC4444';
+        ctx.lineWidth = 1;
+        // Scratch 1
+        ctx.beginPath();
+        ctx.moveTo(-size * 0.2, -size * 0.15);
+        ctx.lineTo(-size * 0.1, -size * 0.05);
+        ctx.stroke();
+        if (b > 0.5) {
+          // Scratch 2
+          ctx.beginPath();
+          ctx.moveTo(-size * 0.18, -size * 0.13);
+          ctx.lineTo(-size * 0.08, -size * 0.03);
+          ctx.stroke();
+        }
+      }
+
+      // Dizzy stars at high damage
+      if (b > 0.6) {
+        ctx.globalAlpha = Math.min((b - 0.5) * 1.5, 0.7);
+        const starCount = b > 0.8 ? 3 : 2;
+        for (let i = 0; i < starCount; i++) {
+          const sa = time * 3 + (i / starCount) * Math.PI * 2;
+          const sr = size * 0.4;
+          const sx = Math.cos(sa) * sr;
+          const sy = -size * 0.3 + Math.sin(sa * 1.5) * size * 0.08;
+          drawStar(sx, sy, 4 + b * 3, '#FFD700');
+        }
+      }
+
+      ctx.globalAlpha = 1;
       ctx.restore();
+    }
+
+    function drawStar(x, y, r, color) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      for (let i = 0; i < 5; i++) {
+        const a = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+        const method = i === 0 ? 'moveTo' : 'lineTo';
+        ctx[method](x + Math.cos(a) * r, y + Math.sin(a) * r);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function roundRect(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
     }
 
     // Fox
@@ -235,14 +424,12 @@ import Layout from '../layouts/Layout.astro';
         ctx.shadowBlur = 20 * glow;
       }
 
-      // Gradient fill
       const grad = ctx.createRadialGradient(-s*0.1, -s*0.2, 0, 0, 0, s*0.6);
       grad.addColorStop(0, lightenColor(color, 40));
       grad.addColorStop(1, color);
       ctx.fillStyle = grad;
       ctx.fill();
 
-      // Shine
       ctx.beginPath();
       ctx.ellipse(-s * 0.18, -s * 0.32, s * 0.1, s * 0.06, -0.5, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(255,255,255,0.6)';
@@ -287,7 +474,7 @@ import Layout from '../layouts/Layout.astro';
 
     // Initial hearts
     for (let i = 0; i < 8; i++) {
-      const h = {
+      hearts.push({
         x: W * 0.15 + Math.random() * W * 0.7,
         y: H * 0.15 + Math.random() * H * 0.6,
         vx: (Math.random() - 0.5) * 1.5,
@@ -300,8 +487,7 @@ import Layout from '../layouts/Layout.astro';
         wobbleSpeed: 1 + Math.random() * 2,
         pulsePhase: Math.random() * Math.PI * 2,
         alive: true,
-      };
-      hearts.push(h);
+      });
     }
 
     // Center fox
@@ -328,13 +514,32 @@ import Layout from '../layouts/Layout.astro';
         });
       }
 
-      // Ring burst
       particles.push({
         x, y, vx: 0, vy: 0,
         life: 1, decay: 0.03,
         size: 5, maxSize: 80,
         color, isRing: true, gravity: 0,
       });
+    }
+
+    function spawnWallParticles(x, y) {
+      for (let i = 0; i < 8; i++) {
+        const angle = Math.atan2(H/2 - y, W/2 - x) + (Math.random() - 0.5) * 1.5;
+        const speed = 1 + Math.random() * 3;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 1,
+          decay: 0.03 + Math.random() * 0.02,
+          size: 2 + Math.random() * 3,
+          color: Math.random() > 0.5 ? 'rgba(200,220,255,0.8)' : 'rgba(255,255,255,0.6)',
+          isHeart: false,
+          rotation: 0,
+          rotSpeed: 0,
+          gravity: 0.02,
+        });
+      }
     }
 
     function spawnPopup(x, y, points) {
@@ -350,6 +555,7 @@ import Layout from '../layouts/Layout.astro';
 
     // Input
     function handleInput(px, py) {
+      if (exploding) return;
       fox.targetX = px;
       fox.targetY = py;
       fox.chasing = true;
@@ -364,9 +570,6 @@ import Layout from '../layouts/Layout.astro';
       handleInput(e.touches[0].clientX, e.touches[0].clientY);
     });
 
-    let mouseX = W/2, mouseY = H/2;
-    canvas.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
-
     // Main loop
     let time = 0;
     let spawnTimer = 0;
@@ -379,6 +582,7 @@ import Layout from '../layouts/Layout.astro';
       lastFrame = now;
       time += dt;
       spawnTimer += dt;
+      if (wallHitCooldown > 0) wallHitCooldown -= dt;
 
       ctx.clearRect(0, 0, W, H);
 
@@ -414,20 +618,14 @@ import Layout from '../layouts/Layout.astro';
       });
       ctx.globalAlpha = 1;
 
-      // Explosion state — render shatter and skip normal game
+      // === EXPLOSION STATE ===
       if (exploding) {
-        explodeTimer -= dt * 0.8;
-        // Draw frozen background
-        const bgGrad2 = ctx.createLinearGradient(0, 0, 0, H);
-        bgGrad2.addColorStop(0, '#0f0a2e');
-        bgGrad2.addColorStop(0.5, '#1a1145');
-        bgGrad2.addColorStop(1, '#12082a');
-        ctx.fillStyle = bgGrad2;
-        ctx.fillRect(0, 0, W, H);
+        explodeTimer -= dt * 1.2;
 
         // White flash at start
-        if (explodeTimer > 0.7) {
-          ctx.globalAlpha = (explodeTimer - 0.7) * 3;
+        if (explodeTimer > 1.5) {
+          const flashI = (explodeTimer - 1.5) / 0.5;
+          ctx.globalAlpha = flashI;
           ctx.fillStyle = '#fff';
           ctx.fillRect(0, 0, W, H);
           ctx.globalAlpha = 1;
@@ -439,20 +637,41 @@ import Layout from '../layouts/Layout.astro';
           p.y += p.vy;
           p.vy += p.gravity;
           p.rotation += p.rotSpeed;
-          p.alpha = Math.max(0, explodeTimer);
+          const alpha = Math.max(0, Math.min(1, explodeTimer * 0.8));
 
           ctx.save();
-          ctx.globalAlpha = p.alpha;
+          ctx.globalAlpha = alpha;
           ctx.translate(p.x + p.w/2, p.y + p.h/2);
           ctx.rotate(p.rotation);
-          // Draw piece as a glass-like shard
-          ctx.fillStyle = `rgba(${20 + Math.random()*20}, ${10 + Math.random()*15}, ${40 + Math.random()*20}, 0.9)`;
-          ctx.strokeStyle = 'rgba(200,220,255,0.6)';
-          ctx.lineWidth = 1;
+
+          // Glass shard with gradient
+          const shardGrad = ctx.createLinearGradient(-p.w/2, -p.h/2, p.w/2, p.h/2);
+          shardGrad.addColorStop(0, 'rgba(15,10,46,0.95)');
+          shardGrad.addColorStop(0.5, 'rgba(26,17,69,0.9)');
+          shardGrad.addColorStop(1, 'rgba(18,8,42,0.95)');
+          ctx.fillStyle = shardGrad;
           ctx.beginPath();
           ctx.rect(-p.w/2, -p.h/2, p.w, p.h);
           ctx.fill();
+
+          // Glass edge highlight
+          ctx.strokeStyle = 'rgba(180,200,255,0.5)';
+          ctx.lineWidth = 1.5;
           ctx.stroke();
+
+          // Crack line across shard
+          ctx.beginPath();
+          ctx.moveTo(-p.w/2 * Math.cos(p.crackAngle), -p.h/2 * Math.sin(p.crackAngle));
+          ctx.lineTo(p.w/2 * Math.cos(p.crackAngle), p.h/2 * Math.sin(p.crackAngle));
+          ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+
+          // Glass reflection
+          ctx.globalAlpha = alpha * 0.15;
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(-p.w/2, -p.h/2, p.w * 0.3, p.h);
+
           ctx.restore();
         });
 
@@ -461,6 +680,8 @@ import Layout from '../layouts/Layout.astro';
         }
         return;
       }
+
+      // === NORMAL GAME ===
 
       // Screen shake
       let shaking = shakeAmount > 0.5;
@@ -481,7 +702,6 @@ import Layout from '../layouts/Layout.astro';
         h.y += h.vy + Math.sin(time * h.wobbleSpeed + h.wobblePhase) * 0.5;
         h.rotation += h.rotSpeed;
 
-        // Bounce off edges with padding
         if (h.x < 30) { h.x = 30; h.vx = Math.abs(h.vx); }
         if (h.x > W - 30) { h.x = W - 30; h.vx = -Math.abs(h.vx); }
         if (h.y < 30) { h.y = 30; h.vy = Math.abs(h.vy); }
@@ -516,11 +736,13 @@ import Layout from '../layouts/Layout.astro';
           spawnCatchParticles(h.x, h.y, h.color);
           spawnPopup(h.x, h.y - 30, points);
 
-          // Fox reaction
           fox.squash = 0.6;
           fox.stretch = 1.4;
           shakeAmount = 5 + combo * 2;
           flashAlpha = 0.15;
+
+          // Catching hearts heals bruises slightly
+          foxBruises = Math.max(0, foxBruises - 0.05);
         }
       });
 
@@ -541,7 +763,6 @@ import Layout from '../layouts/Layout.astro';
         const dy = fox.targetY - fox.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        // Also gravitate toward nearest heart
         let nearestHeart = null;
         let nearestDist = Infinity;
         hearts.forEach(h => {
@@ -577,7 +798,6 @@ import Layout from '../layouts/Layout.astro';
       } else {
         fox.vx *= 0.97;
         fox.vy *= 0.97;
-        // Idle float
         fox.vx += Math.sin(time * 0.5) * 0.03;
         fox.vy += Math.cos(time * 0.7) * 0.03;
       }
@@ -585,7 +805,7 @@ import Layout from '../layouts/Layout.astro';
       fox.x += fox.vx;
       fox.y += fox.vy;
 
-      // Keep fox in bounds — detect wall hits
+      // Wall collision — detect hits, add cracks, accumulate damage
       let hitWall = false;
       let wallX = fox.x, wallY = fox.y;
       const impactSpeed = Math.sqrt(fox.vx * fox.vx + fox.vy * fox.vy);
@@ -595,37 +815,51 @@ import Layout from '../layouts/Layout.astro';
       if (fox.y < 40) { fox.y = 40; fox.vy *= -0.5; hitWall = true; wallX = fox.x; wallY = 0; }
       if (fox.y > H - 120) { fox.y = H - 120; fox.vy *= -0.5; hitWall = true; wallX = fox.x; wallY = H; }
 
-      if (hitWall && impactSpeed > 2 && !exploding) {
-        const severity = Math.min(impactSpeed / 8, 1);
-        wallDamage += severity;
-        shakeAmount = Math.max(shakeAmount, impactSpeed * 2);
+      if (hitWall && impactSpeed > 1.5 && wallHitCooldown <= 0) {
+        wallHitCooldown = 0.15;
+        const severity = Math.min(impactSpeed / 6, 1);
+        wallDamage += severity * 1.2;
+        foxBruises = Math.min(1, foxBruises + severity * 0.15);
+        shakeAmount = Math.max(shakeAmount, impactSpeed * 3);
         addCrack(wallX, wallY, severity);
-        // Damage decay is slow
+        spawnWallParticles(wallX, wallY);
+        flashAlpha = Math.max(flashAlpha, severity * 0.1);
+
+        // Clear trail on wall hit to prevent ghost frames
+        fox.trail = [];
+
+        // Squash on impact
+        fox.squash = 0.5;
+        fox.stretch = 1.5;
+
         if (wallDamage >= maxDamage) {
           triggerExplosion();
         }
       }
 
-      // Slowly heal cracks over time
+      // Slowly heal over time
       if (wallDamage > 0 && !exploding) {
-        wallDamage -= dt * 0.15;
+        wallDamage -= dt * 0.3;
         if (wallDamage < 0) wallDamage = 0;
-        // Fade old cracks
-        cracks.forEach(c => { c.alpha -= dt * 0.05; });
-        cracks = cracks.filter(c => c.alpha > 0.05);
+        cracks.forEach(c => { c.alpha -= dt * 0.08; });
+        cracks = cracks.filter(c => c.alpha > 0.02);
+      }
+      if (foxBruises > 0) {
+        foxBruises -= dt * 0.02;
+        if (foxBruises < 0) foxBruises = 0;
       }
 
       fox.bouncePhase += dt * 3;
 
-      // Fox trail
-      fox.trail.push({ x: fox.x, y: fox.y, alpha: 0.4, size: fox.size * 0.6 });
-      if (fox.trail.length > 12) fox.trail.shift();
+      // Fox trail — minimal, no ghost frames
+      fox.trail.push({ x: fox.x, y: fox.y, alpha: 0.25, size: fox.size * 0.5 });
+      if (fox.trail.length > 6) fox.trail.shift();
 
-      // Draw fox trail
+      // Draw fox trail — very subtle
       fox.trail.forEach((t, i) => {
-        t.alpha *= 0.88;
-        if (foxLoaded && t.alpha > 0.02) {
-          ctx.globalAlpha = t.alpha * 0.3;
+        t.alpha *= 0.85;
+        if (foxLoaded && t.alpha > 0.03) {
+          ctx.globalAlpha = t.alpha * 0.15;
           const s = t.size * (i / fox.trail.length);
           ctx.drawImage(foxImg, t.x - s/2, t.y - s/2, s, s);
         }
@@ -639,7 +873,6 @@ import Layout from '../layouts/Layout.astro';
       fox.squash += (targetSquash - fox.squash) * 0.15;
       fox.stretch += (targetStretch - fox.stretch) * 0.15;
 
-      // Rotation based on movement
       const targetRot = Math.atan2(fox.vy, fox.vx) * 0.15;
       fox.rotation += (targetRot - fox.rotation) * 0.1;
 
@@ -651,9 +884,10 @@ import Layout from '../layouts/Layout.astro';
         ctx.rotate(fox.rotation);
         ctx.scale(fox.stretch, fox.squash);
 
-        // Glow behind fox
+        // Glow behind fox — dims when bruised
+        const glowAlpha = 0.3 * (1 - foxBruises * 0.6);
         const foxGlow = ctx.createRadialGradient(0, 0, fox.size * 0.2, 0, 0, fox.size * 0.8);
-        foxGlow.addColorStop(0, 'rgba(255,154,92,0.3)');
+        foxGlow.addColorStop(0, `rgba(255,154,92,${glowAlpha})`);
         foxGlow.addColorStop(1, 'rgba(255,154,92,0)');
         ctx.fillStyle = foxGlow;
         ctx.beginPath();
@@ -662,7 +896,11 @@ import Layout from '../layouts/Layout.astro';
 
         const s = fox.size;
         ctx.drawImage(foxImg, -s/2, -s/2, s, s);
+
         ctx.restore();
+
+        // Draw bruises on top of fox (in screen space)
+        drawFoxBruises(fox.x, fox.y + bobY, fox.size);
       }
 
       // Particles
@@ -694,7 +932,6 @@ import Layout from '../layouts/Layout.astro';
             drawHeart(0, 0, p.size, p.color, 0);
             ctx.restore();
           } else {
-            // Sparkle
             ctx.fillStyle = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
@@ -728,8 +965,8 @@ import Layout from '../layouts/Layout.astro';
 
       if (shaking) ctx.restore();
 
-      // Glass cracks overlay
-      drawCracks();
+      // Glass cracks overlay — drawn OVER everything for glass-screen effect
+      drawGlassOverlay();
 
       // Flash effect
       if (flashAlpha > 0.01) {
@@ -740,20 +977,15 @@ import Layout from '../layouts/Layout.astro';
         flashAlpha *= 0.85;
       }
 
-      // 404 Title — always visible, large, centered top area
+      // 404 Title
       const centerY = Math.min(H * 0.28, 220);
 
-      // Title glow
       ctx.save();
       ctx.textAlign = 'center';
 
-      // "404" big
-      ctx.font = '900 clamp(80px, 15vw, 160px) Nunito, sans-serif';
-      // Use font size based on screen
       const fontSize404 = Math.min(Math.max(W * 0.15, 80), 160);
       ctx.font = `900 ${fontSize404}px Nunito, sans-serif`;
 
-      // Gradient text
       const textGrad = ctx.createLinearGradient(W/2 - 150, centerY, W/2 + 150, centerY);
       textGrad.addColorStop(0, '#FF6B8A');
       textGrad.addColorStop(0.5, '#B76CFD');
@@ -764,7 +996,6 @@ import Layout from '../layouts/Layout.astro';
       ctx.fillText('404', W/2, centerY);
       ctx.shadowBlur = 0;
 
-      // Subtitle
       const subSize = Math.min(Math.max(W * 0.025, 16), 28);
       ctx.font = `800 ${subSize}px Nunito, sans-serif`;
       ctx.fillStyle = 'rgba(255,255,255,0.85)';
@@ -773,7 +1004,6 @@ import Layout from '../layouts/Layout.astro';
       ctx.fillText('Lost in the distance', W/2, centerY + fontSize404 * 0.35);
       ctx.shadowBlur = 0;
 
-      // Hint text (fades after interaction)
       if (!gameStarted) {
         const hintAlpha = 0.4 + Math.sin(time * 2) * 0.2;
         ctx.globalAlpha = hintAlpha;
@@ -783,7 +1013,6 @@ import Layout from '../layouts/Layout.astro';
         ctx.globalAlpha = 1;
       }
 
-      // Score (top right)
       if (score > 0) {
         const scoreSize = Math.min(Math.max(W * 0.02, 16), 24);
         ctx.font = `800 ${scoreSize}px Nunito, sans-serif`;
