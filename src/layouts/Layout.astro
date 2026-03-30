@@ -10,6 +10,8 @@ const {
   title = 'Far Fox — Stay Connected, No Matter the Distance',
   description = 'The couples app for long-distance relationships. Share photos, love letters, daily questions, mood tracking, and more — all wrapped around your own little fox companion.',
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
 ---
 
 <!doctype html>
@@ -20,34 +22,49 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
 
+    <!-- Canonical -->
+    <link rel="canonical" href={canonicalURL.href} />
+
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://lovefarfox.com" />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:image" content="https://lovefarfox.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Far Fox" />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://lovefarfox.com/og-image.png" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/fox-logo.png" />
+    <link rel="apple-touch-icon" href="/fox-logo.png" />
 
-    <!-- Fonts -->
+    <!-- Fonts — preload for speed -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Google Search Console — replace content with your verification code -->
+    <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> -->
 
     <!-- Schema.org -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "Far Fox",
+      "url": "https://lovefarfox.com",
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "iOS, Android, Web",
       "description": description,
+      "image": "https://lovefarfox.com/fox-logo.png",
       "offers": {
         "@type": "Offer",
         "price": "0",
