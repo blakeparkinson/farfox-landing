@@ -45,7 +45,7 @@ import Layout from '../layouts/Layout.astro';
 
     // Wall damage / glass crack system
     let wallDamage = 0;
-    const maxDamage = 10;
+    const maxDamage = 6;
     let cracks = [];
     let exploding = false;
     let explodeTimer = 0;
@@ -164,57 +164,56 @@ import Layout from '../layouts/Layout.astro';
         cracks.forEach(crack => {
           crack.branches.forEach(segments => {
             segments.forEach(seg => {
-              // Outer glow line
+              // Wide outer glow
               ctx.beginPath();
               ctx.moveTo(seg.x1, seg.y1);
               ctx.lineTo(seg.x2, seg.y2);
-              ctx.strokeStyle = `rgba(180,200,255,${0.15 * crack.alpha})`;
-              ctx.lineWidth = 4;
+              ctx.strokeStyle = `rgba(180,200,255,${0.25 * crack.alpha})`;
+              ctx.lineWidth = 6;
               ctx.stroke();
 
-              // Main crack line
+              // Main crack line — thick and bright
               ctx.beginPath();
               ctx.moveTo(seg.x1, seg.y1);
               ctx.lineTo(seg.x2, seg.y2);
-              ctx.strokeStyle = `rgba(255,255,255,${0.7 * crack.alpha})`;
-              ctx.lineWidth = 1.5;
+              ctx.strokeStyle = `rgba(255,255,255,${0.85 * crack.alpha})`;
+              ctx.lineWidth = 2.5;
               ctx.stroke();
 
-              // Bright inner line
+              // Sharp bright center
               ctx.beginPath();
               ctx.moveTo(seg.x1, seg.y1);
               ctx.lineTo(seg.x2, seg.y2);
-              ctx.strokeStyle = `rgba(220,240,255,${0.9 * crack.alpha})`;
-              ctx.lineWidth = 0.5;
+              ctx.strokeStyle = `rgba(230,245,255,${0.95 * crack.alpha})`;
+              ctx.lineWidth = 1;
               ctx.stroke();
             });
           });
         });
       }
 
-      // Glass sheen overlay — gets more visible with damage
-      if (damageRatio > 0.1) {
-        // Frosted glass effect near cracks
-        ctx.globalAlpha = damageRatio * 0.08;
+      // Frosted glass overlay — visible early
+      if (damageRatio > 0.05) {
+        ctx.globalAlpha = damageRatio * 0.15;
         ctx.fillStyle = '#fff';
         ctx.fillRect(0, 0, W, H);
         ctx.globalAlpha = 1;
       }
 
-      // Damage vignette — red edges intensify
-      if (damageRatio > 0.15) {
-        const vignette = ctx.createRadialGradient(W/2, H/2, W * 0.15, W/2, H/2, W * 0.75);
+      // Damage vignette — red edges intensify early
+      if (damageRatio > 0.1) {
+        const vignette = ctx.createRadialGradient(W/2, H/2, W * 0.1, W/2, H/2, W * 0.7);
         vignette.addColorStop(0, 'rgba(0,0,0,0)');
-        vignette.addColorStop(0.7, `rgba(60,0,0,${damageRatio * 0.3})`);
-        vignette.addColorStop(1, `rgba(100,0,0,${damageRatio * 0.5})`);
+        vignette.addColorStop(0.6, `rgba(80,0,0,${damageRatio * 0.4})`);
+        vignette.addColorStop(1, `rgba(120,0,0,${damageRatio * 0.6})`);
         ctx.fillStyle = vignette;
         ctx.fillRect(0, 0, W, H);
       }
 
       // Warning pulse when close to breaking
-      if (damageRatio > 0.7) {
+      if (damageRatio > 0.5) {
         const pulse = Math.sin(time * 8) * 0.5 + 0.5;
-        ctx.globalAlpha = (damageRatio - 0.7) * pulse * 0.15;
+        ctx.globalAlpha = (damageRatio - 0.5) * pulse * 0.3;
         ctx.fillStyle = '#ff0000';
         ctx.fillRect(0, 0, W, H);
         ctx.globalAlpha = 1;
@@ -222,43 +221,43 @@ import Layout from '../layouts/Layout.astro';
     }
 
     function drawFoxBruises(x, y, size) {
-      if (foxBruises <= 0) return;
+      if (foxBruises <= 0.01) return;
       const b = Math.min(foxBruises, 1);
 
       ctx.save();
       ctx.translate(x, y);
 
-      // Red/purple tint overlay on the fox
-      ctx.globalAlpha = b * 0.3;
+      // Red/purple tint overlay on the fox — visible even at low damage
+      ctx.globalAlpha = 0.1 + b * 0.4;
       ctx.fillStyle = '#8B0000';
       ctx.beginPath();
-      ctx.arc(0, 0, size * 0.35, 0, Math.PI * 2);
+      ctx.arc(0, 0, size * 0.38, 0, Math.PI * 2);
       ctx.fill();
 
-      // Bruise spots
-      if (b > 0.2) {
-        ctx.globalAlpha = Math.min(b * 0.6, 0.5);
+      // Bruise spots — show early
+      if (b > 0.08) {
+        ctx.globalAlpha = Math.min(0.3 + b * 0.5, 0.7);
         // Bruise 1 — left cheek
         ctx.fillStyle = '#6B2FA0';
         ctx.beginPath();
-        ctx.ellipse(-size * 0.15, size * 0.05, size * 0.08 * b, size * 0.06 * b, 0.3, 0, Math.PI * 2);
+        ctx.ellipse(-size * 0.15, size * 0.05, size * 0.1, size * 0.07, 0.3, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      if (b > 0.4) {
+      if (b > 0.25) {
         // Bruise 2 — right side
-        ctx.globalAlpha = Math.min((b - 0.2) * 0.6, 0.5);
+        ctx.globalAlpha = Math.min(0.3 + (b - 0.2) * 0.6, 0.65);
         ctx.fillStyle = '#4A1A7A';
         ctx.beginPath();
-        ctx.ellipse(size * 0.12, -size * 0.08, size * 0.07 * b, size * 0.05 * b, -0.5, 0, Math.PI * 2);
+        ctx.ellipse(size * 0.12, -size * 0.08, size * 0.09, size * 0.06, -0.5, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Band-aid at higher damage
-      if (b > 0.5) {
-        ctx.globalAlpha = Math.min((b - 0.4) * 1.5, 0.9);
+      // Band-aid at moderate damage
+      if (b > 0.3) {
+        ctx.globalAlpha = Math.min((b - 0.2) * 2, 0.95);
         const bx = size * 0.18, by = -size * 0.2;
-        const bw = size * 0.2, bh = size * 0.07;
+        const bw = size * 0.22, bh = size * 0.08;
         ctx.save();
         ctx.translate(bx, by);
         ctx.rotate(0.4);
@@ -282,9 +281,9 @@ import Layout from '../layouts/Layout.astro';
         ctx.restore();
       }
 
-      // Second band-aid at very high damage
-      if (b > 0.75) {
-        ctx.globalAlpha = Math.min((b - 0.7) * 2, 0.9);
+      // Second band-aid
+      if (b > 0.5) {
+        ctx.globalAlpha = Math.min((b - 0.4) * 2, 0.95);
         const bx = -size * 0.12, by = size * 0.12;
         const bw = size * 0.16, bh = size * 0.06;
         ctx.save();
@@ -301,29 +300,36 @@ import Layout from '../layouts/Layout.astro';
         ctx.restore();
       }
 
-      // Scratch marks
-      if (b > 0.3) {
-        ctx.globalAlpha = Math.min((b - 0.2) * 0.8, 0.6);
+      // Scratch marks — show early
+      if (b > 0.1) {
+        ctx.globalAlpha = Math.min(0.3 + b * 0.6, 0.8);
         ctx.strokeStyle = '#CC4444';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 1.5;
         // Scratch 1
         ctx.beginPath();
-        ctx.moveTo(-size * 0.2, -size * 0.15);
-        ctx.lineTo(-size * 0.1, -size * 0.05);
+        ctx.moveTo(-size * 0.22, -size * 0.15);
+        ctx.lineTo(-size * 0.08, -size * 0.03);
         ctx.stroke();
-        if (b > 0.5) {
+        if (b > 0.3) {
           // Scratch 2
           ctx.beginPath();
-          ctx.moveTo(-size * 0.18, -size * 0.13);
-          ctx.lineTo(-size * 0.08, -size * 0.03);
+          ctx.moveTo(-size * 0.19, -size * 0.13);
+          ctx.lineTo(-size * 0.06, -size * 0.01);
+          ctx.stroke();
+        }
+        if (b > 0.5) {
+          // Scratch 3 — other side
+          ctx.beginPath();
+          ctx.moveTo(size * 0.1, size * 0.1);
+          ctx.lineTo(size * 0.2, size * 0.18);
           ctx.stroke();
         }
       }
 
-      // Dizzy stars at high damage
-      if (b > 0.6) {
-        ctx.globalAlpha = Math.min((b - 0.5) * 1.5, 0.7);
-        const starCount = b > 0.8 ? 3 : 2;
+      // Dizzy stars
+      if (b > 0.35) {
+        ctx.globalAlpha = Math.min((b - 0.3) * 1.5, 0.8);
+        const starCount = b > 0.6 ? 3 : 2;
         for (let i = 0; i < starCount; i++) {
           const sa = time * 3 + (i / starCount) * Math.PI * 2;
           const sr = size * 0.4;
@@ -786,13 +792,13 @@ import Layout from '../layouts/Layout.astro';
         const tdy = ty - fox.y;
         const tdist = Math.sqrt(tdx * tdx + tdy * tdy);
 
-        const accel = 0.4;
+        const accel = 0.8;
         fox.vx += (tdx / Math.max(tdist, 1)) * accel;
         fox.vy += (tdy / Math.max(tdist, 1)) * accel;
-        fox.vx *= 0.94;
-        fox.vy *= 0.94;
+        fox.vx *= 0.92;
+        fox.vy *= 0.92;
 
-        if (dist < 10) {
+        if (dist < 5) {
           fox.chasing = false;
         }
       } else {
@@ -815,15 +821,15 @@ import Layout from '../layouts/Layout.astro';
       if (fox.y < 40) { fox.y = 40; fox.vy *= -0.5; hitWall = true; wallX = fox.x; wallY = 0; }
       if (fox.y > H - 120) { fox.y = H - 120; fox.vy *= -0.5; hitWall = true; wallX = fox.x; wallY = H; }
 
-      if (hitWall && impactSpeed > 1.5 && wallHitCooldown <= 0) {
-        wallHitCooldown = 0.15;
-        const severity = Math.min(impactSpeed / 6, 1);
-        wallDamage += severity * 1.2;
-        foxBruises = Math.min(1, foxBruises + severity * 0.15);
-        shakeAmount = Math.max(shakeAmount, impactSpeed * 3);
+      if (hitWall && impactSpeed > 0.8 && wallHitCooldown <= 0) {
+        wallHitCooldown = 0.1;
+        const severity = Math.min(impactSpeed / 4, 1);
+        wallDamage += severity * 1.5;
+        foxBruises = Math.min(1, foxBruises + severity * 0.35);
+        shakeAmount = Math.max(shakeAmount, impactSpeed * 4);
         addCrack(wallX, wallY, severity);
         spawnWallParticles(wallX, wallY);
-        flashAlpha = Math.max(flashAlpha, severity * 0.1);
+        flashAlpha = Math.max(flashAlpha, severity * 0.2);
 
         // Clear trail on wall hit to prevent ghost frames
         fox.trail = [];
@@ -837,15 +843,15 @@ import Layout from '../layouts/Layout.astro';
         }
       }
 
-      // Slowly heal over time
+      // Slowly heal over time — very slow so damage accumulates
       if (wallDamage > 0 && !exploding) {
-        wallDamage -= dt * 0.3;
+        wallDamage -= dt * 0.08;
         if (wallDamage < 0) wallDamage = 0;
-        cracks.forEach(c => { c.alpha -= dt * 0.08; });
+        cracks.forEach(c => { c.alpha -= dt * 0.03; });
         cracks = cracks.filter(c => c.alpha > 0.02);
       }
       if (foxBruises > 0) {
-        foxBruises -= dt * 0.02;
+        foxBruises -= dt * 0.008;
         if (foxBruises < 0) foxBruises = 0;
       }
 
