@@ -15,10 +15,10 @@ import Layout from '../layouts/Layout.astro';
   <!-- HTML UI — crisp text rendering -->
   <div style="position:fixed;inset:0;z-index:2;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;">
     <div style="text-align:center;padding:0 24px;margin-top:-12vh;">
-      <h1 class="select-none" style="font-family:Nunito,sans-serif;font-weight:900;font-size:clamp(100px,20vw,240px);line-height:0.85;background:linear-gradient(135deg,#FF6B8A 0%,#E879F9 30%,#B76CFD 60%,#FF9A5C 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 60px rgba(183,108,253,0.3)) drop-shadow(0 0 120px rgba(255,107,138,0.15));margin:0;letter-spacing:-0.02em;">
+      <h1 class="select-none title-shimmer" style="font-family:Nunito,sans-serif;font-weight:900;font-size:clamp(100px,20vw,240px);line-height:0.85;background:linear-gradient(135deg,#FF6B8A 0%,#E879F9 30%,#B76CFD 60%,#FF9A5C 100%);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 60px rgba(183,108,253,0.3)) drop-shadow(0 0 120px rgba(255,107,138,0.15));margin:0;letter-spacing:-0.02em;">
         404
       </h1>
-      <p class="select-none" style="font-family:Nunito,sans-serif;font-weight:600;font-size:clamp(14px,2.2vw,24px);color:rgba(255,255,255,0.6);margin:clamp(8px,1.5vw,20px) 0 0;letter-spacing:0.02em;">
+      <p id="subtitle" class="select-none" style="font-family:Nunito,sans-serif;font-weight:600;font-size:clamp(14px,2.2vw,24px);color:rgba(255,255,255,0.6);margin:clamp(8px,1.5vw,20px) 0 0;letter-spacing:0.02em;transition:opacity 0.8s ease;">
         Looks like you've wandered too far, little fox
       </p>
     </div>
@@ -42,6 +42,15 @@ import Layout from '../layouts/Layout.astro';
 
   <!-- Custom cursor -->
   <div id="cursor" style="position:fixed;z-index:6;pointer-events:none;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.7);box-shadow:0 0 12px rgba(255,107,138,0.5),0 0 30px rgba(183,108,253,0.2);transform:translate(-50%,-50%);opacity:0;transition:opacity 0.3s;will-change:transform;"></div>
+
+  <style>
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .title-shimmer { animation: shimmer 8s ease-in-out infinite; }
+  </style>
 
   <script is:inline>
   (function() {
@@ -100,8 +109,10 @@ import Layout from '../layouts/Layout.astro';
       { x: 0.12, y: 0.78, r: 240, c: [244,114,182], a: 0.03, p: 0.022 },
     ];
 
-    // Sparkle trail particles (from fox movement)
+    // Sparkle trail particles (from fox movement) — now heart-shaped
     const sparkles = [];
+    // Click-burst hearts
+    const clickHearts = [];
 
     // Ambient floating light motes
     const motes = [];
@@ -120,22 +131,31 @@ import Layout from '../layouts/Layout.astro';
     const hearts = [];
     function spawnHeart() {
       const colors = ['#FF6B8A','#B76CFD','#FF9A5C','#F472B6','#E879F9','#FFB6C1'];
+      // Mix of sizes — some huge hero hearts, some medium, some small
+      const sizeRoll = Math.random();
+      const sz = sizeRoll > 0.85 ? 40 + Math.random() * 35  // ~15% huge
+               : sizeRoll > 0.5  ? 20 + Math.random() * 20  // ~35% medium
+               :                   10 + Math.random() * 12;  // ~50% small
+      const op = sizeRoll > 0.85 ? 0.08 + Math.random() * 0.12  // big = more transparent
+               : sizeRoll > 0.5  ? 0.15 + Math.random() * 0.25
+               :                   0.2 + Math.random() * 0.35;
       hearts.push({
         x: Math.random() * W,
-        y: H + 20 + Math.random() * 40,
-        size: 8 + Math.random() * 14,
-        speed: 0.15 + Math.random() * 0.35,
-        wobbleAmp: 12 + Math.random() * 20,
-        wobbleSpd: 0.3 + Math.random() * 0.6,
+        y: H + 20 + Math.random() * 60,
+        size: sz,
+        speed: 0.1 + Math.random() * 0.4 * (1 - sz / 80), // big = slower
+        wobbleAmp: 10 + sz * 0.5 + Math.random() * 15,
+        wobbleSpd: 0.2 + Math.random() * 0.5,
         wobbleOff: Math.random() * Math.PI * 2,
-        rot: (Math.random() - 0.5) * 0.3,
-        rotSpd: (Math.random() - 0.5) * 0.006,
-        opacity: 0.15 + Math.random() * 0.3,
+        rot: (Math.random() - 0.5) * 0.25,
+        rotSpd: (Math.random() - 0.5) * 0.004,
+        opacity: op,
         color: colors[Math.floor(Math.random() * colors.length)],
         glowPhase: Math.random() * Math.PI * 2,
+        depth: sizeRoll > 0.85 ? 0 : sizeRoll > 0.5 ? 1 : 2, // parallax layer
       });
     }
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < 25; i++) {
       spawnHeart();
       hearts[i].y = Math.random() * H;
     }
@@ -152,7 +172,7 @@ import Layout from '../layouts/Layout.astro';
       ctx.bezierCurveTo(s*0.25,-s*0.7,s*0.5,-s*0.55,s*0.5,-s*0.3);
       ctx.bezierCurveTo(s*0.5,-s*0.1,s*0.05,s*0.1,0,s*0.3);
       ctx.closePath();
-      if (glow > 0) { ctx.shadowColor = color; ctx.shadowBlur = 10 * glow; }
+      if (glow > 0) { ctx.shadowColor = color; ctx.shadowBlur = Math.max(12, s * 0.6) * glow; }
       const g = ctx.createRadialGradient(-s*0.08,-s*0.22,0,0,0,s*0.55);
       const r = parseInt(color.slice(1,3),16), gr = parseInt(color.slice(3,5),16), b = parseInt(color.slice(5,7),16);
       g.addColorStop(0, `rgb(${Math.min(255,r+60)},${Math.min(255,gr+60)},${Math.min(255,b+60)})`);
@@ -167,11 +187,11 @@ import Layout from '../layouts/Layout.astro';
       ctx.restore();
     }
 
-    // Distant planet
+    // Distant planet — bigger and more dramatic
     const planet = {
-      x: W * 0.82, y: H * 0.18,
-      radius: Math.min(40, W * 0.04),
-      ringTilt: 0.3,
+      x: W * 0.82, y: H * 0.15,
+      radius: Math.min(70, W * 0.065),
+      ringTilt: 0.28,
     };
 
     // Constellation lines — subtle connecting lines between some stars
@@ -192,10 +212,20 @@ import Layout from '../layouts/Layout.astro';
       }
     }
 
+    // Crescent moon — opposite side of planet
+    const moon = {
+      x: W * 0.15, y: H * 0.12,
+      radius: Math.min(32, W * 0.03),
+    };
+
+    // Aurora ribbons
+    const auroraPoints = 12;
+    const aurora = { phase: Math.random() * Math.PI * 2 };
+
     // Shooting stars
     const shoots = [];
     function maybeShoot() {
-      if (Math.random() > 0.002 || shoots.length > 1) return;
+      if (Math.random() > 0.005 || shoots.length > 2) return;
       shoots.push({
         x: Math.random() * W * 0.6, y: -10,
         angle: 0.4 + Math.random() * 0.3,
@@ -221,13 +251,21 @@ import Layout from '../layouts/Layout.astro';
     interact.addEventListener('click', e => {
       targetX = e.clientX; targetY = e.clientY;
       mouseActive = true;
-      // Click ripple
-      sparkles.push(
-        ...Array.from({ length: 6 }, (_, i) => {
-          const a = (Math.PI * 2 / 6) * i;
-          return { x: e.clientX, y: e.clientY, vx: Math.cos(a) * 1.5, vy: Math.sin(a) * 1.5, life: 1, size: 2.5, color: 'rgba(255,255,255,' };
-        })
-      );
+      // Heart burst on click
+      const burstColors = ['#FF6B8A','#B76CFD','#FF9A5C','#F472B6','#E879F9'];
+      for (let i = 0; i < 10; i++) {
+        const a = (Math.PI * 2 / 10) * i + (Math.random() - 0.5) * 0.4;
+        const spd = 2 + Math.random() * 3;
+        clickHearts.push({
+          x: e.clientX, y: e.clientY,
+          vx: Math.cos(a) * spd, vy: Math.sin(a) * spd - 1,
+          life: 1,
+          size: 6 + Math.random() * 10,
+          color: burstColors[Math.floor(Math.random() * burstColors.length)],
+          rot: Math.random() * Math.PI * 2,
+          rotSpd: (Math.random() - 0.5) * 0.15,
+        });
+      }
     });
     interact.addEventListener('touchstart', e => {
       e.preventDefault();
@@ -333,54 +371,181 @@ import Layout from '../layouts/Layout.astro';
         const ppx = planet.x + px * 0.01 * W;
         const ppy = planet.y + py * 0.01 * H;
         const r = planet.radius;
-        // Planet body
-        const pg = ctx.createRadialGradient(ppx - r * 0.3, ppy - r * 0.3, 0, ppx, ppy, r);
-        pg.addColorStop(0, 'rgba(60,40,100,0.6)');
-        pg.addColorStop(0.7, 'rgba(30,20,60,0.5)');
-        pg.addColorStop(1, 'rgba(15,10,35,0.4)');
+        // Atmosphere glow — outer
+        const ag2 = ctx.createRadialGradient(ppx, ppy, r * 0.5, ppx, ppy, r * 3.5);
+        ag2.addColorStop(0, 'rgba(183,108,253,0.06)');
+        ag2.addColorStop(0.5, 'rgba(255,107,138,0.02)');
+        ag2.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = ag2;
+        ctx.beginPath();
+        ctx.arc(ppx, ppy, r * 3.5, 0, Math.PI * 2);
+        ctx.fill();
+        // Planet body — richer gradient
+        const pg = ctx.createRadialGradient(ppx - r * 0.35, ppy - r * 0.35, 0, ppx, ppy, r);
+        pg.addColorStop(0, 'rgba(90,60,150,0.7)');
+        pg.addColorStop(0.5, 'rgba(50,30,90,0.65)');
+        pg.addColorStop(0.85, 'rgba(25,15,55,0.6)');
+        pg.addColorStop(1, 'rgba(10,5,30,0.5)');
         ctx.fillStyle = pg;
         ctx.beginPath();
         ctx.arc(ppx, ppy, r, 0, Math.PI * 2);
         ctx.fill();
-        // Ring
+        // Surface detail — subtle band
+        ctx.globalAlpha = 0.08;
+        ctx.fillStyle = '#B76CFD';
+        ctx.beginPath();
+        ctx.ellipse(ppx, ppy + r * 0.1, r * 0.9, r * 0.12, 0.05, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        // Ring — back half (behind planet)
         ctx.save();
         ctx.translate(ppx, ppy);
         ctx.scale(1, planet.ringTilt);
-        ctx.strokeStyle = 'rgba(183,108,253,0.15)';
+        // Outer ring
+        ctx.strokeStyle = 'rgba(255,154,92,0.12)';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, r * 2.3, r * 2.3, 0.15, Math.PI, Math.PI * 2);
+        ctx.stroke();
+        // Main ring
+        ctx.strokeStyle = 'rgba(183,108,253,0.22)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, r * 1.9, r * 1.9, 0.15, Math.PI, Math.PI * 2);
+        ctx.stroke();
+        // Inner ring
+        ctx.strokeStyle = 'rgba(255,107,138,0.1)';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.ellipse(0, 0, r * 1.8, r * 1.8, 0.2, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.strokeStyle = 'rgba(255,154,92,0.08)';
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.ellipse(0, 0, r * 2.1, r * 2.1, 0.2, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, r * 1.6, r * 1.6, 0.15, Math.PI, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
-        // Atmosphere glow
-        const ag = ctx.createRadialGradient(ppx, ppy, r * 0.8, ppx, ppy, r * 2.5);
-        ag.addColorStop(0, 'rgba(183,108,253,0.04)');
-        ag.addColorStop(1, 'rgba(183,108,253,0)');
-        ctx.fillStyle = ag;
+        // Ring — front half (in front of planet)
+        ctx.save();
+        ctx.translate(ppx, ppy);
+        ctx.scale(1, planet.ringTilt);
+        ctx.strokeStyle = 'rgba(255,154,92,0.15)';
+        ctx.lineWidth = 6;
         ctx.beginPath();
-        ctx.arc(ppx, ppy, r * 2.5, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, r * 2.3, r * 2.3, 0.15, 0, Math.PI);
+        ctx.stroke();
+        ctx.strokeStyle = 'rgba(183,108,253,0.28)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, r * 1.9, r * 1.9, 0.15, 0, Math.PI);
+        ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,107,138,0.12)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, r * 1.6, r * 1.6, 0.15, 0, Math.PI);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Crescent moon
+      {
+        const mpx = moon.x + px * 0.008 * W;
+        const mpy = moon.y + py * 0.008 * H;
+        const mr = moon.radius;
+        // Moon glow
+        const mg = ctx.createRadialGradient(mpx, mpy, mr * 0.3, mpx, mpy, mr * 3);
+        mg.addColorStop(0, 'rgba(255,235,210,0.08)');
+        mg.addColorStop(0.5, 'rgba(255,210,170,0.03)');
+        mg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = mg;
+        ctx.beginPath();
+        ctx.arc(mpx, mpy, mr * 3, 0, Math.PI * 2);
+        ctx.fill();
+        // Moon body
+        ctx.fillStyle = 'rgba(220,210,240,0.55)';
+        ctx.beginPath();
+        ctx.arc(mpx, mpy, mr, 0, Math.PI * 2);
+        ctx.fill();
+        // Crescent shadow — offset circle to carve crescent
+        ctx.fillStyle = '#04020a';
+        ctx.beginPath();
+        ctx.arc(mpx + mr * 0.55, mpy - mr * 0.2, mr * 0.85, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Floating hearts
+      // Aurora / northern lights
+      {
+        ctx.save();
+        for (let band = 0; band < 3; band++) {
+          const bandColors = [
+            ['rgba(183,108,253,', 'rgba(139,92,246,'],
+            ['rgba(255,107,138,', 'rgba(244,114,182,'],
+            ['rgba(110,231,183,', 'rgba(52,211,153,'],
+          ][band];
+          const yBase = H * (0.08 + band * 0.06);
+          const amplitude = 30 + band * 15;
+          const speed = 0.15 + band * 0.05;
+          const phaseOff = band * 1.8;
+
+          ctx.beginPath();
+          ctx.moveTo(-20, yBase);
+          for (let i = 0; i <= auroraPoints; i++) {
+            const xp = (i / auroraPoints) * (W + 40) - 20;
+            const wave1 = Math.sin(t * speed + i * 0.6 + phaseOff + aurora.phase) * amplitude;
+            const wave2 = Math.sin(t * (speed * 0.7) + i * 0.3 + phaseOff * 1.5) * amplitude * 0.5;
+            ctx.lineTo(xp, yBase + wave1 + wave2);
+          }
+          // Close path downward to create a ribbon shape
+          for (let i = auroraPoints; i >= 0; i--) {
+            const xp = (i / auroraPoints) * (W + 40) - 20;
+            const wave1 = Math.sin(t * speed + i * 0.6 + phaseOff + aurora.phase + 0.8) * amplitude;
+            const wave2 = Math.sin(t * (speed * 0.7) + i * 0.3 + phaseOff * 1.5 + 0.5) * amplitude * 0.4;
+            ctx.lineTo(xp, yBase + 50 + band * 20 + wave1 + wave2);
+          }
+          ctx.closePath();
+
+          const aGrad = ctx.createLinearGradient(0, yBase - amplitude, 0, yBase + 80);
+          const aAlpha = 0.025 + 0.015 * Math.sin(t * 0.3 + band);
+          aGrad.addColorStop(0, bandColors[0] + '0)');
+          aGrad.addColorStop(0.3, bandColors[0] + aAlpha + ')');
+          aGrad.addColorStop(0.6, bandColors[1] + (aAlpha * 0.7) + ')');
+          aGrad.addColorStop(1, bandColors[1] + '0)');
+          ctx.fillStyle = aGrad;
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      // Click-burst hearts
+      for (let i = clickHearts.length - 1; i >= 0; i--) {
+        const ch = clickHearts[i];
+        ch.x += ch.vx;
+        ch.y += ch.vy;
+        ch.vy += 0.08; // gravity
+        ch.vx *= 0.98;
+        ch.rot += ch.rotSpd;
+        ch.life -= dt * 1.8;
+        if (ch.life <= 0) { clickHearts.splice(i, 1); continue; }
+        ctx.save();
+        ctx.translate(ch.x, ch.y);
+        ctx.rotate(ch.rot);
+        drawHeartShape(0, 0, ch.size * ch.life, ch.color, ch.life * 0.8, ch.life * 0.6);
+        ctx.restore();
+      }
+
+      // Floating hearts — with depth parallax
+      const heartParallax = [0.01, 0.025, 0.045];
       hearts.forEach(h => {
         h.y -= h.speed;
         h.x += Math.sin(t * h.wobbleSpd + h.wobbleOff) * h.wobbleAmp * dt;
         h.rot += h.rotSpd;
 
-        const fadeIn = Math.min(1, (H - h.y) / 150);
-        const fadeOut = Math.min(1, h.y / 150);
-        const glow = 0.3 + 0.3 * Math.sin(t * 1.2 + h.glowPhase);
+        const fadeIn = Math.min(1, (H - h.y) / 200);
+        const fadeOut = Math.min(1, h.y / 200);
+        const glow = 0.4 + 0.4 * Math.sin(t * 1.2 + h.glowPhase);
         const alpha = h.opacity * fadeIn * fadeOut;
 
         if (alpha > 0.01) {
+          const hp = heartParallax[h.depth] || 0.025;
+          const hx = h.x + px * hp * W;
+          const hy = h.y + py * hp * H;
           ctx.save();
-          ctx.translate(h.x, h.y);
+          ctx.translate(hx, hy);
           ctx.rotate(h.rot);
           drawHeartShape(0, 0, h.size, h.color, alpha, glow);
           ctx.restore();
@@ -388,9 +553,9 @@ import Layout from '../layouts/Layout.astro';
       });
       // Recycle hearts
       for (let i = hearts.length - 1; i >= 0; i--) {
-        if (hearts[i].y < -50) hearts.splice(i, 1);
+        if (hearts[i].y < -80) hearts.splice(i, 1);
       }
-      if (hearts.length < 18 && Math.random() < dt * 1.5) spawnHeart();
+      if (hearts.length < 25 && Math.random() < dt * 2) spawnHeart();
 
       // Shooting stars
       maybeShoot();
@@ -427,21 +592,20 @@ import Layout from '../layouts/Layout.astro';
         ctx.fill();
       });
 
-      // Sparkle trail particles
+      // Sparkle trail — heart-shaped particles
       for (let i = sparkles.length - 1; i >= 0; i--) {
         const p = sparkles[i];
         p.x += p.vx; p.y += p.vy;
-        p.vx *= 0.96; p.vy *= 0.96;
-        p.life -= dt * 2;
+        p.vy -= 0.02; // float upward
+        p.vx *= 0.97; p.vy *= 0.97;
+        p.rot += p.rotSpd;
+        p.life -= dt * 1.8;
         if (p.life <= 0) { sparkles.splice(i, 1); continue; }
-        ctx.globalAlpha = p.life * 0.7;
-        ctx.fillStyle = p.color + '0.9)';
-        ctx.shadowColor = p.color + '0.5)';
-        ctx.shadowBlur = 8;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        drawHeartShape(0, 0, p.size * p.life, p.color, p.life * 0.6, p.life * 0.4);
+        ctx.restore();
       }
       ctx.globalAlpha = 1;
 
@@ -478,32 +642,95 @@ import Layout from '../layouts/Layout.astro';
       fox.x = Math.max(pad, Math.min(W - pad, fox.x));
       fox.y = Math.max(pad, Math.min(H - foxSize * 1.2, fox.y));
 
-      // Emit sparkle trail when moving
+      // Heart collection — fox pops nearby floating hearts
+      const collectRadius = foxSize * 0.7;
+      const heartParallaxArr = [0.01, 0.025, 0.045];
+      for (let i = hearts.length - 1; i >= 0; i--) {
+        const h = hearts[i];
+        const hp = heartParallaxArr[h.depth] || 0.025;
+        const hx = h.x + px * hp * W;
+        const hy = h.y + py * hp * H;
+        const ddx = fox.x - hx, ddy = fox.y - hy;
+        const dd = Math.sqrt(ddx * ddx + ddy * ddy);
+        if (dd < collectRadius + h.size * 0.5) {
+          // Pop burst — several tiny hearts fly outward
+          for (let j = 0; j < 5; j++) {
+            const a = (Math.PI * 2 / 5) * j + Math.random() * 0.5;
+            clickHearts.push({
+              x: hx, y: hy,
+              vx: Math.cos(a) * (1.5 + Math.random() * 2),
+              vy: Math.sin(a) * (1.5 + Math.random() * 2) - 1,
+              life: 0.7,
+              size: h.size * 0.4 + Math.random() * 4,
+              color: h.color,
+              rot: Math.random() * Math.PI * 2,
+              rotSpd: (Math.random() - 0.5) * 0.2,
+            });
+          }
+          hearts.splice(i, 1);
+        }
+      }
+
+      // Emit heart trail when moving
       const spd = Math.sqrt(fox.vx * fox.vx + fox.vy * fox.vy);
-      if (spd > 1 && Math.random() < spd * 0.12) {
-        const colors = ['rgba(255,154,92,', 'rgba(255,107,138,', 'rgba(183,108,253,', 'rgba(255,255,255,'];
+      if (spd > 1 && Math.random() < spd * 0.15) {
+        const trailColors = ['#FF6B8A','#B76CFD','#FF9A5C','#F472B6','#E879F9'];
         sparkles.push({
           x: fox.x + (Math.random() - 0.5) * foxSize * 0.3,
           y: fox.y + (Math.random() - 0.5) * foxSize * 0.3,
           vx: -fox.vx * 0.08 + (Math.random() - 0.5) * 0.3,
-          vy: -fox.vy * 0.08 + (Math.random() - 0.5) * 0.3,
-          life: 0.5 + Math.random() * 0.4,
-          size: 1.5 + Math.random() * 2,
-          color: colors[Math.floor(Math.random() * colors.length)],
+          vy: -fox.vy * 0.08 + (Math.random() - 0.5) * 0.3 - 0.3,
+          life: 0.6 + Math.random() * 0.4,
+          size: 4 + Math.random() * 6,
+          color: trailColors[Math.floor(Math.random() * trailColors.length)],
+          rot: Math.random() * Math.PI * 2,
+          rotSpd: (Math.random() - 0.5) * 0.1,
+          isHeart: true,
         });
       }
 
       // Position fox DOM element — round to avoid sub-pixel jitter
+      // Idle breathing: gentle bob + scale pulse when stationary
       const tilt = spd > 0.5 ? Math.atan2(fox.vy, fox.vx) * 0.05 : 0;
-      foxWrap.style.transform = `translate(${Math.round(fox.x - foxSize / 2)}px, ${Math.round(fox.y - foxSize / 2)}px) rotate(${tilt.toFixed(3)}rad)`;
+      const idleBlend = Math.max(0, 1 - spd / 2); // 1 when still, 0 when moving
+      const breathBob = idleBlend * Math.sin(t * 1.5) * 3;
+      const breathScale = 1 + idleBlend * Math.sin(t * 1.2) * 0.03;
+      foxWrap.style.transform = `translate(${Math.round(fox.x - foxSize / 2)}px, ${Math.round(fox.y - foxSize / 2 + breathBob)}px) rotate(${tilt.toFixed(3)}rad) scale(${breathScale.toFixed(4)})`;
 
-      // Glow pulse
-      const glowScale = 1 + Math.sin(t * 0.8) * 0.06;
+      // Glow pulse — intensifies with speed, shifts color
+      const spdNorm = Math.min(spd / 8, 1); // 0 = still, 1 = fast
+      const glowScale = 1 + Math.sin(t * 0.8) * 0.06 + spdNorm * 0.15;
       foxGlow.style.transform = `scale(${glowScale.toFixed(3)})`;
-      foxGlow.style.opacity = (0.7 + Math.sin(t * 1.2) * 0.12).toFixed(3);
+      foxGlow.style.opacity = (0.7 + Math.sin(t * 1.2) * 0.12 + spdNorm * 0.25).toFixed(3);
+      // Shift glow color: warm orange at rest → cool purple at speed
+      const glowR = Math.round(lerp(255, 160, spdNorm));
+      const glowG = Math.round(lerp(154, 108, spdNorm));
+      const glowB = Math.round(lerp(92, 253, spdNorm));
+      foxGlow.style.background = `radial-gradient(circle,rgba(${glowR},${glowG},${glowB},${(0.18 + spdNorm * 0.12).toFixed(2)}) 0%,rgba(255,107,138,0.06) 40%,rgba(183,108,253,0.02) 65%,transparent 100%)`;
     }
 
     requestAnimationFrame(frame);
+
+    // Rotating subtitle messages
+    const subtitles = [
+      'Looks like you\'ve wandered too far, little fox',
+      'Lost somewhere between the stars\u2026',
+      'Even foxes get lost sometimes',
+      'Too far from home, but never alone',
+      'The cosmos is vast\u2026 and this page doesn\'t exist',
+      'Drifting through digital space\u2026',
+      'Love travels far, but not this far',
+    ];
+    let subIdx = 0;
+    const subEl = document.getElementById('subtitle');
+    setInterval(() => {
+      subEl.style.opacity = '0';
+      setTimeout(() => {
+        subIdx = (subIdx + 1) % subtitles.length;
+        subEl.textContent = subtitles[subIdx];
+        subEl.style.opacity = '1';
+      }, 800);
+    }, 5000);
   })();
   </script>
 </Layout>
