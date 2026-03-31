@@ -116,6 +116,82 @@ import Layout from '../layouts/Layout.astro';
       });
     }
 
+    // Floating hearts — gentle, ambient
+    const hearts = [];
+    function spawnHeart() {
+      const colors = ['#FF6B8A','#B76CFD','#FF9A5C','#F472B6','#E879F9','#FFB6C1'];
+      hearts.push({
+        x: Math.random() * W,
+        y: H + 20 + Math.random() * 40,
+        size: 8 + Math.random() * 14,
+        speed: 0.15 + Math.random() * 0.35,
+        wobbleAmp: 12 + Math.random() * 20,
+        wobbleSpd: 0.3 + Math.random() * 0.6,
+        wobbleOff: Math.random() * Math.PI * 2,
+        rot: (Math.random() - 0.5) * 0.3,
+        rotSpd: (Math.random() - 0.5) * 0.006,
+        opacity: 0.15 + Math.random() * 0.3,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        glowPhase: Math.random() * Math.PI * 2,
+      });
+    }
+    for (let i = 0; i < 18; i++) {
+      spawnHeart();
+      hearts[i].y = Math.random() * H;
+    }
+
+    function drawHeartShape(cx, cy, size, color, alpha, glow) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(cx, cy);
+      const s = size;
+      ctx.beginPath();
+      ctx.moveTo(0, s * 0.3);
+      ctx.bezierCurveTo(-s*0.05,s*0.1,-s*0.5,-s*0.1,-s*0.5,-s*0.3);
+      ctx.bezierCurveTo(-s*0.5,-s*0.55,-s*0.25,-s*0.7,0,-s*0.5);
+      ctx.bezierCurveTo(s*0.25,-s*0.7,s*0.5,-s*0.55,s*0.5,-s*0.3);
+      ctx.bezierCurveTo(s*0.5,-s*0.1,s*0.05,s*0.1,0,s*0.3);
+      ctx.closePath();
+      if (glow > 0) { ctx.shadowColor = color; ctx.shadowBlur = 10 * glow; }
+      const g = ctx.createRadialGradient(-s*0.08,-s*0.22,0,0,0,s*0.55);
+      const r = parseInt(color.slice(1,3),16), gr = parseInt(color.slice(3,5),16), b = parseInt(color.slice(5,7),16);
+      g.addColorStop(0, `rgb(${Math.min(255,r+60)},${Math.min(255,gr+60)},${Math.min(255,b+60)})`);
+      g.addColorStop(1, color);
+      ctx.fillStyle = g;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.ellipse(-s*0.13,-s*0.32,s*0.07,s*0.04,-0.5,0,Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${0.4 * alpha})`;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Distant planet
+    const planet = {
+      x: W * 0.82, y: H * 0.18,
+      radius: Math.min(40, W * 0.04),
+      ringTilt: 0.3,
+    };
+
+    // Constellation lines — subtle connecting lines between some stars
+    const constellations = [];
+    // Build a few random constellations from nearby front-layer stars
+    const frontStars = stars.filter(s => s.depth === 2);
+    for (let c = 0; c < 3; c++) {
+      const cx = Math.random(), cy = Math.random();
+      const nearby = frontStars
+        .filter(s => Math.abs(s.x - cx) < 0.2 && Math.abs(s.y - cy) < 0.2)
+        .slice(0, 4 + Math.floor(Math.random() * 3));
+      if (nearby.length >= 3) {
+        const lines = [];
+        for (let i = 0; i < nearby.length - 1; i++) {
+          lines.push([nearby[i], nearby[i + 1]]);
+        }
+        constellations.push(lines);
+      }
+    }
+
     // Shooting stars
     const shoots = [];
     function maybeShoot() {
@@ -230,6 +306,92 @@ import Layout from '../layouts/Layout.astro';
       });
       ctx.globalAlpha = 1;
 
+      // Constellation lines
+      constellations.forEach(lines => {
+        lines.forEach(([a, b]) => {
+          const pf = depthParallax[2];
+          const ax = ((a.x * W + px * pf * W) % W + W) % W;
+          const ay = ((a.y * H + py * pf * H) % H + H) % H;
+          const bx = ((b.x * W + px * pf * W) % W + W) % W;
+          const by = ((b.y * H + py * pf * H) % H + H) % H;
+          // Only draw if not wrapping around screen
+          if (Math.abs(ax - bx) < W * 0.3 && Math.abs(ay - by) < H * 0.3) {
+            ctx.globalAlpha = 0.06 + 0.02 * Math.sin(t * 0.5);
+            ctx.strokeStyle = '#B76CFD';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            ctx.lineTo(bx, by);
+            ctx.stroke();
+          }
+        });
+      });
+      ctx.globalAlpha = 1;
+
+      // Distant planet with ring
+      {
+        const ppx = planet.x + px * 0.01 * W;
+        const ppy = planet.y + py * 0.01 * H;
+        const r = planet.radius;
+        // Planet body
+        const pg = ctx.createRadialGradient(ppx - r * 0.3, ppy - r * 0.3, 0, ppx, ppy, r);
+        pg.addColorStop(0, 'rgba(60,40,100,0.6)');
+        pg.addColorStop(0.7, 'rgba(30,20,60,0.5)');
+        pg.addColorStop(1, 'rgba(15,10,35,0.4)');
+        ctx.fillStyle = pg;
+        ctx.beginPath();
+        ctx.arc(ppx, ppy, r, 0, Math.PI * 2);
+        ctx.fill();
+        // Ring
+        ctx.save();
+        ctx.translate(ppx, ppy);
+        ctx.scale(1, planet.ringTilt);
+        ctx.strokeStyle = 'rgba(183,108,253,0.15)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, r * 1.8, r * 1.8, 0.2, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,154,92,0.08)';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, r * 2.1, r * 2.1, 0.2, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        // Atmosphere glow
+        const ag = ctx.createRadialGradient(ppx, ppy, r * 0.8, ppx, ppy, r * 2.5);
+        ag.addColorStop(0, 'rgba(183,108,253,0.04)');
+        ag.addColorStop(1, 'rgba(183,108,253,0)');
+        ctx.fillStyle = ag;
+        ctx.beginPath();
+        ctx.arc(ppx, ppy, r * 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Floating hearts
+      hearts.forEach(h => {
+        h.y -= h.speed;
+        h.x += Math.sin(t * h.wobbleSpd + h.wobbleOff) * h.wobbleAmp * dt;
+        h.rot += h.rotSpd;
+
+        const fadeIn = Math.min(1, (H - h.y) / 150);
+        const fadeOut = Math.min(1, h.y / 150);
+        const glow = 0.3 + 0.3 * Math.sin(t * 1.2 + h.glowPhase);
+        const alpha = h.opacity * fadeIn * fadeOut;
+
+        if (alpha > 0.01) {
+          ctx.save();
+          ctx.translate(h.x, h.y);
+          ctx.rotate(h.rot);
+          drawHeartShape(0, 0, h.size, h.color, alpha, glow);
+          ctx.restore();
+        }
+      });
+      // Recycle hearts
+      for (let i = hearts.length - 1; i >= 0; i--) {
+        if (hearts[i].y < -50) hearts.splice(i, 1);
+      }
+      if (hearts.length < 18 && Math.random() < dt * 1.5) spawnHeart();
+
       // Shooting stars
       maybeShoot();
       for (let i = shoots.length - 1; i >= 0; i--) {
@@ -294,18 +456,20 @@ import Layout from '../layouts/Layout.astro';
       if (mouseActive) {
         const dx = targetX - fox.x, dy = targetY - fox.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist > 0.5) {
-          const force = Math.min(dist * 0.03, 6);
+        if (dist > 2) {
+          const force = Math.min(dist * 0.02, 4);
           fox.vx += (dx / dist) * force;
           fox.vy += (dy / dist) * force;
         }
       }
-      // Very gentle ambient drift
-      fox.vx += Math.sin(t * 0.2) * 0.008;
-      fox.vy += Math.cos(t * 0.28) * 0.008;
 
-      fox.vx *= 0.88;
-      fox.vy *= 0.88;
+      fox.vx *= 0.90;
+      fox.vy *= 0.90;
+
+      // Kill micro-velocities to prevent jitter
+      if (Math.abs(fox.vx) < 0.05) fox.vx = 0;
+      if (Math.abs(fox.vy) < 0.05) fox.vy = 0;
+
       fox.x += fox.vx;
       fox.y += fox.vy;
 
@@ -316,27 +480,27 @@ import Layout from '../layouts/Layout.astro';
 
       // Emit sparkle trail when moving
       const spd = Math.sqrt(fox.vx * fox.vx + fox.vy * fox.vy);
-      if (spd > 0.8 && Math.random() < spd * 0.15) {
+      if (spd > 1 && Math.random() < spd * 0.12) {
         const colors = ['rgba(255,154,92,', 'rgba(255,107,138,', 'rgba(183,108,253,', 'rgba(255,255,255,'];
         sparkles.push({
-          x: fox.x + (Math.random() - 0.5) * foxSize * 0.4,
-          y: fox.y + (Math.random() - 0.5) * foxSize * 0.4,
-          vx: (Math.random() - 0.5) * 0.5 - fox.vx * 0.1,
-          vy: (Math.random() - 0.5) * 0.5 - fox.vy * 0.1,
-          life: 0.6 + Math.random() * 0.4,
+          x: fox.x + (Math.random() - 0.5) * foxSize * 0.3,
+          y: fox.y + (Math.random() - 0.5) * foxSize * 0.3,
+          vx: -fox.vx * 0.08 + (Math.random() - 0.5) * 0.3,
+          vy: -fox.vy * 0.08 + (Math.random() - 0.5) * 0.3,
+          life: 0.5 + Math.random() * 0.4,
           size: 1.5 + Math.random() * 2,
           color: colors[Math.floor(Math.random() * colors.length)],
         });
       }
 
-      // Position fox DOM element
-      const tilt = Math.atan2(fox.vy, fox.vx) * 0.06;
-      foxWrap.style.transform = `translate(${fox.x - foxSize / 2}px, ${fox.y - foxSize / 2}px) rotate(${tilt}rad)`;
+      // Position fox DOM element — round to avoid sub-pixel jitter
+      const tilt = spd > 0.5 ? Math.atan2(fox.vy, fox.vx) * 0.05 : 0;
+      foxWrap.style.transform = `translate(${Math.round(fox.x - foxSize / 2)}px, ${Math.round(fox.y - foxSize / 2)}px) rotate(${tilt.toFixed(3)}rad)`;
 
       // Glow pulse
-      const glowScale = 1 + Math.sin(t * 0.8) * 0.08;
-      foxGlow.style.transform = `scale(${glowScale})`;
-      foxGlow.style.opacity = 0.7 + Math.sin(t * 1.2) * 0.15;
+      const glowScale = 1 + Math.sin(t * 0.8) * 0.06;
+      foxGlow.style.transform = `scale(${glowScale.toFixed(3)})`;
+      foxGlow.style.opacity = (0.7 + Math.sin(t * 1.2) * 0.12).toFixed(3);
     }
 
     requestAnimationFrame(frame);
