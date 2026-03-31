@@ -44,6 +44,11 @@ const testimonials = [
     name: 'Dev & Priya',
     detail: 'Long-distance for 2 years',
   },
+  {
+    quote: 'Finally an app with a countdown feature so I can passive-aggressively remind my boyfriend that he still hasn\'t booked his flights for a trip that\'s 4 months away. You\'re welcome, Blake.',
+    name: 'Amanda R.',
+    detail: 'Professional trip planner (unpaid)',
+  },
 ];
 
 const features = [
@@ -255,7 +260,7 @@ const features = [
         <span class="bg-gradient-to-r from-fox-pink to-fox-orange bg-clip-text text-transparent">real love</span>
       </h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {testimonials.map((t, i) => (
           <div class="p-6 rounded-2xl bg-white/70 border border-fox-pink/8 scroll-reveal" style={`transition-delay: ${i * 0.1}s;`}>
             <div class="text-fox-pink/30 text-4xl font-900 leading-none mb-2">"</div>
