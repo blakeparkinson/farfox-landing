@@ -3,522 +3,340 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="404 — Lost in the Distance | Far Fox" description="This page doesn't exist — but you found something beautiful.">
-  <canvas id="scene" style="position:fixed;inset:0;z-index:0;touch-action:none;"></canvas>
+  <!-- Atmospheric canvas background -->
+  <canvas id="bg" style="position:fixed;inset:0;z-index:0;"></canvas>
 
+  <!-- Fox layer — positioned via JS, above canvas, below text -->
+  <div id="fox-wrap" style="position:fixed;z-index:1;pointer-events:none;will-change:transform;">
+    <div id="fox-glow" style="position:absolute;inset:-60%;border-radius:50%;background:radial-gradient(circle,rgba(255,154,92,0.18) 0%,rgba(255,107,138,0.06) 40%,rgba(183,108,253,0.02) 65%,transparent 100%);"></div>
+    <img id="fox" src="/fox-logo.png" alt="" style="position:relative;width:100%;height:100%;z-index:1;" />
+  </div>
+
+  <!-- HTML UI — crisp text rendering -->
+  <div style="position:fixed;inset:0;z-index:2;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+    <div style="text-align:center;padding:0 24px;margin-top:-12vh;">
+      <h1 class="select-none" style="font-family:Nunito,sans-serif;font-weight:900;font-size:clamp(100px,20vw,240px);line-height:0.85;background:linear-gradient(135deg,#FF6B8A 0%,#E879F9 30%,#B76CFD 60%,#FF9A5C 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 60px rgba(183,108,253,0.3)) drop-shadow(0 0 120px rgba(255,107,138,0.15));margin:0;letter-spacing:-0.02em;">
+        404
+      </h1>
+      <p class="select-none" style="font-family:Nunito,sans-serif;font-weight:600;font-size:clamp(14px,2.2vw,24px);color:rgba(255,255,255,0.6);margin:clamp(8px,1.5vw,20px) 0 0;letter-spacing:0.02em;">
+        Looks like you've wandered too far, little fox
+      </p>
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
   <div class="fixed inset-x-0 bottom-0 z-10 flex flex-col items-center pb-8 sm:pb-12 pointer-events-none">
     <div class="pointer-events-auto text-center px-6">
       <a
         href="/"
         class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-800 hover:shadow-xl hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5 text-sm sm:text-base"
+        style="backdrop-filter:blur(12px);background:linear-gradient(135deg,rgba(255,107,138,0.85),rgba(183,108,253,0.85));border:1px solid rgba(255,255,255,0.1);"
       >
         Take Me Home
       </a>
     </div>
   </div>
 
+  <!-- Interaction layer — captures mouse/touch above everything -->
+  <div id="interact" style="position:fixed;inset:0;z-index:5;cursor:none;touch-action:none;"></div>
+
+  <!-- Custom cursor -->
+  <div id="cursor" style="position:fixed;z-index:6;pointer-events:none;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.7);box-shadow:0 0 12px rgba(255,107,138,0.5),0 0 30px rgba(183,108,253,0.2);transform:translate(-50%,-50%);opacity:0;transition:opacity 0.3s;will-change:transform;"></div>
+
   <script is:inline>
   (function() {
-    const C = document.getElementById('scene');
-    const X = C.getContext('2d');
+    const canvas = document.getElementById('bg');
+    const ctx = canvas.getContext('2d');
+    const foxWrap = document.getElementById('fox-wrap');
+    const foxGlow = document.getElementById('fox-glow');
+    const cursorEl = document.getElementById('cursor');
+    const interact = document.getElementById('interact');
     let W, H, dpr;
+
+    const foxSize = Math.min(90, Math.max(56, window.innerWidth * 0.08));
+    foxWrap.style.width = foxSize + 'px';
+    foxWrap.style.height = foxSize + 'px';
 
     function resize() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = window.innerWidth;
       H = window.innerHeight;
-      C.width = W * dpr;
-      C.height = H * dpr;
-      C.style.width = W + 'px';
-      C.style.height = H + 'px';
-      X.setTransform(dpr, 0, 0, dpr, 0, 0);
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     resize();
     window.addEventListener('resize', resize);
 
-    // Assets
-    const foxImg = new Image();
-    foxImg.src = '/fox-logo.png';
-    let foxReady = false;
-    foxImg.onload = () => { foxReady = true; };
-
     function lerp(a, b, t) { return a + (b - a) * t; }
 
-    // ---- SCENE OBJECTS ----
+    // ---- BACKGROUND OBJECTS ----
 
-    // Shooting stars
-    const shootingStars = [];
-    function maybeSpawnShootingStar() {
-      if (Math.random() > 0.003 || shootingStars.length > 2) return;
-      const startX = Math.random() * W * 0.7;
-      const angle = 0.3 + Math.random() * 0.4;
-      shootingStars.push({
-        x: startX, y: -10,
-        vx: Math.cos(angle) * (8 + Math.random() * 6),
-        vy: Math.sin(angle) * (8 + Math.random() * 6),
-        life: 1,
-        length: 60 + Math.random() * 80,
-        width: 1 + Math.random() * 1.5,
+    // Stars — 3 depth layers
+    const stars = [];
+    for (let i = 0; i < 200; i++) {
+      const depth = i < 100 ? 0 : i < 160 ? 1 : 2;
+      const brand = Math.random() > 0.92;
+      stars.push({
+        x: Math.random(), y: Math.random(),
+        size: (depth * 0.4 + 0.3) + Math.random() * (depth * 0.3 + 0.3),
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.6 + Math.random() * 2,
+        depth,
+        color: brand ? (Math.random() > 0.5 ? '#FF6B8A' : '#B76CFD') : '#fff',
+        baseAlpha: brand ? 0.6 : 0.15 + depth * 0.15,
       });
     }
+    const depthParallax = [0.006, 0.018, 0.04];
 
-    // Starfield — 3 parallax layers
-    const starLayers = [[], [], []];
-    const layerParallax = [0.008, 0.02, 0.045];
-    for (let layer = 0; layer < 3; layer++) {
-      const count = layer === 0 ? 100 : layer === 1 ? 60 : 35;
-      for (let i = 0; i < count; i++) {
-        const isBrand = Math.random() > 0.88;
-        starLayers[layer].push({
-          x: Math.random(), y: Math.random(),
-          size: (layer * 0.5 + 0.4) + Math.random() * (layer * 0.4 + 0.4),
-          twinkle: Math.random() * Math.PI * 2,
-          speed: 0.8 + Math.random() * 2.5,
-          color: isBrand ? (Math.random() > 0.5 ? '#FF6B8A' : '#B76CFD') : '#fff',
-          alpha: isBrand ? 0.7 : (0.3 + layer * 0.2),
-        });
-      }
-    }
-
-    // Nebulae — large soft glow patches
+    // Nebulae
     const nebulae = [
-      { x: 0.2, y: 0.3, r: 250, color: [255,107,138], a: 0.045, drift: { x: 0.00012, y: -0.00008 }, p: 0.03 },
-      { x: 0.75, y: 0.25, r: 200, color: [183,108,253], a: 0.04, drift: { x: -0.0001, y: 0.00006 }, p: 0.025 },
-      { x: 0.5, y: 0.7, r: 280, color: [255,154,92], a: 0.035, drift: { x: 0.00007, y: 0.0001 }, p: 0.035 },
-      { x: 0.85, y: 0.65, r: 180, color: [139,92,246], a: 0.03, drift: { x: -0.00008, y: -0.00005 }, p: 0.02 },
-      { x: 0.15, y: 0.75, r: 220, color: [244,114,182], a: 0.035, drift: { x: 0.00009, y: -0.00006 }, p: 0.028 },
-      { x: 0.5, y: 0.15, r: 300, color: [99,102,241], a: 0.025, drift: { x: -0.00005, y: 0.00008 }, p: 0.015 },
+      { x: 0.18, y: 0.28, r: 280, c: [255,107,138], a: 0.04, p: 0.025 },
+      { x: 0.78, y: 0.22, r: 220, c: [183,108,253], a: 0.035, p: 0.02 },
+      { x: 0.5, y: 0.72, r: 300, c: [255,154,92], a: 0.03, p: 0.03 },
+      { x: 0.88, y: 0.62, r: 200, c: [139,92,246], a: 0.025, p: 0.018 },
+      { x: 0.12, y: 0.78, r: 240, c: [244,114,182], a: 0.03, p: 0.022 },
     ];
 
-    // Floating hearts
-    const hearts = [];
-    function spawnHeart() {
-      const colors = ['#FF6B8A','#B76CFD','#FF9A5C','#F472B6','#E879F9','#FFB6C1'];
-      hearts.push({
-        x: Math.random() * W,
-        y: H + 20 + Math.random() * 40,
-        size: 10 + Math.random() * 16,
-        speed: 0.2 + Math.random() * 0.5,
-        wobbleAmp: 15 + Math.random() * 25,
-        wobbleSpd: 0.4 + Math.random() * 0.8,
-        wobbleOff: Math.random() * Math.PI * 2,
-        rot: (Math.random() - 0.5) * 0.3,
-        rotSpd: (Math.random() - 0.5) * 0.008,
-        opacity: 0.2 + Math.random() * 0.35,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        popped: false, popScale: 1, popAlpha: 1,
-        glowPhase: Math.random() * Math.PI * 2,
+    // Sparkle trail particles (from fox movement)
+    const sparkles = [];
+
+    // Ambient floating light motes
+    const motes = [];
+    for (let i = 0; i < 25; i++) {
+      motes.push({
+        x: Math.random() * W, y: Math.random() * H,
+        size: 1 + Math.random() * 2,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: -0.1 - Math.random() * 0.2,
+        phase: Math.random() * Math.PI * 2,
+        color: ['rgba(255,107,138,','rgba(183,108,253,','rgba(255,154,92,','rgba(255,255,255,'][Math.floor(Math.random() * 4)],
       });
     }
-    for (let i = 0; i < 14; i++) {
-      spawnHeart();
-      hearts[i].y = Math.random() * H;
+
+    // Shooting stars
+    const shoots = [];
+    function maybeShoot() {
+      if (Math.random() > 0.002 || shoots.length > 1) return;
+      shoots.push({
+        x: Math.random() * W * 0.6, y: -10,
+        angle: 0.4 + Math.random() * 0.3,
+        speed: 10 + Math.random() * 8,
+        life: 1, len: 80 + Math.random() * 60,
+      });
     }
 
-    // Pop particles — mini hearts + sparkles
-    const pops = [];
-    function popHeart(h) {
-      h.popped = true;
-      for (let i = 0; i < 12; i++) {
-        const a = (Math.PI * 2 / 12) * i + Math.random() * 0.3;
-        const spd = 1.5 + Math.random() * 3;
-        const isHeart = i < 4;
-        pops.push({
-          x: h.x, y: h.y,
-          vx: Math.cos(a) * spd,
-          vy: Math.sin(a) * spd - 1,
-          size: isHeart ? 6 + Math.random() * 4 : 2 + Math.random() * 2.5,
-          life: 1,
-          color: h.color,
-          isHeart,
-          rot: Math.random() * Math.PI * 2,
-          rotSpd: (Math.random() - 0.5) * 0.15,
-        });
-      }
-    }
+    // ---- FOX STATE ----
+    const fox = { x: W / 2, y: H * 0.58, vx: 0, vy: 0 };
+    let mouseActive = false;
+    let mx = W / 2, my = H / 2;
+    let targetX = W / 2, targetY = H * 0.58;
 
-    // Ambient light rings — expand outward from fox occasionally
-    const rings = [];
-    let ringTimer = 0;
-
-    // Fox
-    const fox = {
-      x: W / 2, y: H * 0.55,
-      vx: 0, vy: 0,
-      targetX: W / 2, targetY: H * 0.55,
-      size: Math.min(100, Math.max(60, W * 0.1)),
-      rotation: 0, squash: 1, stretch: 1,
-      bobPhase: 0, glowPulse: 0,
-    };
-
-    // Input
-    let mx = W / 2, my = H / 2, mouseActive = false;
-    C.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; mouseActive = true; });
-    C.addEventListener('click', e => { fox.targetX = e.clientX; fox.targetY = e.clientY; mouseActive = true; });
-    C.addEventListener('touchstart', e => {
+    interact.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursorEl.style.opacity = '1';
+      cursorEl.style.left = mx + 'px';
+      cursorEl.style.top = my + 'px';
+      mouseActive = true;
+    });
+    interact.addEventListener('mouseleave', () => { cursorEl.style.opacity = '0'; });
+    interact.addEventListener('click', e => {
+      targetX = e.clientX; targetY = e.clientY;
+      mouseActive = true;
+      // Click ripple
+      sparkles.push(
+        ...Array.from({ length: 6 }, (_, i) => {
+          const a = (Math.PI * 2 / 6) * i;
+          return { x: e.clientX, y: e.clientY, vx: Math.cos(a) * 1.5, vy: Math.sin(a) * 1.5, life: 1, size: 2.5, color: 'rgba(255,255,255,' };
+        })
+      );
+    });
+    interact.addEventListener('touchstart', e => {
       e.preventDefault();
-      mx = e.touches[0].clientX; my = e.touches[0].clientY;
-      fox.targetX = mx; fox.targetY = my; mouseActive = true;
+      const t = e.touches[0];
+      mx = t.clientX; my = t.clientY;
+      targetX = mx; targetY = my;
+      mouseActive = true;
     }, { passive: false });
-    C.addEventListener('touchmove', e => {
+    interact.addEventListener('touchmove', e => {
       e.preventDefault();
       mx = e.touches[0].clientX; my = e.touches[0].clientY;
     }, { passive: false });
 
-    // ---- DRAW HELPERS ----
-
-    function drawHeartShape(cx, cy, size, color, alpha, glowAmt) {
-      X.save();
-      X.globalAlpha = alpha;
-      X.translate(cx, cy);
-      const s = size;
-      X.beginPath();
-      X.moveTo(0, s * 0.3);
-      X.bezierCurveTo(-s*0.05,s*0.1,-s*0.5,-s*0.1,-s*0.5,-s*0.3);
-      X.bezierCurveTo(-s*0.5,-s*0.55,-s*0.25,-s*0.7,0,-s*0.5);
-      X.bezierCurveTo(s*0.25,-s*0.7,s*0.5,-s*0.55,s*0.5,-s*0.3);
-      X.bezierCurveTo(s*0.5,-s*0.1,s*0.05,s*0.1,0,s*0.3);
-      X.closePath();
-      if (glowAmt > 0) { X.shadowColor = color; X.shadowBlur = 15 * glowAmt; }
-      const g = X.createRadialGradient(-s*0.08,-s*0.22,0,0,0,s*0.55);
-      g.addColorStop(0, lighten(color, 70));
-      g.addColorStop(0.6, color);
-      g.addColorStop(1, darken(color, 30));
-      X.fillStyle = g;
-      X.fill();
-      X.shadowBlur = 0;
-      // Specular highlight
-      X.beginPath();
-      X.ellipse(-s*0.14,-s*0.33,s*0.09,s*0.05,-0.5,0,Math.PI*2);
-      X.fillStyle = `rgba(255,255,255,${0.55 * alpha})`;
-      X.fill();
-      X.restore();
-    }
-
-    function lighten(hex, amt) {
-      return `rgb(${Math.min(255,parseInt(hex.slice(1,3),16)+amt)},${Math.min(255,parseInt(hex.slice(3,5),16)+amt)},${Math.min(255,parseInt(hex.slice(5,7),16)+amt)})`;
-    }
-    function darken(hex, amt) {
-      return `rgb(${Math.max(0,parseInt(hex.slice(1,3),16)-amt)},${Math.max(0,parseInt(hex.slice(3,5),16)-amt)},${Math.max(0,parseInt(hex.slice(5,7),16)-amt)})`;
-    }
-
-    // ---- MAIN LOOP ----
-    let t = 0, lastNow = performance.now(), heartTimer = 0;
+    // ---- RENDER LOOP ----
+    let t = 0, last = performance.now();
 
     function frame(now) {
       requestAnimationFrame(frame);
-      const dt = Math.min((now - lastNow) / 1000, 0.05);
-      lastNow = now;
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
       t += dt;
-      heartTimer += dt;
-      ringTimer += dt;
 
-      X.clearRect(0, 0, W, H);
+      ctx.clearRect(0, 0, W, H);
 
-      // --- DEEP SPACE SKY ---
-      const sky = X.createLinearGradient(0, 0, W * 0.3, H);
-      sky.addColorStop(0, '#06030f');
-      sky.addColorStop(0.3, '#0d0820');
-      sky.addColorStop(0.6, '#150e35');
-      sky.addColorStop(0.85, '#0f0928');
-      sky.addColorStop(1, '#08051a');
-      X.fillStyle = sky;
-      X.fillRect(0, 0, W, H);
+      // Sky
+      const sky = ctx.createLinearGradient(0, 0, W * 0.2, H);
+      sky.addColorStop(0, '#04020a');
+      sky.addColorStop(0.35, '#0a0618');
+      sky.addColorStop(0.65, '#110c2a');
+      sky.addColorStop(1, '#06031a');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, W, H);
 
-      // Subtle animated color wash
-      const wash = X.createRadialGradient(
-        W * 0.5 + Math.sin(t * 0.1) * W * 0.15,
-        H * 0.4 + Math.cos(t * 0.08) * H * 0.1,
-        0,
-        W * 0.5, H * 0.5, W * 0.7
-      );
-      wash.addColorStop(0, 'rgba(183,108,253,0.03)');
-      wash.addColorStop(0.5, 'rgba(255,107,138,0.015)');
+      // Slow breathing color wash
+      const washX = W * 0.5 + Math.sin(t * 0.07) * W * 0.2;
+      const washY = H * 0.4 + Math.cos(t * 0.05) * H * 0.15;
+      const wash = ctx.createRadialGradient(washX, washY, 0, W * 0.5, H * 0.5, W * 0.8);
+      wash.addColorStop(0, `rgba(183,108,253,${0.02 + Math.sin(t * 0.1) * 0.008})`);
+      wash.addColorStop(0.5, `rgba(255,107,138,${0.01 + Math.cos(t * 0.08) * 0.005})`);
       wash.addColorStop(1, 'rgba(0,0,0,0)');
-      X.fillStyle = wash;
-      X.fillRect(0, 0, W, H);
+      ctx.fillStyle = wash;
+      ctx.fillRect(0, 0, W, H);
 
-      // Parallax offset
       const px = (mx / W - 0.5) * 2;
       const py = (my / H - 0.5) * 2;
 
-      // --- NEBULAE ---
+      // Nebulae
       nebulae.forEach(n => {
-        n.x += n.drift.x; n.y += n.drift.y;
-        if (n.x < -0.1 || n.x > 1.1) n.drift.x *= -1;
-        if (n.y < -0.1 || n.y > 1.1) n.drift.y *= -1;
         const nx = n.x * W + px * n.p * W;
         const ny = n.y * H + py * n.p * H;
-        const pulse = 1 + Math.sin(t * 0.3 + n.x * 5) * 0.15;
-        const g = X.createRadialGradient(nx, ny, 0, nx, ny, n.r * pulse);
-        g.addColorStop(0, `rgba(${n.color[0]},${n.color[1]},${n.color[2]},${n.a * pulse})`);
-        g.addColorStop(0.6, `rgba(${n.color[0]},${n.color[1]},${n.color[2]},${n.a * 0.3})`);
-        g.addColorStop(1, `rgba(${n.color[0]},${n.color[1]},${n.color[2]},0)`);
-        X.fillStyle = g;
-        X.fillRect(0, 0, W, H);
+        const pulse = 1 + Math.sin(t * 0.25 + n.x * 4) * 0.1;
+        const g = ctx.createRadialGradient(nx, ny, 0, nx, ny, n.r * pulse);
+        g.addColorStop(0, `rgba(${n.c[0]},${n.c[1]},${n.c[2]},${n.a})`);
+        g.addColorStop(0.5, `rgba(${n.c[0]},${n.c[1]},${n.c[2]},${n.a * 0.25})`);
+        g.addColorStop(1, `rgba(${n.c[0]},${n.c[1]},${n.c[2]},0)`);
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, H);
       });
 
-      // --- STARS ---
-      starLayers.forEach((layer, li) => {
-        const pf = layerParallax[li];
-        layer.forEach(s => {
-          const tw = s.alpha * (0.5 + 0.5 * Math.sin(t * s.speed + s.twinkle));
-          X.globalAlpha = tw;
-          X.fillStyle = s.color;
-          const sx = ((s.x * W + px * pf * W) % W + W) % W;
-          const sy = ((s.y * H + py * pf * H) % H + H) % H;
-          X.beginPath();
-          X.arc(sx, sy, s.size, 0, Math.PI * 2);
-          X.fill();
-          // Cross-shaped highlight for bigger stars
-          if (s.size > 1.5 && tw > 0.5) {
-            X.globalAlpha = (tw - 0.5) * 0.6;
-            X.fillRect(sx - s.size * 2, sy - 0.3, s.size * 4, 0.6);
-            X.fillRect(sx - 0.3, sy - s.size * 2, 0.6, s.size * 4);
-          }
-        });
-      });
-      X.globalAlpha = 1;
-
-      // --- SHOOTING STARS ---
-      maybeSpawnShootingStar();
-      for (let i = shootingStars.length - 1; i >= 0; i--) {
-        const ss = shootingStars[i];
-        ss.x += ss.vx; ss.y += ss.vy;
-        ss.life -= dt * 1.2;
-        if (ss.life <= 0 || ss.x > W + 50 || ss.y > H + 50) {
-          shootingStars.splice(i, 1); continue;
+      // Stars
+      stars.forEach(s => {
+        const pf = depthParallax[s.depth];
+        const sx = ((s.x * W + px * pf * W) % W + W) % W;
+        const sy = ((s.y * H + py * pf * H) % H + H) % H;
+        const tw = s.baseAlpha * (0.4 + 0.6 * (Math.sin(t * s.speed + s.phase) * 0.5 + 0.5));
+        ctx.globalAlpha = tw;
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(sx, sy, s.size, 0, Math.PI * 2);
+        ctx.fill();
+        if (s.size > 1.4 && tw > 0.35) {
+          ctx.globalAlpha = (tw - 0.35) * 0.4;
+          ctx.fillRect(sx - s.size * 2.5, sy - 0.25, s.size * 5, 0.5);
+          ctx.fillRect(sx - 0.25, sy - s.size * 2.5, 0.5, s.size * 5);
         }
-        const tailX = ss.x - (ss.vx / Math.sqrt(ss.vx*ss.vx+ss.vy*ss.vy)) * ss.length * ss.life;
-        const tailY = ss.y - (ss.vy / Math.sqrt(ss.vx*ss.vx+ss.vy*ss.vy)) * ss.length * ss.life;
-        const sg = X.createLinearGradient(tailX, tailY, ss.x, ss.y);
-        sg.addColorStop(0, 'rgba(255,255,255,0)');
-        sg.addColorStop(0.7, `rgba(255,255,255,${ss.life * 0.4})`);
-        sg.addColorStop(1, `rgba(255,255,255,${ss.life * 0.9})`);
-        X.strokeStyle = sg;
-        X.lineWidth = ss.width;
-        X.lineCap = 'round';
-        X.beginPath();
-        X.moveTo(tailX, tailY);
-        X.lineTo(ss.x, ss.y);
-        X.stroke();
-        // Head glow
-        X.beginPath();
-        X.arc(ss.x, ss.y, ss.width * 2, 0, Math.PI * 2);
-        X.fillStyle = `rgba(255,255,255,${ss.life * 0.5})`;
-        X.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      // Shooting stars
+      maybeShoot();
+      for (let i = shoots.length - 1; i >= 0; i--) {
+        const s = shoots[i];
+        s.x += Math.cos(s.angle) * s.speed;
+        s.y += Math.sin(s.angle) * s.speed;
+        s.life -= dt * 1.5;
+        if (s.life <= 0 || s.x > W + 60 || s.y > H + 60) { shoots.splice(i, 1); continue; }
+        const dx = Math.cos(s.angle), dy = Math.sin(s.angle);
+        const g = ctx.createLinearGradient(s.x - dx * s.len * s.life, s.y - dy * s.len * s.life, s.x, s.y);
+        g.addColorStop(0, 'rgba(255,255,255,0)');
+        g.addColorStop(1, `rgba(255,255,255,${s.life * 0.8})`);
+        ctx.strokeStyle = g;
+        ctx.lineWidth = 1.5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(s.x - dx * s.len * s.life, s.y - dy * s.len * s.life);
+        ctx.lineTo(s.x, s.y);
+        ctx.stroke();
       }
 
-      // --- FLOATING HEARTS ---
-      hearts.forEach(h => {
-        if (h.popped) {
-          h.popScale += dt * 4;
-          h.popAlpha -= dt * 3.5;
-          if (h.popAlpha > 0) {
-            X.save();
-            X.translate(h.x, h.y);
-            X.scale(h.popScale, h.popScale);
-            X.rotate(h.rot);
-            drawHeartShape(0, 0, h.size, h.color, h.popAlpha * 0.4, 0);
-            X.restore();
-          }
-          return;
-        }
-
-        h.y -= h.speed;
-        h.x += Math.sin(t * h.wobbleSpd + h.wobbleOff) * h.wobbleAmp * dt;
-        h.rot += h.rotSpd;
-
-        const fadeIn = Math.min(1, (H - h.y) / 120);
-        const fadeOut = Math.min(1, h.y / 120);
-        const glow = 0.5 + 0.5 * Math.sin(t * 1.5 + h.glowPhase);
-        const alpha = h.opacity * fadeIn * fadeOut;
-
-        X.save();
-        X.translate(h.x, h.y);
-        X.rotate(h.rot);
-        drawHeartShape(0, 0, h.size, h.color, alpha, glow * 0.6);
-        X.restore();
-
-        // Fox collision
-        const dx = fox.x - h.x, dy = fox.y - h.y;
-        if (dx*dx + dy*dy < (fox.size * 0.35 + h.size * 0.3) ** 2) {
-          popHeart(h);
-        }
+      // Ambient motes
+      motes.forEach(m => {
+        m.x += m.speedX + Math.sin(t * 0.5 + m.phase) * 0.15;
+        m.y += m.speedY;
+        if (m.y < -10) { m.y = H + 10; m.x = Math.random() * W; }
+        if (m.x < -10) m.x = W + 10;
+        if (m.x > W + 10) m.x = -10;
+        const a = 0.15 + 0.15 * Math.sin(t * 1.5 + m.phase);
+        ctx.fillStyle = m.color + a + ')';
+        ctx.beginPath();
+        ctx.arc(m.x, m.y, m.size, 0, Math.PI * 2);
+        ctx.fill();
       });
 
-      for (let i = hearts.length - 1; i >= 0; i--) {
-        if (hearts[i].y < -50 || (hearts[i].popped && hearts[i].popAlpha <= 0)) hearts.splice(i, 1);
-      }
-      if (heartTimer > 0.7 && hearts.length < 16) { spawnHeart(); heartTimer = 0; }
-
-      // --- POP PARTICLES ---
-      for (let i = pops.length - 1; i >= 0; i--) {
-        const p = pops[i];
+      // Sparkle trail particles
+      for (let i = sparkles.length - 1; i >= 0; i--) {
+        const p = sparkles[i];
         p.x += p.vx; p.y += p.vy;
-        p.vy += 0.04; p.vx *= 0.99;
-        p.rot += p.rotSpd;
+        p.vx *= 0.96; p.vy *= 0.96;
         p.life -= dt * 2;
-        if (p.life <= 0) { pops.splice(i, 1); continue; }
-        if (p.isHeart) {
-          X.save();
-          X.translate(p.x, p.y);
-          X.rotate(p.rot);
-          X.scale(p.life, p.life);
-          drawHeartShape(0, 0, p.size, p.color, p.life, 0);
-          X.restore();
-        } else {
-          X.globalAlpha = p.life;
-          X.fillStyle = p.color;
-          X.shadowColor = p.color;
-          X.shadowBlur = 6;
-          X.beginPath();
-          X.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-          X.fill();
-          X.shadowBlur = 0;
-        }
+        if (p.life <= 0) { sparkles.splice(i, 1); continue; }
+        ctx.globalAlpha = p.life * 0.7;
+        ctx.fillStyle = p.color + '0.9)';
+        ctx.shadowColor = p.color + '0.5)';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
       }
-      X.globalAlpha = 1;
+      ctx.globalAlpha = 1;
 
-      // --- FOX ---
-      if (mouseActive) {
-        const dx = fox.targetX - fox.x, dy = fox.targetY - fox.y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist > 1) {
-          const spd = Math.min(dist * 0.05, 10);
-          fox.vx += (dx / dist) * spd * dt * 60;
-          fox.vy += (dy / dist) * spd * dt * 60;
-        }
-      }
-      fox.vx += Math.sin(t * 0.25) * 0.015;
-      fox.vy += Math.cos(t * 0.35) * 0.015;
-      fox.vx *= 0.91; fox.vy *= 0.91;
-      fox.x += fox.vx; fox.y += fox.vy;
-      fox.x = Math.max(fox.size * 0.5, Math.min(W - fox.size * 0.5, fox.x));
-      fox.y = Math.max(fox.size * 0.5, Math.min(H - fox.size * 1.5, fox.y));
-
-      const spd = Math.sqrt(fox.vx*fox.vx + fox.vy*fox.vy);
-      fox.stretch = lerp(fox.stretch, 1 + Math.min(spd * 0.018, 0.15), 0.1);
-      fox.squash = lerp(fox.squash, 1 - Math.min(spd * 0.012, 0.1), 0.1);
-      fox.rotation = lerp(fox.rotation, spd > 0.3 ? Math.atan2(fox.vy, fox.vx) * 0.1 : 0, 0.06);
-      fox.bobPhase += dt * 2;
-      fox.glowPulse = 0.5 + 0.5 * Math.sin(t * 1.2);
-
-      // Ambient light rings from fox
-      if (ringTimer > 3 + Math.random() * 2) {
-        rings.push({ x: fox.x, y: fox.y, r: fox.size * 0.3, maxR: fox.size * 3, life: 1 });
-        ringTimer = 0;
-      }
-      for (let i = rings.length - 1; i >= 0; i--) {
-        const r = rings[i];
-        r.r += (r.maxR - r.r) * 0.03;
-        r.life -= dt * 0.5;
-        if (r.life <= 0) { rings.splice(i, 1); continue; }
-        X.globalAlpha = r.life * 0.12;
-        X.strokeStyle = '#FF9A5C';
-        X.lineWidth = 1.5;
-        X.beginPath();
-        X.arc(r.x, r.y, r.r, 0, Math.PI * 2);
-        X.stroke();
-      }
-      X.globalAlpha = 1;
-
-      const bob = Math.sin(fox.bobPhase) * 5;
-
-      if (foxReady) {
-        X.save();
-        X.translate(fox.x, fox.y + bob);
-        X.rotate(fox.rotation);
-        X.scale(fox.stretch, fox.squash);
-
-        // Multi-layer glow
-        const s = fox.size;
-        const glowI = fox.glowPulse;
-
-        // Outer aurora
-        const g3 = X.createRadialGradient(0, 0, s * 0.2, 0, 0, s * 1.2);
-        g3.addColorStop(0, `rgba(255,154,92,${0.06 + glowI * 0.03})`);
-        g3.addColorStop(0.4, `rgba(255,107,138,${0.03 + glowI * 0.02})`);
-        g3.addColorStop(0.7, `rgba(183,108,253,${0.02 + glowI * 0.01})`);
-        g3.addColorStop(1, 'rgba(0,0,0,0)');
-        X.fillStyle = g3;
-        X.beginPath();
-        X.arc(0, 0, s * 1.2, 0, Math.PI * 2);
-        X.fill();
-
-        // Inner warm glow
-        const g2 = X.createRadialGradient(0, 0, s * 0.1, 0, 0, s * 0.6);
-        g2.addColorStop(0, `rgba(255,200,150,${0.2 + glowI * 0.1})`);
-        g2.addColorStop(1, 'rgba(255,154,92,0)');
-        X.fillStyle = g2;
-        X.beginPath();
-        X.arc(0, 0, s * 0.6, 0, Math.PI * 2);
-        X.fill();
-
-        // Fox image
-        X.drawImage(foxImg, -s/2, -s/2, s, s);
-        X.restore();
-      }
-
-      // --- 404 TEXT ---
-      X.save();
-      X.textAlign = 'center';
-
-      const cy = Math.min(H * 0.2, 180);
-      const fs = Math.min(Math.max(W * 0.2, 90), 220);
-      X.font = `900 ${fs}px Nunito, sans-serif`;
-
-      // Deep glow layers
-      X.shadowColor = 'rgba(183,108,253,0.35)';
-      X.shadowBlur = 80;
-      const tg = X.createLinearGradient(W/2 - fs * 0.8, cy - fs * 0.3, W/2 + fs * 0.8, cy + fs * 0.2);
-      tg.addColorStop(0, '#FF6B8A');
-      tg.addColorStop(0.4, '#E879F9');
-      tg.addColorStop(0.6, '#B76CFD');
-      tg.addColorStop(1, '#FF9A5C');
-      X.fillStyle = tg;
-      X.fillText('404', W/2, cy);
-
-      // Second glow pass
-      X.shadowColor = 'rgba(255,107,138,0.2)';
-      X.shadowBlur = 120;
-      X.fillText('404', W/2, cy);
-
-      // Crisp top layer without shadow
-      X.shadowBlur = 0;
-      X.fillText('404', W/2, cy);
-
-      // Subtitle with letterSpacing feel
-      const ss = Math.min(Math.max(W * 0.026, 15), 26);
-      X.font = `600 ${ss}px Nunito, sans-serif`;
-      X.shadowColor = 'rgba(0,0,0,0.4)';
-      X.shadowBlur = 8;
-
-      // Subtle gradient on subtitle
-      const stg = X.createLinearGradient(W/2 - 150, 0, W/2 + 150, 0);
-      stg.addColorStop(0, 'rgba(255,255,255,0.55)');
-      stg.addColorStop(0.5, 'rgba(255,255,255,0.8)');
-      stg.addColorStop(1, 'rgba(255,255,255,0.55)');
-      X.fillStyle = stg;
-      X.fillText("Looks like you've wandered too far, little fox", W/2, cy + fs * 0.3);
-      X.shadowBlur = 0;
-
-      // Hint
-      if (!mouseActive) {
-        X.globalAlpha = 0.3 + Math.sin(t * 1.5) * 0.12;
-        X.font = `500 ${Math.max(12, ss * 0.6)}px Nunito, sans-serif`;
-        X.fillStyle = 'rgba(255,255,255,0.5)';
-        X.fillText('tap anywhere to guide the fox', W/2, cy + fs * 0.48);
-        X.globalAlpha = 1;
-      }
-
-      X.restore();
-
-      // --- VIGNETTE ---
-      const vig = X.createRadialGradient(W/2, H/2, W * 0.25, W/2, H/2, W * 0.85);
+      // Vignette
+      const vig = ctx.createRadialGradient(W/2, H/2, W * 0.2, W/2, H/2, W * 0.9);
       vig.addColorStop(0, 'rgba(0,0,0,0)');
-      vig.addColorStop(1, 'rgba(0,0,0,0.4)');
-      X.fillStyle = vig;
-      X.fillRect(0, 0, W, H);
+      vig.addColorStop(1, 'rgba(0,0,0,0.5)');
+      ctx.fillStyle = vig;
+      ctx.fillRect(0, 0, W, H);
+
+      // ---- FOX MOVEMENT ----
+      if (mouseActive) {
+        const dx = targetX - fox.x, dy = targetY - fox.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 0.5) {
+          const force = Math.min(dist * 0.03, 6);
+          fox.vx += (dx / dist) * force;
+          fox.vy += (dy / dist) * force;
+        }
+      }
+      // Very gentle ambient drift
+      fox.vx += Math.sin(t * 0.2) * 0.008;
+      fox.vy += Math.cos(t * 0.28) * 0.008;
+
+      fox.vx *= 0.88;
+      fox.vy *= 0.88;
+      fox.x += fox.vx;
+      fox.y += fox.vy;
+
+      // Soft bounds
+      const pad = foxSize * 0.4;
+      fox.x = Math.max(pad, Math.min(W - pad, fox.x));
+      fox.y = Math.max(pad, Math.min(H - foxSize * 1.2, fox.y));
+
+      // Emit sparkle trail when moving
+      const spd = Math.sqrt(fox.vx * fox.vx + fox.vy * fox.vy);
+      if (spd > 0.8 && Math.random() < spd * 0.15) {
+        const colors = ['rgba(255,154,92,', 'rgba(255,107,138,', 'rgba(183,108,253,', 'rgba(255,255,255,'];
+        sparkles.push({
+          x: fox.x + (Math.random() - 0.5) * foxSize * 0.4,
+          y: fox.y + (Math.random() - 0.5) * foxSize * 0.4,
+          vx: (Math.random() - 0.5) * 0.5 - fox.vx * 0.1,
+          vy: (Math.random() - 0.5) * 0.5 - fox.vy * 0.1,
+          life: 0.6 + Math.random() * 0.4,
+          size: 1.5 + Math.random() * 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+        });
+      }
+
+      // Position fox DOM element
+      const tilt = Math.atan2(fox.vy, fox.vx) * 0.06;
+      foxWrap.style.transform = `translate(${fox.x - foxSize / 2}px, ${fox.y - foxSize / 2}px) rotate(${tilt}rad)`;
+
+      // Glow pulse
+      const glowScale = 1 + Math.sin(t * 0.8) * 0.08;
+      foxGlow.style.transform = `scale(${glowScale})`;
+      foxGlow.style.opacity = 0.7 + Math.sin(t * 1.2) * 0.15;
     }
 
     requestAnimationFrame(frame);
