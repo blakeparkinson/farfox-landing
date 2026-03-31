@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="404 — Lost in the Distance | Far Fox" description="This page doesn't exist, but you found a game! Help your fox catch hearts.">
-  <canvas id="game" style="position:fixed;inset:0;z-index:0;cursor:crosshair;touch-action:none;"></canvas>
+  <canvas id="scene" style="position:fixed;inset:0;z-index:0;touch-action:none;"></canvas>
 
   <div class="fixed inset-x-0 bottom-0 z-10 flex flex-col items-center pb-8 sm:pb-12 pointer-events-none">
     <div class="pointer-events-auto text-center px-6">
@@ -18,984 +18,423 @@ import Layout from '../layouts/Layout.astro';
 
   <script is:inline>
   (function() {
-    const canvas = document.getElementById('game');
-    const ctx = canvas.getContext('2d');
-    let W, H;
+    const C = document.getElementById('scene');
+    const X = C.getContext('2d');
+    let W, H, dpr;
 
     function resize() {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      C.width = W * dpr;
+      C.height = H * dpr;
+      C.style.width = W + 'px';
+      C.style.height = H + 'px';
+      X.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     resize();
     window.addEventListener('resize', resize);
 
-    // Load fox image
+    // Assets
     const foxImg = new Image();
     foxImg.src = '/fox-logo.png';
-    let foxLoaded = false;
-    foxImg.onload = () => { foxLoaded = true; };
+    let foxReady = false;
+    foxImg.onload = () => { foxReady = true; };
 
-    // Game state
-    let score = 0;
-    let combo = 0;
-    let lastCatchTime = 0;
-    let shakeAmount = 0;
-    let flashAlpha = 0;
-    let gameStarted = false;
+    // Easing
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function ease(t) { return t < 0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
 
-    // Wall damage / glass crack system
-    let wallDamage = 0;
-    const maxDamage = 6;
-    let cracks = [];
-    let exploding = false;
-    let explodeTimer = 0;
-    let shatterPieces = [];
-    let foxBruises = 0; // 0-1 bruise level
-    let wallHitCooldown = 0; // prevent rapid-fire hits
+    // ---- SCENE OBJECTS ----
 
-    function addCrack(x, y, severity) {
-      // Spawn cracks at impact point, radiating inward toward screen center
-      const numBranches = 3 + Math.floor(severity * 3);
-      const crack = { branches: [], alpha: 1, age: 0 };
-      for (let b = 0; b < numBranches; b++) {
-        // Angle generally toward screen center with spread
-        const toCenterAngle = Math.atan2(H/2 - y, W/2 - x);
-        const angle = toCenterAngle + (Math.random() - 0.5) * 2.5;
-        const segments = [];
-        let cx = x, cy = y;
-        const segCount = 4 + Math.floor(Math.random() * 6 * severity);
-        for (let s = 0; s < segCount; s++) {
-          const len = 20 + Math.random() * 60 * severity;
-          const a = angle + (Math.random() - 0.5) * 1.0;
-          const nx = cx + Math.cos(a) * len;
-          const ny = cy + Math.sin(a) * len;
-          segments.push({ x1: cx, y1: cy, x2: nx, y2: ny });
-          cx = nx;
-          cy = ny;
-          // Sub-branches for complexity
-          if (Math.random() > 0.4 && severity > 0.3) {
-            const sa = a + (Math.random() > 0.5 ? 1 : -1) * (0.5 + Math.random() * 1.0);
-            const sl = 8 + Math.random() * 30 * severity;
-            const snx = cx + Math.cos(sa) * sl;
-            const sny = cy + Math.sin(sa) * sl;
-            segments.push({ x1: cx, y1: cy, x2: snx, y2: sny });
-            // Second-level sub-branch
-            if (Math.random() > 0.6) {
-              const sa2 = sa + (Math.random() - 0.5) * 1.2;
-              const sl2 = 5 + Math.random() * 15;
-              segments.push({ x1: snx, y1: sny, x2: snx + Math.cos(sa2) * sl2, y2: sny + Math.sin(sa2) * sl2 });
-            }
-          }
-        }
-        crack.branches.push(segments);
-      }
-      cracks.push(crack);
-    }
-
-    function triggerExplosion() {
-      exploding = true;
-      explodeTimer = 2.0;
-      shatterPieces = [];
-      // Create irregular shatter shards
-      const cols = 10, rows = 7;
-      const pw = W / cols, ph = H / rows;
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const cx = c * pw + pw / 2 + (Math.random() - 0.5) * pw * 0.3;
-          const cy = r * ph + ph / 2 + (Math.random() - 0.5) * ph * 0.3;
-          const angle = Math.atan2(cy - H/2, cx - W/2) + (Math.random() - 0.5) * 0.3;
-          const distFromCenter = Math.sqrt((cx - W/2)**2 + (cy - H/2)**2);
-          const speed = 3 + (distFromCenter / W) * 12 + Math.random() * 4;
-          shatterPieces.push({
-            x: c * pw, y: r * ph, w: pw + 2, h: ph + 2,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed - 2,
-            rotation: 0,
-            rotSpeed: (Math.random() - 0.5) * 0.2,
-            gravity: 0.15 + Math.random() * 0.15,
-            // Each shard gets a crack line for glass look
-            crackAngle: Math.random() * Math.PI,
-          });
-        }
+    // Starfield — 3 layers for parallax
+    const starLayers = [[], [], []];
+    const layerSpeeds = [0.01, 0.025, 0.05];
+    for (let layer = 0; layer < 3; layer++) {
+      const count = layer === 0 ? 80 : layer === 1 ? 50 : 30;
+      for (let i = 0; i < count; i++) {
+        starLayers[layer].push({
+          x: Math.random(),
+          y: Math.random(),
+          size: (layer + 1) * 0.6 + Math.random() * 0.8,
+          twinkle: Math.random() * Math.PI * 2,
+          speed: 0.5 + Math.random() * 2,
+          hue: Math.random() > 0.9 ? (Math.random() > 0.5 ? '#FF6B8A' : '#B76CFD') : '#fff',
+        });
       }
     }
 
-    function resetGame() {
-      exploding = false;
-      wallDamage = 0;
-      foxBruises = 0;
-      cracks = [];
-      shatterPieces = [];
-      fox.x = W / 2;
-      fox.y = H / 2;
-      fox.vx = 0;
-      fox.vy = 0;
-      fox.chasing = false;
-      score = 0;
-      combo = 0;
-      gameStarted = false;
-      hearts.length = 0;
-      particles.length = 0;
-      popups.length = 0;
+    // Nebula blobs — soft colored gradient spheres
+    const nebulae = [];
+    const nebulaColors = [
+      { r: 255, g: 107, b: 138 }, // pink
+      { r: 183, g: 108, b: 253 }, // purple
+      { r: 255, g: 154, b: 92 },  // orange
+      { r: 99, g: 102, b: 241 },  // indigo
+      { r: 139, g: 92, b: 246 },  // violet
+    ];
+    for (let i = 0; i < 5; i++) {
+      nebulae.push({
+        x: 0.1 + Math.random() * 0.8,
+        y: 0.1 + Math.random() * 0.8,
+        radius: 120 + Math.random() * 200,
+        color: nebulaColors[i],
+        alpha: 0.04 + Math.random() * 0.04,
+        drift: { x: (Math.random() - 0.5) * 0.00015, y: (Math.random() - 0.5) * 0.00015 },
+        parallax: 0.02 + Math.random() * 0.03,
+      });
+    }
+
+    // Floating hearts
+    const hearts = [];
+    function spawnHeart() {
+      hearts.push({
+        x: Math.random() * W,
+        y: H + 30,
+        size: 12 + Math.random() * 18,
+        speed: 0.3 + Math.random() * 0.6,
+        wobbleAmp: 20 + Math.random() * 30,
+        wobbleSpeed: 0.5 + Math.random() * 1,
+        wobbleOffset: Math.random() * Math.PI * 2,
+        rotation: (Math.random() - 0.5) * 0.4,
+        rotSpeed: (Math.random() - 0.5) * 0.01,
+        opacity: 0.3 + Math.random() * 0.4,
+        color: ['#FF6B8A', '#B76CFD', '#FF9A5C', '#F472B6', '#E879F9', '#FFB6C1'][Math.floor(Math.random() * 6)],
+        popped: false,
+        popScale: 1,
+        popAlpha: 1,
+      });
+    }
+    // Seed initial hearts
+    for (let i = 0; i < 12; i++) {
+      spawnHeart();
+      hearts[i].y = Math.random() * H;
+    }
+
+    // Pop particles
+    const pops = [];
+    function popHeart(h) {
+      h.popped = true;
+      h.popScale = 1;
+      h.popAlpha = 1;
       for (let i = 0; i < 8; i++) {
-        hearts.push({
-          x: W * 0.15 + Math.random() * W * 0.7,
-          y: H * 0.15 + Math.random() * H * 0.6,
-          vx: (Math.random() - 0.5) * 1.5,
-          vy: (Math.random() - 0.5) * 1.5,
-          size: 25 + Math.random() * 20,
-          color: ['#FF6B8A', '#B76CFD', '#FF9A5C', '#FFB6C1', '#F472B6', '#E879F9'][i % 6],
-          rotation: Math.random() * Math.PI * 2,
-          rotSpeed: (Math.random() - 0.5) * 0.04,
-          wobblePhase: Math.random() * Math.PI * 2,
-          wobbleSpeed: 1 + Math.random() * 2,
-          pulsePhase: Math.random() * Math.PI * 2,
-          alive: true,
+        const a = (Math.PI * 2 / 8) * i + Math.random() * 0.4;
+        pops.push({
+          x: h.x, y: h.y,
+          vx: Math.cos(a) * (1.5 + Math.random() * 2),
+          vy: Math.sin(a) * (1.5 + Math.random() * 2),
+          size: 2 + Math.random() * 3,
+          life: 1,
+          color: h.color,
         });
       }
     }
 
-    function drawGlassOverlay() {
-      const damageRatio = wallDamage / maxDamage;
-
-      // Draw all cracks
-      if (cracks.length > 0) {
-        cracks.forEach(crack => {
-          crack.branches.forEach(segments => {
-            segments.forEach(seg => {
-              // Wide outer glow
-              ctx.beginPath();
-              ctx.moveTo(seg.x1, seg.y1);
-              ctx.lineTo(seg.x2, seg.y2);
-              ctx.strokeStyle = `rgba(180,200,255,${0.25 * crack.alpha})`;
-              ctx.lineWidth = 6;
-              ctx.stroke();
-
-              // Main crack line — thick and bright
-              ctx.beginPath();
-              ctx.moveTo(seg.x1, seg.y1);
-              ctx.lineTo(seg.x2, seg.y2);
-              ctx.strokeStyle = `rgba(255,255,255,${0.85 * crack.alpha})`;
-              ctx.lineWidth = 2.5;
-              ctx.stroke();
-
-              // Sharp bright center
-              ctx.beginPath();
-              ctx.moveTo(seg.x1, seg.y1);
-              ctx.lineTo(seg.x2, seg.y2);
-              ctx.strokeStyle = `rgba(230,245,255,${0.95 * crack.alpha})`;
-              ctx.lineWidth = 1;
-              ctx.stroke();
-            });
-          });
-        });
-      }
-
-      // Frosted glass overlay — visible early
-      if (damageRatio > 0.05) {
-        ctx.globalAlpha = damageRatio * 0.15;
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, W, H);
-        ctx.globalAlpha = 1;
-      }
-
-      // Damage vignette — red edges intensify early
-      if (damageRatio > 0.1) {
-        const vignette = ctx.createRadialGradient(W/2, H/2, W * 0.1, W/2, H/2, W * 0.7);
-        vignette.addColorStop(0, 'rgba(0,0,0,0)');
-        vignette.addColorStop(0.6, `rgba(80,0,0,${damageRatio * 0.4})`);
-        vignette.addColorStop(1, `rgba(120,0,0,${damageRatio * 0.6})`);
-        ctx.fillStyle = vignette;
-        ctx.fillRect(0, 0, W, H);
-      }
-
-      // Warning pulse when close to breaking
-      if (damageRatio > 0.5) {
-        const pulse = Math.sin(time * 8) * 0.5 + 0.5;
-        ctx.globalAlpha = (damageRatio - 0.5) * pulse * 0.3;
-        ctx.fillStyle = '#ff0000';
-        ctx.fillRect(0, 0, W, H);
-        ctx.globalAlpha = 1;
-      }
-    }
-
-    function drawFoxBruises(x, y, size) {
-      if (foxBruises <= 0.01) return;
-      const b = Math.min(foxBruises, 1);
-
-      ctx.save();
-      ctx.translate(x, y);
-
-      // Band-aid at moderate damage
-      if (b > 0.3) {
-        ctx.globalAlpha = Math.min((b - 0.2) * 2, 0.95);
-        const bx = size * 0.18, by = -size * 0.2;
-        const bw = size * 0.22, bh = size * 0.08;
-        ctx.save();
-        ctx.translate(bx, by);
-        ctx.rotate(0.4);
-        // Band-aid body
-        ctx.fillStyle = '#F5D0A9';
-        ctx.strokeStyle = '#D4A574';
-        ctx.lineWidth = 1;
-        roundRect(-bw/2, -bh/2, bw, bh, 3);
-        ctx.fill();
-        ctx.stroke();
-        // Pad in center
-        ctx.fillStyle = '#E8C49A';
-        ctx.fillRect(-bw * 0.15, -bh/2, bw * 0.3, bh);
-        // Dots on band-aid
-        ctx.fillStyle = '#D4A574';
-        for (let d = -1; d <= 1; d += 2) {
-          ctx.beginPath();
-          ctx.arc(d * bw * 0.3, 0, 1, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.restore();
-      }
-
-      // Second band-aid
-      if (b > 0.5) {
-        ctx.globalAlpha = Math.min((b - 0.4) * 2, 0.95);
-        const bx = -size * 0.12, by = size * 0.12;
-        const bw = size * 0.16, bh = size * 0.06;
-        ctx.save();
-        ctx.translate(bx, by);
-        ctx.rotate(-0.6);
-        ctx.fillStyle = '#F5D0A9';
-        ctx.strokeStyle = '#D4A574';
-        ctx.lineWidth = 1;
-        roundRect(-bw/2, -bh/2, bw, bh, 3);
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = '#E8C49A';
-        ctx.fillRect(-bw * 0.15, -bh/2, bw * 0.3, bh);
-        ctx.restore();
-      }
-
-      // Scratch marks — show early
-      if (b > 0.1) {
-        ctx.globalAlpha = Math.min(0.3 + b * 0.6, 0.8);
-        ctx.strokeStyle = '#CC4444';
-        ctx.lineWidth = 1.5;
-        // Scratch 1
-        ctx.beginPath();
-        ctx.moveTo(-size * 0.22, -size * 0.15);
-        ctx.lineTo(-size * 0.08, -size * 0.03);
-        ctx.stroke();
-        if (b > 0.3) {
-          // Scratch 2
-          ctx.beginPath();
-          ctx.moveTo(-size * 0.19, -size * 0.13);
-          ctx.lineTo(-size * 0.06, -size * 0.01);
-          ctx.stroke();
-        }
-        if (b > 0.5) {
-          // Scratch 3 — other side
-          ctx.beginPath();
-          ctx.moveTo(size * 0.1, size * 0.1);
-          ctx.lineTo(size * 0.2, size * 0.18);
-          ctx.stroke();
-        }
-      }
-
-      // Dizzy stars
-      if (b > 0.35) {
-        ctx.globalAlpha = Math.min((b - 0.3) * 1.5, 0.8);
-        const starCount = b > 0.6 ? 3 : 2;
-        for (let i = 0; i < starCount; i++) {
-          const sa = time * 3 + (i / starCount) * Math.PI * 2;
-          const sr = size * 0.4;
-          const sx = Math.cos(sa) * sr;
-          const sy = -size * 0.3 + Math.sin(sa * 1.5) * size * 0.08;
-          drawStar(sx, sy, 4 + b * 3, '#FFD700');
-        }
-      }
-
-      ctx.globalAlpha = 1;
-      ctx.restore();
-    }
-
-    function drawStar(x, y, r, color) {
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      for (let i = 0; i < 5; i++) {
-        const a = (i * 4 * Math.PI) / 5 - Math.PI / 2;
-        const method = i === 0 ? 'moveTo' : 'lineTo';
-        ctx[method](x + Math.cos(a) * r, y + Math.sin(a) * r);
-      }
-      ctx.closePath();
-      ctx.fill();
-    }
-
-    function roundRect(x, y, w, h, r) {
-      ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.lineTo(x + w - r, y);
-      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-      ctx.lineTo(x + w, y + h - r);
-      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-      ctx.lineTo(x + r, y + h);
-      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-      ctx.lineTo(x, y + r);
-      ctx.quadraticCurveTo(x, y, x + r, y);
-      ctx.closePath();
-    }
-
-    // Fox
+    // Fox state
     const fox = {
-      x: 0, y: 0,
+      x: W / 2, y: H * 0.55,
       vx: 0, vy: 0,
-      targetX: 0, targetY: 0,
-      size: 80,
-      chasing: false,
+      targetX: W / 2, targetY: H * 0.55,
+      size: Math.min(100, W * 0.12),
       rotation: 0,
-      squash: 1,
-      stretch: 1,
-      bouncePhase: 0,
+      squash: 1, stretch: 1,
+      bobPhase: 0,
     };
 
-    function draw404Title() {
-      const centerY = Math.min(H * 0.28, 220);
-      ctx.save();
-      ctx.textAlign = 'center';
+    // Mouse / touch
+    let mx = W / 2, my = H / 2;
+    let mouseActive = false;
 
-      const fontSize404 = Math.min(Math.max(W * 0.15, 80), 160);
-      ctx.font = `900 ${fontSize404}px Nunito, sans-serif`;
+    C.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; mouseActive = true; });
+    C.addEventListener('click', e => {
+      fox.targetX = e.clientX;
+      fox.targetY = e.clientY;
+      mouseActive = true;
+    });
+    C.addEventListener('touchstart', e => {
+      e.preventDefault();
+      const t = e.touches[0];
+      mx = t.clientX; my = t.clientY;
+      fox.targetX = t.clientX;
+      fox.targetY = t.clientY;
+      mouseActive = true;
+    });
+    C.addEventListener('touchmove', e => {
+      e.preventDefault();
+      const t = e.touches[0];
+      mx = t.clientX; my = t.clientY;
+    });
 
-      const textGrad = ctx.createLinearGradient(W/2 - 150, centerY, W/2 + 150, centerY);
-      textGrad.addColorStop(0, '#FF6B8A');
-      textGrad.addColorStop(0.5, '#B76CFD');
-      textGrad.addColorStop(1, '#FF9A5C');
-      ctx.fillStyle = textGrad;
-      ctx.shadowColor = '#FF6B8A';
-      ctx.shadowBlur = 30;
-      ctx.fillText('404', W/2, centerY);
-      ctx.shadowBlur = 0;
+    // ---- DRAWING HELPERS ----
 
-      const subSize = Math.min(Math.max(W * 0.025, 16), 28);
-      ctx.font = `800 ${subSize}px Nunito, sans-serif`;
-      ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.shadowColor = 'rgba(0,0,0,0.5)';
-      ctx.shadowBlur = 8;
-      ctx.fillText('Lost in the distance', W/2, centerY + fontSize404 * 0.35);
-      ctx.shadowBlur = 0;
-
-      if (!gameStarted) {
-        const hintAlpha = 0.4 + Math.sin(time * 2) * 0.2;
-        ctx.globalAlpha = hintAlpha;
-        ctx.font = `700 ${Math.max(14, subSize * 0.7)}px Nunito, sans-serif`;
-        ctx.fillStyle = 'rgba(255,255,255,0.7)';
-        ctx.fillText('click anywhere to help your fox catch hearts', W/2, centerY + fontSize404 * 0.55);
-        ctx.globalAlpha = 1;
-      }
-
-      if (score > 0) {
-        const scoreSize = Math.min(Math.max(W * 0.02, 16), 24);
-        ctx.font = `800 ${scoreSize}px Nunito, sans-serif`;
-        ctx.textAlign = 'right';
-        ctx.fillStyle = 'rgba(255,255,255,0.9)';
-        ctx.shadowColor = '#FF6B8A';
-        ctx.shadowBlur = 10;
-        const scoreText = combo > 1 ? `${score} pts  ·  ${combo}x combo` : `${score} pts`;
-        ctx.fillText(scoreText, W - 24, 40);
-        ctx.shadowBlur = 0;
-      }
-
-      ctx.restore();
-    }
-
-    // Hearts
-    const hearts = [];
-    const particles = [];
-    const popups = [];
-    const stars = [];
-    const bgOrbs = [];
-
-    // Stars
-    for (let i = 0; i < 150; i++) {
-      stars.push({
-        x: Math.random(), y: Math.random(),
-        size: Math.random() * 2.5 + 0.5,
-        twinkleSpeed: 1 + Math.random() * 3,
-        twinkleOffset: Math.random() * Math.PI * 2,
-        color: Math.random() > 0.85 ? (Math.random() > 0.5 ? '#FF6B8A' : '#B76CFD') : '#fff',
-      });
-    }
-
-    // Background gradient orbs
-    for (let i = 0; i < 6; i++) {
-      bgOrbs.push({
-        x: Math.random(), y: Math.random(),
-        radius: 150 + Math.random() * 250,
-        color: ['#FF6B8A', '#B76CFD', '#FF9A5C', '#6366F1', '#F472B6', '#8B5CF6'][i],
-        vx: (Math.random() - 0.5) * 0.0002,
-        vy: (Math.random() - 0.5) * 0.0002,
-        alpha: 0.08 + Math.random() * 0.06,
-      });
-    }
-
-    function drawHeart(cx, cy, size, color, glow) {
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.beginPath();
+    function drawHeart(cx, cy, size, color, alpha) {
+      X.save();
+      X.globalAlpha = alpha;
+      X.translate(cx, cy);
+      X.beginPath();
       const s = size;
-      ctx.moveTo(0, s * 0.3);
-      ctx.bezierCurveTo(-s * 0.05, s * 0.1, -s * 0.5, -s * 0.1, -s * 0.5, -s * 0.3);
-      ctx.bezierCurveTo(-s * 0.5, -s * 0.55, -s * 0.25, -s * 0.7, 0, -s * 0.5);
-      ctx.bezierCurveTo(s * 0.25, -s * 0.7, s * 0.5, -s * 0.55, s * 0.5, -s * 0.3);
-      ctx.bezierCurveTo(s * 0.5, -s * 0.1, s * 0.05, s * 0.1, 0, s * 0.3);
-      ctx.closePath();
-
-      if (glow > 0) {
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 20 * glow;
-      }
-
-      const grad = ctx.createRadialGradient(-s*0.1, -s*0.2, 0, 0, 0, s*0.6);
-      grad.addColorStop(0, lightenColor(color, 40));
-      grad.addColorStop(1, color);
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.ellipse(-s * 0.18, -s * 0.32, s * 0.1, s * 0.06, -0.5, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,0.6)';
-      ctx.fill();
-
-      ctx.restore();
+      X.moveTo(0, s * 0.3);
+      X.bezierCurveTo(-s*0.05, s*0.1, -s*0.5, -s*0.1, -s*0.5, -s*0.3);
+      X.bezierCurveTo(-s*0.5, -s*0.55, -s*0.25, -s*0.7, 0, -s*0.5);
+      X.bezierCurveTo(s*0.25, -s*0.7, s*0.5, -s*0.55, s*0.5, -s*0.3);
+      X.bezierCurveTo(s*0.5, -s*0.1, s*0.05, s*0.1, 0, s*0.3);
+      X.closePath();
+      X.shadowColor = color;
+      X.shadowBlur = 12;
+      const g = X.createRadialGradient(-s*0.1, -s*0.25, 0, 0, 0, s*0.55);
+      g.addColorStop(0, lighten(color, 60));
+      g.addColorStop(1, color);
+      X.fillStyle = g;
+      X.fill();
+      X.shadowBlur = 0;
+      // highlight
+      X.beginPath();
+      X.ellipse(-s*0.15, -s*0.32, s*0.08, s*0.05, -0.5, 0, Math.PI*2);
+      X.fillStyle = `rgba(255,255,255,${0.5 * alpha})`;
+      X.fill();
+      X.restore();
     }
 
-    function lightenColor(hex, amount) {
-      let r = parseInt(hex.slice(1,3), 16);
-      let g = parseInt(hex.slice(3,5), 16);
-      let b = parseInt(hex.slice(5,7), 16);
-      r = Math.min(255, r + amount);
-      g = Math.min(255, g + amount);
-      b = Math.min(255, b + amount);
+    function lighten(hex, amt) {
+      const r = Math.min(255, parseInt(hex.slice(1,3),16) + amt);
+      const g = Math.min(255, parseInt(hex.slice(3,5),16) + amt);
+      const b = Math.min(255, parseInt(hex.slice(5,7),16) + amt);
       return `rgb(${r},${g},${b})`;
     }
 
-    function spawnHeart() {
-      const colors = ['#FF6B8A', '#B76CFD', '#FF9A5C', '#FFB6C1', '#F472B6', '#E879F9'];
-      const side = Math.floor(Math.random() * 4);
-      let x, y;
-      if (side === 0) { x = -40; y = Math.random() * H; }
-      else if (side === 1) { x = W + 40; y = Math.random() * H; }
-      else if (side === 2) { x = Math.random() * W; y = -40; }
-      else { x = Math.random() * W; y = H + 40; }
+    // ---- MAIN LOOP ----
+    let t = 0;
+    let lastNow = performance.now();
+    let heartTimer = 0;
 
-      hearts.push({
-        x, y,
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: (Math.random() - 0.5) * 1.5,
-        size: 25 + Math.random() * 20,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        rotation: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.04,
-        wobblePhase: Math.random() * Math.PI * 2,
-        wobbleSpeed: 1 + Math.random() * 2,
-        pulsePhase: Math.random() * Math.PI * 2,
-        alive: true,
-      });
-    }
-
-    // Initial hearts
-    for (let i = 0; i < 8; i++) {
-      hearts.push({
-        x: W * 0.15 + Math.random() * W * 0.7,
-        y: H * 0.15 + Math.random() * H * 0.6,
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: (Math.random() - 0.5) * 1.5,
-        size: 25 + Math.random() * 20,
-        color: ['#FF6B8A', '#B76CFD', '#FF9A5C', '#FFB6C1', '#F472B6', '#E879F9'][i % 6],
-        rotation: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.04,
-        wobblePhase: Math.random() * Math.PI * 2,
-        wobbleSpeed: 1 + Math.random() * 2,
-        pulsePhase: Math.random() * Math.PI * 2,
-        alive: true,
-      });
-    }
-
-    // Center fox
-    fox.x = W / 2;
-    fox.y = H / 2;
-
-    function spawnCatchParticles(x, y, color) {
-      for (let i = 0; i < 20; i++) {
-        const angle = (Math.PI * 2 / 20) * i + Math.random() * 0.3;
-        const speed = 2 + Math.random() * 6;
-        const isHeart = Math.random() > 0.6;
-        particles.push({
-          x, y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          life: 1,
-          decay: 0.015 + Math.random() * 0.02,
-          size: isHeart ? 12 + Math.random() * 8 : 3 + Math.random() * 5,
-          color: Math.random() > 0.3 ? color : '#FFD700',
-          isHeart,
-          rotation: Math.random() * Math.PI * 2,
-          rotSpeed: (Math.random() - 0.5) * 0.2,
-          gravity: 0.08 + Math.random() * 0.05,
-        });
-      }
-
-      particles.push({
-        x, y, vx: 0, vy: 0,
-        life: 1, decay: 0.03,
-        size: 5, maxSize: 80,
-        color, isRing: true, gravity: 0,
-      });
-    }
-
-    function spawnWallParticles(x, y) {
-      for (let i = 0; i < 8; i++) {
-        const angle = Math.atan2(H/2 - y, W/2 - x) + (Math.random() - 0.5) * 1.5;
-        const speed = 1 + Math.random() * 3;
-        particles.push({
-          x, y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          life: 1,
-          decay: 0.03 + Math.random() * 0.02,
-          size: 2 + Math.random() * 3,
-          color: Math.random() > 0.5 ? 'rgba(200,220,255,0.8)' : 'rgba(255,255,255,0.6)',
-          isHeart: false,
-          rotation: 0,
-          rotSpeed: 0,
-          gravity: 0.02,
-        });
-      }
-    }
-
-    function spawnPopup(x, y, points) {
-      popups.push({
-        x, y,
-        text: combo > 1 ? `+${points} x${combo}!` : `+${points}`,
-        life: 1,
-        vy: -2,
-        size: 20 + Math.min(points, 5) * 4,
-        color: combo > 3 ? '#FFD700' : combo > 1 ? '#FF6B8A' : '#fff',
-      });
-    }
-
-    // Input
-    function handleInput(px, py) {
-      if (exploding) return;
-      fox.targetX = px;
-      fox.targetY = py;
-      fox.chasing = true;
-      if (!gameStarted) {
-        gameStarted = true;
-      }
-    }
-
-    canvas.addEventListener('click', (e) => handleInput(e.clientX, e.clientY));
-    canvas.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      handleInput(e.touches[0].clientX, e.touches[0].clientY);
-    });
-
-    // Main loop
-    let time = 0;
-    let spawnTimer = 0;
-    let lastFrame = performance.now();
-
-    function loop(now) {
-      requestAnimationFrame(loop);
-      const rawDt = (now - lastFrame) / 1000;
+    function frame(now) {
+      requestAnimationFrame(frame);
+      const rawDt = (now - lastNow) / 1000;
       const dt = Math.min(rawDt, 0.05);
-      lastFrame = now;
-      time += dt;
-      spawnTimer += dt;
-      if (wallHitCooldown > 0) wallHitCooldown -= dt;
+      lastNow = now;
+      t += dt;
+      heartTimer += dt;
 
-      ctx.clearRect(0, 0, W, H);
+      X.clearRect(0, 0, W, H);
 
-      function drawBackground() {
-        const pad = 30; // extra padding to cover shake offsets
-        const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-        bgGrad.addColorStop(0, '#0f0a2e');
-        bgGrad.addColorStop(0.5, '#1a1145');
-        bgGrad.addColorStop(1, '#12082a');
-        ctx.fillStyle = bgGrad;
-        ctx.fillRect(-pad, -pad, W + pad * 2, H + pad * 2);
+      // --- SKY ---
+      const sky = X.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0, '#0a0618');
+      sky.addColorStop(0.4, '#120a2e');
+      sky.addColorStop(0.7, '#1a1040');
+      sky.addColorStop(1, '#0e0825');
+      X.fillStyle = sky;
+      X.fillRect(0, 0, W, H);
 
-        bgOrbs.forEach(orb => {
-          orb.x += orb.vx;
-          orb.y += orb.vy;
-          if (orb.x < -0.2 || orb.x > 1.2) orb.vx *= -1;
-          if (orb.y < -0.2 || orb.y > 1.2) orb.vy *= -1;
-          const grad = ctx.createRadialGradient(orb.x * W, orb.y * H, 0, orb.x * W, orb.y * H, orb.radius);
-          grad.addColorStop(0, orb.color + Math.round(orb.alpha * 255).toString(16).padStart(2,'0'));
-          grad.addColorStop(1, orb.color + '00');
-          ctx.fillStyle = grad;
-          ctx.fillRect(-pad, -pad, W + pad * 2, H + pad * 2);
-        });
+      // Parallax offset from mouse
+      const px = (mx / W - 0.5) * 2;
+      const py = (my / H - 0.5) * 2;
 
+      // --- NEBULAE ---
+      nebulae.forEach(n => {
+        n.x += n.drift.x;
+        n.y += n.drift.y;
+        if (n.x < -0.1 || n.x > 1.1) n.drift.x *= -1;
+        if (n.y < -0.1 || n.y > 1.1) n.drift.y *= -1;
+        const nx = n.x * W + px * n.parallax * W;
+        const ny = n.y * H + py * n.parallax * H;
+        const g = X.createRadialGradient(nx, ny, 0, nx, ny, n.radius);
+        g.addColorStop(0, `rgba(${n.color.r},${n.color.g},${n.color.b},${n.alpha})`);
+        g.addColorStop(1, `rgba(${n.color.r},${n.color.g},${n.color.b},0)`);
+        X.fillStyle = g;
+        X.fillRect(0, 0, W, H);
+      });
+
+      // --- STARS with parallax ---
+      starLayers.forEach((stars, li) => {
+        const pxFactor = layerSpeeds[li];
         stars.forEach(s => {
-          const alpha = 0.3 + 0.7 * ((Math.sin(time * s.twinkleSpeed + s.twinkleOffset) + 1) / 2);
-          ctx.globalAlpha = alpha;
-          ctx.fillStyle = s.color;
-          ctx.beginPath();
-          ctx.arc(s.x * W, s.y * H, s.size, 0, Math.PI * 2);
-          ctx.fill();
+          const twinkle = 0.4 + 0.6 * (Math.sin(t * s.speed + s.twinkle) * 0.5 + 0.5);
+          X.globalAlpha = twinkle;
+          X.fillStyle = s.hue;
+          const sx = s.x * W + px * pxFactor * W;
+          const sy = s.y * H + py * pxFactor * H;
+          X.beginPath();
+          X.arc(sx, sy, s.size, 0, Math.PI * 2);
+          X.fill();
         });
-        ctx.globalAlpha = 1;
-      }
+      });
+      X.globalAlpha = 1;
 
-      // === EXPLOSION STATE ===
-      if (exploding) {
-        drawBackground();
-        explodeTimer -= dt * 1.2;
-
-        // White flash at start
-        if (explodeTimer > 1.5) {
-          const flashI = (explodeTimer - 1.5) / 0.5;
-          ctx.globalAlpha = flashI;
-          ctx.fillStyle = '#fff';
-          ctx.fillRect(0, 0, W, H);
-          ctx.globalAlpha = 1;
+      // --- FLOATING HEARTS ---
+      hearts.forEach(h => {
+        if (h.popped) {
+          h.popScale += dt * 3;
+          h.popAlpha -= dt * 3;
+          if (h.popAlpha > 0) {
+            X.save();
+            X.translate(h.x, h.y);
+            X.scale(h.popScale, h.popScale);
+            X.rotate(h.rotation);
+            drawHeart(0, 0, h.size, h.color, h.popAlpha * 0.5);
+            X.restore();
+          }
+          return;
         }
 
-        // Animate shatter pieces
-        shatterPieces.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy += p.gravity;
-          p.rotation += p.rotSpeed;
-          const alpha = Math.max(0, Math.min(1, explodeTimer * 0.8));
-
-          ctx.save();
-          ctx.globalAlpha = alpha;
-          ctx.translate(p.x + p.w/2, p.y + p.h/2);
-          ctx.rotate(p.rotation);
-
-          // Glass shard with gradient
-          const shardGrad = ctx.createLinearGradient(-p.w/2, -p.h/2, p.w/2, p.h/2);
-          shardGrad.addColorStop(0, 'rgba(15,10,46,0.95)');
-          shardGrad.addColorStop(0.5, 'rgba(26,17,69,0.9)');
-          shardGrad.addColorStop(1, 'rgba(18,8,42,0.95)');
-          ctx.fillStyle = shardGrad;
-          ctx.beginPath();
-          ctx.rect(-p.w/2, -p.h/2, p.w, p.h);
-          ctx.fill();
-
-          // Glass edge highlight
-          ctx.strokeStyle = 'rgba(180,200,255,0.5)';
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-
-          // Crack line across shard
-          ctx.beginPath();
-          ctx.moveTo(-p.w/2 * Math.cos(p.crackAngle), -p.h/2 * Math.sin(p.crackAngle));
-          ctx.lineTo(p.w/2 * Math.cos(p.crackAngle), p.h/2 * Math.sin(p.crackAngle));
-          ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-
-          // Glass reflection
-          ctx.globalAlpha = alpha * 0.15;
-          ctx.fillStyle = '#fff';
-          ctx.fillRect(-p.w/2, -p.h/2, p.w * 0.3, p.h);
-
-          ctx.restore();
-        });
-
-        if (explodeTimer <= 0) {
-          resetGame();
-        }
-        // Draw 404 title during explosion too
-        draw404Title();
-        return;
-      }
-
-      // === NORMAL GAME ===
-
-      // Screen shake — apply transform then redraw background inside it
-      let shaking = shakeAmount > 0.5;
-      if (shaking) {
-        ctx.save();
-        ctx.translate(
-          (Math.random() - 0.5) * shakeAmount,
-          (Math.random() - 0.5) * shakeAmount
-        );
-        shakeAmount *= 0.9;
-      }
-      drawBackground();
-
-      // Hearts
-      hearts.forEach((h, i) => {
-        if (!h.alive) return;
-
-        h.x += h.vx;
-        h.y += h.vy + Math.sin(time * h.wobbleSpeed + h.wobblePhase) * 0.5;
+        h.y -= h.speed;
+        h.x += Math.sin(t * h.wobbleSpeed + h.wobbleOffset) * h.wobbleAmp * dt;
         h.rotation += h.rotSpeed;
 
-        if (h.x < 30) { h.x = 30; h.vx = Math.abs(h.vx); }
-        if (h.x > W - 30) { h.x = W - 30; h.vx = -Math.abs(h.vx); }
-        if (h.y < 30) { h.y = 30; h.vy = Math.abs(h.vy); }
-        if (h.y > H - 100) { h.y = H - 100; h.vy = -Math.abs(h.vy); }
+        // Fade in at bottom, fade out at top
+        const fadeIn = Math.min(1, (H - h.y) / 100);
+        const fadeOut = Math.min(1, h.y / 100);
+        const alpha = h.opacity * fadeIn * fadeOut;
 
-        const pulse = 1 + Math.sin(time * 3 + h.pulsePhase) * 0.1;
-        const glow = (Math.sin(time * 2 + i) + 1) / 2;
+        X.save();
+        X.translate(h.x, h.y);
+        X.rotate(h.rotation);
+        drawHeart(0, 0, h.size, h.color, alpha);
+        X.restore();
 
-        ctx.save();
-        ctx.translate(h.x, h.y);
-        ctx.rotate(h.rotation);
-        ctx.scale(pulse, pulse);
-        drawHeart(0, 0, h.size, h.color, 0.3 + glow * 0.4);
-        ctx.restore();
-
-        // Collision with fox
+        // Check if fox touches this heart
         const dx = fox.x - h.x;
         const dy = fox.y - h.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const catchRadius = fox.size * 0.4 + h.size * 0.4;
-
-        if (dist < catchRadius) {
-          h.alive = false;
-          const now = time;
-          if (now - lastCatchTime < 2.5) combo++;
-          else combo = 1;
-          lastCatchTime = now;
-
-          const points = combo;
-          score += points;
-
-          spawnCatchParticles(h.x, h.y, h.color);
-          spawnPopup(h.x, h.y - 30, points);
-
-          fox.squash = 0.6;
-          fox.stretch = 1.4;
-          shakeAmount = 5 + combo * 2;
-          flashAlpha = 0.15;
-
-          // Catching hearts heals bruises slightly
-          foxBruises = Math.max(0, foxBruises - 0.05);
+        if (Math.sqrt(dx*dx + dy*dy) < fox.size * 0.4 + h.size * 0.3) {
+          popHeart(h);
         }
       });
 
-      // Remove dead hearts
+      // Remove dead hearts and spawn new
       for (let i = hearts.length - 1; i >= 0; i--) {
-        if (!hearts[i].alive) hearts.splice(i, 1);
+        if (hearts[i].y < -40 || (hearts[i].popped && hearts[i].popAlpha <= 0)) {
+          hearts.splice(i, 1);
+        }
       }
-
-      // Spawn hearts
-      if (spawnTimer > 1.8 && hearts.length < 10) {
+      if (heartTimer > 0.8 && hearts.length < 15) {
         spawnHeart();
-        spawnTimer = 0;
+        heartTimer = 0;
       }
 
-      // Fox physics
-      if (fox.chasing) {
+      // --- POP PARTICLES ---
+      for (let i = pops.length - 1; i >= 0; i--) {
+        const p = pops[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05;
+        p.vx *= 0.98;
+        p.life -= dt * 2.5;
+        if (p.life <= 0) { pops.splice(i, 1); continue; }
+        X.globalAlpha = p.life;
+        X.fillStyle = p.color;
+        X.beginPath();
+        X.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        X.fill();
+      }
+      X.globalAlpha = 1;
+
+      // --- FOX ---
+      // Smooth follow toward target (which updates on click) or gentle drift
+      if (mouseActive) {
         const dx = fox.targetX - fox.x;
         const dy = fox.targetY - fox.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        let nearestHeart = null;
-        let nearestDist = Infinity;
-        hearts.forEach(h => {
-          if (!h.alive) return;
-          const hdx = h.x - fox.targetX;
-          const hdy = h.y - fox.targetY;
-          const d = Math.sqrt(hdx*hdx + hdy*hdy);
-          if (d < nearestDist && d < 200) {
-            nearestDist = d;
-            nearestHeart = h;
-          }
-        });
-
-        let tx = fox.targetX, ty = fox.targetY;
-        if (nearestHeart) {
-          tx = nearestHeart.x;
-          ty = nearestHeart.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist > 2) {
+          const speed = Math.min(dist * 0.04, 8);
+          fox.vx += (dx / dist) * speed * dt * 60;
+          fox.vy += (dy / dist) * speed * dt * 60;
         }
-
-        const tdx = tx - fox.x;
-        const tdy = ty - fox.y;
-        const tdist = Math.sqrt(tdx * tdx + tdy * tdy);
-
-        const accel = 0.8;
-        fox.vx += (tdx / Math.max(tdist, 1)) * accel;
-        fox.vy += (tdy / Math.max(tdist, 1)) * accel;
-        fox.vx *= 0.92;
-        fox.vy *= 0.92;
-
-        if (dist < 5) {
-          fox.chasing = false;
-        }
-      } else {
-        fox.vx *= 0.97;
-        fox.vy *= 0.97;
-        fox.vx += Math.sin(time * 0.5) * 0.03;
-        fox.vy += Math.cos(time * 0.7) * 0.03;
       }
+      // Gentle ambient drift
+      fox.vx += Math.sin(t * 0.3) * 0.02;
+      fox.vy += Math.cos(t * 0.4) * 0.02;
+
+      // Damping
+      fox.vx *= 0.92;
+      fox.vy *= 0.92;
 
       fox.x += fox.vx;
       fox.y += fox.vy;
 
-      // Wall collision — detect hits, add cracks, accumulate damage
-      let hitWall = false;
-      let wallX = fox.x, wallY = fox.y;
-      const impactSpeed = Math.sqrt(fox.vx * fox.vx + fox.vy * fox.vy);
+      // Soft bounds
+      fox.x = Math.max(fox.size * 0.6, Math.min(W - fox.size * 0.6, fox.x));
+      fox.y = Math.max(fox.size * 0.6, Math.min(H - fox.size * 1.5, fox.y));
 
-      if (fox.x < 40) { fox.x = 40; fox.vx *= -0.5; hitWall = true; wallX = 0; wallY = fox.y; }
-      if (fox.x > W - 40) { fox.x = W - 40; fox.vx *= -0.5; hitWall = true; wallX = W; wallY = fox.y; }
-      if (fox.y < 40) { fox.y = 40; fox.vy *= -0.5; hitWall = true; wallX = fox.x; wallY = 0; }
-      if (fox.y > H - 120) { fox.y = H - 120; fox.vy *= -0.5; hitWall = true; wallX = fox.x; wallY = H; }
+      // Squash & stretch based on speed
+      const spd = Math.sqrt(fox.vx*fox.vx + fox.vy*fox.vy);
+      fox.stretch = lerp(fox.stretch, spd > 0.5 ? 1 + spd * 0.02 : 1, 0.1);
+      fox.squash = lerp(fox.squash, spd > 0.5 ? 1 - spd * 0.015 : 1, 0.1);
 
-      if (hitWall && impactSpeed > 0.8 && wallHitCooldown <= 0) {
-        wallHitCooldown = 0.1;
-        const severity = Math.min(impactSpeed / 4, 1);
-        wallDamage += severity * 1.5;
-        foxBruises = Math.min(1, foxBruises + severity * 0.35);
-        shakeAmount = Math.max(shakeAmount, impactSpeed * 4);
-        addCrack(wallX, wallY, severity);
-        spawnWallParticles(wallX, wallY);
-        flashAlpha = Math.max(flashAlpha, severity * 0.2);
+      // Tilt toward movement
+      const targetRot = Math.atan2(fox.vy, fox.vx) * 0.12;
+      fox.rotation = lerp(fox.rotation, spd > 0.3 ? targetRot : 0, 0.08);
 
+      fox.bobPhase += dt * 2;
+      const bob = Math.sin(fox.bobPhase) * 5;
 
-        // Squash on impact
-        fox.squash = 0.5;
-        fox.stretch = 1.5;
+      if (foxReady) {
+        X.save();
+        X.translate(fox.x, fox.y + bob);
+        X.rotate(fox.rotation);
+        X.scale(fox.stretch, fox.squash);
 
-        if (wallDamage >= maxDamage) {
-          triggerExplosion();
-        }
-      }
+        // Warm glow
+        const glow = X.createRadialGradient(0, 0, fox.size * 0.15, 0, 0, fox.size * 0.75);
+        glow.addColorStop(0, 'rgba(255,154,92,0.25)');
+        glow.addColorStop(0.5, 'rgba(255,107,138,0.08)');
+        glow.addColorStop(1, 'rgba(183,108,253,0)');
+        X.fillStyle = glow;
+        X.beginPath();
+        X.arc(0, 0, fox.size * 0.75, 0, Math.PI * 2);
+        X.fill();
 
-      // Slowly heal over time — very slow so damage accumulates
-      if (wallDamage > 0 && !exploding) {
-        wallDamage -= dt * 0.08;
-        if (wallDamage < 0) wallDamage = 0;
-        cracks.forEach(c => { c.alpha -= dt * 0.03; });
-        cracks = cracks.filter(c => c.alpha > 0.02);
-      }
-      if (foxBruises > 0) {
-        foxBruises -= dt * 0.008;
-        if (foxBruises < 0) foxBruises = 0;
-      }
-
-      fox.bouncePhase += dt * 3;
-
-      // Draw fox
-      const speed = Math.sqrt(fox.vx * fox.vx + fox.vy * fox.vy);
-      const targetSquash = speed > 1 ? 0.85 : 1;
-      const targetStretch = speed > 1 ? 1.15 : 1;
-      fox.squash += (targetSquash - fox.squash) * 0.15;
-      fox.stretch += (targetStretch - fox.stretch) * 0.15;
-
-      const targetRot = Math.atan2(fox.vy, fox.vx) * 0.15;
-      fox.rotation += (targetRot - fox.rotation) * 0.1;
-
-      const bobY = Math.sin(fox.bouncePhase) * 4;
-
-      if (foxLoaded) {
-        ctx.save();
-        ctx.translate(fox.x, fox.y + bobY);
-        ctx.rotate(fox.rotation);
-        ctx.scale(fox.stretch, fox.squash);
-
-        // Glow behind fox — dims when bruised
-        const glowAlpha = 0.3 * (1 - foxBruises * 0.6);
-        const foxGlow = ctx.createRadialGradient(0, 0, fox.size * 0.2, 0, 0, fox.size * 0.8);
-        foxGlow.addColorStop(0, `rgba(255,154,92,${glowAlpha})`);
-        foxGlow.addColorStop(1, 'rgba(255,154,92,0)');
-        ctx.fillStyle = foxGlow;
-        ctx.beginPath();
-        ctx.arc(0, 0, fox.size * 0.8, 0, Math.PI * 2);
-        ctx.fill();
-
+        // Fox
         const s = fox.size;
-        ctx.drawImage(foxImg, -s/2, -s/2, s, s);
-
-        ctx.restore();
-
-        // Draw bruises on top of fox (in screen space)
-        drawFoxBruises(fox.x, fox.y + bobY, fox.size);
+        X.drawImage(foxImg, -s/2, -s/2, s, s);
+        X.restore();
       }
 
-      // Particles
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.life -= p.decay;
+      // --- 404 TEXT ---
+      X.save();
+      X.textAlign = 'center';
 
-        if (p.isRing) {
-          p.size += (p.maxSize - p.size) * 0.1;
-          ctx.globalAlpha = p.life * 0.5;
-          ctx.strokeStyle = p.color;
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.stroke();
-        } else {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy += p.gravity;
-          p.vx *= 0.98;
-          p.rotation += p.rotSpeed;
+      const centerY = Math.min(H * 0.22, 200);
+      const fs = Math.min(Math.max(W * 0.18, 80), 200);
+      X.font = `900 ${fs}px Nunito, sans-serif`;
 
-          ctx.globalAlpha = p.life;
-          if (p.isHeart) {
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate(p.rotation);
-            ctx.scale(p.life, p.life);
-            drawHeart(0, 0, p.size, p.color, 0);
-            ctx.restore();
-          } else {
-            ctx.fillStyle = p.color;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
+      // Text shadow layers for depth
+      X.shadowColor = 'rgba(183,108,253,0.4)';
+      X.shadowBlur = 60;
+      const tg = X.createLinearGradient(W/2 - fs, centerY, W/2 + fs, centerY);
+      tg.addColorStop(0, '#FF6B8A');
+      tg.addColorStop(0.5, '#B76CFD');
+      tg.addColorStop(1, '#FF9A5C');
+      X.fillStyle = tg;
+      X.fillText('404', W/2, centerY);
 
-        ctx.globalAlpha = 1;
-        if (p.life <= 0) particles.splice(i, 1);
+      // Second pass for extra glow
+      X.shadowColor = 'rgba(255,107,138,0.3)';
+      X.shadowBlur = 80;
+      X.fillText('404', W/2, centerY);
+      X.shadowBlur = 0;
+
+      // Subtitle
+      const ss = Math.min(Math.max(W * 0.028, 16), 30);
+      X.font = `700 ${ss}px Nunito, sans-serif`;
+      X.fillStyle = 'rgba(255,255,255,0.75)';
+      X.shadowColor = 'rgba(0,0,0,0.3)';
+      X.shadowBlur = 6;
+      X.fillText("Looks like you've wandered too far, little fox", W/2, centerY + fs * 0.32);
+      X.shadowBlur = 0;
+
+      // Hint — pulses gently
+      if (!mouseActive) {
+        X.globalAlpha = 0.35 + Math.sin(t * 1.5) * 0.15;
+        X.font = `600 ${Math.max(13, ss * 0.65)}px Nunito, sans-serif`;
+        X.fillStyle = 'rgba(255,255,255,0.6)';
+        X.fillText('tap or click to guide the fox', W/2, centerY + fs * 0.52);
+        X.globalAlpha = 1;
       }
 
-      // Popups
-      for (let i = popups.length - 1; i >= 0; i--) {
-        const p = popups[i];
-        p.life -= 0.015;
-        p.y += p.vy;
-        p.vy *= 0.98;
-
-        ctx.globalAlpha = p.life;
-        ctx.fillStyle = p.color;
-        ctx.font = `900 ${p.size * (1 + (1-p.life)*0.5)}px Nunito, sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 10;
-        ctx.fillText(p.text, p.x, p.y);
-        ctx.shadowBlur = 0;
-        ctx.globalAlpha = 1;
-
-        if (p.life <= 0) popups.splice(i, 1);
-      }
-
-      if (shaking) ctx.restore();
-
-      // Glass cracks overlay — drawn OVER everything for glass-screen effect
-      drawGlassOverlay();
-
-      // Flash effect
-      if (flashAlpha > 0.01) {
-        ctx.globalAlpha = flashAlpha;
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, W, H);
-        ctx.globalAlpha = 1;
-        flashAlpha *= 0.85;
-      }
-
-      draw404Title();
+      X.restore();
     }
 
-    requestAnimationFrame(loop);
+    requestAnimationFrame(frame);
   })();
   </script>
 </Layout>
