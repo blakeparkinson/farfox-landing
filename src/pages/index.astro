@@ -117,9 +117,9 @@ const features = [
   <!-- Hero -->
   <section class="min-h-screen flex items-center justify-center pt-20 pb-16 px-6 relative overflow-hidden">
     <!-- Subtle gradient orbs -->
-    <div class="absolute top-20 left-10 w-72 h-72 bg-fox-pink/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-20 right-10 w-96 h-96 bg-fox-purple/10 rounded-full blur-3xl"></div>
-    <div class="absolute top-40 right-20 w-48 h-48 bg-fox-orange/15 rounded-full blur-3xl"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-fox-pink/10 rounded-full blur-3xl will-change-transform"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-fox-purple/10 rounded-full blur-3xl will-change-transform"></div>
+    <div class="absolute top-40 right-20 w-48 h-48 bg-fox-orange/15 rounded-full blur-3xl will-change-transform"></div>
 
     <div class="max-w-3xl mx-auto relative z-10">
       <div class="text-center">
@@ -194,8 +194,8 @@ const features = [
       <div class="flex flex-col sm:flex-row gap-12 sm:gap-8">
         <div class="flex-1 flex flex-col items-center scroll-reveal" style="transition-delay: 0.1s;">
           <div class="w-14 h-14 rounded-full bg-gradient-to-br from-fox-pink to-fox-purple flex items-center justify-center text-white font-900 text-xl mb-4">1</div>
-          <h3 class="font-800 text-xl mb-2">Create your account</h3>
-          <p class="text-fox-text-light max-w-sm">Sign up in seconds. Pick a name for your fox.</p>
+          <h3 class="font-800 text-xl mb-2">Name your fox</h3>
+          <p class="text-fox-text-light max-w-sm">Sign up and choose a name for the fox companion that'll grow with your relationship.</p>
         </div>
         <!-- Connector arrow (hidden on mobile) -->
         <div class="hidden sm:flex items-center justify-center text-fox-pink/20 -mx-2 pt-0 mt-2">
@@ -203,16 +203,16 @@ const features = [
         </div>
         <div class="flex-1 flex flex-col items-center scroll-reveal" style="transition-delay: 0.2s;">
           <div class="w-14 h-14 rounded-full bg-gradient-to-br from-fox-orange to-fox-pink flex items-center justify-center text-white font-900 text-xl mb-4">2</div>
-          <h3 class="font-800 text-xl mb-2">Invite your partner</h3>
-          <p class="text-fox-text-light max-w-sm">Share a link. Once they join, your fox comes alive.</p>
+          <h3 class="font-800 text-xl mb-2">Connect with your partner</h3>
+          <p class="text-fox-text-light max-w-sm">Send an invite link. Once they join, your fox wakes up and your first daily question drops.</p>
         </div>
         <div class="hidden sm:flex items-center justify-center text-fox-pink/20 -mx-2 pt-0 mt-2">
           <svg width="32" height="16" viewBox="0 0 32 16" fill="none"><path d="M0 8h28m0 0l-6-6m6 6l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="flex-1 flex flex-col items-center scroll-reveal" style="transition-delay: 0.3s;">
           <div class="w-14 h-14 rounded-full bg-gradient-to-br from-fox-purple to-fox-orange flex items-center justify-center text-white font-900 text-xl mb-4">3</div>
-          <h3 class="font-800 text-xl mb-2">Start your daily rituals</h3>
-          <p class="text-fox-text-light max-w-sm">Photos, letters, questions, challenges — make distance feel smaller every day.</p>
+          <h3 class="font-800 text-xl mb-2">Build your rituals</h3>
+          <p class="text-fox-text-light max-w-sm">Answer questions, write love letters, complete challenges together — level up your fox and your streak.</p>
         </div>
       </div>
     </div>
@@ -382,7 +382,24 @@ const features = [
       transition: none;
     }
   }
+
+  /* No-JS fallback: show content if JS doesn't run */
+  @media (scripting: none) {
+    .scroll-reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>
+
+<noscript>
+  <style>
+    .scroll-reveal {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  </style>
+</noscript>
 
 <script>
   const observer = new IntersectionObserver(
