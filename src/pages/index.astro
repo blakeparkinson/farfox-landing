@@ -123,7 +123,7 @@ const features = [
 
     <div class="max-w-3xl mx-auto relative z-10">
       <div class="text-center">
-        <img src="/fox-logo.png" alt="Far Fox kawaii fox mascot — the couples app for staying connected long distance" class="w-28 h-28 mx-auto mb-8 drop-shadow-lg fade-in" width="112" height="112" />
+        <img src="/fox-logo.png" alt="Far Fox kawaii fox mascot — the couples app for staying connected long distance" class="w-28 h-28 mx-auto mb-8 drop-shadow-lg fade-in fox-float" width="112" height="112" />
         <h1 class="text-4xl sm:text-5xl md:text-6xl font-900 leading-tight tracking-tight mb-6 fade-in" style="animation-delay: 0.1s;">
           Stay connected,
           <br />
@@ -360,6 +360,16 @@ const features = [
     }
   }
 
+  /* Gentle floating fox */
+  .fox-float {
+    animation: fadeInUp 0.6s ease forwards, foxFloat 3s ease-in-out 0.6s infinite;
+  }
+
+  @keyframes foxFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
   /* Scroll reveal */
   .scroll-reveal {
     opacity: 0;
@@ -375,6 +385,7 @@ const features = [
   /* Respect reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .fade-in,
+    .fox-float,
     .scroll-reveal {
       opacity: 1;
       transform: none;

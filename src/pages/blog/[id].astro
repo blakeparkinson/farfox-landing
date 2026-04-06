@@ -41,7 +41,7 @@ const articleSchema = {
 };
 ---
 
-<Layout title={`${post.data.title} — Far Fox`} description={post.data.description}>
+<Layout title={`${post.data.title} — Far Fox`} description={post.data.description} image={post.data.image}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
 
   <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
