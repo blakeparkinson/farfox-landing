@@ -307,15 +307,18 @@ const featureGroups = [
   </section>
 
   <!-- Features -->
-  <section id="features" class="py-16 sm:py-24 px-6">
+  <section id="features" class="py-16 sm:py-24 px-6 bg-gradient-to-b from-fox-text/[0.04] via-transparent to-transparent">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-10 sm:mb-16">
-        <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4">
+        <p class="text-sm font-700 uppercase tracking-widest text-fox-pink/70 mb-4 scroll-reveal">
+          The rituals that fill the silence
+        </p>
+        <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4 scroll-reveal" style="transition-delay: 0.05s;">
           Everything you need to
           <span class="bg-gradient-to-r from-fox-pink to-fox-orange bg-clip-text text-transparent">stay close</span>
         </h2>
-        <p class="text-fox-text-light text-lg max-w-lg mx-auto">
-          Not just another messaging app. Far Fox is built from the ground up for couples who live apart.
+        <p class="text-fox-text-light text-lg max-w-lg mx-auto scroll-reveal" style="transition-delay: 0.1s;">
+          Not another messaging app. A daily anchor — built from the ground up for couples who live apart.
         </p>
       </div>
 
@@ -397,52 +400,71 @@ const featureGroups = [
   <!-- Fox lore: the mascot has identity -->
   <section class="py-16 sm:py-24 px-6">
     <div class="max-w-5xl mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
-        <!-- Fox visual -->
-        <div class="relative flex justify-center order-2 md:order-1 scroll-reveal">
-          <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/25 via-fox-purple/20 to-fox-orange/20 blur-3xl scale-110"></div>
-          <img src="/fox-logo.png" alt="Far Fox companion mascot" class="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 drop-shadow-2xl fox-float" />
+      <div class="text-center mb-12 scroll-reveal">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-900 tracking-tight mb-5 leading-tight">
+          Your fox isn't just a
+          <span class="bg-gradient-to-r from-fox-pink to-fox-orange bg-clip-text text-transparent">logo</span>
+        </h2>
+        <p class="text-fox-text-light text-lg max-w-xl mx-auto">
+          It grows alongside your relationship — gaining levels, accessories, and quiet little quirks the more you show up for each other.
+        </p>
+      </div>
+
+      <!-- Fox evolution row -->
+      <div class="grid grid-cols-4 gap-3 sm:gap-6 mb-16 max-w-3xl mx-auto">
+        <div class="text-center scroll-reveal" style="transition-delay: 0.05s;">
+          <div class="relative inline-flex items-center justify-center w-full aspect-square mb-3">
+            <div class="absolute inset-0 bg-fox-pink/15 rounded-full blur-2xl scale-90"></div>
+            <img src="/fox-logo.png" alt="" class="relative w-12 h-12 sm:w-20 sm:h-20" style="filter: saturate(0.65) brightness(1.08);" />
+          </div>
+          <p class="font-800 text-xs sm:text-sm text-fox-text">Day 1</p>
+          <p class="text-fox-text-light text-[10px] sm:text-xs">Curious Pup</p>
         </div>
 
-        <!-- Lore copy -->
-        <div class="order-1 md:order-2 scroll-reveal">
-          <h2 class="text-3xl sm:text-4xl md:text-5xl font-900 tracking-tight mb-6 leading-tight">
-            Your fox isn't just a
-            <span class="bg-gradient-to-r from-fox-pink to-fox-orange bg-clip-text text-transparent">logo</span>
-          </h2>
-
-          <div class="space-y-3 text-fox-text-light text-lg leading-relaxed mb-8">
-            <p>It wakes up the morning you both join.</p>
-            <p>Tilts its head when neither of you writes a letter.</p>
-            <p>Sleeps when you sleep, in <em>your</em> timezone.</p>
-            <p>Levels up the day you hit your 100-day streak.</p>
-            <p>And when you log in after a quiet week? It's been waiting.</p>
+        <div class="text-center scroll-reveal" style="transition-delay: 0.1s;">
+          <div class="relative inline-flex items-center justify-center w-full aspect-square mb-3">
+            <div class="absolute inset-0 bg-fox-pink/20 rounded-full blur-2xl"></div>
+            <img src="/fox-logo.png" alt="" class="relative w-16 h-16 sm:w-24 sm:h-24" style="filter: saturate(0.85);" />
           </div>
+          <p class="font-800 text-xs sm:text-sm text-fox-text">Day 30</p>
+          <p class="text-fox-text-light text-[10px] sm:text-xs">Wise Fox</p>
+        </div>
 
-          <div class="pt-6 border-t border-fox-pink/15">
-            <p class="text-fox-text font-700 text-lg sm:text-xl leading-snug">
-              Most apps have mascots.<br />
-              Far Fox has a small creature you'll catch yourself worrying about.
-            </p>
+        <div class="text-center scroll-reveal" style="transition-delay: 0.15s;">
+          <div class="relative inline-flex items-center justify-center w-full aspect-square mb-3">
+            <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/30 to-fox-purple/25 rounded-full blur-2xl scale-110"></div>
+            <img src="/fox-logo.png" alt="" class="relative w-20 h-20 sm:w-28 sm:h-28 drop-shadow-md" />
           </div>
+          <p class="font-800 text-xs sm:text-sm text-fox-text">Day 100</p>
+          <p class="text-fox-text-light text-[10px] sm:text-xs">Elder Fox</p>
+        </div>
+
+        <div class="text-center scroll-reveal" style="transition-delay: 0.2s;">
+          <div class="relative inline-flex items-center justify-center w-full aspect-square mb-3">
+            <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/40 via-fox-purple/35 to-fox-orange/35 rounded-full blur-2xl scale-125"></div>
+            <img src="/fox-logo.png" alt="" class="relative w-24 h-24 sm:w-32 sm:h-32 drop-shadow-lg" style="filter: saturate(1.15);" />
+            <span class="absolute top-0 right-0 sm:top-1 sm:right-2 text-base sm:text-2xl select-none" aria-hidden="true">✨</span>
+          </div>
+          <p class="font-800 text-xs sm:text-sm text-fox-text">Day 365</p>
+          <p class="text-fox-text-light text-[10px] sm:text-xs">Mystic Fox</p>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- What is Far Fox — SEO content section -->
-  <section class="py-20 px-6">
-    <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-6 scroll-reveal">
-        Built for the
-        <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">distance</span>
-      </h2>
-      <p class="text-fox-text-light text-lg leading-relaxed scroll-reveal max-w-2xl mx-auto">
-        Whether you're a long-distance couple, a military spouse, studying abroad, or
-        just spending a few weeks apart — Far Fox replaces transactional texting with
-        rituals that actually keep you close. No ads, no algorithms, no distractions —
-        just you, your partner, and your fox.
-      </p>
+      <!-- Lore narrative -->
+      <div class="max-w-2xl mx-auto text-center space-y-3 text-fox-text-light text-lg leading-relaxed mb-10 scroll-reveal">
+        <p>It wakes up the morning you both join.</p>
+        <p>Tilts its head when neither of you writes a letter.</p>
+        <p>Sleeps when you sleep, in <em>your</em> timezone.</p>
+        <p>Levels up the day you hit your 100-day streak.</p>
+        <p>And when you log in after a quiet week? It's been waiting.</p>
+      </div>
+
+      <div class="max-w-2xl mx-auto pt-10 border-t border-fox-pink/15 text-center scroll-reveal">
+        <p class="text-fox-text font-700 text-lg sm:text-xl leading-snug">
+          Most apps have mascots.<br />
+          Far Fox has a small creature you'll catch yourself worrying about.
+        </p>
+      </div>
     </div>
   </section>
 
