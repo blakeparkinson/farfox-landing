@@ -51,76 +51,100 @@ const testimonials = [
   },
 ];
 
-const features = [
+const featureGroups = [
   {
-    emoji: '📸',
-    title: 'Shared Photos',
-    description: 'Snap and share moments throughout your day. Build a private photo timeline together.',
+    title: 'Daily Connection',
+    description: 'Small daily touchpoints that make distance feel smaller.',
+    features: [
+      {
+        emoji: '💬',
+        title: 'Daily Questions',
+        description: 'Answer fun and deep questions together. See each other\'s answers once you\'ve both responded.',
+      },
+      {
+        emoji: '📸',
+        title: 'Shared Photos',
+        description: 'Snap and share moments throughout your day. Build a private photo timeline together.',
+      },
+      {
+        emoji: '🎙️',
+        title: 'Voice & Video Messages',
+        description: 'Leave voice notes and short video messages. Hear their voice whenever you need it — no call required.',
+      },
+      {
+        emoji: '💛',
+        title: 'Thinking of You',
+        description: 'Send a quick tap. Your partner feels a buzz and knows you\'re thinking about them right now.',
+      },
+    ],
   },
   {
-    emoji: '💌',
-    title: 'Love Letters',
-    description: 'Write heartfelt letters on beautiful stationery themes. Daily prompts keep the words flowing.',
+    title: 'Write & Reflect',
+    description: 'Quiet rituals for the things that need more than a text.',
+    features: [
+      {
+        emoji: '💌',
+        title: 'Love Letters',
+        description: 'Write heartfelt letters on beautiful stationery themes. Daily prompts keep the words flowing.',
+      },
+      {
+        emoji: '🔮',
+        title: 'Time Capsule',
+        description: 'Seal a message to be opened on a future date. A love letter your future selves will read together.',
+      },
+      {
+        emoji: '🌙',
+        title: 'Mood & Presence',
+        description: 'Share how you\'re feeling. See when your partner is online and what timezone they\'re in.',
+      },
+    ],
   },
   {
-    emoji: '💬',
-    title: 'Daily Questions',
-    description: 'Answer fun and deep questions together. See each other\'s answers once you\'ve both responded.',
+    title: 'Play Together',
+    description: 'Games and challenges that turn screen time into shared time.',
+    features: [
+      {
+        emoji: '🔥',
+        title: 'Would You Rather',
+        description: 'Play rounds of Would You Rather and see how well you match. Spoiler: it\'s never 100%.',
+      },
+      {
+        emoji: '🧩',
+        title: 'Couple Quizzes',
+        description: 'Compatibility quizzes that reveal how well you really know each other. Compare answers side by side.',
+      },
+      {
+        emoji: '🎯',
+        title: 'Challenges & Streaks',
+        description: 'Daily challenges that integrate with the app. Take a photo, write a letter, answer a question — earn XP.',
+      },
+      {
+        emoji: '🐾',
+        title: 'Your Fox Companion',
+        description: 'A little fox that grows with your relationship. It reacts to everything you do — pet it, feed it love.',
+      },
+    ],
   },
   {
-    emoji: '🔥',
-    title: 'Would You Rather',
-    description: 'Play rounds of Would You Rather and see how well you match. Spoiler: it\'s never 100%.',
-  },
-  {
-    emoji: '🐾',
-    title: 'Your Fox Companion',
-    description: 'A little fox that grows with your relationship. It reacts to everything you do — pet it, feed it love.',
-  },
-  {
-    emoji: '🎯',
-    title: 'Challenges & Streaks',
-    description: 'Daily challenges that integrate with the app. Take a photo, write a letter, answer a question — earn XP.',
-  },
-  {
-    emoji: '🌙',
-    title: 'Mood & Presence',
-    description: 'Share how you\'re feeling. See when your partner is online and what timezone they\'re in.',
-  },
-  {
-    emoji: '📅',
-    title: 'Plans & Countdowns',
-    description: 'Track your next visit, anniversaries, and special dates. The countdown makes it real.',
-  },
-  {
-    emoji: '🎙️',
-    title: 'Voice & Video Messages',
-    description: 'Leave voice notes and short video messages. Hear their voice whenever you need it — no call required.',
-  },
-  {
-    emoji: '🔮',
-    title: 'Time Capsule',
-    description: 'Seal a message to be opened on a future date. A love letter your future selves will read together.',
-  },
-  {
-    emoji: '🦊',
-    title: 'Ask Foxy',
-    description: 'Your AI relationship companion. Ask for advice, date ideas, or just vent — Foxy gets your situation.',
-  },
-  {
-    emoji: '🧩',
-    title: 'Couple Quizzes',
-    description: 'Compatibility quizzes that reveal how well you really know each other. Compare answers side by side.',
-  },
-  {
-    emoji: '💛',
-    title: 'Thinking of You',
-    description: 'Send a quick tap. Your partner feels a buzz and knows you\'re thinking about them right now.',
-  },
-  {
-    emoji: '🗓️',
-    title: 'Shared Calendar',
-    description: 'Plan visits, mark anniversaries, and sync your schedules. No more "I didn\'t know you had that."',
+    title: 'Plan Together',
+    description: 'Look forward to the next time you\'re in the same place.',
+    features: [
+      {
+        emoji: '📅',
+        title: 'Plans & Countdowns',
+        description: 'Track your next visit, anniversaries, and special dates. The countdown makes it real.',
+      },
+      {
+        emoji: '🗓️',
+        title: 'Shared Calendar',
+        description: 'Plan visits, mark anniversaries, and sync your schedules. No more "I didn\'t know you had that."',
+      },
+      {
+        emoji: '🦊',
+        title: 'Ask Foxy',
+        description: 'Your AI relationship companion. Ask for advice, date ideas, or just vent — Foxy gets your situation.',
+      },
+    ],
   },
 ];
 ---
@@ -201,12 +225,24 @@ const features = [
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {features.map((f, i) => (
-          <div class="group p-6 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1 scroll-reveal" style={`transition-delay: ${i * 0.05}s;`}>
-            <div class="text-3xl mb-3">{f.emoji}</div>
-            <h3 class="font-800 text-lg mb-2">{f.title}</h3>
-            <p class="text-fox-text-light text-sm leading-relaxed">{f.description}</p>
+      <div class="space-y-16">
+        {featureGroups.map((group) => (
+          <div>
+            <div class="text-center mb-8 scroll-reveal">
+              <h3 class="text-2xl sm:text-3xl font-900 tracking-tight mb-2">
+                <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">{group.title}</span>
+              </h3>
+              <p class="text-fox-text-light text-base max-w-md mx-auto">{group.description}</p>
+            </div>
+            <div class={`grid grid-cols-1 sm:grid-cols-2 gap-6 ${group.features.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3 max-w-4xl mx-auto'}`}>
+              {group.features.map((f, i) => (
+                <div class="group p-6 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1 scroll-reveal" style={`transition-delay: ${i * 0.05}s;`}>
+                  <div class="text-3xl mb-3">{f.emoji}</div>
+                  <h4 class="font-800 text-lg mb-2">{f.title}</h4>
+                  <p class="text-fox-text-light text-sm leading-relaxed">{f.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
