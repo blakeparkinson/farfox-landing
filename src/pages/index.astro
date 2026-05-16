@@ -274,6 +274,38 @@ const featureGroups = [
     </div>
   </section>
 
+  <!-- Emotional punch: name the pain -->
+  <section class="py-20 sm:py-28 px-6 bg-fox-text relative overflow-hidden">
+    <!-- Soft glows on dark background -->
+    <div class="absolute top-10 -left-20 w-72 h-72 bg-fox-pink/15 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 -right-20 w-72 h-72 bg-fox-purple/15 rounded-full blur-3xl"></div>
+
+    <div class="max-w-3xl mx-auto relative z-10 text-center">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-900 tracking-tight mb-10 leading-tight text-white scroll-reveal">
+        Long-distance has a
+        <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">
+          specific kind of loneliness
+        </span>
+      </h2>
+
+      <div class="space-y-5 text-lg sm:text-xl text-white/80 leading-relaxed scroll-reveal" style="transition-delay: 0.1s;">
+        <p>The 11pm goodnight that feels hollow.</p>
+        <p>Watching the same show, alone, again.</p>
+        <p>The way <em>"how was your day?"</em> slowly stops working.</p>
+      </div>
+
+      <div class="mt-14 pt-10 border-t border-white/10 scroll-reveal" style="transition-delay: 0.2s;">
+        <p class="text-base sm:text-lg text-white/60 leading-relaxed max-w-2xl mx-auto">
+          Texting feels like maintenance. Calls feel like meetings.
+          Whole weeks pass without a single moment that's truly <em>yours</em>.
+        </p>
+        <p class="mt-8 text-xl sm:text-2xl font-800 text-white">
+          Far Fox is built for the silence between the messages.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <!-- Features -->
   <section id="features" class="py-16 sm:py-24 px-6">
     <div class="max-w-5xl mx-auto">
@@ -312,35 +344,87 @@ const featureGroups = [
   </section>
 
   <!-- How it works -->
-  <section class="py-16 sm:py-24 px-6 bg-gradient-to-b from-fox-bg to-white">
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-10 sm:mb-16 scroll-reveal">
+  <section class="py-16 sm:py-24 px-6 bg-gradient-to-b from-fox-bg to-white relative overflow-hidden">
+    <!-- Soft decorative orbs -->
+    <div class="absolute top-1/2 -left-32 w-96 h-96 bg-fox-pink/8 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 -right-32 w-96 h-96 bg-fox-purple/8 rounded-full blur-3xl"></div>
+
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4 scroll-reveal">
         Getting started is
         <span class="bg-gradient-to-r from-fox-purple to-fox-pink bg-clip-text text-transparent">easy</span>
       </h2>
+      <p class="text-fox-text-light text-lg max-w-md mx-auto mb-12 sm:mb-16 scroll-reveal" style="transition-delay: 0.1s;">
+        From signup to your first daily ritual — about three minutes.
+      </p>
 
-      <div class="flex flex-col sm:flex-row gap-12 sm:gap-8">
-        <div class="flex-1 flex flex-col items-center scroll-reveal" style="transition-delay: 0.1s;">
-          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-fox-pink to-fox-purple flex items-center justify-center text-white font-900 text-xl mb-4">1</div>
-          <h3 class="font-800 text-xl mb-2">Name your fox</h3>
-          <p class="text-fox-text-light max-w-sm">Sign up and choose a name for the fox companion that'll grow with your relationship.</p>
+      <div class="relative">
+        <!-- Dashed progression line (desktop only) -->
+        <div class="hidden sm:block absolute top-12 left-[16.66%] right-[16.66%] border-t-2 border-dashed border-fox-pink/25 z-0"></div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 relative z-10">
+          <!-- Step 1 -->
+          <div class="scroll-reveal" style="transition-delay: 0.15s;">
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl border border-fox-pink/10 p-8 hover:border-fox-pink/30 hover:shadow-xl hover:shadow-fox-pink/10 transition-all duration-300 hover:-translate-y-1 h-full">
+              <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-fox-pink to-fox-purple flex items-center justify-center text-white font-900 text-2xl mb-5 shadow-lg shadow-fox-pink/30 ring-4 ring-white">1</div>
+              <h3 class="font-800 text-xl mb-2">Name your fox</h3>
+              <p class="text-fox-text-light text-sm leading-relaxed">Sign up and pick a name for the fox companion that'll grow with your relationship.</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="scroll-reveal" style="transition-delay: 0.25s;">
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl border border-fox-pink/10 p-8 hover:border-fox-pink/30 hover:shadow-xl hover:shadow-fox-pink/10 transition-all duration-300 hover:-translate-y-1 h-full">
+              <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-fox-orange to-fox-pink flex items-center justify-center text-white font-900 text-2xl mb-5 shadow-lg shadow-fox-orange/30 ring-4 ring-white">2</div>
+              <h3 class="font-800 text-xl mb-2">Connect your partner</h3>
+              <p class="text-fox-text-light text-sm leading-relaxed">Send an invite link. Once they join, your fox wakes up and your first daily question drops.</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="scroll-reveal" style="transition-delay: 0.35s;">
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl border border-fox-pink/10 p-8 hover:border-fox-pink/30 hover:shadow-xl hover:shadow-fox-pink/10 transition-all duration-300 hover:-translate-y-1 h-full">
+              <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-fox-purple to-fox-orange flex items-center justify-center text-white font-900 text-2xl mb-5 shadow-lg shadow-fox-purple/30 ring-4 ring-white">3</div>
+              <h3 class="font-800 text-xl mb-2">Build your rituals</h3>
+              <p class="text-fox-text-light text-sm leading-relaxed">Answer questions, write love letters, complete challenges — level up your fox and your streak.</p>
+            </div>
+          </div>
         </div>
-        <!-- Connector arrow (hidden on mobile) -->
-        <div class="hidden sm:flex items-center justify-center text-fox-pink/20 -mx-2 pt-0 mt-2">
-          <svg width="32" height="16" viewBox="0 0 32 16" fill="none"><path d="M0 8h28m0 0l-6-6m6 6l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fox lore: the mascot has identity -->
+  <section class="py-16 sm:py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <!-- Fox visual -->
+        <div class="relative flex justify-center order-2 md:order-1 scroll-reveal">
+          <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/25 via-fox-purple/20 to-fox-orange/20 blur-3xl scale-110"></div>
+          <img src="/fox-logo.png" alt="Far Fox companion mascot" class="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 drop-shadow-2xl fox-float" />
         </div>
-        <div class="flex-1 flex flex-col items-center scroll-reveal" style="transition-delay: 0.2s;">
-          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-fox-orange to-fox-pink flex items-center justify-center text-white font-900 text-xl mb-4">2</div>
-          <h3 class="font-800 text-xl mb-2">Connect with your partner</h3>
-          <p class="text-fox-text-light max-w-sm">Send an invite link. Once they join, your fox wakes up and your first daily question drops.</p>
-        </div>
-        <div class="hidden sm:flex items-center justify-center text-fox-pink/20 -mx-2 pt-0 mt-2">
-          <svg width="32" height="16" viewBox="0 0 32 16" fill="none"><path d="M0 8h28m0 0l-6-6m6 6l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="flex-1 flex flex-col items-center scroll-reveal" style="transition-delay: 0.3s;">
-          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-fox-purple to-fox-orange flex items-center justify-center text-white font-900 text-xl mb-4">3</div>
-          <h3 class="font-800 text-xl mb-2">Build your rituals</h3>
-          <p class="text-fox-text-light max-w-sm">Answer questions, write love letters, complete challenges together — level up your fox and your streak.</p>
+
+        <!-- Lore copy -->
+        <div class="order-1 md:order-2 scroll-reveal">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-900 tracking-tight mb-6 leading-tight">
+            Your fox isn't just a
+            <span class="bg-gradient-to-r from-fox-pink to-fox-orange bg-clip-text text-transparent">logo</span>
+          </h2>
+
+          <div class="space-y-3 text-fox-text-light text-lg leading-relaxed mb-8">
+            <p>It wakes up the morning you both join.</p>
+            <p>Tilts its head when neither of you writes a letter.</p>
+            <p>Sleeps when you sleep, in <em>your</em> timezone.</p>
+            <p>Levels up the day you hit your 100-day streak.</p>
+            <p>And when you log in after a quiet week? It's been waiting.</p>
+          </div>
+
+          <div class="pt-6 border-t border-fox-pink/15">
+            <p class="text-fox-text font-700 text-lg sm:text-xl leading-snug">
+              Most apps have mascots.<br />
+              Far Fox has a small creature you'll catch yourself worrying about.
+            </p>
+          </div>
         </div>
       </div>
     </div>
