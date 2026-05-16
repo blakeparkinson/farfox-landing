@@ -176,9 +176,11 @@ const featureGroups = [
               >
                 Try Far Fox Free
               </a>
-              <div class="flex items-center gap-1.5 mt-2 text-xs text-fox-text-light/70">
-                <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                <span class="font-700">100% free</span>
+              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-1.5 gap-y-0.5 mt-2 text-xs text-fox-text-light/70 max-w-[260px] sm:max-w-none">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                  <span class="font-700">100% free</span>
+                </span>
                 <span>·</span>
                 <span>No ads</span>
                 <span>·</span>
@@ -200,7 +202,7 @@ const featureGroups = [
             <!-- Soft glow behind phone -->
             <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/20 via-fox-purple/15 to-fox-orange/15 blur-3xl scale-110"></div>
             <!-- Phone frame -->
-            <div class="relative bg-fox-text rounded-[2.5rem] p-2 shadow-2xl shadow-fox-pink/25 w-[280px]">
+            <div class="relative bg-fox-text rounded-[2.5rem] p-2 shadow-2xl shadow-fox-pink/25 w-[240px] sm:w-[260px] md:w-[280px]">
               <div class="relative rounded-[2rem] overflow-hidden w-full" style="aspect-ratio: 928 / 1698;">
                 <img src="/screenshots/hero-home.png" alt="Far Fox app home, love letters, explore activities, travel map, and would you rather screens" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 1;" />
                 <img src="/screenshots/love-letters.png" alt="" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 0;" loading="lazy" />
@@ -216,9 +218,9 @@ const featureGroups = [
   </section>
 
   <!-- App showcase -->
-  <section class="py-24 px-6 bg-gradient-to-b from-fox-bg/0 via-fox-pink/5 to-fox-bg/0">
+  <section class="py-16 sm:py-24 px-6 bg-gradient-to-b from-fox-bg/0 via-fox-pink/5 to-fox-bg/0">
     <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-16">
+      <div class="text-center mb-10 sm:mb-16">
         <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4 scroll-reveal">
           See it in
           <span class="bg-gradient-to-r from-fox-pink to-fox-orange bg-clip-text text-transparent">action</span>
@@ -273,9 +275,9 @@ const featureGroups = [
   </section>
 
   <!-- Features -->
-  <section id="features" class="py-24 px-6">
+  <section id="features" class="py-16 sm:py-24 px-6">
     <div class="max-w-5xl mx-auto">
-      <div class="text-center mb-16">
+      <div class="text-center mb-10 sm:mb-16">
         <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4">
           Everything you need to
           <span class="bg-gradient-to-r from-fox-pink to-fox-orange bg-clip-text text-transparent">stay close</span>
@@ -310,9 +312,9 @@ const featureGroups = [
   </section>
 
   <!-- How it works -->
-  <section class="py-24 px-6 bg-gradient-to-b from-fox-bg to-white">
+  <section class="py-16 sm:py-24 px-6 bg-gradient-to-b from-fox-bg to-white">
     <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-16 scroll-reveal">
+      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-10 sm:mb-16 scroll-reveal">
         Getting started is
         <span class="bg-gradient-to-r from-fox-purple to-fox-pink bg-clip-text text-transparent">easy</span>
       </h2>
@@ -361,9 +363,9 @@ const featureGroups = [
   </section>
 
   <!-- FAQ -->
-  <section class="py-24 px-6 bg-gradient-to-b from-fox-bg to-white">
+  <section class="py-16 sm:py-24 px-6 bg-gradient-to-b from-fox-bg to-white">
     <div class="max-w-3xl mx-auto">
-      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-12 text-center">
+      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-8 sm:mb-12 text-center">
         Frequently asked
         <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">questions</span>
       </h2>
@@ -399,7 +401,7 @@ const featureGroups = [
   })} />
 
   <!-- CTA -->
-  <section class="py-24 px-6 bg-gradient-to-b from-white to-fox-bg">
+  <section class="py-16 sm:py-24 px-6 bg-gradient-to-b from-white to-fox-bg">
     <div class="max-w-2xl mx-auto text-center">
       <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4">
         Your fox is waiting
