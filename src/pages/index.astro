@@ -161,7 +161,7 @@ const featureGroups = [
       </a>
       <a
         href="https://app.lovefarfox.com"
-        class="px-5 py-2 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-700 text-sm hover:shadow-lg hover:shadow-fox-pink/25 transition-all duration-200 hover:-translate-y-0.5"
+        class="px-5 py-2 rounded-full bg-fox-pink text-white font-700 text-sm hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
       >
         Open App
       </a>
@@ -175,39 +175,116 @@ const featureGroups = [
     <div class="absolute bottom-20 right-10 w-96 h-96 bg-fox-purple/10 rounded-full blur-3xl will-change-transform"></div>
     <div class="absolute top-40 right-20 w-48 h-48 bg-fox-orange/15 rounded-full blur-3xl will-change-transform"></div>
 
-    <div class="max-w-3xl mx-auto relative z-10">
-      <div class="text-center">
-        <img src="/fox-logo.png" alt="Far Fox kawaii fox mascot — the couples app for staying connected long distance" class="w-28 h-28 mx-auto mb-8 drop-shadow-lg fade-in fox-float" width="112" height="112" />
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-900 leading-tight tracking-tight mb-6 fade-in" style="animation-delay: 0.1s;">
-          Stay connected,
-          <br />
-          <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">
-            no matter the distance
-          </span>
-        </h1>
-        <p class="text-lg sm:text-xl text-fox-text-light max-w-xl mx-auto mb-10 leading-relaxed fade-in" style="animation-delay: 0.2s;">
-          The couples app that makes long-distance feel a little closer.
-          Share photos, write love letters, answer daily questions, and grow
-          your own fox companion together.
-        </p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in" style="animation-delay: 0.3s;">
-          <a
-            href="https://app.lovefarfox.com"
-            class="px-8 py-3.5 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-800 text-lg hover:shadow-xl hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
-          >
-            Try Far Fox Free
-          </a>
-          <a
-            href="#features"
-            class="px-8 py-3.5 rounded-full border-2 border-fox-pink/20 text-fox-text font-700 text-lg hover:border-fox-pink/40 transition-all duration-200"
-          >
-            See Features
-          </a>
+    <div class="max-w-6xl mx-auto relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <!-- Left: text + CTA -->
+        <div class="text-center lg:text-left">
+          <img src="/fox-logo.png" alt="Far Fox kawaii fox mascot — the couples app for staying connected long distance" class="w-20 h-20 mx-auto lg:mx-0 mb-6 drop-shadow-lg fade-in fox-float" width="80" height="80" />
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-900 leading-tight tracking-tight mb-6 fade-in" style="animation-delay: 0.1s;">
+            Daily rituals for couples who
+            <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">
+              live apart
+            </span>
+          </h1>
+          <p class="text-lg sm:text-xl text-fox-text-light max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed fade-in" style="animation-delay: 0.2s;">
+            Far Fox is more than messaging. Daily questions, love letters,
+            shared photos, voice notes, and a fox that grows with your
+            relationship — built for couples who refuse to drift.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 fade-in" style="animation-delay: 0.3s;">
+            <div class="flex flex-col items-center sm:items-start">
+              <a
+                href="https://app.lovefarfox.com"
+                class="px-8 py-3.5 rounded-full bg-fox-pink text-white font-800 text-lg hover:bg-fox-purple hover:shadow-xl hover:shadow-fox-pink/40 transition-all duration-200 hover:-translate-y-0.5"
+              >
+                Try Far Fox Free
+              </a>
+              <div class="flex items-center gap-1.5 mt-2 text-xs text-fox-text-light/70">
+                <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                <span class="font-700">100% free</span>
+                <span>·</span>
+                <span>No ads</span>
+                <span>·</span>
+                <span>iOS, Android, Web</span>
+              </div>
+            </div>
+            <a
+              href="#features"
+              class="px-8 py-3.5 rounded-full border-2 border-fox-pink/20 text-fox-text font-700 text-lg hover:border-fox-pink/40 transition-all duration-200"
+            >
+              See Features
+            </a>
+          </div>
         </div>
 
-        <p class="mt-12 text-sm text-fox-text-light/60 fade-in" style="animation-delay: 0.4s;">
-          Built for couples who refuse to let distance win.
+        <!-- Right: phone screenshot mockup -->
+        <div class="flex justify-center lg:justify-end fade-in" style="animation-delay: 0.4s;">
+          <div class="relative">
+            <!-- Soft glow behind phone -->
+            <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/20 via-fox-purple/15 to-fox-orange/15 blur-3xl scale-110"></div>
+            <!-- Phone frame -->
+            <div class="relative bg-fox-text rounded-[2.5rem] p-2 shadow-2xl shadow-fox-pink/25 max-w-[280px]">
+              <img src="/screenshots/home.png" alt="Far Fox app home screen showing fox companion, anniversary countdown, and partner presence" class="rounded-[2rem] w-full block" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- App showcase -->
+  <section class="py-24 px-6 bg-gradient-to-b from-fox-bg/0 via-fox-pink/5 to-fox-bg/0">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4 scroll-reveal">
+          See it in
+          <span class="bg-gradient-to-r from-fox-pink to-fox-orange bg-clip-text text-transparent">action</span>
+        </h2>
+        <p class="text-fox-text-light text-lg max-w-lg mx-auto scroll-reveal">
+          Real screens from real couples. Built for daily use, not occasional notifications.
         </p>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div class="scroll-reveal" style="transition-delay: 0.05s;">
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/20 to-fox-purple/15 blur-2xl scale-105"></div>
+            <div class="relative bg-fox-text rounded-2xl sm:rounded-3xl p-1.5 shadow-xl shadow-fox-pink/15">
+              <img src="/screenshots/letters.png" alt="Love letters screen showing received letters with heart reactions" class="rounded-xl sm:rounded-2xl w-full block" loading="lazy" />
+            </div>
+          </div>
+          <p class="text-center mt-4 text-sm font-700 text-fox-text-light">💌 Love Letters</p>
+        </div>
+
+        <div class="scroll-reveal" style="transition-delay: 0.1s;">
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-fox-purple/20 to-fox-pink/15 blur-2xl scale-105"></div>
+            <div class="relative bg-fox-text rounded-2xl sm:rounded-3xl p-1.5 shadow-xl shadow-fox-purple/15">
+              <img src="/screenshots/photos.png" alt="Shared moments photo timeline showing couple's daily photos" class="rounded-xl sm:rounded-2xl w-full block" loading="lazy" />
+            </div>
+          </div>
+          <p class="text-center mt-4 text-sm font-700 text-fox-text-light">📸 Shared Photos</p>
+        </div>
+
+        <div class="scroll-reveal" style="transition-delay: 0.15s;">
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-fox-orange/20 to-fox-pink/15 blur-2xl scale-105"></div>
+            <div class="relative bg-fox-text rounded-2xl sm:rounded-3xl p-1.5 shadow-xl shadow-fox-orange/15">
+              <img src="/screenshots/travel.png" alt="Travel map with planned visits between long-distance partners" class="rounded-xl sm:rounded-2xl w-full block" loading="lazy" />
+            </div>
+          </div>
+          <p class="text-center mt-4 text-sm font-700 text-fox-text-light">🗺️ Travel Map</p>
+        </div>
+
+        <div class="scroll-reveal" style="transition-delay: 0.2s;">
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/20 to-fox-purple/15 blur-2xl scale-105"></div>
+            <div class="relative bg-fox-text rounded-2xl sm:rounded-3xl p-1.5 shadow-xl shadow-fox-pink/15">
+              <img src="/screenshots/more.png" alt="Explore screen showing quizzes, challenges, mood, Ask Foxy, and other activities" class="rounded-xl sm:rounded-2xl w-full block" loading="lazy" />
+            </div>
+          </div>
+          <p class="text-center mt-4 text-sm font-700 text-fox-text-light">✨ All Activities</p>
+        </div>
       </div>
     </div>
   </section>
@@ -285,36 +362,18 @@ const featureGroups = [
   </section>
 
   <!-- What is Far Fox — SEO content section -->
-  <section class="py-24 px-6">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-8 text-center">
-        Why couples love
-        <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
+  <section class="py-20 px-6">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-6 scroll-reveal">
+        Built for the
+        <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">distance</span>
       </h2>
-      <div class="space-y-6 text-fox-text-light text-lg leading-relaxed">
-        <p>
-          Long-distance relationships are hard. You miss the small moments — cooking dinner together,
-          falling asleep on the couch, sharing a look across the room that only you two understand.
-          Far Fox was built to bring some of those moments back, even when you're thousands of miles apart.
-        </p>
-        <p>
-          Unlike generic messaging apps, Far Fox is designed specifically for couples. Every feature exists
-          to help you feel closer: daily love letter prompts give you something meaningful to write about,
-          shared photo timelines capture your separate days in one place, and daily questions spark the kind
-          of conversations that keep relationships growing.
-        </p>
-        <p>
-          At the heart of the app is your fox — a kawaii companion that evolves as your relationship does.
-          The more you and your partner use the app together, the more your fox grows, levels up, and
-          unlocks new expressions. It's a playful reminder that love takes daily care, and that even
-          small gestures count.
-        </p>
-        <p>
-          Whether you're in a long-distance relationship, a military couple, studying abroad, or just
-          spending time apart, Far Fox gives you rituals to look forward to every day. No ads, no
-          algorithms, no distractions — just you, your partner, and your fox.
-        </p>
-      </div>
+      <p class="text-fox-text-light text-lg leading-relaxed scroll-reveal max-w-2xl mx-auto">
+        Whether you're a long-distance couple, a military spouse, studying abroad, or
+        just spending a few weeks apart — Far Fox replaces transactional texting with
+        rituals that actually keep you close. No ads, no algorithms, no distractions —
+        just you, your partner, and your fox.
+      </p>
     </div>
   </section>
 
@@ -390,10 +449,13 @@ const featureGroups = [
       </p>
       <a
         href="https://app.lovefarfox.com"
-        class="inline-block px-10 py-4 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-800 text-lg hover:shadow-xl hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
+        class="inline-block px-10 py-4 rounded-full bg-fox-pink text-white font-800 text-lg hover:bg-fox-purple hover:shadow-xl hover:shadow-fox-pink/40 transition-all duration-200 hover:-translate-y-0.5"
       >
         Try Far Fox Free
       </a>
+      <p class="mt-4 text-sm text-fox-text-light/70">
+        Free · iOS, Android, Web · No ads
+      </p>
     </div>
   </section>
 
