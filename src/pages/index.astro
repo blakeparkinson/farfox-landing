@@ -201,7 +201,13 @@ const featureGroups = [
             <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/20 via-fox-purple/15 to-fox-orange/15 blur-3xl scale-110"></div>
             <!-- Phone frame -->
             <div class="relative bg-fox-text rounded-[2.5rem] p-2 shadow-2xl shadow-fox-pink/25 max-w-[280px]">
-              <img src="/screenshots/hero-home.png" alt="Far Fox app home screen showing fox companion, daily streak, and a memory prompt for the day" class="rounded-[2rem] w-full block" />
+              <div class="relative rounded-[2rem] overflow-hidden" style="aspect-ratio: 928 / 1698;">
+                <img src="/screenshots/hero-home.png" alt="Far Fox app home, love letters, explore activities, travel map, and would you rather screens" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 1;" />
+                <img src="/screenshots/love-letters.png" alt="" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 0;" loading="lazy" />
+                <img src="/screenshots/explore.png" alt="" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 0;" loading="lazy" />
+                <img src="/screenshots/travel-map.png" alt="" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 0;" loading="lazy" />
+                <img src="/screenshots/would-you-rather.png" alt="" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 0;" loading="lazy" />
+              </div>
             </div>
           </div>
         </div>
@@ -509,4 +515,16 @@ const featureGroups = [
   );
 
   document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+
+  // Hero phone screen cycle
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const heroScreens = document.querySelectorAll<HTMLImageElement>('.hero-screen');
+  if (!prefersReducedMotion && heroScreens.length > 1) {
+    let current = 0;
+    setInterval(() => {
+      heroScreens[current].style.opacity = '0';
+      current = (current + 1) % heroScreens.length;
+      heroScreens[current].style.opacity = '1';
+    }, 4000);
+  }
 </script>
