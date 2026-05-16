@@ -411,41 +411,51 @@ const featureGroups = [
       </div>
 
       <!-- Fox evolution row -->
-      <div class="grid grid-cols-4 gap-3 sm:gap-6 mb-16 max-w-3xl mx-auto">
+      <div class="grid grid-cols-4 gap-2 sm:gap-6 mb-16 max-w-4xl mx-auto">
+        <!-- Stage 1: Day 1 — no heart-eyes yet, baby -->
         <div class="text-center scroll-reveal" style="transition-delay: 0.05s;">
-          <div class="relative inline-flex items-center justify-center w-full aspect-square mb-3">
-            <div class="absolute inset-0 bg-fox-pink/15 rounded-full blur-2xl scale-90"></div>
-            <img src="/fox-logo.png" alt="" class="relative w-12 h-12 sm:w-20 sm:h-20" style="filter: saturate(0.65) brightness(1.08);" />
+          <div class="relative mx-auto w-full max-w-[140px] aspect-square flex items-center justify-center">
+            <div class="absolute inset-2 bg-fox-pink/10 rounded-full"></div>
+            <img src="/fox-logo-v1.png" alt="" class="relative w-14 h-14 sm:w-20 sm:h-20 z-10" style="filter: saturate(0.7) brightness(1.05);" />
           </div>
-          <p class="font-800 text-xs sm:text-sm text-fox-text">Day 1</p>
+          <p class="mt-3 font-800 text-xs sm:text-sm text-fox-text">Day 1</p>
+          <p class="text-fox-text-light text-[10px] sm:text-xs">Hatchling</p>
+        </div>
+
+        <!-- Stage 2: Day 30 — heart eyes appear, accessorized -->
+        <div class="text-center scroll-reveal" style="transition-delay: 0.1s;">
+          <div class="relative mx-auto w-full max-w-[140px] aspect-square flex items-center justify-center">
+            <div class="absolute inset-2 bg-fox-pink/20 rounded-full"></div>
+            <img src="/fox-logo.png" alt="" class="relative w-20 h-20 sm:w-28 sm:h-28 z-10" />
+            <span class="absolute top-[10%] left-[12%] text-base sm:text-2xl z-20 rotate-[-15deg] select-none" aria-hidden="true">🌸</span>
+          </div>
+          <p class="mt-3 font-800 text-xs sm:text-sm text-fox-text">Day 30</p>
           <p class="text-fox-text-light text-[10px] sm:text-xs">Curious Pup</p>
         </div>
 
-        <div class="text-center scroll-reveal" style="transition-delay: 0.1s;">
-          <div class="relative inline-flex items-center justify-center w-full aspect-square mb-3">
-            <div class="absolute inset-0 bg-fox-pink/20 rounded-full blur-2xl"></div>
-            <img src="/fox-logo.png" alt="" class="relative w-16 h-16 sm:w-24 sm:h-24" style="filter: saturate(0.85);" />
+        <!-- Stage 3: Day 100 — graduation cap, halo glow -->
+        <div class="text-center scroll-reveal" style="transition-delay: 0.15s;">
+          <div class="relative mx-auto w-full max-w-[140px] aspect-square flex items-center justify-center">
+            <div class="absolute inset-1 bg-gradient-to-br from-fox-pink/30 via-fox-purple/25 to-fox-pink/20 rounded-full blur-md"></div>
+            <div class="absolute inset-2 bg-gradient-to-br from-fox-pink/15 to-fox-purple/15 rounded-full"></div>
+            <img src="/fox-logo.png" alt="" class="relative w-24 h-24 sm:w-32 sm:h-32 z-10 drop-shadow-md" />
+            <span class="absolute top-[2%] left-1/2 -translate-x-1/2 text-xl sm:text-3xl z-20 select-none" aria-hidden="true">🎓</span>
           </div>
-          <p class="font-800 text-xs sm:text-sm text-fox-text">Day 30</p>
+          <p class="mt-3 font-800 text-xs sm:text-sm text-fox-text">Day 100</p>
           <p class="text-fox-text-light text-[10px] sm:text-xs">Wise Fox</p>
         </div>
 
-        <div class="text-center scroll-reveal" style="transition-delay: 0.15s;">
-          <div class="relative inline-flex items-center justify-center w-full aspect-square mb-3">
-            <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/30 to-fox-purple/25 rounded-full blur-2xl scale-110"></div>
-            <img src="/fox-logo.png" alt="" class="relative w-20 h-20 sm:w-28 sm:h-28 drop-shadow-md" />
-          </div>
-          <p class="font-800 text-xs sm:text-sm text-fox-text">Day 100</p>
-          <p class="text-fox-text-light text-[10px] sm:text-xs">Elder Fox</p>
-        </div>
-
+        <!-- Stage 4: Day 365 — crown + sparkles, cosmic gradient -->
         <div class="text-center scroll-reveal" style="transition-delay: 0.2s;">
-          <div class="relative inline-flex items-center justify-center w-full aspect-square mb-3">
-            <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/40 via-fox-purple/35 to-fox-orange/35 rounded-full blur-2xl scale-125"></div>
-            <img src="/fox-logo.png" alt="" class="relative w-24 h-24 sm:w-32 sm:h-32 drop-shadow-lg" style="filter: saturate(1.15);" />
-            <span class="absolute top-0 right-0 sm:top-1 sm:right-2 text-base sm:text-2xl select-none" aria-hidden="true">✨</span>
+          <div class="relative mx-auto w-full max-w-[140px] aspect-square flex items-center justify-center fox-mystic">
+            <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/50 via-fox-purple/40 to-fox-orange/40 rounded-full blur-xl"></div>
+            <div class="absolute inset-1 bg-gradient-to-br from-fox-pink/25 via-fox-purple/20 to-fox-orange/20 rounded-full"></div>
+            <img src="/fox-logo.png" alt="" class="relative w-28 h-28 sm:w-36 sm:h-36 z-10 drop-shadow-lg" style="filter: saturate(1.15);" />
+            <span class="absolute top-[-4%] left-1/2 -translate-x-1/2 text-2xl sm:text-4xl z-20 select-none" aria-hidden="true">👑</span>
+            <span class="absolute top-[15%] right-[2%] text-sm sm:text-xl z-20 select-none" aria-hidden="true">✨</span>
+            <span class="absolute bottom-[15%] left-[2%] text-sm sm:text-xl z-20 select-none" aria-hidden="true">✨</span>
           </div>
-          <p class="font-800 text-xs sm:text-sm text-fox-text">Day 365</p>
+          <p class="mt-3 font-800 text-xs sm:text-sm text-fox-text">Day 365</p>
           <p class="text-fox-text-light text-[10px] sm:text-xs">Mystic Fox</p>
         </div>
       </div>
@@ -555,6 +565,15 @@ const featureGroups = [
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* Mystic fox aura — slow pulse */
+  .fox-mystic {
+    animation: mysticPulse 3s ease-in-out infinite;
+  }
+  @keyframes mysticPulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.03); }
   }
 
   /* Floating fox with personality */
