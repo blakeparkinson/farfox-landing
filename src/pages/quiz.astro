@@ -1,0 +1,287 @@
+---
+/**
+ * Public Connection Rituals quiz — the highest-leverage funnel surface
+ * on the marketing site. TikTok bio link → here → 6 taps → personal
+ * result page → signup CTA.
+ *
+ * No signup required to take the quiz. Anonymous results land in
+ * `anonymous_quiz_results` via the SECURITY DEFINER RPC; the user
+ * gets redirected to /profile/<slug>, which renders identically to
+ * an authenticated profile page.
+ *
+ * All interactivity is vanilla JS in an inline <script> — no
+ * framework needed for a 6-step linear flow, and keeping it framework-
+ * free means fast first paint (we're competing with the TikTok back
+ * button on mobile).
+ */
+import Layout from '../layouts/Layout.astro';
+import { RITUAL_QUESTIONS } from '../lib/connectionRituals';
+
+// We render the question/choice data into a hidden JSON island so the
+// client-side script can drive the flow without re-fetching anything.
+const quizData = JSON.stringify(RITUAL_QUESTIONS);
+---
+
+<Layout
+  title="The Love Profile quiz · Far Fox"
+  description="6 questions. 2 minutes. A shareable picture of how you feel loved."
+>
+  <main class="min-h-screen pt-24 pb-20 px-6 bg-gradient-to-b from-fox-bg via-white to-fox-bg">
+    <div class="max-w-xl mx-auto" id="quiz-root">
+      <!-- ── INTRO (default visible) ─────────────────────────────── -->
+      <section id="step-intro" class="text-center">
+        <img
+          src="/fox-face.png"
+          alt="Far Fox companion"
+          class="w-28 h-28 mx-auto mb-6 drop-shadow-lg"
+          width="112"
+          height="112"
+        />
+        <div class="uppercase tracking-[0.3em] text-xs font-900 text-fox-pink mb-3">
+          The Love Profile Quiz
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-900 tracking-tight mb-4 leading-tight">
+          How do you
+          <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">feel loved?</span>
+        </h1>
+        <p class="text-fox-text-light text-lg leading-snug mb-8 max-w-md mx-auto">
+          Six honest questions. Two minutes. A shareable picture of how you actually want to be loved — built for couples who refuse to drift.
+        </p>
+        <button
+          id="quiz-start"
+          class="px-10 py-4 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-900 text-lg hover:shadow-2xl hover:shadow-fox-pink/40 transition-all duration-200 hover:-translate-y-0.5"
+        >
+          Start the quiz →
+        </button>
+        <p class="mt-4 text-sm text-fox-text-light/70">
+          No signup needed · Free
+        </p>
+      </section>
+
+      <!-- ── QUESTION STEP (hidden by default) ───────────────────── -->
+      <section id="step-question" class="hidden">
+        <!-- Progress -->
+        <div class="mb-8">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-800 uppercase tracking-wider text-fox-pink" id="q-progress-label">Question 1 of 6</span>
+            <a href="#" id="q-back" class="text-xs text-fox-text-light hover:text-fox-pink transition-colors hidden">← Back</a>
+          </div>
+          <div class="h-1.5 bg-fox-pink/10 rounded-full overflow-hidden">
+            <div id="q-progress-bar" class="h-full bg-gradient-to-r from-fox-pink to-fox-purple transition-all duration-300" style="width: 16.66%"></div>
+          </div>
+        </div>
+
+        <h2 id="q-prompt" class="text-2xl sm:text-3xl font-900 mb-8 leading-tight text-fox-text"></h2>
+
+        <div id="q-choices" class="space-y-3">
+          <!-- choices injected by JS -->
+        </div>
+      </section>
+
+      <!-- ── NAME STEP (hidden by default) ───────────────────────── -->
+      <section id="step-name" class="hidden text-center">
+        <div class="text-5xl mb-4">💕</div>
+        <h2 class="text-3xl sm:text-4xl font-900 mb-3 leading-tight">
+          Almost there. What's your name?
+        </h2>
+        <p class="text-fox-text-light text-lg mb-8 max-w-sm mx-auto">
+          So your love profile feels like yours.
+        </p>
+        <input
+          id="quiz-name"
+          type="text"
+          maxlength="40"
+          placeholder="Your first name"
+          autocomplete="given-name"
+          class="w-full max-w-sm mx-auto block px-5 py-4 rounded-2xl bg-white border-2 border-fox-pink/20 focus:border-fox-pink focus:outline-none text-lg text-center font-700 mb-6"
+        />
+        <button
+          id="quiz-finish"
+          disabled
+          class="px-10 py-4 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-900 text-lg disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-2xl hover:shadow-fox-pink/40 transition-all duration-200 hover:-translate-y-0.5 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+        >
+          See my love profile →
+        </button>
+        <p id="quiz-error" class="hidden mt-4 text-sm text-red-500"></p>
+      </section>
+
+      <!-- ── LOADING STEP ─────────────────────────────────────────── -->
+      <section id="step-loading" class="hidden text-center py-20">
+        <div class="inline-block w-12 h-12 border-4 border-fox-pink/20 border-t-fox-pink rounded-full animate-spin mb-6"></div>
+        <p class="text-fox-text-light text-lg">Building your love profile…</p>
+      </section>
+    </div>
+  </main>
+
+  <script type="application/json" id="quiz-data" set:html={quizData} />
+
+  <script>
+    interface RitualChoice {
+      key: string;
+      emoji: string;
+      label: string;
+    }
+    interface RitualQuestion {
+      key: string;
+      prompt: string;
+      choices: RitualChoice[];
+    }
+
+    const QUESTIONS: RitualQuestion[] = JSON.parse(
+      document.getElementById('quiz-data')!.textContent!,
+    );
+
+    // ── State ─────────────────────────────────────────────────────
+    let questionIndex = 0;
+    const answers: Record<string, string> = {};
+
+    // ── Elements ──────────────────────────────────────────────────
+    const stepIntro = document.getElementById('step-intro')!;
+    const stepQuestion = document.getElementById('step-question')!;
+    const stepName = document.getElementById('step-name')!;
+    const stepLoading = document.getElementById('step-loading')!;
+    const progressLabel = document.getElementById('q-progress-label')!;
+    const progressBar = document.getElementById('q-progress-bar')!;
+    const promptEl = document.getElementById('q-prompt')!;
+    const choicesEl = document.getElementById('q-choices')!;
+    const backEl = document.getElementById('q-back')!;
+    const startBtn = document.getElementById('quiz-start')!;
+    const nameInput = document.getElementById('quiz-name') as HTMLInputElement;
+    const finishBtn = document.getElementById('quiz-finish') as HTMLButtonElement;
+    const errorEl = document.getElementById('quiz-error')!;
+
+    // ── Step navigation ──────────────────────────────────────────
+    function showStep(which: 'intro' | 'question' | 'name' | 'loading') {
+      [stepIntro, stepQuestion, stepName, stepLoading].forEach((el) =>
+        el.classList.add('hidden'),
+      );
+      const target = { intro: stepIntro, question: stepQuestion, name: stepName, loading: stepLoading }[which];
+      target.classList.remove('hidden');
+      // Scroll to top so users on small screens see the new step
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Render the current question ──────────────────────────────
+    function renderQuestion() {
+      const q = QUESTIONS[questionIndex];
+      const total = QUESTIONS.length;
+      const pct = ((questionIndex + 1) / total) * 100;
+
+      progressLabel.textContent = `Question ${questionIndex + 1} of ${total}`;
+      progressBar.style.width = `${pct}%`;
+      promptEl.textContent = q.prompt;
+
+      // Show back button on questions 2+
+      backEl.classList.toggle('hidden', questionIndex === 0);
+
+      choicesEl.innerHTML = '';
+      q.choices.forEach((c) => {
+        const btn = document.createElement('button');
+        const isSelected = answers[q.key] === c.key;
+        btn.className =
+          'w-full text-left p-5 rounded-2xl bg-white border-2 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fox-pink/10 ' +
+          (isSelected
+            ? 'border-fox-pink bg-fox-pink/5 shadow-md'
+            : 'border-fox-pink/15 hover:border-fox-pink/40');
+        btn.innerHTML = `
+          <div class="flex items-center gap-4">
+            <div class="text-3xl flex-shrink-0">${c.emoji}</div>
+            <div class="font-800 text-lg text-fox-text">${c.label}</div>
+          </div>
+        `;
+        btn.addEventListener('click', () => onChoiceSelected(c.key));
+        choicesEl.appendChild(btn);
+      });
+    }
+
+    function onChoiceSelected(choiceKey: string) {
+      const q = QUESTIONS[questionIndex];
+      answers[q.key] = choiceKey;
+
+      // Small delay so the user gets to see the tap registered before
+      // the next question slides in (less jarring than instant).
+      setTimeout(() => {
+        if (questionIndex < QUESTIONS.length - 1) {
+          questionIndex += 1;
+          renderQuestion();
+        } else {
+          showStep('name');
+          // Focus the name field after the transition so mobile
+          // keyboards pop up automatically.
+          setTimeout(() => nameInput.focus(), 200);
+        }
+      }, 180);
+    }
+
+    backEl.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (questionIndex > 0) {
+        questionIndex -= 1;
+        renderQuestion();
+      }
+    });
+
+    startBtn.addEventListener('click', () => {
+      showStep('question');
+      renderQuestion();
+    });
+
+    nameInput.addEventListener('input', () => {
+      finishBtn.disabled = nameInput.value.trim().length === 0;
+    });
+    nameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !finishBtn.disabled) {
+        finishBtn.click();
+      }
+    });
+
+    // ── Submit ────────────────────────────────────────────────────
+    const SUPABASE_URL = 'https://xuohqhzqbtkgzabxmwqu.supabase.co';
+    const SUPABASE_ANON_KEY =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1b2hxaHpxYnRrZ3phYnhtd3F1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2OTEyNDMsImV4cCI6MjA4NzI2NzI0M30.wIH1pjCc5uD-huwdRvAJpCn5ePevo9d_91YWJbbxVx4';
+
+    finishBtn.addEventListener('click', async () => {
+      const name = nameInput.value.trim();
+      if (name.length === 0) return;
+      errorEl.classList.add('hidden');
+      showStep('loading');
+
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/rpc/create_anonymous_quiz_result`,
+          {
+            method: 'POST',
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              p_name: name,
+              p_rituals: answers,
+              p_fingerprint: null,
+            }),
+          },
+        );
+        if (!res.ok) {
+          throw new Error(`Save failed (${res.status})`);
+        }
+        // RPC returns the slug as a JSON-encoded string ("abc12345").
+        const slug = (await res.json()) as string;
+        if (!slug || typeof slug !== 'string') {
+          throw new Error('No slug returned');
+        }
+        // Redirect to the result page. `just_made=1` query string
+        // tells the profile page to surface the "Save this with an
+        // account" upsell at the top.
+        window.location.href = `/profile/${slug}?just_made=1`;
+      } catch (err) {
+        console.error(err);
+        showStep('name');
+        errorEl.textContent =
+          'Something went wrong saving your profile. Try again?';
+        errorEl.classList.remove('hidden');
+      }
+    });
+  </script>
+</Layout>

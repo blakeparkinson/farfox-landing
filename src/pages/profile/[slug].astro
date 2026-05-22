@@ -18,6 +18,11 @@ if (!slug || typeof slug !== 'string') {
   return Astro.redirect('/404');
 }
 
+// `?just_made=1` is set by the public quiz flow right after a fresh
+// anonymous result is created — we use it to surface a louder
+// "save & connect with your partner" upsell at the top of the page.
+const isFreshResult = Astro.url.searchParams.get('just_made') === '1';
+
 const profile = await fetchProfileBySlug(slug);
 
 if (!profile || !profile.connection_rituals) {
@@ -46,6 +51,37 @@ const ogImage = `https://lovefarfox.com/profile/${slug}/og.png`;
 <Layout title={pageTitle} description={pageDesc} image={ogImage}>
   <main class="min-h-screen pt-24 pb-20 px-6 bg-gradient-to-b from-fox-bg via-white to-fox-bg">
     <div class="max-w-2xl mx-auto">
+      <!-- "Just made it" banner — only on the redirect from /quiz.
+           Loud, congratulatory, with the share + signup CTAs that
+           normally sit at the bottom pulled up where the user can't
+           miss them. -->
+      {isFreshResult && (
+        <div class="mb-8 rounded-3xl bg-gradient-to-br from-fox-pink/15 via-fox-purple/12 to-fox-orange/15 border-2 border-fox-pink/30 p-6 text-center">
+          <div class="text-3xl mb-2">🎉</div>
+          <h2 class="text-xl sm:text-2xl font-900 text-fox-text mb-2 leading-snug">
+            Here's your love profile, {firstName}.
+          </h2>
+          <p class="text-fox-text-light text-sm leading-snug mb-4 max-w-sm mx-auto">
+            Send it to your person. When they take theirs, you'll see how you match.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-stretch sm:items-center">
+            <a
+              href={`https://app.lovefarfox.com/signup?ref=quiz&slug=${slug}`}
+              class="px-6 py-3 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-900 text-sm hover:shadow-xl hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
+            >
+              Save & connect with your partner →
+            </a>
+            <a
+              href="#share"
+              data-share-url={`https://lovefarfox.com/profile/${slug}`}
+              class="quiz-share-btn px-6 py-3 rounded-full bg-white border-2 border-fox-pink/30 text-fox-text font-800 text-sm hover:border-fox-pink hover:-translate-y-0.5 transition-all duration-200"
+            >
+              📤 Share this link
+            </a>
+          </div>
+        </div>
+      )}
+
       <!-- Header — branded fox above the eyebrow so the page feels
            like Far Fox, not a generic love quiz. -->
       <div class="text-center mb-10">
@@ -121,4 +157,37 @@ const ogImage = `https://lovefarfox.com/profile/${slug}/og.png`;
       </div>
     </div>
   </main>
+
+  <script>
+    // Native share where supported (iOS + Android Chrome), clipboard
+    // fallback everywhere else. One tap → URL is in their hands.
+    document.querySelectorAll<HTMLAnchorElement>('.quiz-share-btn').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const url = btn.dataset.shareUrl;
+        if (!url) return;
+        const navAny = navigator as Navigator & { share?: (data: ShareData) => Promise<void> };
+        if (typeof navAny.share === 'function') {
+          try {
+            await navAny.share({
+              title: 'My love profile',
+              text: 'Here\'s how I feel loved 💕',
+              url,
+            });
+          } catch (_) {
+            // user dismissed — no-op
+          }
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(url);
+          const original = btn.textContent;
+          btn.textContent = '✓ Link copied';
+          setTimeout(() => { btn.textContent = original; }, 1800);
+        } catch (_) {
+          alert(url);
+        }
+      });
+    });
+  </script>
 </Layout>
