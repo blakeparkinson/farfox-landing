@@ -36,9 +36,11 @@ const answered = RITUAL_QUESTIONS.map((q) => {
 
 const pageTitle = `How ${firstName} loves — a love profile · Far Fox`;
 const pageDesc = tagline;
-// Per-profile OG image. Falls back to the brand image until we ship a
-// dedicated /og endpoint that renders the profile into a 1200x630 PNG.
-const ogImage = 'https://lovefarfox.com/og-image.png';
+// Per-profile OG image: dynamic endpoint at /profile/<slug>/og.png
+// renders the user's name + chosen emojis into a 1200x630 PNG so
+// previews in iMessage / Twitter / Discord show *their* profile,
+// not the generic brand card.
+const ogImage = `https://lovefarfox.com/profile/${slug}/og.png`;
 ---
 
 <Layout title={pageTitle} description={pageDesc} image={ogImage}>

@@ -146,7 +146,7 @@ const featureGroups = [
   </nav>
 
   <!-- Hero -->
-  <section class="min-h-screen flex items-center justify-center pt-20 pb-16 px-6 relative overflow-hidden">
+  <section class="min-h-screen flex items-center justify-center pt-20 pb-16 px-6 relative overflow-hidden hero-hearts">
     <!-- Subtle gradient orbs -->
     <div class="absolute top-20 left-10 w-72 h-72 bg-fox-pink/10 rounded-full blur-3xl will-change-transform"></div>
     <div class="absolute bottom-20 right-10 w-96 h-96 bg-fox-purple/10 rounded-full blur-3xl will-change-transform"></div>
@@ -617,6 +617,17 @@ const featureGroups = [
   @keyframes mysticPulse {
     0%, 100% { transform: scale(1); }
     50%      { transform: scale(1.03); }
+  }
+
+  /* Subtle heart pattern on the hero — inline SVG, no extra asset.
+     Whisper-light opacity so it reads as texture, not decoration. */
+  .hero-hearts {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='%23FF6B8A' fill-opacity='0.05'><path d='M20 28c0-4 3-7 7-7 2.5 0 4.6 1.3 5.7 3.3C33.8 22.3 35.9 21 38.4 21c4 0 7 3 7 7 0 6.5-11 12-12.2 12C32 40 20 34.5 20 28zM58 60c0-3 2.2-5 5-5 1.8 0 3.3 1 4.1 2.4.8-1.4 2.3-2.4 4.1-2.4 2.8 0 5 2 5 5 0 4.6-7.9 8.6-8.7 8.6S58 64.6 58 60z'/></g></svg>");
+    background-size: 160px 160px;
+    background-position: 0 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-hearts { background-image: none; }
   }
 
   /* Sleeping fox — slow breathing rise/fall */
