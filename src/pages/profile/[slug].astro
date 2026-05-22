@@ -44,9 +44,16 @@ const ogImage = 'https://lovefarfox.com/og-image.png';
 <Layout title={pageTitle} description={pageDesc} image={ogImage}>
   <main class="min-h-screen pt-24 pb-20 px-6 bg-gradient-to-b from-fox-bg via-white to-fox-bg">
     <div class="max-w-2xl mx-auto">
-      <!-- Header -->
+      <!-- Header — branded fox above the eyebrow so the page feels
+           like Far Fox, not a generic love quiz. -->
       <div class="text-center mb-10">
-        <div class="text-6xl mb-4">💕</div>
+        <img
+          src="/fox-face.png"
+          alt="Far Fox companion"
+          class="w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-4 drop-shadow-lg"
+          width="112"
+          height="112"
+        />
         <div class="uppercase tracking-[0.3em] text-xs font-900 text-fox-pink mb-2">
           A Love Profile
         </div>
@@ -76,9 +83,17 @@ const ogImage = 'https://lovefarfox.com/og-image.png';
       </div>
 
       <!-- Take-yours CTA — the whole point of this page existing -->
-      <div class="bg-gradient-to-br from-fox-pink to-fox-purple rounded-3xl p-8 text-center text-white shadow-2xl shadow-fox-pink/30">
-        <div class="text-5xl mb-3">🦊</div>
-        <h2 class="text-2xl sm:text-3xl font-900 mb-3 leading-tight">
+      <div class="bg-gradient-to-br from-fox-pink to-fox-purple rounded-3xl p-8 text-center text-white shadow-2xl shadow-fox-pink/30 relative overflow-hidden">
+        <!-- Subtle glow behind the fox -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-white/15 rounded-full blur-2xl"></div>
+        <img
+          src="/fox-letter.png"
+          alt="Far Fox messenger holding a love letter"
+          class="relative w-24 h-24 mx-auto mb-3 drop-shadow-xl"
+          width="96"
+          height="96"
+        />
+        <h2 class="text-2xl sm:text-3xl font-900 mb-3 leading-tight relative">
           Find out how you love.
         </h2>
         <p class="text-white/90 mb-6 max-w-sm mx-auto leading-snug">
