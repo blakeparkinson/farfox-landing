@@ -75,6 +75,39 @@ export const GET: APIRoute = async ({ params }) => {
 
   const { w400, w800 } = await loadFonts();
 
+  // Cache of emoji codepoint → data URL across requests in the same
+  // warm function. Twemoji SVGs are tiny but the network hop adds
+  // ~50ms per emoji on a cold request — caching avoids repeat fetches.
+  const emojiCache = new Map<string, string>();
+
+  /**
+   * Satori calls this when it encounters a glyph the font can't render
+   * (i.e. emojis). We fetch the matching Twemoji SVG and hand back a
+   * data: URL — satori inlines it as an `<image>` node.
+   */
+  async function loadEmoji(segment: string): Promise<string> {
+    // Codepoints joined with '-', with the variation-selector (FE0F)
+    // stripped because Twemoji's filenames omit it for most glyphs.
+    const codepoints = [...segment]
+      .map((c) => c.codePointAt(0)?.toString(16))
+      .filter((c): c is string => !!c && c !== 'fe0f')
+      .join('-');
+
+    if (emojiCache.has(codepoints)) return emojiCache.get(codepoints)!;
+
+    const url = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/${codepoints}.svg`;
+    let svgText: string;
+    try {
+      svgText = await fetch(url).then((r) => r.text());
+    } catch {
+      // Fall through to an empty pixel — better than a missing-glyph box.
+      return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4=';
+    }
+    const dataUrl = `data:image/svg+xml;base64,${Buffer.from(svgText).toString('base64')}`;
+    emojiCache.set(codepoints, dataUrl);
+    return dataUrl;
+  }
+
   // ── Compose the OG card with satori ─────────────────────────────
   // Satori uses a strict subset of CSS — flex layout, no grid. Sizes
   // are in px, everything is explicit.
@@ -221,6 +254,12 @@ export const GET: APIRoute = async ({ params }) => {
         { name: 'Nunito', data: w400, weight: 400, style: 'normal' },
         { name: 'Nunito', data: w800, weight: 800, style: 'normal' },
       ],
+      loadAdditionalAsset: async (code, segment) => {
+        if (code === 'emoji') {
+          return await loadEmoji(segment);
+        }
+        return code;
+      },
     },
   );
 
