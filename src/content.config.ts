@@ -8,6 +8,17 @@ const blog = defineCollection({
     description: z.string(),
     date: z.string(),
     image: z.string().optional(),
+    // Optional structured FAQs. When present, they're rendered at the
+    // end of the post AND emitted as schema.org FAQPage so Google can
+    // surface them as rich FAQ drop-downs in search results.
+    faqs: z
+      .array(
+        z.object({
+          question: z.string(),
+          answer: z.string(),
+        }),
+      )
+      .optional(),
   }),
 });
 

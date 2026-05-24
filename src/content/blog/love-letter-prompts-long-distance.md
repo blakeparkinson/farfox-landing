@@ -2,6 +2,17 @@
 title: "50 Love Letter Prompts for Long-Distance Couples (When the Page Goes Blank)"
 description: "Stuck on what to write? 50 love letter prompts for long-distance couples — gratitude, memories, future plans, missing them, and the quiet things you've never said. Organized by mood, ready to use tonight."
 date: "2026-05-24"
+faqs:
+  - question: "What's a good first love letter to write?"
+    answer: "Start with prompt #29 (\"Write about the first time you knew you'd want to spend more time with them\") or #5 (\"Describe what 'home' has come to mean since you met them\"). Both make great first letters because they have a natural arc — beginning, middle, end — and they don't require you to feel like an experienced letter-writer."
+  - question: "How do I write a love letter without it feeling cringe?"
+    answer: "The two biggest causes of cringe: trying to sound like a Bridgerton character, and over-explaining. Stay in your voice. Pick one specific moment or feeling instead of trying to summarize everything. Don't say \"you are my everything\" — say \"you are the only person who knows about the thing I did in 2019.\""
+  - question: "What should I do with the letter once it's written?"
+    answer: "Don't email it. Don't paste it in chat. Either send it through something that makes it feel like a letter (a real envelope, a love-letter app, a printed-and-mailed-from-an-actual-post-office service) or hand it to them in person when the gap closes. The container is part of the gift."
+  - question: "Are these prompts good for couples who aren't long-distance?"
+    answer: "Yes. They're written with the long-distance frame because that's the audience where letters are most life-or-death — but every prompt works for couples who live together too. The \"future plans\" section reads differently when you already share a couch, but it still reads."
+  - question: "Where can I get more prompts like these?"
+    answer: "Far Fox ships with 200+ daily letter prompts organized by mood — gratitude, memories, future, missing, anniversary, playful, deep, and more. A new one is surfaced every day on a fresh stationery theme. You can also see how you and your partner like to feel loved with the free love profile quiz at lovefarfox.com/quiz, which tunes the prompts you see."
 ---
 
 You sit down to write your partner a real letter — the kind that isn't a text message, the kind they'll keep — and the page just stares back. You know what you *feel*. You don't know where to start.
@@ -130,30 +141,6 @@ Anywhere is fine, but the medium matters more than people think. A letter writte
 Far Fox has 30+ animated stationery themes — campfire, parchment, galaxy, sakura, candlelight, anniversary gold — and lets you seal letters for a future date, so the time-capsule kind work too. The point isn't that it has to be Far Fox; the point is that the *container* shapes what you write. Notes app is for thoughts. A letter wants a different room.
 
 > *"Pick a prompt that scares you a little. Send the version that scares you a little. The crookedness is what makes it feel real."*
-
-## FAQs
-
-### What's a good first love letter to write?
-
-Start with prompt #29 ("Write about the first time you knew you'd want to spend more time with them") or #5 ("Describe what 'home' has come to mean since you met them"). Both make great first letters because they have a natural arc — beginning, middle, end — and they don't require you to feel like an experienced letter-writer.
-
-### How do I write a love letter without it feeling cringe?
-
-The two biggest causes of cringe: trying to sound like a Bridgerton character, and over-explaining. Stay in your voice. Pick one specific moment or feeling instead of trying to summarize everything. Don't say "you are my everything" — say "you are the only person who knows about the thing I did in 2019."
-
-### What should I do with the letter once it's written?
-
-Don't email it. Don't paste it in chat. Either send it through something that makes it feel like a letter (a real envelope, a love-letter app, a printed-and-mailed-from-an-actual-post-office service) or hand it to them in person when the gap closes. The container is part of the gift.
-
-### Are these prompts good for couples who aren't long-distance?
-
-Yes. They're written with the long-distance frame because that's the audience where letters are most life-or-death — but every prompt works for couples who live together too. The "future plans" section reads differently when you already share a couch, but it still reads.
-
-### Where can I get more prompts like these?
-
-[Far Fox](https://app.lovefarfox.com) ships with 200+ daily letter prompts organized by mood — gratitude, memories, future, missing, anniversary, playful, deep, and more. A new one is surfaced every day on a fresh stationery theme. You can also see how you and your partner like to feel loved with the free [love profile quiz](https://lovefarfox.com/quiz), which tunes the prompts you see.
-
----
 
 **The letter that lands isn't the one with the prettiest words. It's the one where you said the thing.**
 
