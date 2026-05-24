@@ -23,3 +23,6 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .vercel
+
+# script-generated video / frame outputs (TikTok mp4s, etc) — local artifacts only
+out/
