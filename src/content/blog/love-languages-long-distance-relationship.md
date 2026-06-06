@@ -9,7 +9,7 @@ Gary Chapman's five love languages were written for couples who share a home. Ph
 
 Long-distance doesn't get that luxury.
 
-But here's the thing: knowing your partner's love language matters *more* when you're apart, not less. When you can't rely on proximity to do the work, you have to be intentional. The couples who stay close across distance are usually the ones who've figured out how to translate their love language into something that travels.
+But here's the thing: knowing your partner's love language matters *more* when you're apart, not less. When you can't rely on proximity to do the work, you have to be intentional. (Our guide to [keeping the spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship) goes deeper on this.) The couples who stay close across distance are usually the ones who've figured out how to translate their love language into something that travels.
 
 Here's how to do it for all five.
 

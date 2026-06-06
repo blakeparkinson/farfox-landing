@@ -1,5 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+// Featured guides for the homepage — surfaces the 6 most recent posts
+// so the homepage (the domain's strongest page) passes link authority
+// down into the blog cluster and gives crawlers a direct path in.
+const featuredPosts = (await getCollection('blog'))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 6);
 
 const faqs = [
   {
@@ -501,6 +509,37 @@ const featureGroups = [
           Most apps have mascots.<br />
           Far Fox has a small creature you'll catch yourself worrying about.
         </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guides / blog — passes homepage authority into the blog cluster -->
+  <section class="py-16 sm:py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-10 sm:mb-14">
+        <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4">
+          Long-distance
+          <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">guides</span>
+        </h2>
+        <p class="text-fox-text-light text-lg max-w-lg mx-auto">
+          Real advice for couples making it work across the miles — questions to ask, letters to write, and rituals that last.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {featuredPosts.map((post) => (
+          <a href={`/blog/${post.id}`} class="block group p-6 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1">
+            <h3 class="font-800 text-base leading-snug mb-2 group-hover:text-fox-pink transition-colors">{post.data.title}</h3>
+            <p class="text-fox-text-light text-sm leading-relaxed line-clamp-3">{post.data.description}</p>
+          </a>
+        ))}
+      </div>
+
+      <div class="text-center mt-10">
+        <a href="/blog" class="inline-flex items-center gap-1.5 font-800 text-fox-pink hover:text-fox-purple transition-colors">
+          Read all guides
+          <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </div>
   </section>

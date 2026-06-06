@@ -33,7 +33,7 @@ You're both still in love. But suddenly the constant contact feels like obligati
 
 **The trap:** Reading every shift in communication as a sign something's wrong. Demanding more contact when what you actually need is *better* contact. Letting a small misread of tone spiral into a 3am argument.
 
-**What to do:** Replace volume with intentionality. A 5-minute voice note where you actually say something real beats two hours of "wyd?" texting. Daily questions are powerful here — they give you something specific to talk about that isn't "how was your day." Shared rituals like writing a love letter or playing Would You Rather create connection that doesn't depend on constant contact.
+**What to do:** Replace volume with intentionality. A 5-minute voice note where you actually say something real beats two hours of "wyd?" texting. [Daily questions](/blog/long-distance-relationship-questions) are powerful here — they give you something specific to talk about that isn't "how was your day." Shared rituals like writing a love letter or playing Would You Rather create connection that doesn't depend on constant contact.
 
 This is the stage where most short-distance relationships break. The ones that survive learn to communicate differently — not more.
 
@@ -69,7 +69,7 @@ This is also when life circumstances start to test you. One of you gets a promot
 
 **What to do:** Make a plan. Concrete dates, concrete timelines, concrete next steps. Long-distance is sustainable when there's an *end in sight* — even if the end is 18 months away. It becomes unsustainable when it feels like the new permanent.
 
-If a plan isn't possible yet, double down on intentional moments. Write a real love letter (not a text). Send a Time Capsule message to be opened on a date six months out. Plan a visit. Make the relationship feel like it's *going somewhere* even if you can't be in the same place yet.
+If a plan isn't possible yet, double down on intentional moments. Write a real [love letter](/blog/love-letter-prompts-long-distance) (not a text). Send a Time Capsule message to be opened on a date six months out. Plan a visit. Make the relationship feel like it's *going somewhere* even if you can't be in the same place yet.
 
 Apps like [Far Fox](https://app.lovefarfox.com) were built specifically for this stage — daily prompts that fight fatigue, shared rituals that don't depend on willpower, and a fox companion that quietly tracks how much you've built together. The visible progress matters more than people realize.
 

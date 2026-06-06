@@ -15,7 +15,7 @@ Here's what actually works.
 
 ## Gifts that create an experience together
 
-The loneliest part of long-distance isn't missing someone in a general way — it's missing the *shared experience*. These gifts address that directly.
+The loneliest part of long-distance isn't missing someone in a general way — it's missing the *shared experience*. These gifts address that directly — and if you want free ways to share experiences too, here are [25 long-distance activities](/blog/long-distance-relationship-activities).
 
 **A subscription you both use**
 

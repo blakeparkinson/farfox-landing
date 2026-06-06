@@ -31,7 +31,7 @@ These kinds of prompts pull you out of autopilot and into actual connection. App
 
 Texting is fast and forgettable. Writing is slow and meaningful.
 
-A love letter doesn't have to be long. Three sentences about how you feel about them today — written with intention — hits different than a paragraph in iMessage. The format changes the feeling.
+A [love letter](/blog/love-letter-prompts-long-distance) doesn't have to be long. Three sentences about how you feel about them today — written with intention — hits different than a paragraph in iMessage. The format changes the feeling.
 
 Try writing on actual stationery (digital or physical). The act of choosing a background, writing deliberately, and sending something that looks and feels different from a text message creates a moment your partner will actually stop and read.
 
@@ -97,7 +97,7 @@ Flirt on purpose. Send the text you'd send if you were dating, not just coexisti
 
 One underrated way to keep the spark: see how far you've come.
 
-Streaks, milestones, and shared memories remind you that this relationship is growing — not just surviving. Looking back at three months of daily questions answered or letters exchanged is proof that you're building something real, one day at a time.
+Streaks, milestones, and shared memories remind you that this relationship is growing — not just surviving. Looking back at three months of [daily questions](/blog/long-distance-relationship-questions) answered or letters exchanged is proof that you're building something real, one day at a time.
 
 In Far Fox, your shared fox companion levels up as you use the app together. It's a small thing, but watching it grow is a tangible reminder that your daily effort adds up.
 

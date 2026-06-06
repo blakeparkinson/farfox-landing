@@ -20,7 +20,7 @@ Looking for couple challenge ideas that go beyond the Pinterest printables? You'
 
 Couple challenges work because they turn good intentions into daily habits. Instead of vaguely promising to "spend more quality time together," you commit to something specific — and you do it together.
 
-Whether you're in a long-distance relationship, living together, or just want to shake up your routine, here are 50 couple challenge ideas organized by category, effort level, and how long they take.
+Whether you're in a long-distance relationship, living together, or just want to shake up your routine, here are 50 couple challenge ideas organized by category, effort level, and how long they take. Looking for lower-key ideas? Start with these [long-distance relationship activities](/blog/long-distance-relationship-activities).
 
 ## Quick daily challenges (5 minutes or less)
 

@@ -9,7 +9,7 @@ When you live apart, conversations carry more weight. You can't rely on shared d
 
 The problem? Most long-distance couples get stuck in the same loop: "how was your day," "what did you eat," "miss you," "goodnight." It's comfortable. It's also how you stop *really* knowing each other.
 
-Here are 100 questions to break that loop — grouped by mood, from light and silly to deep and vulnerable. Use them on a call, in a text, or take turns answering one every day.
+Here are 100 questions to break that loop — grouped by mood, from light and silly to deep and vulnerable. Use them on a call, in a text, or take turns answering one every day. (For more ways to connect, see our [long-distance relationship activities](/blog/long-distance-relationship-activities).)
 
 ## Deep questions to ask your long-distance partner
 

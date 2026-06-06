@@ -15,10 +15,10 @@ Whether you're separated by a deployment, school, work, or just life, here are 2
 Not a selfie — a photo of what you're seeing right now. Your lunch, your walk, your messy desk. It's a window into each other's world. Apps like [Far Fox](https://app.lovefarfox.com) have a shared photo timeline built for exactly this.
 
 **2. Answer a daily question together**
-"What's your earliest childhood memory?" or "If we could live anywhere for a year, where?" Daily questions spark real conversations that texting doesn't. Far Fox sends you both the same question each day — you can't see their answer until you've both responded.
+"What's your earliest childhood memory?" or "If we could live anywhere for a year, where?" [Daily questions](/blog/long-distance-relationship-questions) spark real conversations that texting doesn't. Far Fox sends you both the same question each day — you can't see their answer until you've both responded.
 
 **3. Write a short love letter**
-Not an essay. Three sentences on how you're feeling about them today. The act of writing (not typing in iMessage) changes the way it feels. Try writing on themed stationery for extra warmth.
+Not an essay. Three sentences on how you're feeling about them today. The act of writing (not typing in iMessage) changes the way it feels. If you freeze up, these [love letter prompts](/blog/love-letter-prompts-long-distance) help. Try writing on themed stationery for extra warmth.
 
 **4. Share your mood**
 A simple "I'm feeling 😊 today" lets your partner know where you're at without having to explain everything. Mood tracking helps you notice patterns and check in more meaningfully.
