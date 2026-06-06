@@ -2,6 +2,7 @@
 title: "The Long-Distance Relationship Timeline: What Actually Happens Month by Month"
 description: "Every long-distance relationship goes through predictable stages — the honeymoon, the first crisis, the drift point, and the new normal. Here's what to expect at each one, and what to do about it."
 date: "2026-05-16"
+tags: ["advice", "connection"]
 ---
 
 Long-distance relationships follow a pattern. Couples who think they're uniquely struggling at month 3 are actually hitting the exact same wall every long-distance couple hits at month 3. The relief in knowing this is real.

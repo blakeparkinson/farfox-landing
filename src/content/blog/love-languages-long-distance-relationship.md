@@ -2,6 +2,7 @@
 title: "Love Languages in Long-Distance Relationships (And How to Actually Use Them)"
 description: "Long-distance makes love languages harder — but also more important. Here's how to speak each one when you can't be in the same room."
 date: "2026-05-14"
+tags: ["connection", "romance", "advice"]
 ---
 
 Gary Chapman's five love languages were written for couples who share a home. Physical touch is easy when you're in the same bed. Acts of service happen naturally when you live together. Words of affirmation flow more freely in person.

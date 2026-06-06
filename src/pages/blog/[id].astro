@@ -19,6 +19,24 @@ const publishDate = new Date(post.data.date).toLocaleDateString('en-US', {
   day: 'numeric',
 });
 
+// Related posts — internal-link cluster. Score every other post by how
+// many tags it shares with this one, break ties by recency, take top 3.
+// Falls back gracefully to the most recent posts when tags are sparse.
+const allPosts = await getCollection('blog');
+const currentTags = post.data.tags ?? [];
+const relatedPosts = allPosts
+  .filter((p) => p.id !== post.id)
+  .map((p) => ({
+    post: p,
+    score: (p.data.tags ?? []).filter((t) => currentTags.includes(t)).length,
+  }))
+  .sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return new Date(b.post.data.date).getTime() - new Date(a.post.data.date).getTime();
+  })
+  .slice(0, 3)
+  .map((x) => x.post);
+
 // Per-post OG image — rendered on-demand at /blog/<slug>/og.png so
 // social previews show the actual post title, not the generic brand
 // card. Falls back to the post's frontmatter image (if set) or the
@@ -66,10 +84,24 @@ const faqSchema = faqs && faqs.length > 0
       })),
     }
   : null;
+
+// BreadcrumbList schema — lets Google render Home › Blog › Post as a
+// breadcrumb trail in search results instead of a raw URL, which both
+// clarifies site structure to crawlers and improves SERP click-through.
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://lovefarfox.com" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://lovefarfox.com/blog" },
+    { "@type": "ListItem", "position": 3, "name": post.data.title, "item": `https://lovefarfox.com/blog/${post.id}` },
+  ],
+};
 ---
 
 <Layout title={`${post.data.title} — Far Fox`} description={post.data.description} image={ogImage}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   {faqSchema && (
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   )}
@@ -93,9 +125,16 @@ const faqSchema = faqs && faqs.length > 0
 
   <main class="pt-28 pb-24 px-6">
     <article class="max-w-3xl mx-auto">
-      <a href="/blog" class="inline-flex items-center gap-1 text-sm text-fox-text-light/60 hover:text-fox-pink transition-colors mb-8">
-        &larr; Back to blog
-      </a>
+      <!-- Visible breadcrumb trail (matches BreadcrumbList schema) -->
+      <nav aria-label="Breadcrumb" class="mb-8">
+        <ol class="flex flex-wrap items-center gap-1.5 text-sm text-fox-text-light/60">
+          <li><a href="/" class="hover:text-fox-pink transition-colors">Home</a></li>
+          <li aria-hidden="true" class="text-fox-text-light/30">/</li>
+          <li><a href="/blog" class="hover:text-fox-pink transition-colors">Blog</a></li>
+          <li aria-hidden="true" class="text-fox-text-light/30">/</li>
+          <li aria-current="page" class="text-fox-text-light/80 truncate max-w-[60%]">{post.data.title}</li>
+        </ol>
+      </nav>
 
       <h1 class="text-3xl sm:text-4xl font-900 tracking-tight leading-tight mb-4">{post.data.title}</h1>
       <p class="text-fox-text-light mb-10">{publishDate}</p>
@@ -141,6 +180,20 @@ const faqSchema = faqs && faqs.length > 0
           Try Far Fox Free
         </a>
       </div>
+
+      {relatedPosts.length > 0 && (
+        <section class="mt-16 pt-12 border-t border-fox-pink/10">
+          <h2 class="text-2xl font-800 tracking-tight mb-6">Keep reading</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            {relatedPosts.map((rp) => (
+              <a href={`/blog/${rp.id}`} class="block group p-5 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1">
+                <h3 class="font-800 text-base leading-snug mb-2 group-hover:text-fox-pink transition-colors">{rp.data.title}</h3>
+                <p class="text-fox-text-light text-sm leading-relaxed line-clamp-3">{rp.data.description}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
     </article>
   </main>
 

@@ -2,6 +2,7 @@
 title: "Best Long-Distance Relationship Apps in 2026 (Honest Review)"
 description: "Looking for the best long-distance relationship app? We reviewed the top options couples are actually using — from shared photo timelines to AI companions — and what makes each one worth trying."
 date: "2026-05-01"
+tags: ["apps", "tools", "advice"]
 ---
 
 Long-distance relationships have never had more tech support. There's a whole category of apps built specifically for couples who live apart — and they're a lot more than glorified group chats.

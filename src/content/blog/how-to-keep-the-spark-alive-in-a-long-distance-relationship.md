@@ -2,6 +2,7 @@
 title: "How to Keep the Spark Alive in a Long-Distance Relationship"
 description: "Long-distance doesn't have to mean losing the spark. Here are practical, real-world ways couples stay emotionally and romantically connected across any distance."
 date: "2026-04-05"
+tags: ["connection", "romance", "advice"]
 ---
 
 Every long-distance couple hits the same wall. The honeymoon energy of constant texting fades. Video calls start feeling like status updates. You love each other — but the **spark** feels harder to reach when you can't share a couch, a meal, or a look across the room.

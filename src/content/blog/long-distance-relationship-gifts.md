@@ -2,6 +2,7 @@
 title: "The Best Long-Distance Relationship Gifts (That Actually Mean Something)"
 description: "Skip the generic. These long-distance relationship gift ideas feel personal, thoughtful, and work across any distance — for birthdays, anniversaries, or no reason at all."
 date: "2026-05-07"
+tags: ["gifts", "romance"]
 ---
 
 Buying a gift for someone you can't hand it to in person is harder than it sounds. You're fighting against shipping delays, guessing at sizing, and the creeping worry that something that feels meaningful online will arrive looking like a $14 Amazon purchase.

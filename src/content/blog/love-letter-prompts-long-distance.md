@@ -2,6 +2,7 @@
 title: "50 Love Letter Prompts for Long-Distance Couples (When the Page Goes Blank)"
 description: "Stuck on what to write? 50 love letter prompts for long-distance couples — gratitude, memories, future plans, missing them, and the quiet things you've never said. Organized by mood, ready to use tonight."
 date: "2026-05-24"
+tags: ["writing", "romance", "connection"]
 faqs:
   - question: "What's a good first love letter to write?"
     answer: "Start with prompt #29 (\"Write about the first time you knew you'd want to spend more time with them\") or #5 (\"Describe what 'home' has come to mean since you met them\"). Both make great first letters because they have a natural arc — beginning, middle, end — and they don't require you to feel like an experienced letter-writer."

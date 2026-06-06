@@ -8,6 +8,10 @@ const blog = defineCollection({
     description: z.string(),
     date: z.string(),
     image: z.string().optional(),
+    // Topic tags used to compute "Related reading" (shared-tag scoring)
+    // and to build the internal-link cluster between posts. Optional so
+    // posts without tags simply fall back to recency-based relations.
+    tags: z.array(z.string()).optional(),
     // Optional structured FAQs. When present, they're rendered at the
     // end of the post AND emitted as schema.org FAQPage so Google can
     // surface them as rich FAQ drop-downs in search results.

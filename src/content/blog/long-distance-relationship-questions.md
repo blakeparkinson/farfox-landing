@@ -2,6 +2,7 @@
 title: "100 Long-Distance Relationship Questions to Ask Your Partner"
 description: "100 thoughtful questions for long-distance couples — from deep and vulnerable to playful and flirty. The perfect way to skip small talk and actually connect."
 date: "2026-04-18"
+tags: ["connection", "conversation", "fun"]
 ---
 
 When you live apart, conversations carry more weight. You can't rely on shared dinners or lazy Sunday mornings to fill in the gaps — the words you exchange *are* the relationship, at least until you're together again.

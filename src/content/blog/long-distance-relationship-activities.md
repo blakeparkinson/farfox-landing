@@ -2,6 +2,7 @@
 title: "25 Long-Distance Relationship Activities That Actually Feel Connected"
 description: "Tired of just texting and FaceTiming? Here are 25 creative long-distance relationship activities that help couples feel close — no matter how many miles apart."
 date: "2026-03-30"
+tags: ["activities", "fun", "connection"]
 ---
 
 Long-distance relationships survive on more than "good morning" texts and the occasional FaceTime. They thrive when you build **daily rituals** — small, intentional moments that make the distance feel a little less real.
