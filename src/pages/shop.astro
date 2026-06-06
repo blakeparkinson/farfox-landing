@@ -20,7 +20,9 @@ import Layout from '../layouts/Layout.astro';
  * single source of truth in the PRODUCTS array below.
  */
 
-const SNIPCART_KEY = import.meta.env.PUBLIC_SNIPCART_KEY ?? '';
+// Snipcart PUBLIC API key — safe to ship in client HTML (that's how the
+// cart works). Env var wins if set in Vercel; otherwise this default.
+const SNIPCART_KEY = import.meta.env.PUBLIC_SNIPCART_KEY ?? 'ZDBhODA3ZGEtNzM5Zi00MGYxLTg4ODItOGY3NTYyMTQwNmRmNjM5MTYzNzE4NTA1NTczODE3';
 const cartLive = SNIPCART_KEY.length > 0;
 
 const SITE = 'https://lovefarfox.com';
@@ -283,7 +285,7 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
   {cartLive && (
     <Fragment>
       <div hidden id="snipcart" data-api-key={SNIPCART_KEY} data-config-modal-style="side"></div>
-      <script src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
+      <script is:inline src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
       <script is:inline>
         // Sync each product's size <select> into the Snipcart custom field
         // before the item is added, so the chosen size rides along.
