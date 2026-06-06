@@ -39,7 +39,7 @@ const MAP: Record<string, Cfg> = {
   'club-tee':       { pid: 71,  color: 'Natural',    design: `${SITE}/shop/designs/long-distance-club.png`, ftype: 'front' },
   'fox-tee':        { pid: 71,  color: 'Soft Cream', design: `${SITE}/fox-logo.png`,                        ftype: 'front' },
   'fox-hoodie':     { pid: 294, color: 'Sand',       design: `${SITE}/fox-letter.png`,                      ftype: 'front' },
-  'moon-mug':       { pid: 19,  color: 'White',      design: `${SITE}/shop/designs/mug-same-moon.png`,      ftype: 'default' },
+  'moon-mug':       { pid: 19,  color: 'White',      design: `${SITE}/shop/designs/mug-same-moon-v2.png`,   ftype: 'default' },
   'fox-mug':        { pid: 19,  color: 'White',      design: `${SITE}/shop/designs/mug-foxlogo.png`,        ftype: 'default' },
   'missyou-sticker':{ pid: 957, color: 'White',      design: `${SITE}/shop/designs/miss-you.png`,           ftype: 'default' },
   'fox-sticker':    { pid: 957, color: 'White',      design: `${SITE}/fox-logo.png`,                        ftype: 'default' },
