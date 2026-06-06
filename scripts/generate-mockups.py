@@ -151,7 +151,7 @@ def generate(store, pid, fname, art, prefer, options=None):
 if __name__ == "__main__":
     sid, sname = discover_store()
     print(f"Store: {sname} ({sid})")
-    OPTIONS = {"tote.png": [{"id": "stitch_color", "value": "white"}]}
+    OPTIONS = {"tote.png": [{"name": "stitch_color", "value": "clear"}]}
     only = os.environ.get("ONLY")  # comma-separated filenames to limit to
     only = set(x.strip() for x in only.split(",")) if only else None
     todo = [p for p in PRODUCTS if (only is None or p[1] in only)]
