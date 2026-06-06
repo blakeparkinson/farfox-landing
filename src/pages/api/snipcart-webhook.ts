@@ -35,7 +35,7 @@ const SITE = 'https://lovefarfox.com';
 //  flagged for manual fulfilment.)
 type Cfg = { pid: number; color: string; design: string; ftype: 'front' | 'default' };
 const MAP: Record<string, Cfg> = {
-  'mile-tee':       { pid: 71,  color: 'White',      design: `${SITE}/shop/designs/worth-every-mile.png`,  ftype: 'front' },
+  'mile-tee':       { pid: 71,  color: 'White',      design: `${SITE}/shop/designs/worth-every-mile-v2.png`, ftype: 'front' },
   'club-tee':       { pid: 71,  color: 'Natural',    design: `${SITE}/shop/designs/long-distance-club.png`, ftype: 'front' },
   'fox-tee':        { pid: 71,  color: 'Soft Cream', design: `${SITE}/fox-logo.png`,                        ftype: 'front' },
   'fox-hoodie':     { pid: 294, color: 'Sand',       design: `${SITE}/fox-letter.png`,                      ftype: 'front' },
