@@ -79,8 +79,13 @@ def slice_cell(cell):
     for n,(cx,cy),(x0,y0,x1,y1),pix in comps:
         is_main = (n == main_size)
         touches_edge = (x0 <= EDGE or y0 <= EDGE or x1 >= W-EDGE or y1 >= H-EDGE)
+        # cell index labels ("1." … "16.") are small isolated blobs whose
+        # centroid sits in the top-left corner of the cell
+        in_corner_label = (cx < 0.30*W and cy < 0.18*H and n < 0.02*H*W)
         if not is_main:
             if n < speck:           # dust
+                continue
+            if in_corner_label:     # grid number label
                 continue
             if touches_edge:        # neighbor bleed clipped at the boundary
                 continue
