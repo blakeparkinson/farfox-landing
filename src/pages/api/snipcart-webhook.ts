@@ -43,8 +43,12 @@ const MAP: Record<string, Cfg> = {
   'fox-mug':        { pid: 19,  color: 'White',      design: `${SITE}/shop/designs/mug-foxlogo.png`,        ftype: 'default' },
   'missyou-sticker':{ pid: 957, color: 'White',      design: `${SITE}/shop/designs/miss-you.png`,           ftype: 'default' },
   'fox-sticker':    { pid: 957, color: 'White',      design: `${SITE}/fox-logo.png`,                        ftype: 'default' },
-  'sticker-pack':   { pid: 505, color: 'White',      design: `${SITE}/shop/designs/sticker-sheet.png`,      ftype: 'default' },
+  'sticker-pack':   { pid: 505, color: 'White',      design: `${SITE}/shop/designs/sticker-sheet-v2.png`,   ftype: 'default' },
   'fox-print':      { pid: 1,   color: 'White',      design: `${SITE}/fox-letter.png`,                      ftype: 'default' },
+  // Pride collection
+  'pride-tee':      { pid: 71,  color: 'White',      design: `${SITE}/shop/designs/pride-love-tee.png`,     ftype: 'front' },
+  'pride-sheet':    { pid: 505, color: 'White',      design: `${SITE}/shop/designs/pride-sticker-sheet.png`,ftype: 'default' },
+  'pride-mug':      { pid: 19,  color: 'White',      design: `${SITE}/shop/designs/pride-mug.png`,          ftype: 'default' },
 };
 
 const pfHeaders = () => ({
