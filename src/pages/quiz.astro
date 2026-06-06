@@ -23,8 +23,8 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
 ---
 
 <Layout
-  title="The Love Profile quiz · Far Fox"
-  description="6 questions. 2 minutes. A shareable picture of how you feel loved."
+  title="Love Language Quiz for Couples — How Do You Feel Loved? | Far Fox"
+  description="A free love language quiz for couples: 6 questions, 2 minutes, no signup. Discover how you and your partner actually want to be loved — perfect for long-distance relationships."
 >
   <main class="min-h-screen pt-24 pb-20 px-6 bg-gradient-to-b from-fox-bg via-white to-fox-bg">
     <div class="max-w-xl mx-auto" id="quiz-root">
@@ -111,7 +111,81 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
         <p class="text-fox-text-light text-lg">Building your love profile…</p>
       </section>
     </div>
+
+    <!-- SEO content — crawlable context below the JS-driven funnel. Gives
+         search engines real text to rank (the quiz steps above are mostly
+         hidden by default) without disrupting the conversion flow. -->
+    <section class="max-w-2xl mx-auto mt-24 pt-12 border-t border-fox-pink/10">
+      <h2 class="text-2xl sm:text-3xl font-900 tracking-tight mb-4">What is the Love Language Quiz?</h2>
+      <p class="text-fox-text-light leading-relaxed mb-4">
+        The Far Fox Love Profile quiz is a free, 2-minute love language quiz built for couples —
+        especially those in long-distance relationships. In six honest questions, it maps how you
+        most naturally <em>feel</em> loved: through words, quality time, thoughtful gestures, physical
+        closeness, or small daily rituals. There's no signup, and you get a shareable result you can
+        send straight to your partner.
+      </p>
+      <p class="text-fox-text-light leading-relaxed mb-8">
+        Knowing your love language matters even more across distance. When you can't rely on being in
+        the same room, you have to be intentional about <em>how</em> you show love — and that starts
+        with understanding what actually lands for each of you. Take the quiz, compare your results,
+        and you'll instantly understand why some gestures land and others quietly miss.
+      </p>
+
+      <h2 class="text-2xl sm:text-3xl font-900 tracking-tight mb-6">Common questions</h2>
+      <div class="space-y-4 mb-10">
+        <details class="group rounded-2xl bg-white/70 border border-fox-pink/8 p-5">
+          <summary class="font-800 cursor-pointer list-none [&::-webkit-details-marker]:hidden flex justify-between items-start">
+            <span>Is the love language quiz free?</span>
+            <span class="ml-4 text-fox-pink/40 group-open:rotate-45 transition-transform text-2xl font-700">+</span>
+          </summary>
+          <p class="mt-3 text-fox-text-light leading-relaxed">Yes — completely free, with no signup required. You answer six questions and get a shareable love profile in about two minutes.</p>
+        </details>
+        <details class="group rounded-2xl bg-white/70 border border-fox-pink/8 p-5">
+          <summary class="font-800 cursor-pointer list-none [&::-webkit-details-marker]:hidden flex justify-between items-start">
+            <span>Can my partner and I both take it?</span>
+            <span class="ml-4 text-fox-pink/40 group-open:rotate-45 transition-transform text-2xl font-700">+</span>
+          </summary>
+          <p class="mt-3 text-fox-text-light leading-relaxed">That's the point. Each of you takes it separately, then compares results. Seeing the difference between how you each feel loved is usually more revealing than the result itself.</p>
+        </details>
+        <details class="group rounded-2xl bg-white/70 border border-fox-pink/8 p-5">
+          <summary class="font-800 cursor-pointer list-none [&::-webkit-details-marker]:hidden flex justify-between items-start">
+            <span>Is this good for long-distance couples?</span>
+            <span class="ml-4 text-fox-pink/40 group-open:rotate-45 transition-transform text-2xl font-700">+</span>
+          </summary>
+          <p class="mt-3 text-fox-text-light leading-relaxed">Especially. Distance forces you to be intentional about showing love, and knowing your partner's love language tells you exactly where to put that effort. See our guide on <a href="/blog/love-languages-long-distance-relationship" class="text-fox-pink font-700 hover:underline">love languages in long-distance relationships</a> for how to act on your results.</p>
+        </details>
+      </div>
+
+      <p class="text-fox-text-light leading-relaxed">
+        Want to go deeper? Read our complete guide on <a href="/blog/how-to-make-a-long-distance-relationship-work" class="text-fox-pink font-700 hover:underline">how to make a long-distance relationship work</a>,
+        or browse all our <a href="/blog" class="text-fox-pink font-700 hover:underline">long-distance relationship guides</a>.
+      </p>
+    </section>
   </main>
+
+  <!-- FAQPage schema for the quiz — eligible for rich results on
+       "love language quiz" queries. -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is the love language quiz free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes — completely free, with no signup required. You answer six questions and get a shareable love profile in about two minutes." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can my partner and I both take the love language quiz?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Each partner takes it separately, then compares results. Seeing the difference between how you each feel loved is usually more revealing than the result itself." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the love language quiz good for long-distance couples?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Especially. Distance forces you to be intentional about showing love, and knowing your partner's love language tells you exactly where to focus that effort." }
+      }
+    ]
+  })} />
 
   <script type="application/json" id="quiz-data" set:html={quizData} />
 

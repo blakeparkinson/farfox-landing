@@ -21,7 +21,7 @@ Most couples think they do. Most are partly wrong.
 
 It's common to confuse what we like to *give* with what our partner needs to *receive*. A words-of-affirmation person who's with a physical touch person will pour out compliments and wonder why their partner still feels distant.
 
-Before you read the rest of this, it's worth taking a proper love language quiz together — separately, then compare. [Far Fox](https://app.lovefarfox.com) has a built-in couple love language quiz that shows you both your results side by side, which usually sparks more conversation than the result itself.
+Before you read the rest of this, it's worth taking a proper [love language quiz](/quiz) together — separately, then compare. [Far Fox](https://app.lovefarfox.com) has a built-in couple love language quiz that shows you both your results side by side, which usually sparks more conversation than the result itself.
 
 Now, to the languages.
 
