@@ -1,0 +1,5 @@
+{
+  "crons": [
+    { "path": "/api/printful-rebuild", "schedule": "0 8 * * *" }
+  ]
+}
