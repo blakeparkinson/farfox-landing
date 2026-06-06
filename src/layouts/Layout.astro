@@ -73,6 +73,25 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
         "priceCurrency": "USD"
       }
     })} />
+
+<!-- Organization + WebSite entity — helps Google build the brand entity
+     and is the prerequisite for a sitelinks search box / knowledge panel. -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Far Fox",
+      "url": "https://lovefarfox.com",
+      "logo": "https://lovefarfox.com/fox-logo.png",
+      "description": "Far Fox is a couples app for long-distance relationships — daily questions, love letters, shared photos, and a fox companion that grows with your relationship.",
+      "sameAs": ["https://app.lovefarfox.com"]
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Far Fox",
+      "url": "https://lovefarfox.com",
+      "publisher": { "@type": "Organization", "name": "Far Fox" }
+    })} />
   </head>
   <body class="bg-fox-bg text-fox-text font-display antialiased">
     <slot />
