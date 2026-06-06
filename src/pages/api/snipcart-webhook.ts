@@ -1,25 +1,23 @@
 import type { APIRoute } from 'astro';
 
-// Serverless endpoint — not prerendered.
 export const prerender = false;
 
 /**
- * Snipcart → Printful fulfillment glue.
+ * Snipcart → Printful fulfillment glue (catalog-agnostic).
  *
- * When a Snipcart order completes, Snipcart POSTs here. We validate the
- * request against Snipcart, map each line item to a Printful catalog
- * variant (by product + chosen size), and create a Printful order so it
- * prints and ships automatically.
+ * Each Snipcart line item's id IS the Printful sync-product id (the shop
+ * catalog is generated from Printful, so this is guaranteed). On
+ * order.completed we look the sync product up, pick the variant matching
+ * the chosen size, and create a Printful order by sync_variant_id —
+ * Printful already knows the print files and product from the sync product.
  *
- * Required Vercel env vars (Project → Settings → Environment Variables):
- *   PRINTFUL_TOKEN      — your Printful API token (server-side secret)
- *   PRINTFUL_STORE_ID   — your Printful store id (18292625)
- *   SNIPCART_SECRET_KEY — your Snipcart SECRET API key (for webhook validation)
- *   PRINTFUL_AUTOCONFIRM — optional "true" to auto-charge+fulfill; otherwise
- *                          orders are created as drafts you confirm in Printful.
+ * There is NO per-product mapping here: adding products in Printful needs
+ * no change to this file.
  *
- * Set the webhook URL in Snipcart → Settings → Webhooks:
- *   https://lovefarfox.com/api/snipcart-webhook
+ * Required Vercel env vars:
+ *   PRINTFUL_TOKEN, SNIPCART_SECRET_KEY (+ optional PRINTFUL_STORE_ID,
+ *   PRINTFUL_AUTOCONFIRM="true").
+ * Snipcart webhook URL: https://lovefarfox.com/api/snipcart-webhook
  */
 
 const PF_TOKEN = import.meta.env.PRINTFUL_TOKEN as string | undefined;
@@ -27,50 +25,28 @@ const PF_STORE = (import.meta.env.PRINTFUL_STORE_ID as string | undefined) ?? '1
 const SNIPCART_SECRET = import.meta.env.SNIPCART_SECRET_KEY as string | undefined;
 const AUTOCONFIRM = (import.meta.env.PRINTFUL_AUTOCONFIRM as string | undefined) === 'true';
 
-const SITE = 'https://lovefarfox.com';
-
-// Snipcart product id → Printful catalog product + colorway + print file.
-// Size is resolved at runtime from the item's "Size" custom field.
-// (Items without a Printful product — pin, sticker pack — are skipped and
-//  flagged for manual fulfilment.)
-type Cfg = { pid: number; color: string; design: string; ftype: 'front' | 'default' };
-const MAP: Record<string, Cfg> = {
-  'mile-tee':       { pid: 71,  color: 'White',      design: `${SITE}/shop/designs/worth-every-mile-v2.png`, ftype: 'front' },
-  'club-tee':       { pid: 71,  color: 'Natural',    design: `${SITE}/shop/designs/long-distance-club.png`, ftype: 'front' },
-  'fox-tee':        { pid: 71,  color: 'Soft Cream', design: `${SITE}/fox-logo.png`,                        ftype: 'front' },
-  'fox-hoodie':     { pid: 294, color: 'Sand',       design: `${SITE}/fox-letter.png`,                      ftype: 'front' },
-  'moon-mug':       { pid: 19,  color: 'White',      design: `${SITE}/shop/designs/mug-same-moon-v2.png`,   ftype: 'default' },
-  'fox-mug':        { pid: 19,  color: 'White',      design: `${SITE}/shop/designs/mug-foxlogo.png`,        ftype: 'default' },
-  'missyou-sticker':{ pid: 957, color: 'White',      design: `${SITE}/shop/designs/miss-you.png`,           ftype: 'default' },
-  'fox-sticker':    { pid: 957, color: 'White',      design: `${SITE}/fox-logo.png`,                        ftype: 'default' },
-  'sticker-pack':   { pid: 505, color: 'White',      design: `${SITE}/shop/designs/sticker-sheet-v2.png`,   ftype: 'default' },
-  'fox-print':      { pid: 1,   color: 'White',      design: `${SITE}/fox-letter.png`,                      ftype: 'default' },
-  // Pride collection
-  'pride-tee':      { pid: 71,  color: 'White',      design: `${SITE}/shop/designs/pride-love-tee.png`,     ftype: 'front' },
-  'pride-sheet':    { pid: 505, color: 'White',      design: `${SITE}/shop/designs/pride-sticker-sheet.png`,ftype: 'default' },
-  'pride-mug':      { pid: 19,  color: 'White',      design: `${SITE}/shop/designs/pride-mug.png`,          ftype: 'default' },
-};
-
 const pfHeaders = () => ({
   Authorization: `Bearer ${PF_TOKEN}`,
   'X-PF-Store-Id': PF_STORE,
   'Content-Type': 'application/json',
 });
 
-// Resolve a Printful catalog variant id for a product config + size.
-async function resolveVariant(cfg: Cfg, size: string | null): Promise<number | null> {
-  for (let off = 0; off < 600; off += 100) {
-    const r = await fetch(`https://api.printful.com/v2/catalog-products/${cfg.pid}/catalog-variants?limit=100&offset=${off}`, { headers: pfHeaders() });
-    if (!r.ok) break;
-    const d = await r.json();
-    const data = d.data ?? [];
-    const byColor = data.filter((v: any) => v.color === cfg.color);
-    const pool = byColor.length ? byColor : data;
-    const match = size ? pool.find((v: any) => v.size === size) : pool[0];
-    if (match) return match.id;
-    if (off + 100 >= (d.paging?.total ?? 0)) break;
+async function pfGet(path: string) {
+  const r = await fetch(`https://api.printful.com${path}`, { headers: pfHeaders() });
+  if (!r.ok) throw new Error(`PF GET ${path} -> ${r.status}`);
+  return (await r.json()).result;
+}
+
+/** Resolve a Snipcart line item to a Printful sync_variant_id. */
+async function resolveSyncVariant(productId: string, size: string | null): Promise<number | null> {
+  const detail = await pfGet(`/store/products/${productId}`);
+  const variants = (detail.sync_variants || []).filter((v: any) => !v.is_ignored);
+  if (!variants.length) return null;
+  if (size) {
+    const m = variants.find((v: any) => (v.size || '').toLowerCase() === size.toLowerCase());
+    if (m) return m.id;
   }
-  return null;
+  return variants[0].id; // single-variant product, or size not provided
 }
 
 async function validateSnipcart(token: string): Promise<boolean> {
@@ -82,17 +58,14 @@ async function validateSnipcart(token: string): Promise<boolean> {
 }
 
 export const POST: APIRoute = async ({ request }) => {
-  // Soft-fail (200) on config gaps so Snipcart doesn't hammer retries.
   if (!PF_TOKEN || !SNIPCART_SECRET) {
-    console.warn('snipcart-webhook: missing PRINTFUL_TOKEN or SNIPCART_SECRET_KEY env');
+    console.warn('snipcart-webhook: missing PRINTFUL_TOKEN or SNIPCART_SECRET_KEY');
     return new Response('not configured', { status: 200 });
   }
-
   const token = request.headers.get('x-snipcart-requesttoken');
   if (!token || !(await validateSnipcart(token))) {
     return new Response('invalid token', { status: 401 });
   }
-
   const body = await request.json().catch(() => null);
   if (!body || body.eventName !== 'order.completed') {
     return new Response('ignored', { status: 200 });
@@ -105,17 +78,12 @@ export const POST: APIRoute = async ({ request }) => {
   const pfItems: any[] = [];
   const skipped: string[] = [];
   for (const it of items) {
-    const cfg = MAP[it.id];
-    if (!cfg) { skipped.push(it.id); continue; }
-    const sizeField = (it.customFields ?? []).find((f: any) => (f.name || '').toLowerCase() === 'size');
-    const variantId = await resolveVariant(cfg, sizeField?.value ?? null);
-    if (!variantId) { skipped.push(it.id); continue; }
-    pfItems.push({
-      variant_id: variantId,
-      quantity: it.quantity ?? 1,
-      retail_price: String(it.price ?? ''),
-      files: [{ url: cfg.design, type: cfg.ftype }],
-    });
+    const size = (it.customFields ?? []).find((f: any) => (f.name || '').toLowerCase() === 'size')?.value ?? null;
+    let syncVariantId: number | null = null;
+    try { syncVariantId = await resolveSyncVariant(it.id, size); }
+    catch (e) { console.error('resolve failed', it.id, String(e)); }
+    if (!syncVariantId) { skipped.push(it.id); continue; }
+    pfItems.push({ sync_variant_id: syncVariantId, quantity: it.quantity ?? 1 });
   }
 
   if (!pfItems.length) {
@@ -128,25 +96,21 @@ export const POST: APIRoute = async ({ request }) => {
       name: ship.fullName || order.billingAddressName || 'Customer',
       address1: ship.address1, address2: ship.address2 || '',
       city: ship.city, state_code: ship.province || '',
-      country_code: ship.country, zip: ship.postalCode,
-      email: order.email,
+      country_code: ship.country, zip: ship.postalCode, email: order.email,
     },
     items: pfItems,
   };
 
   const url = `https://api.printful.com/orders${AUTOCONFIRM ? '?confirm=true' : ''}`;
   const resp = await fetch(url, { method: 'POST', headers: pfHeaders(), body: JSON.stringify(pfOrder) });
-  const respText = await resp.text();
   if (!resp.ok) {
-    console.error('snipcart-webhook: printful order failed', resp.status, respText.slice(0, 400));
-    // 200 so Snipcart marks delivered; we've logged for manual recovery.
+    console.error('snipcart-webhook: printful order failed', resp.status, (await resp.text()).slice(0, 400));
     return new Response('printful error logged', { status: 200 });
   }
   if (skipped.length) console.warn('snipcart-webhook: items needing manual fulfilment:', skipped);
   return new Response('order created', { status: 200 });
 };
 
-// Snipcart also GETs the endpoint to verify it exists.
 export const GET: APIRoute = async () =>
   new Response(JSON.stringify({ ok: true, service: 'snipcart-printful-webhook' }), {
     status: 200, headers: { 'Content-Type': 'application/json' },

@@ -7,7 +7,8 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "sync": "node scripts/sync-catalog.mjs",
+    "build": "node scripts/sync-catalog.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },

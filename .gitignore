@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # script-generated video / frame outputs (TikTok mp4s, etc) — local artifacts only
 out/
+
+# python bytecode
+scripts/__pycache__/

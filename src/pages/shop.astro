@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import catalog from '../data/catalog.json';
 
 /**
  * Far Fox Shop — print-on-demand storefront.
@@ -29,119 +30,18 @@ const SITE = 'https://lovefarfox.com';
 
 type Product = {
   id: string;
+  slug: string;
   name: string;
-  blurb: string;
   price: number;
+  currency?: string;
   image: string;
-  badge?: string;
   sizes?: string[];
 };
 
-const PRODUCTS: Product[] = [
-  {
-    id: 'mile-tee',
-    name: '"Worth Every Mile" Tee',
-    blurb: 'Two cities, a dashed flight path, one heart — and two foxes meeting in the middle. Our signature long-distance tee.',
-    price: 30,
-    image: '/shop/design-mile-tee.png',
-    badge: 'New',
-    sizes: ['S', 'M', 'L', 'XL', '2XL'],
-  },
-  {
-    id: 'club-tee',
-    name: 'Long Distance Club Tee',
-    blurb: 'Varsity-style crest for the club nobody chooses but everybody in it is proud of.',
-    price: 30,
-    image: '/shop/design-club-tee.png',
-    sizes: ['S', 'M', 'L', 'XL', '2XL'],
-  },
-  {
-    id: 'moon-mug',
-    name: '"Same Moon" Mug',
-    blurb: 'Same moon, same us. The curled-up fox and a crescent moon for long-distance mornings.',
-    price: 18,
-    image: '/shop/design-moon-mug.png',
-    badge: 'New',
-  },
-  {
-    id: 'missyou-sticker',
-    name: '"Miss You" Sticker',
-    blurb: 'Handwritten "miss you" with the sitting fox. Stick it where they\'ll see it.',
-    price: 4.5,
-    image: '/shop/design-missyou-sticker.png',
-  },
-  {
-    id: 'pride-tee',
-    name: '"Love is Love" Pride Tee',
-    blurb: 'The fox flying the rainbow flag, with LOVE IS LOVE in full pride colors. Love has no distance.',
-    price: 30,
-    image: '/shop/design-pride-tee.png',
-    badge: 'Pride',
-    sizes: ['S', 'M', 'L', 'XL', '2XL'],
-  },
-  {
-    id: 'pride-sheet',
-    name: 'Pride Sticker Sheet',
-    blurb: 'A kiss-cut sheet of pride foxes — flag, rainbow hearts, and a couple holding paws. Weatherproof.',
-    price: 12,
-    image: '/shop/design-pride-sheet.png',
-    badge: 'Pride',
-  },
-  {
-    id: 'pride-mug',
-    name: 'Pride Mug',
-    blurb: 'A rainbow heart and "love is love" to start the day proud. 11oz ceramic.',
-    price: 18,
-    image: '/shop/design-pride-mug.png',
-    badge: 'Pride',
-  },
-  {
-    id: 'fox-tee',
-    name: 'Far Fox Tee',
-    blurb: 'Soft cream cotton tee with the heart-eyed fox on the chest. Unisex fit.',
-    price: 28,
-    image: '/shop/tee.png',
-    badge: 'Bestseller',
-    sizes: ['S', 'M', 'L', 'XL', '2XL'],
-  },
-  {
-    id: 'fox-hoodie',
-    name: 'Love Letter Hoodie',
-    blurb: 'Cozy oatmeal hoodie — the fox tucked on the chest holding a love letter.',
-    price: 48,
-    image: '/shop/hoodie.png',
-    sizes: ['S', 'M', 'L', 'XL', '2XL'],
-  },
-  {
-    id: 'fox-mug',
-    name: 'Far Fox Mug',
-    blurb: '11oz ceramic mug. Morning coffee with a fox that misses them too.',
-    price: 18,
-    image: '/shop/mug.png',
-  },
-  {
-    id: 'sticker-pack',
-    name: 'Sticker Sheet',
-    blurb: 'A kiss-cut sheet of eight fox moods — heart, sleepy, excited, waving, and more. Weatherproof.',
-    price: 12,
-    image: '/shop/sticker-pack.png',
-    badge: 'Fan favorite',
-  },
-  {
-    id: 'fox-sticker',
-    name: 'Die-Cut Sticker',
-    blurb: 'Single 3" glossy vinyl fox. Laptop, water bottle, care-package filler.',
-    price: 4.5,
-    image: '/shop/sticker-single.png',
-  },
-  {
-    id: 'fox-print',
-    name: 'Art Print',
-    blurb: 'Museum-quality matte print of the fox. Frame-ready, ships flat.',
-    price: 20,
-    image: '/shop/print.png',
-  },
-];
+// Catalog is generated from Printful at build time (scripts/sync-catalog.mjs):
+// every sync product in the store, with its price, sizes and mockup. Add,
+// edit or remove products in the Printful dashboard — nothing here changes.
+const PRODUCTS: Product[] = (catalog.products as Product[]);
 
 const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
 ---
@@ -214,18 +114,18 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
         <div class="group flex flex-col rounded-3xl bg-white/70 border border-fox-pink/10 overflow-hidden hover:border-fox-pink/25 hover:shadow-xl hover:shadow-fox-pink/10 transition-all duration-200 hover:-translate-y-1">
           <div class="relative aspect-square bg-gradient-to-br from-fox-bg to-white overflow-hidden">
             <img src={p.image} alt={p.name} class="w-full h-full object-contain p-2" loading="lazy" />
-            {p.badge && (
-              <span class="absolute top-3 left-3 text-xs font-800 uppercase tracking-wide text-white bg-fox-pink rounded-full px-3 py-1">{p.badge}</span>
+            {p.name.includes('Pride') && (
+              <span class="absolute top-3 left-3 text-xs font-800 uppercase tracking-wide text-white bg-fox-pink rounded-full px-3 py-1">Pride</span>
             )}
           </div>
           <div class="flex flex-col flex-1 p-5">
-            <div class="flex items-baseline justify-between gap-2 mb-1">
-              <h2 class="font-800 text-lg">{p.name}</h2>
+            <div class="flex items-baseline justify-between gap-2 mb-3">
+              <h2 class="font-800 text-lg leading-tight">{p.name}</h2>
               <span class="font-900 text-fox-pink whitespace-nowrap">{fmt(p.price)}</span>
             </div>
-            <p class="text-fox-text-light text-sm leading-relaxed mb-4 flex-1">{p.blurb}</p>
+            <div class="flex-1"></div>
 
-            {p.sizes && (
+            {p.sizes && p.sizes.length > 0 && (
               <select
                 id={`size-${p.id}`}
                 class="mb-3 w-full rounded-xl border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text focus:outline-none focus:border-fox-pink"
@@ -243,10 +143,10 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
                 data-item-price={p.price}
                 data-item-url="/shop"
                 data-item-image={`${SITE}${p.image}`}
-                data-item-description={p.blurb}
-                data-item-custom1-name={p.sizes ? 'Size' : undefined}
-                data-item-custom1-options={p.sizes ? p.sizes.join('|') : undefined}
-                data-size-select={p.sizes ? `size-${p.id}` : undefined}
+                data-item-description={p.name}
+                data-item-custom1-name={p.sizes?.length ? 'Size' : undefined}
+                data-item-custom1-options={p.sizes?.length ? p.sizes.join('|') : undefined}
+                data-size-select={p.sizes?.length ? `size-${p.id}` : undefined}
               >
                 Add to cart
               </button>

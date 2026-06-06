@@ -1,0 +1,173 @@
+{
+  "generatedAt": "2026-06-06T22:31:25.232Z",
+  "products": [
+    {
+      "id": "436891457",
+      "slug": "far-fox-pride-mug",
+      "name": "Pride Mug",
+      "price": 18,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436891457.png",
+      "sizes": [
+        "11 oz",
+        "15 oz",
+        "20 oz"
+      ]
+    },
+    {
+      "id": "436891456",
+      "slug": "far-fox-pride-sticker-sheet",
+      "name": "Pride Sticker Sheet",
+      "price": 12,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436891456.png",
+      "sizes": []
+    },
+    {
+      "id": "436891455",
+      "slug": "far-fox-love-is-love-pride-tee",
+      "name": "\"Love is Love\" Pride Tee",
+      "price": 30,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436891455.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ]
+    },
+    {
+      "id": "436888903",
+      "slug": "far-fox-sticker-sheet",
+      "name": "Sticker Sheet",
+      "price": 12,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436888903.png",
+      "sizes": []
+    },
+    {
+      "id": "436888902",
+      "slug": "far-fox-heart-eyes-mug",
+      "name": "Heart Eyes Mug",
+      "price": 18,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436888902.png",
+      "sizes": [
+        "11 oz",
+        "15 oz",
+        "20 oz"
+      ]
+    },
+    {
+      "id": "436888901",
+      "slug": "far-fox-same-moon-mug",
+      "name": "\"Same Moon\" Mug",
+      "price": 18,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436888901.png",
+      "sizes": [
+        "11 oz",
+        "15 oz",
+        "20 oz"
+      ]
+    },
+    {
+      "id": "436883196",
+      "slug": "far-fox-art-print",
+      "name": "Art Print",
+      "price": 20,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436883196.png",
+      "sizes": []
+    },
+    {
+      "id": "436883191",
+      "slug": "far-fox-die-cut-sticker",
+      "name": "Die-Cut Sticker",
+      "price": 4.5,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436883191.png",
+      "sizes": []
+    },
+    {
+      "id": "436883186",
+      "slug": "far-fox-miss-you-too-sticker",
+      "name": "\"Miss You Too\" Sticker",
+      "price": 4.5,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436883186.jpg",
+      "sizes": []
+    },
+    {
+      "id": "436883173",
+      "slug": "far-fox-miss-you-sticker",
+      "name": "\"Miss You\" Sticker",
+      "price": 4.5,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436883173.png",
+      "sizes": []
+    },
+    {
+      "id": "436883154",
+      "slug": "far-fox-love-letter-hoodie",
+      "name": "Love Letter Hoodie",
+      "price": 48,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436883154.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ]
+    },
+    {
+      "id": "436883133",
+      "slug": "far-fox-heart-eyes-tee",
+      "name": "Heart Eyes Tee",
+      "price": 28,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436883133.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ]
+    },
+    {
+      "id": "436883116",
+      "slug": "far-fox-long-distance-club-tee",
+      "name": "Long Distance Club Tee",
+      "price": 30,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436883116.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ]
+    },
+    {
+      "id": "436882976",
+      "slug": "far-fox-worth-every-mile-tee",
+      "name": "\"Worth Every Mile\" Tee",
+      "price": 30,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436882976.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ]
+    }
+  ]
+}
