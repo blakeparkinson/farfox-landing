@@ -87,9 +87,66 @@ to link:
 > the whole emotional arc month-by-month here if it helps: [link to the timeline post].
 > The short version: it's not you, it's communication fatigue, and it's fixable.
 
-High-value posts you can make (value-first, link in comments if asked):
-- "I rounded up the actual long-distance relationship statistics with sources" → links naturally to the stats post
-- "47 long-distance date ideas that aren't just 'watch a movie on call'" → date-ideas post
+High-value posts you can make (value-first, link in comments if asked). Two
+**complete, ready-to-post** drafts below — paste as-is.
+
+---
+
+**READY-TO-POST #1 — r/LongDistance (the value-first share)**
+
+> **Title:** I got tired of "good morning / how was your day / goodnight" so I made a list of 100 questions that actually go somewhere
+>
+> My partner and I hit the month-3 wall where every conversation felt like a status update. We weren't fighting, we were just… reporting. So I started collecting better questions — stuff that makes you actually pause before answering.
+>
+> A few that consistently got us talking for an hour:
+> - What's something you changed your mind about this year?
+> - If we had one totally free weekend together right now, what's the *first* thing you'd want to do?
+> - What's a small thing I do that you've never told me you liked?
+> - What part of your day do you most wish I could've been there for?
+>
+> The trick that made it work: we answer the *same* question separately, then compare — it stops it from being a back-and-forth and makes it feel like a shared thing.
+>
+> I ended up writing out 100 of them grouped by mood (deep, flirty, silly, future) — happy to share the full list if anyone wants it, just say so. What questions have actually worked for you all? Always collecting more.
+
+*(When people ask in comments, link the questions post. Don't put the link in the body of the first post — let the mods and the upvotes warm up first.)*
+
+---
+
+**READY-TO-POST #2 — r/LongDistance (date-night angle)**
+
+> **Title:** 40+ long-distance date ideas that aren't just "watch a movie on call" (we were in a rut)
+>
+> We'd defaulted to "put on the same show and half-watch it" for months and it stopped feeling like a date. So we made a rule: a real date has a *start time*, a plan, and full attention (phone on a stand, notifications off). Total game-changer.
+>
+> Some that actually felt like dates:
+> - Cook the same recipe over video — chaotic, fun, you eat the same meal 2,000 miles apart
+> - Online co-op games (Stardew Valley, It Takes Two — relationship stress-tested 😅)
+> - "Order to their door" — you send dinner to them, then eat together on call
+> - Same sunset, two cities — watch at the same minute, send photos
+> - Body-doubling: both work/study on call in comfortable silence. Weirdly intimate.
+> - Write each other a letter *during* the date, read aloud at the end
+>
+> The phone-on-a-stand + dress-up-a-little thing matters more than the activity tbh. What are your go-to virtual dates? Stealing ideas for this weekend.
+
+*(Same rule: link the date-ideas post only if asked in comments.)*
+
+---
+
+**READY-TO-POST #3 — r/dataisbeautiful or r/LongDistance (stats / link-bait angle)**
+
+> **Title:** The actual data on long-distance relationships (success rates, how common they are, what predicts breakup) — with sources
+>
+> The internet repeats a lot of LDR "stats" with no source, so I dug into what's actually documented:
+> - ~14M people in the US consider themselves long-distance
+> - Success rate is most commonly cited around 58–60% — roughly comparable to relationships overall
+> - A 2013 study (Jiang & Hancock) found LDR couples often report *equal or greater* intimacy than couples who live together
+> - The strongest predictor of making it isn't the number of miles — it's whether there's a plan to eventually close the distance
+>
+> Full roundup with sources here if useful: https://lovefarfox.com/blog/long-distance-relationship-statistics
+>
+> (Note: some popular figures trace to Dr. Guldner's center and are estimates, not peer-reviewed — flagged which is which in the writeup.)
+
+*(This one CAN include the link in-body — it's a sourced data post, which is exactly what r/dataisbeautiful and LDR subs accept. This is your best single shot at an organic backlink + traffic spike.)*
 
 ### 2d. Blogger / creator outreach (email template)
 
