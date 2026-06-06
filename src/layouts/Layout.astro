@@ -92,6 +92,9 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
       "url": "https://lovefarfox.com",
       "publisher": { "@type": "Organization", "name": "Far Fox" }
     })} />
+
+    <!-- Per-page <head> extras (e.g. Snipcart stylesheet on /shop) -->
+    <slot name="head" />
   </head>
   <body class="bg-fox-bg text-fox-text font-display antialiased">
     <slot />

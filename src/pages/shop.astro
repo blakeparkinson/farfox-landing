@@ -1,0 +1,274 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+/**
+ * Far Fox Shop — print-on-demand storefront.
+ *
+ * Cart + checkout run on Snipcart (static-site friendly, integrates with
+ * Printful for automatic fulfillment). The whole storefront UI is built
+ * here; going live needs exactly two things from the owner:
+ *   1. A Snipcart PUBLIC API key  → set PUBLIC_SNIPCART_KEY in the env
+ *      (Vercel → Settings → Environment Variables), and
+ *   2. Connect Printful inside the Snipcart dashboard so orders fulfill
+ *      automatically.
+ * Until a key is set, the page renders fully; the cart simply stays inert
+ * (we show a small "preview" notice instead of a broken checkout).
+ *
+ * Snipcart validates prices by crawling each item's `data-item-url`. Every
+ * product here uses /shop as its url and the matching button lives on this
+ * page, so validation resolves against this same page. Prices are the
+ * single source of truth in the PRODUCTS array below.
+ */
+
+const SNIPCART_KEY = import.meta.env.PUBLIC_SNIPCART_KEY ?? '';
+const cartLive = SNIPCART_KEY.length > 0;
+
+const SITE = 'https://lovefarfox.com';
+
+type Product = {
+  id: string;
+  name: string;
+  blurb: string;
+  price: number;
+  image: string;
+  badge?: string;
+  sizes?: string[];
+};
+
+const PRODUCTS: Product[] = [
+  {
+    id: 'fox-tee',
+    name: 'Far Fox Tee',
+    blurb: 'Soft cream cotton tee with the heart-eyed fox on the chest. Unisex fit.',
+    price: 28,
+    image: '/shop/tee.png',
+    badge: 'Bestseller',
+    sizes: ['S', 'M', 'L', 'XL', '2XL'],
+  },
+  {
+    id: 'fox-hoodie',
+    name: 'Love Letter Hoodie',
+    blurb: 'Cozy oatmeal hoodie — the fox tucked on the chest holding a love letter.',
+    price: 48,
+    image: '/shop/hoodie.png',
+    sizes: ['S', 'M', 'L', 'XL', '2XL'],
+  },
+  {
+    id: 'fox-mug',
+    name: 'Far Fox Mug',
+    blurb: '11oz ceramic mug. Morning coffee with a fox that misses them too.',
+    price: 18,
+    image: '/shop/mug.png',
+  },
+  {
+    id: 'fox-tote',
+    name: 'Sleepy Fox Tote',
+    blurb: 'Natural cotton tote with the curled-up sleeping fox. Roomy and sturdy.',
+    price: 22,
+    image: '/shop/tote.png',
+  },
+  {
+    id: 'fox-pin',
+    name: 'Enamel Pin',
+    blurb: 'Hard enamel fox-face pin with a gold-tone edge. On a branded backing card.',
+    price: 12,
+    image: '/shop/pin.png',
+  },
+  {
+    id: 'sticker-pack',
+    name: 'Sticker Pack (8)',
+    blurb: 'Eight die-cut vinyl stickers — the whole fox mood board. Weatherproof.',
+    price: 14,
+    image: '/shop/sticker-pack.png',
+    badge: 'Fan favorite',
+  },
+  {
+    id: 'fox-sticker',
+    name: 'Die-Cut Sticker',
+    blurb: 'Single 3" glossy vinyl fox. Laptop, water bottle, care-package filler.',
+    price: 4.5,
+    image: '/shop/sticker-single.png',
+  },
+  {
+    id: 'fox-print',
+    name: 'Art Print',
+    blurb: 'Museum-quality matte print of the fox. Frame-ready, ships flat.',
+    price: 20,
+    image: '/shop/print.png',
+  },
+];
+
+const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
+---
+
+<Layout
+  title="Far Fox Shop — Stickers, Mugs, Tees & More"
+  description="Official Far Fox merch: enamel pins, die-cut stickers, mugs, tees, hoodies, and totes featuring the kawaii fox. Print-on-demand, ships worldwide."
+>
+  {cartLive && (
+    <Fragment slot="head">
+      <link rel="preconnect" href="https://app.snipcart.com" />
+      <link rel="preconnect" href="https://cdn.snipcart.com" />
+      <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.css" />
+    </Fragment>
+  )}
+
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/fox-logo.png" alt="Far Fox" class="w-8 h-8" />
+        <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">
+          Far Fox
+        </span>
+      </a>
+      <div class="flex items-center gap-4">
+        <a href="/blog" class="hidden sm:inline text-sm font-700 text-fox-text-light hover:text-fox-pink transition-colors">Blog</a>
+        {cartLive && (
+          <button class="snipcart-checkout flex items-center gap-1.5 text-sm font-800 text-fox-text hover:text-fox-pink transition-colors">
+            <span aria-hidden="true">🛒</span>
+            Cart (<span class="snipcart-items-count">0</span>)
+          </button>
+        )}
+        <a
+          href="https://app.lovefarfox.com"
+          class="px-5 py-2 rounded-full bg-fox-pink text-white font-700 text-sm hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
+        >
+          Open App
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-32 pb-12 px-6 text-center relative overflow-hidden">
+    <div class="absolute top-10 left-1/4 w-72 h-72 bg-fox-pink/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-fox-purple/10 rounded-full blur-3xl"></div>
+    <div class="max-w-3xl mx-auto relative z-10">
+      <img src="/fox-logo.png" alt="Far Fox mascot" class="w-20 h-20 mx-auto mb-6 drop-shadow-lg" />
+      <h1 class="text-4xl sm:text-5xl font-900 tracking-tight mb-4">
+        The Far Fox
+        <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">Shop</span>
+      </h1>
+      <p class="text-fox-text-light text-lg max-w-xl mx-auto leading-relaxed">
+        Carry the fox with you. Quality merch featuring the little companion that grows
+        with your relationship — printed to order and shipped worldwide.
+      </p>
+      {!cartLive && (
+        <p class="mt-6 inline-block text-sm font-700 text-fox-text-light/80 bg-fox-pink/10 border border-fox-pink/20 rounded-full px-4 py-1.5">
+          🦊 Preview — checkout opens soon
+        </p>
+      )}
+    </div>
+  </section>
+
+  <!-- Product grid -->
+  <section class="pb-20 px-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      {PRODUCTS.map((p) => (
+        <div class="group flex flex-col rounded-3xl bg-white/70 border border-fox-pink/10 overflow-hidden hover:border-fox-pink/25 hover:shadow-xl hover:shadow-fox-pink/10 transition-all duration-200 hover:-translate-y-1">
+          <div class="relative aspect-square bg-gradient-to-br from-fox-bg to-white overflow-hidden">
+            <img src={p.image} alt={p.name} class="w-full h-full object-contain p-2" loading="lazy" />
+            {p.badge && (
+              <span class="absolute top-3 left-3 text-xs font-800 uppercase tracking-wide text-white bg-fox-pink rounded-full px-3 py-1">{p.badge}</span>
+            )}
+          </div>
+          <div class="flex flex-col flex-1 p-5">
+            <div class="flex items-baseline justify-between gap-2 mb-1">
+              <h2 class="font-800 text-lg">{p.name}</h2>
+              <span class="font-900 text-fox-pink whitespace-nowrap">{fmt(p.price)}</span>
+            </div>
+            <p class="text-fox-text-light text-sm leading-relaxed mb-4 flex-1">{p.blurb}</p>
+
+            {p.sizes && (
+              <select
+                id={`size-${p.id}`}
+                class="mb-3 w-full rounded-xl border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text focus:outline-none focus:border-fox-pink"
+                aria-label={`Size for ${p.name}`}
+              >
+                {p.sizes.map((s) => <option value={s}>{`Size: ${s}`}</option>)}
+              </select>
+            )}
+
+            {cartLive ? (
+              <button
+                class="snipcart-add-item mt-auto w-full px-5 py-3 rounded-full bg-fox-pink text-white font-800 hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200"
+                data-item-id={p.id}
+                data-item-name={p.name}
+                data-item-price={p.price}
+                data-item-url="/shop"
+                data-item-image={`${SITE}${p.image}`}
+                data-item-description={p.blurb}
+                data-item-custom1-name={p.sizes ? 'Size' : undefined}
+                data-item-custom1-options={p.sizes ? p.sizes.join('|') : undefined}
+                data-size-select={p.sizes ? `size-${p.id}` : undefined}
+              >
+                Add to cart
+              </button>
+            ) : (
+              <button
+                disabled
+                class="mt-auto w-full px-5 py-3 rounded-full bg-fox-pink/30 text-white/90 font-800 cursor-not-allowed"
+              >
+                Coming soon
+              </button>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Quality / reassurance -->
+  <section class="py-16 px-6 bg-gradient-to-b from-fox-bg to-white">
+    <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+      <div>
+        <div class="text-3xl mb-3">✨</div>
+        <h3 class="font-800 text-lg mb-1">Genuinely good quality</h3>
+        <p class="text-fox-text-light text-sm leading-relaxed">Printed on premium blanks — soft cotton, hard enamel, weatherproof vinyl. No flimsy merch.</p>
+      </div>
+      <div>
+        <div class="text-3xl mb-3">🌍</div>
+        <h3 class="font-800 text-lg mb-1">Ships worldwide</h3>
+        <p class="text-fox-text-light text-sm leading-relaxed">Printed to order near you and shipped almost anywhere — made for couples in two places.</p>
+      </div>
+      <div>
+        <div class="text-3xl mb-3">🦊</div>
+        <h3 class="font-800 text-lg mb-1">Supports the app</h3>
+        <p class="text-fox-text-light text-sm leading-relaxed">Every order helps keep Far Fox free, with no ads and no selling your data.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 border-t border-fox-pink/10">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
+      <div class="flex items-center gap-6 text-sm text-fox-text-light/50">
+        <a href="/shop" class="hover:text-fox-pink transition-colors">Shop</a>
+        <a href="/blog" class="hover:text-fox-pink transition-colors">Blog</a>
+        <a href="/privacy" class="hover:text-fox-pink transition-colors">Privacy</a>
+        <a href="/terms" class="hover:text-fox-pink transition-colors">Terms</a>
+        <a href="mailto:blake@lovefarfox.com" class="hover:text-fox-pink transition-colors">Contact</a>
+        <span>&copy; {new Date().getFullYear()} Far Fox</span>
+      </div>
+    </div>
+  </footer>
+
+  {cartLive && (
+    <Fragment>
+      <div hidden id="snipcart" data-api-key={SNIPCART_KEY} data-config-modal-style="side"></div>
+      <script src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
+      <script is:inline>
+        // Sync each product's size <select> into the Snipcart custom field
+        // before the item is added, so the chosen size rides along.
+        document.querySelectorAll('.snipcart-add-item[data-size-select]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const sel = document.getElementById(btn.getAttribute('data-size-select'));
+            if (sel) btn.setAttribute('data-item-custom1-value', sel.value);
+          }, true);
+        });
+      </script>
+    </Fragment>
+  )}
+</Layout>
