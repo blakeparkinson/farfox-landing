@@ -22,20 +22,29 @@ PRODUCTS = [
     (71,  "tee.png",            f"{SITE}/fox-logo.png",     ["Soft Cream", "Natural", "White"]),
     (294, "hoodie.png",         f"{SITE}/fox-letter.png",   ["Soft Cream", "Natural", "White", "Sand"]),
     (19,  "mug.png",            f"{SITE}/fox-logo.png",     ["White"]),
-    (84,  "tote.png",           f"{SITE}/fox-sleeping.png", ["Natural", "White"]),
+    (84,  "tote.png",           f"{SITE}/fox-sleeping.png", ["Natural", "White", "Black"]),
     (957, "sticker-single.png", f"{SITE}/fox-logo.png",     ["White"]),
     (1,   "print.png",          f"{SITE}/fox-letter.png",   ["White"]),
 ]
 
+import re as _re
 def req(method, url, body=None, store=None):
     h = dict(HDR)
     if store: h["X-PF-Store-Id"] = str(store)
     data = json.dumps(body).encode() if body is not None else None
-    r = urllib.request.Request(url, data=data, headers=h, method=method)
-    try:
-        return urllib.request.urlopen(r).read()
-    except urllib.error.HTTPError as e:
-        raise SystemExit(f"{method} {url} -> {e.code}: {e.read().decode()[:400]}")
+    for attempt in range(6):
+        r = urllib.request.Request(url, data=data, headers=h, method=method)
+        try:
+            return urllib.request.urlopen(r).read()
+        except urllib.error.HTTPError as e:
+            txt = e.read().decode()
+            if e.code == 429:
+                m = _re.search(r"after (\d+) second", txt)
+                wait = int(m.group(1)) + 5 if m else 60
+                print(f"    rate-limited; waiting {wait}s …")
+                time.sleep(wait); continue
+            raise RuntimeError(f"{method} {url} -> {e.code}: {txt[:400]}")
+    raise RuntimeError(f"{method} {url} -> still rate-limited after retries")
 
 def jget(url, store=None): return json.loads(req("GET", url, store=store))
 
@@ -78,23 +87,40 @@ def styles(pid):
         style_id = front["mockup_styles"][0]["id"]
     return front["placement"], front["technique"], style_id
 
-def generate(store, pid, fname, art, prefer):
-    vid = pick_variant(pid, prefer)
-    placement, technique, style_id = styles(pid)
+def build_body(pid, vid, placement, technique, art, style_id, options):
+    placement_obj = {
+        "placement": placement,
+        "technique": technique,
+        "layers": [{"type": "file", "url": art}],
+    }
     product = {
         "source": "catalog",
         "catalog_product_id": pid,
         "catalog_variant_ids": [vid],
-        "placements": [{
-            "placement": placement,
-            "technique": technique,
-            "layers": [{"type": "file", "url": art}],
-        }],
+        "placements": [placement_obj],
     }
     if style_id:
         product["mockup_style_ids"] = [style_id]
-    body = {"format": "jpg", "products": [product]}
-    task = json.loads(req("POST", f"{API}/v2/mockup-tasks", body, store=store))
+    if options:
+        product["options"] = options
+    return {"format": "jpg", "products": [product]}
+
+def create_task(store, body):
+    """POST a mockup task; on an invalid-style error, retry once without the
+    forced style (default mockup view always works)."""
+    try:
+        return json.loads(req("POST", f"{API}/v2/mockup-tasks", body, store=store))
+    except Exception as e:
+        if "style_ids" in str(e) and body["products"][0].get("mockup_style_ids"):
+            body["products"][0].pop("mockup_style_ids", None)
+            return json.loads(req("POST", f"{API}/v2/mockup-tasks", body, store=store))
+        raise
+
+def generate(store, pid, fname, art, prefer, options=None):
+    vid = pick_variant(pid, prefer)
+    placement, technique, style_id = styles(pid)
+    body = build_body(pid, vid, placement, technique, art, style_id, options)
+    task = create_task(store, body)
     tid = task["data"][0]["id"] if isinstance(task.get("data"), list) else task["data"]["id"]
     # poll
     for _ in range(40):
@@ -102,8 +128,16 @@ def generate(store, pid, fname, art, prefer):
         st = jget(f"{API}/v2/mockup-tasks?id={tid}", store=store)
         row = st["data"][0] if isinstance(st.get("data"), list) else st["data"]
         if row.get("status") == "completed":
-            mocks = row.get("mockups", [])
-            url = mocks[0]["mockup_url"] if mocks else None
+            url = None
+            # mockups are nested: catalog_variant_mockups[].mockups[].mockup_url
+            for cvm in row.get("catalog_variant_mockups", []):
+                for mk in cvm.get("mockups", []):
+                    if mk.get("mockup_url"):
+                        url = mk["mockup_url"]; break
+                if url: break
+            if not url:  # fall back to flat shape just in case
+                mocks = row.get("mockups", [])
+                url = mocks[0]["mockup_url"] if mocks else None
             if not url: raise SystemExit(f"{fname}: completed but no mockup url: {json.dumps(row)[:300]}")
             img = urllib.request.urlopen(url).read()
             out = os.path.join("public/shop", fname)
@@ -117,7 +151,16 @@ def generate(store, pid, fname, art, prefer):
 if __name__ == "__main__":
     sid, sname = discover_store()
     print(f"Store: {sname} ({sid})")
-    for pid, fname, art, prefer in PRODUCTS:
+    OPTIONS = {"tote.png": [{"id": "stitch_color", "value": "white"}]}
+    only = os.environ.get("ONLY")  # comma-separated filenames to limit to
+    only = set(x.strip() for x in only.split(",")) if only else None
+    todo = [p for p in PRODUCTS if (only is None or p[1] in only)]
+    for i, (pid, fname, art, prefer) in enumerate(todo):
         print(f"Generating {fname} from product {pid} …")
-        generate(sid, pid, fname, art, prefer)
+        try:
+            generate(sid, pid, fname, art, prefer, options=OPTIONS.get(fname))
+        except (Exception, SystemExit) as e:
+            print(f"  ✗ {fname} skipped: {str(e)[:200]}")
+        if i < len(todo) - 1:
+            time.sleep(60)  # space out task creation to respect rate limits
     print("Done. Real mockups saved to public/shop/.")
