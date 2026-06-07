@@ -1,6 +1,26 @@
 {
-  "generatedAt": "2026-06-07T01:57:03.133Z",
+  "generatedAt": "2026-06-07T14:00:54.261Z",
   "products": [
+    {
+      "id": "436911930",
+      "slug": "far-fox-long-distance-club-baseball-jersey",
+      "name": "Long Distance Club Baseball Jersey",
+      "price": 55,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-436911930.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL",
+        "5XL"
+      ],
+      "colors": []
+    },
     {
       "id": "436909622",
       "slug": "far-fox-morse-i-love-you-tee",
