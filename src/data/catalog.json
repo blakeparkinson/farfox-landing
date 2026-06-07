@@ -1,6 +1,44 @@
 {
-  "generatedAt": "2026-06-07T23:01:33.298Z",
+  "generatedAt": "2026-06-07T23:26:59.092Z",
   "products": [
+    {
+      "id": "437126197",
+      "slug": "far-fox-long-distance-fc-jersey-orange",
+      "name": "Long Distance FC Jersey (Orange)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-437126197.png",
+      "back": "/shop/backs/437126197.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
+    {
+      "id": "437126174",
+      "slug": "far-fox-long-distance-fc-jersey-white",
+      "name": "Long Distance FC Jersey (White)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-437126174.png",
+      "back": "/shop/backs/437126174.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
     {
       "id": "437120257",
       "slug": "far-fox-champions-long-distance-fc-jersey",
