@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-07T16:21:59.776Z",
+  "generatedAt": "2026-06-07T16:33:16.683Z",
   "products": [
     {
       "id": "437052584",
@@ -8,6 +8,7 @@
       "price": 55,
       "currency": "USD",
       "image": "/shop/auto/mockup-437052584.png",
+      "back": "/shop/backs/437052584.png",
       "sizes": [
         "XS",
         "S",
@@ -23,11 +24,12 @@
     },
     {
       "id": "437021439",
-      "slug": "far-fox-long-distance-club-baseball-jersey-away",
-      "name": "Long Distance Club Baseball Jersey (Away)",
+      "slug": "far-fox-long-distance-club-baseball-jersey-royal",
+      "name": "Long Distance Club Baseball Jersey (Royal)",
       "price": 55,
       "currency": "USD",
       "image": "/shop/auto/mockup-437021439.png",
+      "back": "/shop/backs/437021439.png",
       "sizes": [
         "XS",
         "S",
@@ -48,6 +50,7 @@
       "price": 55,
       "currency": "USD",
       "image": "/shop/auto/mockup-436911930.png",
+      "back": "/shop/backs/436911930.png",
       "sizes": [
         "XS",
         "S",
@@ -68,6 +71,7 @@
       "price": 30,
       "currency": "USD",
       "image": "/shop/colors/436909622-white.png",
+      "back": null,
       "sizes": [
         "S",
         "M",
@@ -130,6 +134,7 @@
       "price": 32,
       "currency": "USD",
       "image": "/shop/colors/436909615-white.png",
+      "back": null,
       "sizes": [
         "S",
         "M",
@@ -192,6 +197,7 @@
       "price": 30,
       "currency": "USD",
       "image": "/shop/colors/436908862-white.png",
+      "back": null,
       "sizes": [
         "S",
         "M",
@@ -254,6 +260,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436908860.png",
+      "back": null,
       "sizes": [
         "11 oz",
         "15 oz",
@@ -268,6 +275,7 @@
       "price": 24,
       "currency": "USD",
       "image": "/shop/auto/mockup-436908856.png",
+      "back": null,
       "sizes": [],
       "colors": []
     },
@@ -278,6 +286,7 @@
       "price": 24,
       "currency": "USD",
       "image": "/shop/auto/mockup-436908844.png",
+      "back": null,
       "sizes": [],
       "colors": []
     },
@@ -288,6 +297,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436891457.png",
+      "back": null,
       "sizes": [
         "11 oz",
         "15 oz",
@@ -302,6 +312,7 @@
       "price": 12,
       "currency": "USD",
       "image": "/shop/auto/mockup-436891456.png",
+      "back": null,
       "sizes": [],
       "colors": []
     },
@@ -312,6 +323,7 @@
       "price": 30,
       "currency": "USD",
       "image": "/shop/auto/mockup-436891455.png",
+      "back": null,
       "sizes": [
         "S",
         "M",
@@ -328,6 +340,7 @@
       "price": 12,
       "currency": "USD",
       "image": "/shop/auto/mockup-436888903.png",
+      "back": null,
       "sizes": [],
       "colors": []
     },
@@ -338,6 +351,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436888902.png",
+      "back": null,
       "sizes": [
         "11 oz",
         "15 oz",
@@ -352,6 +366,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436888901.png",
+      "back": null,
       "sizes": [
         "11 oz",
         "15 oz",
@@ -366,6 +381,7 @@
       "price": 20,
       "currency": "USD",
       "image": "/shop/auto/mockup-436883196.png",
+      "back": null,
       "sizes": [],
       "colors": []
     },
@@ -376,6 +392,7 @@
       "price": 4.5,
       "currency": "USD",
       "image": "/shop/auto/mockup-436883191.png",
+      "back": null,
       "sizes": [],
       "colors": []
     },
@@ -386,6 +403,7 @@
       "price": 4.5,
       "currency": "USD",
       "image": "/shop/auto/mockup-436883186.png",
+      "back": null,
       "sizes": [],
       "colors": []
     },
@@ -396,6 +414,7 @@
       "price": 4.5,
       "currency": "USD",
       "image": "/shop/auto/mockup-436883173.png",
+      "back": null,
       "sizes": [],
       "colors": []
     },
@@ -406,6 +425,7 @@
       "price": 48,
       "currency": "USD",
       "image": "/shop/colors/436883154-white.png",
+      "back": null,
       "sizes": [
         "S",
         "M",
@@ -453,6 +473,7 @@
       "price": 28,
       "currency": "USD",
       "image": "/shop/colors/436883133-white.png",
+      "back": null,
       "sizes": [
         "S",
         "M",
@@ -515,6 +536,7 @@
       "price": 30,
       "currency": "USD",
       "image": "/shop/colors/436883116-white.png",
+      "back": null,
       "sizes": [
         "S",
         "M",
@@ -577,6 +599,7 @@
       "price": 30,
       "currency": "USD",
       "image": "/shop/colors/436882976-white.png",
+      "back": null,
       "sizes": [
         "S",
         "M",

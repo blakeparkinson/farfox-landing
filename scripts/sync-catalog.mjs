@@ -26,6 +26,7 @@ const ROOT = process.cwd();
 const AUTO_DIR = join(ROOT, 'public/shop/auto');
 const OVERRIDE_DIR = join(ROOT, 'public/shop/mockups');
 const COLORS_DIR = join(ROOT, 'public/shop/colors');
+const BACKS_DIR = join(ROOT, 'public/shop/backs');
 const OUT = join(ROOT, 'src/data/catalog.json');
 
 const H = { Authorization: `Bearer ${TOKEN}`, 'X-PF-Store-Id': STORE };
@@ -113,6 +114,7 @@ async function main() {
       price: prices.length ? Math.min(...prices) : 0,
       currency: variants[0].currency || 'USD',
       image: firstColorImg || image,
+      back: existsSync(join(BACKS_DIR, `${p.id}.png`)) ? `/shop/backs/${p.id}.png` : null,
       sizes: sizes.length > 1 ? sizes : [],   // size picker only when there's a choice
       colors: colors.length > 1 ? colors : [], // colour picker only when there's a choice
     });

@@ -35,6 +35,7 @@ type Product = {
   price: number;
   currency?: string;
   image: string;
+  back?: string | null;
   sizes?: string[];
   colors?: { name: string; hex: string }[];
 };
@@ -117,6 +118,12 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
             <img id={`img-${p.id}`} src={p.image} alt={p.name} class="w-full h-full object-contain p-2 transition-opacity duration-150" loading="lazy" />
             {p.name.includes('Pride') && (
               <span class="absolute top-3 left-3 text-xs font-800 uppercase tracking-wide text-white bg-fox-pink rounded-full px-3 py-1">Pride</span>
+            )}
+            {p.back && (
+              <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 bg-white/85 backdrop-blur rounded-full px-1.5 py-1 shadow-sm">
+                <button type="button" class="view-btn text-[11px] font-800 px-2.5 py-0.5 rounded-full transition-colors" data-product={p.id} data-view={`${SITE}${p.image}`} data-active="true">Front</button>
+                <button type="button" class="view-btn text-[11px] font-800 px-2.5 py-0.5 rounded-full transition-colors" data-product={p.id} data-view={`${SITE}${p.back}`} data-active="false">Back</button>
+              </div>
             )}
           </div>
           <div class="flex flex-col flex-1 p-5">
@@ -253,6 +260,29 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
             if (label) label.textContent = name;
             const img = document.getElementById(`img-${pid}`);
             const src = sw.getAttribute('data-image');
+            if (img && src && img.getAttribute('src') !== src) {
+              img.style.opacity = '0';
+              const swap = new Image();
+              swap.onload = () => { img.src = src; img.style.opacity = '1'; };
+              swap.src = src;
+            }
+          });
+        });
+        // Front/Back view toggle (jerseys etc.)
+        const paintView = (btn) => {
+          const on = btn.getAttribute('data-active') === 'true';
+          btn.style.background = on ? '#e0689a' : 'transparent';
+          btn.style.color = on ? '#fff' : '#6e6874';
+        };
+        document.querySelectorAll('.view-btn').forEach((btn) => {
+          paintView(btn);
+          btn.addEventListener('click', () => {
+            const pid = btn.getAttribute('data-product');
+            document.querySelectorAll(`.view-btn[data-product="${pid}"]`).forEach((b) => {
+              b.setAttribute('data-active', b === btn ? 'true' : 'false'); paintView(b);
+            });
+            const img = document.getElementById(`img-${pid}`);
+            const src = btn.getAttribute('data-view');
             if (img && src && img.getAttribute('src') !== src) {
               img.style.opacity = '0';
               const swap = new Image();
