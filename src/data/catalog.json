@@ -1,6 +1,26 @@
 {
-  "generatedAt": "2026-06-07T14:00:54.261Z",
+  "generatedAt": "2026-06-07T14:07:53.213Z",
   "products": [
+    {
+      "id": "437021439",
+      "slug": "far-fox-long-distance-club-baseball-jersey-away",
+      "name": "Long Distance Club Baseball Jersey (Away)",
+      "price": 55,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-437021439.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL",
+        "5XL"
+      ],
+      "colors": []
+    },
     {
       "id": "436911930",
       "slug": "far-fox-long-distance-club-baseball-jersey",
