@@ -68,6 +68,18 @@ async function main() {
     const SIZE_ORDER = ['XS','S','M','L','XL','2XL','3XL','4XL','5XL','11 oz','15 oz','20 oz','One size'];
     const sizes = [...new Set(variants.map((v) => v.size).filter(Boolean))]
       .sort((a, b) => (SIZE_ORDER.indexOf(a) + 1 || 99) - (SIZE_ORDER.indexOf(b) + 1 || 99));
+    // colours (with swatch hex). Light shirts listed before dark for a nicer picker.
+    const COLOR_HEX = {
+      'White':'#ffffff','Natural':'#fef1d1','Ash':'#f0f1ea','Soft Pink':'#ffd8e1',
+      'Heather Prism Ice Blue':'#c3e2e3','Yellow':'#ffd667','Soft Cream':'#e7d4c0',
+      'Athletic Heather':'#cececc','Lilac':'#efbbe3','Silver':'#e3e3dd',
+      'Black':'#0c0c0c','Navy':'#212642','Maroon':'#721d37','Forest':'#223e25',
+      'Heather Navy':'#303643','True Royal':'#01408d','Team Purple':'#230f46',
+    };
+    const DARKISH = new Set(['Black','Navy','Maroon','Forest','Heather Navy','True Royal','Team Purple','Heather Midnight Navy']);
+    const colorNames = [...new Set(variants.map((v) => v.color).filter(Boolean))];
+    colorNames.sort((a, b) => (DARKISH.has(a) ? 1 : 0) - (DARKISH.has(b) ? 1 : 0));
+    const colors = colorNames.map((name) => ({ name, hex: COLOR_HEX[name] || '#cccccc' }));
     // image: override file wins, else Printful preview/thumbnail downloaded locally
     let image;
     const ov = overrideFor(p.id);
@@ -94,6 +106,7 @@ async function main() {
       currency: variants[0].currency || 'USD',
       image,
       sizes: sizes.length > 1 ? sizes : [],   // size picker only when there's a choice
+      colors: colors.length > 1 ? colors : [], // colour picker only when there's a choice
     });
   }
   // stable order: newest first by id desc

@@ -37,16 +37,30 @@ async function pfGet(path: string) {
   return (await r.json()).result;
 }
 
-/** Resolve a Snipcart line item to a Printful sync_variant_id. */
-async function resolveSyncVariant(productId: string, size: string | null): Promise<number | null> {
+/** Resolve a Snipcart line item to a Printful sync_variant_id by size + colour. */
+async function resolveSyncVariant(
+  productId: string,
+  size: string | null,
+  color: string | null,
+): Promise<number | null> {
   const detail = await pfGet(`/store/products/${productId}`);
   const variants = (detail.sync_variants || []).filter((v: any) => !v.is_ignored);
   if (!variants.length) return null;
-  if (size) {
-    const m = variants.find((v: any) => (v.size || '').toLowerCase() === size.toLowerCase());
+  const eq = (a: string, b: string | null) => !!b && (a || '').toLowerCase() === b.toLowerCase();
+  // Most specific first: colour + size, then size, then colour, then first.
+  if (size && color) {
+    const m = variants.find((v: any) => eq(v.size, size) && eq(v.color, color));
     if (m) return m.id;
   }
-  return variants[0].id; // single-variant product, or size not provided
+  if (size) {
+    const m = variants.find((v: any) => eq(v.size, size));
+    if (m) return m.id;
+  }
+  if (color) {
+    const m = variants.find((v: any) => eq(v.color, color));
+    if (m) return m.id;
+  }
+  return variants[0].id; // single-variant product, or nothing matched
 }
 
 async function validateSnipcart(token: string): Promise<boolean> {
@@ -78,9 +92,11 @@ export const POST: APIRoute = async ({ request }) => {
   const pfItems: any[] = [];
   const skipped: string[] = [];
   for (const it of items) {
-    const size = (it.customFields ?? []).find((f: any) => (f.name || '').toLowerCase() === 'size')?.value ?? null;
+    const cf = it.customFields ?? [];
+    const size = cf.find((f: any) => (f.name || '').toLowerCase() === 'size')?.value ?? null;
+    const color = cf.find((f: any) => (f.name || '').toLowerCase() === 'color')?.value ?? null;
     let syncVariantId: number | null = null;
-    try { syncVariantId = await resolveSyncVariant(it.id, size); }
+    try { syncVariantId = await resolveSyncVariant(it.id, size, color); }
     catch (e) { console.error('resolve failed', it.id, String(e)); }
     if (!syncVariantId) { skipped.push(it.id); continue; }
     pfItems.push({ sync_variant_id: syncVariantId, quantity: it.quantity ?? 1 });

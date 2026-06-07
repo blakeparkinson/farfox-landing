@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-07T01:23:12.859Z",
+  "generatedAt": "2026-06-07T01:42:06.046Z",
   "products": [
     {
       "id": "436909622",
@@ -14,6 +14,44 @@
         "L",
         "XL",
         "2XL"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#ffffff"
+        },
+        {
+          "name": "Natural",
+          "hex": "#fef1d1"
+        },
+        {
+          "name": "Ash",
+          "hex": "#f0f1ea"
+        },
+        {
+          "name": "Soft Pink",
+          "hex": "#ffd8e1"
+        },
+        {
+          "name": "Heather Prism Ice Blue",
+          "hex": "#c3e2e3"
+        },
+        {
+          "name": "Yellow",
+          "hex": "#ffd667"
+        },
+        {
+          "name": "Black",
+          "hex": "#0c0c0c"
+        },
+        {
+          "name": "Navy",
+          "hex": "#212642"
+        },
+        {
+          "name": "Maroon",
+          "hex": "#721d37"
+        }
       ]
     },
     {
@@ -29,21 +67,44 @@
         "L",
         "XL",
         "2XL"
-      ]
-    },
-    {
-      "id": "436909603",
-      "slug": "far-fox-varsity-143-tee",
-      "name": "Varsity 143 Tee",
-      "price": 30,
-      "currency": "USD",
-      "image": "/shop/auto/mockup-436909603.png",
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL",
-        "2XL"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#ffffff"
+        },
+        {
+          "name": "Natural",
+          "hex": "#fef1d1"
+        },
+        {
+          "name": "Ash",
+          "hex": "#f0f1ea"
+        },
+        {
+          "name": "Soft Pink",
+          "hex": "#ffd8e1"
+        },
+        {
+          "name": "Heather Prism Ice Blue",
+          "hex": "#c3e2e3"
+        },
+        {
+          "name": "Yellow",
+          "hex": "#ffd667"
+        },
+        {
+          "name": "Black",
+          "hex": "#0c0c0c"
+        },
+        {
+          "name": "Navy",
+          "hex": "#212642"
+        },
+        {
+          "name": "Maroon",
+          "hex": "#721d37"
+        }
       ]
     },
     {
@@ -59,6 +120,44 @@
         "L",
         "XL",
         "2XL"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#ffffff"
+        },
+        {
+          "name": "Natural",
+          "hex": "#fef1d1"
+        },
+        {
+          "name": "Ash",
+          "hex": "#f0f1ea"
+        },
+        {
+          "name": "Soft Pink",
+          "hex": "#ffd8e1"
+        },
+        {
+          "name": "Heather Prism Ice Blue",
+          "hex": "#c3e2e3"
+        },
+        {
+          "name": "Yellow",
+          "hex": "#ffd667"
+        },
+        {
+          "name": "Black",
+          "hex": "#0c0c0c"
+        },
+        {
+          "name": "Navy",
+          "hex": "#212642"
+        },
+        {
+          "name": "Maroon",
+          "hex": "#721d37"
+        }
       ]
     },
     {
@@ -72,7 +171,8 @@
         "11 oz",
         "15 oz",
         "20 oz"
-      ]
+      ],
+      "colors": []
     },
     {
       "id": "436908856",
@@ -81,7 +181,8 @@
       "price": 24,
       "currency": "USD",
       "image": "/shop/auto/mockup-436908856.png",
-      "sizes": []
+      "sizes": [],
+      "colors": []
     },
     {
       "id": "436908844",
@@ -90,7 +191,8 @@
       "price": 24,
       "currency": "USD",
       "image": "/shop/auto/mockup-436908844.png",
-      "sizes": []
+      "sizes": [],
+      "colors": []
     },
     {
       "id": "436891457",
@@ -103,7 +205,8 @@
         "11 oz",
         "15 oz",
         "20 oz"
-      ]
+      ],
+      "colors": []
     },
     {
       "id": "436891456",
@@ -112,7 +215,8 @@
       "price": 12,
       "currency": "USD",
       "image": "/shop/auto/mockup-436891456.png",
-      "sizes": []
+      "sizes": [],
+      "colors": []
     },
     {
       "id": "436891455",
@@ -127,7 +231,8 @@
         "L",
         "XL",
         "2XL"
-      ]
+      ],
+      "colors": []
     },
     {
       "id": "436888903",
@@ -136,7 +241,8 @@
       "price": 12,
       "currency": "USD",
       "image": "/shop/auto/mockup-436888903.png",
-      "sizes": []
+      "sizes": [],
+      "colors": []
     },
     {
       "id": "436888902",
@@ -149,7 +255,8 @@
         "11 oz",
         "15 oz",
         "20 oz"
-      ]
+      ],
+      "colors": []
     },
     {
       "id": "436888901",
@@ -162,7 +269,8 @@
         "11 oz",
         "15 oz",
         "20 oz"
-      ]
+      ],
+      "colors": []
     },
     {
       "id": "436883196",
@@ -171,7 +279,8 @@
       "price": 20,
       "currency": "USD",
       "image": "/shop/auto/mockup-436883196.png",
-      "sizes": []
+      "sizes": [],
+      "colors": []
     },
     {
       "id": "436883191",
@@ -180,7 +289,8 @@
       "price": 4.5,
       "currency": "USD",
       "image": "/shop/auto/mockup-436883191.png",
-      "sizes": []
+      "sizes": [],
+      "colors": []
     },
     {
       "id": "436883186",
@@ -189,7 +299,8 @@
       "price": 4.5,
       "currency": "USD",
       "image": "/shop/auto/mockup-436883186.png",
-      "sizes": []
+      "sizes": [],
+      "colors": []
     },
     {
       "id": "436883173",
@@ -198,7 +309,8 @@
       "price": 4.5,
       "currency": "USD",
       "image": "/shop/auto/mockup-436883173.png",
-      "sizes": []
+      "sizes": [],
+      "colors": []
     },
     {
       "id": "436883154",
@@ -213,6 +325,32 @@
         "L",
         "XL",
         "2XL"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#ffffff"
+        },
+        {
+          "name": "Athletic Heather",
+          "hex": "#cececc"
+        },
+        {
+          "name": "Lilac",
+          "hex": "#efbbe3"
+        },
+        {
+          "name": "Black",
+          "hex": "#0c0c0c"
+        },
+        {
+          "name": "Heather Navy",
+          "hex": "#303643"
+        },
+        {
+          "name": "Maroon",
+          "hex": "#721d37"
+        }
       ]
     },
     {
@@ -228,6 +366,44 @@
         "L",
         "XL",
         "2XL"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#ffffff"
+        },
+        {
+          "name": "Natural",
+          "hex": "#fef1d1"
+        },
+        {
+          "name": "Ash",
+          "hex": "#f0f1ea"
+        },
+        {
+          "name": "Soft Pink",
+          "hex": "#ffd8e1"
+        },
+        {
+          "name": "Heather Prism Ice Blue",
+          "hex": "#c3e2e3"
+        },
+        {
+          "name": "Yellow",
+          "hex": "#ffd667"
+        },
+        {
+          "name": "Black",
+          "hex": "#0c0c0c"
+        },
+        {
+          "name": "Navy",
+          "hex": "#212642"
+        },
+        {
+          "name": "Maroon",
+          "hex": "#721d37"
+        }
       ]
     },
     {
@@ -243,6 +419,44 @@
         "L",
         "XL",
         "2XL"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#ffffff"
+        },
+        {
+          "name": "Natural",
+          "hex": "#fef1d1"
+        },
+        {
+          "name": "Ash",
+          "hex": "#f0f1ea"
+        },
+        {
+          "name": "Soft Pink",
+          "hex": "#ffd8e1"
+        },
+        {
+          "name": "Heather Prism Ice Blue",
+          "hex": "#c3e2e3"
+        },
+        {
+          "name": "Yellow",
+          "hex": "#ffd667"
+        },
+        {
+          "name": "Black",
+          "hex": "#0c0c0c"
+        },
+        {
+          "name": "Navy",
+          "hex": "#212642"
+        },
+        {
+          "name": "Maroon",
+          "hex": "#721d37"
+        }
       ]
     },
     {
@@ -258,6 +472,44 @@
         "L",
         "XL",
         "2XL"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#ffffff"
+        },
+        {
+          "name": "Natural",
+          "hex": "#fef1d1"
+        },
+        {
+          "name": "Ash",
+          "hex": "#f0f1ea"
+        },
+        {
+          "name": "Soft Pink",
+          "hex": "#ffd8e1"
+        },
+        {
+          "name": "Heather Prism Ice Blue",
+          "hex": "#c3e2e3"
+        },
+        {
+          "name": "Yellow",
+          "hex": "#ffd667"
+        },
+        {
+          "name": "Black",
+          "hex": "#0c0c0c"
+        },
+        {
+          "name": "Navy",
+          "hex": "#212642"
+        },
+        {
+          "name": "Maroon",
+          "hex": "#721d37"
+        }
       ]
     }
   ]

@@ -36,6 +36,7 @@ type Product = {
   currency?: string;
   image: string;
   sizes?: string[];
+  colors?: { name: string; hex: string }[];
 };
 
 // Catalog is generated from Printful at build time (scripts/sync-catalog.mjs):
@@ -125,6 +126,30 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
             </div>
             <div class="flex-1"></div>
 
+            {p.colors && p.colors.length > 0 && (
+              <div class="mb-3">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-700 uppercase tracking-wide text-fox-text-light">Color</span>
+                  <span id={`color-label-${p.id}`} class="text-xs font-700 text-fox-text">{p.colors[0].name}</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5" role="radiogroup" aria-label={`Color for ${p.name}`}>
+                  {p.colors.map((c, i) => (
+                    <button
+                      type="button"
+                      class="color-swatch w-6 h-6 rounded-full border transition-transform hover:scale-110"
+                      data-product={p.id}
+                      data-color={c.name}
+                      data-selected={i === 0 ? 'true' : 'false'}
+                      title={c.name}
+                      aria-label={c.name}
+                      style={`background:${c.hex};border-color:${c.hex.toLowerCase() === '#ffffff' ? '#d8d2c8' : 'rgba(0,0,0,0.15)'};box-shadow:${i === 0 ? '0 0 0 2px #fff,0 0 0 4px var(--swatch-ring,#e0689a)' : 'none'}`}
+                    ></button>
+                  ))}
+                </div>
+                <input type="hidden" id={`color-${p.id}`} value={p.colors[0].name} />
+              </div>
+            )}
+
             {p.sizes && p.sizes.length > 0 && (
               <select
                 id={`size-${p.id}`}
@@ -147,6 +172,10 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
                 data-item-custom1-name={p.sizes?.length ? 'Size' : undefined}
                 data-item-custom1-options={p.sizes?.length ? p.sizes.join('|') : undefined}
                 data-size-select={p.sizes?.length ? `size-${p.id}` : undefined}
+                data-item-custom2-name={p.colors?.length ? 'Color' : undefined}
+                data-item-custom2-options={p.colors?.length ? p.colors.map((c) => c.name).join('|') : undefined}
+                data-item-custom2-value={p.colors?.length ? p.colors[0].name : undefined}
+                data-color-input={p.colors?.length ? `color-${p.id}` : undefined}
               >
                 Add to cart
               </button>
@@ -205,12 +234,37 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
       <div hidden id="snipcart" data-api-key={SNIPCART_KEY} data-config-modal-style="side"></div>
       <script is:inline src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
       <script is:inline>
-        // Sync each product's size <select> into the Snipcart custom field
-        // before the item is added, so the chosen size rides along.
-        document.querySelectorAll('.snipcart-add-item[data-size-select]').forEach((btn) => {
+        // Colour swatch selection: update the hidden input, the label and the
+        // selected ring for the product the swatch belongs to.
+        document.querySelectorAll('.color-swatch').forEach((sw) => {
+          sw.addEventListener('click', () => {
+            const pid = sw.getAttribute('data-product');
+            const name = sw.getAttribute('data-color');
+            document.querySelectorAll(`.color-swatch[data-product="${pid}"]`).forEach((s) => {
+              s.setAttribute('data-selected', 'false');
+              s.style.boxShadow = 'none';
+            });
+            sw.setAttribute('data-selected', 'true');
+            sw.style.boxShadow = '0 0 0 2px #fff,0 0 0 4px var(--swatch-ring,#e0689a)';
+            const hidden = document.getElementById(`color-${pid}`);
+            if (hidden) hidden.value = name;
+            const label = document.getElementById(`color-label-${pid}`);
+            if (label) label.textContent = name;
+          });
+        });
+        // Before add-to-cart, copy the chosen size + colour into Snipcart fields.
+        document.querySelectorAll('.snipcart-add-item').forEach((btn) => {
           btn.addEventListener('click', () => {
-            const sel = document.getElementById(btn.getAttribute('data-size-select'));
-            if (sel) btn.setAttribute('data-item-custom1-value', sel.value);
+            const sizeSel = btn.getAttribute('data-size-select');
+            if (sizeSel) {
+              const sel = document.getElementById(sizeSel);
+              if (sel) btn.setAttribute('data-item-custom1-value', sel.value);
+            }
+            const colorInput = btn.getAttribute('data-color-input');
+            if (colorInput) {
+              const ci = document.getElementById(colorInput);
+              if (ci) btn.setAttribute('data-item-custom2-value', ci.value);
+            }
           }, true);
         });
       </script>
