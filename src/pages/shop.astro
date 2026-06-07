@@ -114,7 +114,7 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
       {PRODUCTS.map((p) => (
         <div class="group flex flex-col rounded-3xl bg-white/70 border border-fox-pink/10 overflow-hidden hover:border-fox-pink/25 hover:shadow-xl hover:shadow-fox-pink/10 transition-all duration-200 hover:-translate-y-1">
           <div class="relative aspect-square bg-gradient-to-br from-fox-bg to-white overflow-hidden">
-            <img src={p.image} alt={p.name} class="w-full h-full object-contain p-2" loading="lazy" />
+            <img id={`img-${p.id}`} src={p.image} alt={p.name} class="w-full h-full object-contain p-2 transition-opacity duration-150" loading="lazy" />
             {p.name.includes('Pride') && (
               <span class="absolute top-3 left-3 text-xs font-800 uppercase tracking-wide text-white bg-fox-pink rounded-full px-3 py-1">Pride</span>
             )}
@@ -139,6 +139,7 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
                       class="color-swatch w-6 h-6 rounded-full border transition-transform hover:scale-110"
                       data-product={p.id}
                       data-color={c.name}
+                      data-image={c.image || p.image}
                       data-selected={i === 0 ? 'true' : 'false'}
                       title={c.name}
                       aria-label={c.name}
@@ -250,6 +251,14 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
             if (hidden) hidden.value = name;
             const label = document.getElementById(`color-label-${pid}`);
             if (label) label.textContent = name;
+            const img = document.getElementById(`img-${pid}`);
+            const src = sw.getAttribute('data-image');
+            if (img && src && img.getAttribute('src') !== src) {
+              img.style.opacity = '0';
+              const swap = new Image();
+              swap.onload = () => { img.src = src; img.style.opacity = '1'; };
+              swap.src = src;
+            }
           });
         });
         // Before add-to-cart, copy the chosen size + colour into Snipcart fields.

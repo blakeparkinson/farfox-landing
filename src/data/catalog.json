@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-07T01:42:06.046Z",
+  "generatedAt": "2026-06-07T01:57:03.133Z",
   "products": [
     {
       "id": "436909622",
@@ -7,7 +7,7 @@
       "name": "Morse \"I Love You\" Tee",
       "price": 30,
       "currency": "USD",
-      "image": "/shop/auto/mockup-436909622.png",
+      "image": "/shop/colors/436909622-white.png",
       "sizes": [
         "S",
         "M",
@@ -18,39 +18,48 @@
       "colors": [
         {
           "name": "White",
-          "hex": "#ffffff"
+          "hex": "#ffffff",
+          "image": "/shop/colors/436909622-white.png"
         },
         {
           "name": "Natural",
-          "hex": "#fef1d1"
+          "hex": "#fef1d1",
+          "image": "/shop/colors/436909622-natural.png"
         },
         {
           "name": "Ash",
-          "hex": "#f0f1ea"
+          "hex": "#f0f1ea",
+          "image": "/shop/colors/436909622-ash.png"
         },
         {
           "name": "Soft Pink",
-          "hex": "#ffd8e1"
+          "hex": "#ffd8e1",
+          "image": "/shop/colors/436909622-soft-pink.png"
         },
         {
           "name": "Heather Prism Ice Blue",
-          "hex": "#c3e2e3"
+          "hex": "#c3e2e3",
+          "image": "/shop/colors/436909622-heather-prism-ice-blue.png"
         },
         {
           "name": "Yellow",
-          "hex": "#ffd667"
+          "hex": "#ffd667",
+          "image": "/shop/colors/436909622-yellow.png"
         },
         {
           "name": "Black",
-          "hex": "#0c0c0c"
+          "hex": "#0c0c0c",
+          "image": "/shop/colors/436909622-black.png"
         },
         {
           "name": "Navy",
-          "hex": "#212642"
+          "hex": "#212642",
+          "image": "/shop/colors/436909622-navy.png"
         },
         {
           "name": "Maroon",
-          "hex": "#721d37"
+          "hex": "#721d37",
+          "image": "/shop/colors/436909622-maroon.png"
         }
       ]
     },
@@ -60,7 +69,7 @@
       "name": "Long Distance Club Back-Print Tee",
       "price": 32,
       "currency": "USD",
-      "image": "/shop/auto/mockup-436909615.png",
+      "image": "/shop/colors/436909615-white.png",
       "sizes": [
         "S",
         "M",
@@ -71,39 +80,48 @@
       "colors": [
         {
           "name": "White",
-          "hex": "#ffffff"
+          "hex": "#ffffff",
+          "image": "/shop/colors/436909615-white.png"
         },
         {
           "name": "Natural",
-          "hex": "#fef1d1"
+          "hex": "#fef1d1",
+          "image": "/shop/colors/436909615-natural.png"
         },
         {
           "name": "Ash",
-          "hex": "#f0f1ea"
+          "hex": "#f0f1ea",
+          "image": "/shop/colors/436909615-ash.png"
         },
         {
           "name": "Soft Pink",
-          "hex": "#ffd8e1"
+          "hex": "#ffd8e1",
+          "image": "/shop/colors/436909615-soft-pink.png"
         },
         {
           "name": "Heather Prism Ice Blue",
-          "hex": "#c3e2e3"
+          "hex": "#c3e2e3",
+          "image": "/shop/colors/436909615-heather-prism-ice-blue.png"
         },
         {
           "name": "Yellow",
-          "hex": "#ffd667"
+          "hex": "#ffd667",
+          "image": "/shop/colors/436909615-yellow.png"
         },
         {
           "name": "Black",
-          "hex": "#0c0c0c"
+          "hex": "#0c0c0c",
+          "image": "/shop/colors/436909615-black.png"
         },
         {
           "name": "Navy",
-          "hex": "#212642"
+          "hex": "#212642",
+          "image": "/shop/colors/436909615-navy.png"
         },
         {
           "name": "Maroon",
-          "hex": "#721d37"
+          "hex": "#721d37",
+          "image": "/shop/colors/436909615-maroon.png"
         }
       ]
     },
@@ -113,7 +131,7 @@
       "name": "Two Time Zones Tee",
       "price": 30,
       "currency": "USD",
-      "image": "/shop/auto/mockup-436908862.png",
+      "image": "/shop/colors/436908862-white.png",
       "sizes": [
         "S",
         "M",
@@ -124,39 +142,48 @@
       "colors": [
         {
           "name": "White",
-          "hex": "#ffffff"
+          "hex": "#ffffff",
+          "image": "/shop/colors/436908862-white.png"
         },
         {
           "name": "Natural",
-          "hex": "#fef1d1"
+          "hex": "#fef1d1",
+          "image": "/shop/colors/436908862-natural.png"
         },
         {
           "name": "Ash",
-          "hex": "#f0f1ea"
+          "hex": "#f0f1ea",
+          "image": "/shop/colors/436908862-ash.png"
         },
         {
           "name": "Soft Pink",
-          "hex": "#ffd8e1"
+          "hex": "#ffd8e1",
+          "image": "/shop/colors/436908862-soft-pink.png"
         },
         {
           "name": "Heather Prism Ice Blue",
-          "hex": "#c3e2e3"
+          "hex": "#c3e2e3",
+          "image": "/shop/colors/436908862-heather-prism-ice-blue.png"
         },
         {
           "name": "Yellow",
-          "hex": "#ffd667"
+          "hex": "#ffd667",
+          "image": "/shop/colors/436908862-yellow.png"
         },
         {
           "name": "Black",
-          "hex": "#0c0c0c"
+          "hex": "#0c0c0c",
+          "image": "/shop/colors/436908862-black.png"
         },
         {
           "name": "Navy",
-          "hex": "#212642"
+          "hex": "#212642",
+          "image": "/shop/colors/436908862-navy.png"
         },
         {
           "name": "Maroon",
-          "hex": "#721d37"
+          "hex": "#721d37",
+          "image": "/shop/colors/436908862-maroon.png"
         }
       ]
     },
@@ -318,7 +345,7 @@
       "name": "Love Letter Hoodie",
       "price": 48,
       "currency": "USD",
-      "image": "/shop/auto/mockup-436883154.png",
+      "image": "/shop/colors/436883154-white.png",
       "sizes": [
         "S",
         "M",
@@ -329,27 +356,33 @@
       "colors": [
         {
           "name": "White",
-          "hex": "#ffffff"
+          "hex": "#ffffff",
+          "image": "/shop/colors/436883154-white.png"
         },
         {
           "name": "Athletic Heather",
-          "hex": "#cececc"
+          "hex": "#cececc",
+          "image": "/shop/colors/436883154-athletic-heather.png"
         },
         {
           "name": "Lilac",
-          "hex": "#efbbe3"
+          "hex": "#efbbe3",
+          "image": "/shop/colors/436883154-lilac.png"
         },
         {
           "name": "Black",
-          "hex": "#0c0c0c"
+          "hex": "#0c0c0c",
+          "image": "/shop/colors/436883154-black.png"
         },
         {
           "name": "Heather Navy",
-          "hex": "#303643"
+          "hex": "#303643",
+          "image": "/shop/colors/436883154-heather-navy.png"
         },
         {
           "name": "Maroon",
-          "hex": "#721d37"
+          "hex": "#721d37",
+          "image": "/shop/colors/436883154-maroon.png"
         }
       ]
     },
@@ -359,7 +392,7 @@
       "name": "Heart Eyes Tee",
       "price": 28,
       "currency": "USD",
-      "image": "/shop/auto/mockup-436883133.png",
+      "image": "/shop/colors/436883133-white.png",
       "sizes": [
         "S",
         "M",
@@ -370,39 +403,48 @@
       "colors": [
         {
           "name": "White",
-          "hex": "#ffffff"
+          "hex": "#ffffff",
+          "image": "/shop/colors/436883133-white.png"
         },
         {
           "name": "Natural",
-          "hex": "#fef1d1"
+          "hex": "#fef1d1",
+          "image": "/shop/colors/436883133-natural.png"
         },
         {
           "name": "Ash",
-          "hex": "#f0f1ea"
+          "hex": "#f0f1ea",
+          "image": "/shop/colors/436883133-ash.png"
         },
         {
           "name": "Soft Pink",
-          "hex": "#ffd8e1"
+          "hex": "#ffd8e1",
+          "image": "/shop/colors/436883133-soft-pink.png"
         },
         {
           "name": "Heather Prism Ice Blue",
-          "hex": "#c3e2e3"
+          "hex": "#c3e2e3",
+          "image": "/shop/colors/436883133-heather-prism-ice-blue.png"
         },
         {
           "name": "Yellow",
-          "hex": "#ffd667"
+          "hex": "#ffd667",
+          "image": "/shop/colors/436883133-yellow.png"
         },
         {
           "name": "Black",
-          "hex": "#0c0c0c"
+          "hex": "#0c0c0c",
+          "image": "/shop/colors/436883133-black.png"
         },
         {
           "name": "Navy",
-          "hex": "#212642"
+          "hex": "#212642",
+          "image": "/shop/colors/436883133-navy.png"
         },
         {
           "name": "Maroon",
-          "hex": "#721d37"
+          "hex": "#721d37",
+          "image": "/shop/colors/436883133-maroon.png"
         }
       ]
     },
@@ -412,7 +454,7 @@
       "name": "Long Distance Club Tee",
       "price": 30,
       "currency": "USD",
-      "image": "/shop/auto/mockup-436883116.png",
+      "image": "/shop/colors/436883116-white.png",
       "sizes": [
         "S",
         "M",
@@ -423,39 +465,48 @@
       "colors": [
         {
           "name": "White",
-          "hex": "#ffffff"
+          "hex": "#ffffff",
+          "image": "/shop/colors/436883116-white.png"
         },
         {
           "name": "Natural",
-          "hex": "#fef1d1"
+          "hex": "#fef1d1",
+          "image": "/shop/colors/436883116-natural.png"
         },
         {
           "name": "Ash",
-          "hex": "#f0f1ea"
+          "hex": "#f0f1ea",
+          "image": "/shop/colors/436883116-ash.png"
         },
         {
           "name": "Soft Pink",
-          "hex": "#ffd8e1"
+          "hex": "#ffd8e1",
+          "image": "/shop/colors/436883116-soft-pink.png"
         },
         {
           "name": "Heather Prism Ice Blue",
-          "hex": "#c3e2e3"
+          "hex": "#c3e2e3",
+          "image": "/shop/colors/436883116-heather-prism-ice-blue.png"
         },
         {
           "name": "Yellow",
-          "hex": "#ffd667"
+          "hex": "#ffd667",
+          "image": "/shop/colors/436883116-yellow.png"
         },
         {
           "name": "Black",
-          "hex": "#0c0c0c"
+          "hex": "#0c0c0c",
+          "image": "/shop/colors/436883116-black.png"
         },
         {
           "name": "Navy",
-          "hex": "#212642"
+          "hex": "#212642",
+          "image": "/shop/colors/436883116-navy.png"
         },
         {
           "name": "Maroon",
-          "hex": "#721d37"
+          "hex": "#721d37",
+          "image": "/shop/colors/436883116-maroon.png"
         }
       ]
     },
@@ -465,7 +516,7 @@
       "name": "\"Worth Every Mile\" Tee",
       "price": 30,
       "currency": "USD",
-      "image": "/shop/auto/mockup-436882976.png",
+      "image": "/shop/colors/436882976-white.png",
       "sizes": [
         "S",
         "M",
@@ -476,39 +527,48 @@
       "colors": [
         {
           "name": "White",
-          "hex": "#ffffff"
+          "hex": "#ffffff",
+          "image": "/shop/colors/436882976-white.png"
         },
         {
           "name": "Natural",
-          "hex": "#fef1d1"
+          "hex": "#fef1d1",
+          "image": "/shop/colors/436882976-natural.png"
         },
         {
           "name": "Ash",
-          "hex": "#f0f1ea"
+          "hex": "#f0f1ea",
+          "image": "/shop/colors/436882976-ash.png"
         },
         {
           "name": "Soft Pink",
-          "hex": "#ffd8e1"
+          "hex": "#ffd8e1",
+          "image": "/shop/colors/436882976-soft-pink.png"
         },
         {
           "name": "Heather Prism Ice Blue",
-          "hex": "#c3e2e3"
+          "hex": "#c3e2e3",
+          "image": "/shop/colors/436882976-heather-prism-ice-blue.png"
         },
         {
           "name": "Yellow",
-          "hex": "#ffd667"
+          "hex": "#ffd667",
+          "image": "/shop/colors/436882976-yellow.png"
         },
         {
           "name": "Black",
-          "hex": "#0c0c0c"
+          "hex": "#0c0c0c",
+          "image": "/shop/colors/436882976-black.png"
         },
         {
           "name": "Navy",
-          "hex": "#212642"
+          "hex": "#212642",
+          "image": "/shop/colors/436882976-navy.png"
         },
         {
           "name": "Maroon",
-          "hex": "#721d37"
+          "hex": "#721d37",
+          "image": "/shop/colors/436882976-maroon.png"
         }
       ]
     }

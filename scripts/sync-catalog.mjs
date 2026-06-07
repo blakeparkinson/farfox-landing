@@ -25,6 +25,7 @@ const STORE = process.env.PRINTFUL_STORE_ID || '18292625';
 const ROOT = process.cwd();
 const AUTO_DIR = join(ROOT, 'public/shop/auto');
 const OVERRIDE_DIR = join(ROOT, 'public/shop/mockups');
+const COLORS_DIR = join(ROOT, 'public/shop/colors');
 const OUT = join(ROOT, 'src/data/catalog.json');
 
 const H = { Authorization: `Bearer ${TOKEN}`, 'X-PF-Store-Id': STORE };
@@ -79,7 +80,14 @@ async function main() {
     const DARKISH = new Set(['Black','Navy','Maroon','Forest','Heather Navy','True Royal','Team Purple','Heather Midnight Navy']);
     const colorNames = [...new Set(variants.map((v) => v.color).filter(Boolean))];
     colorNames.sort((a, b) => (DARKISH.has(a) ? 1 : 0) - (DARKISH.has(b) ? 1 : 0));
-    const colors = colorNames.map((name) => ({ name, hex: COLOR_HEX[name] || '#cccccc' }));
+    const colorSlug = (s) => s.toLowerCase().replace(/ /g, '-');
+    const colors = colorNames.map((name) => {
+      const file = `${p.id}-${colorSlug(name)}.png`;
+      const hasImg = existsSync(join(COLORS_DIR, file));
+      return { name, hex: COLOR_HEX[name] || '#cccccc', image: hasImg ? `/shop/colors/${file}` : null };
+    });
+    // If we have per-colour images, use the first colour's image as the card default.
+    const firstColorImg = colors.find((c) => c.image)?.image;
     // image: override file wins, else Printful preview/thumbnail downloaded locally
     let image;
     const ov = overrideFor(p.id);
@@ -104,7 +112,7 @@ async function main() {
       name: p.name.replace(/^Far Fox\s*[—-]\s*/i, ''),
       price: prices.length ? Math.min(...prices) : 0,
       currency: variants[0].currency || 'USD',
-      image,
+      image: firstColorImg || image,
       sizes: sizes.length > 1 ? sizes : [],   // size picker only when there's a choice
       colors: colors.length > 1 ? colors : [], // colour picker only when there's a choice
     });
