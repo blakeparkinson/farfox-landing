@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-07T16:33:16.683Z",
+  "generatedAt": "2026-06-07T16:52:40.458Z",
   "products": [
     {
       "id": "437052584",
@@ -71,7 +71,7 @@
       "price": 30,
       "currency": "USD",
       "image": "/shop/colors/436909622-white.png",
-      "back": null,
+      "back": "/shop/backs/436909622.png",
       "sizes": [
         "S",
         "M",
@@ -134,7 +134,7 @@
       "price": 32,
       "currency": "USD",
       "image": "/shop/colors/436909615-white.png",
-      "back": null,
+      "back": "/shop/backs/436909615.png",
       "sizes": [
         "S",
         "M",
@@ -197,7 +197,7 @@
       "price": 30,
       "currency": "USD",
       "image": "/shop/colors/436908862-white.png",
-      "back": null,
+      "back": "/shop/backs/436908862.png",
       "sizes": [
         "S",
         "M",
@@ -323,7 +323,7 @@
       "price": 30,
       "currency": "USD",
       "image": "/shop/auto/mockup-436891455.png",
-      "back": null,
+      "back": "/shop/backs/436891455.png",
       "sizes": [
         "S",
         "M",
@@ -425,7 +425,7 @@
       "price": 48,
       "currency": "USD",
       "image": "/shop/colors/436883154-white.png",
-      "back": null,
+      "back": "/shop/backs/436883154.png",
       "sizes": [
         "S",
         "M",
@@ -473,7 +473,7 @@
       "price": 28,
       "currency": "USD",
       "image": "/shop/colors/436883133-white.png",
-      "back": null,
+      "back": "/shop/backs/436883133.png",
       "sizes": [
         "S",
         "M",
@@ -536,7 +536,7 @@
       "price": 30,
       "currency": "USD",
       "image": "/shop/colors/436883116-white.png",
-      "back": null,
+      "back": "/shop/backs/436883116.png",
       "sizes": [
         "S",
         "M",
@@ -599,7 +599,7 @@
       "price": 30,
       "currency": "USD",
       "image": "/shop/colors/436882976-white.png",
-      "back": null,
+      "back": "/shop/backs/436882976.png",
       "sizes": [
         "S",
         "M",
