@@ -1,6 +1,63 @@
 {
-  "generatedAt": "2026-06-07T16:52:40.458Z",
+  "generatedAt": "2026-06-07T22:43:05.531Z",
   "products": [
+    {
+      "id": "437118032",
+      "slug": "far-fox-long-distance-club-soccer-jersey-royal",
+      "name": "Long Distance Club Soccer Jersey (Royal)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-437118032.png",
+      "back": "/shop/backs/437118032.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
+    {
+      "id": "437118026",
+      "slug": "far-fox-long-distance-club-soccer-jersey-away",
+      "name": "Long Distance Club Soccer Jersey (Away)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-437118026.png",
+      "back": "/shop/backs/437118026.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
+    {
+      "id": "437118018",
+      "slug": "far-fox-long-distance-club-soccer-jersey-home",
+      "name": "Long Distance Club Soccer Jersey (Home)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-437118018.png",
+      "back": "/shop/backs/437118018.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
     {
       "id": "437052584",
       "slug": "far-fox-long-distance-club-baseball-jersey-red",
