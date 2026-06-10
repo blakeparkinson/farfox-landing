@@ -62,9 +62,35 @@ const grouped = [...CATS.map((c) => c.title), 'More']
 ---
 
 <Layout
-  title="Far Fox Shop — Stickers, Mugs, Tees & More"
-  description="Official Far Fox merch: enamel pins, die-cut stickers, mugs, tees, hoodies, and totes featuring the kawaii fox. Print-on-demand, ships worldwide."
+  title="Far Fox Shop — Jerseys, Tees, Mugs, Prints & Stickers"
+  description="Official Far Fox merch for long-distance couples: Far Fox FC soccer jerseys, baseball jerseys, tees, hoodies, mugs, art prints, and stickers. Printed to order, ships worldwide."
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Far Fox Shop",
+      "url": "https://lovefarfox.com/shop",
+      "numberOfItems": PRODUCTS.length,
+      "itemListElement": PRODUCTS.map((p, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "item": {
+          "@type": "Product",
+          "name": p.name,
+          "image": `${SITE}${p.image}`,
+          "url": "https://lovefarfox.com/shop",
+          "brand": { "@type": "Brand", "name": "Far Fox" },
+          "offers": {
+            "@type": "Offer",
+            "price": p.price,
+            "priceCurrency": p.currency || "USD",
+            "availability": "https://schema.org/InStock",
+          },
+        },
+      })),
+    })} />
+  </Fragment>
   {cartLive && (
     <Fragment slot="head">
       <link rel="preconnect" href="https://app.snipcart.com" />

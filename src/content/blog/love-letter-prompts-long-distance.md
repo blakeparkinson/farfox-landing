@@ -123,6 +123,8 @@ The prompt isn't the letter. The prompt is the door. Three rules:
 
 **3. Send it before you re-read it more than twice.** If you re-read it three times, you'll talk yourself out of half of it. Send the version that scares you a little.
 
+(Writing a batch instead of one? These prompts pair perfectly with [open when letters](/blog/open-when-letters) — sealed envelopes your partner opens at specific moments, like "open when you can't sleep.")
+
 ## How long should a love letter be?
 
 Whatever it takes to say the one thing. The shortest great letters are two paragraphs. The longest are about a page and a half. The middle of that range is where most landings happen.

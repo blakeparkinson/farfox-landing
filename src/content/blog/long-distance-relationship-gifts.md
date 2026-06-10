@@ -33,6 +33,10 @@ Virtual cooking classes, online wine tastings, escape rooms designed for remote 
 
 ## Sentimental gifts that travel well
 
+**A stack of open when letters**
+
+A bundle of sealed envelopes labeled for future moments — "open when you miss me," "open when you can't sleep," "open the night before we see each other." It costs almost nothing and lands harder than most things you can buy. ([Here's our full guide with 60+ ideas](/blog/open-when-letters).)
+
 **A custom photo book**
 
 Not a photo dump — a curated story. Pick 20–30 photos that tell the arc of your relationship and arrange them with intention. Services like Artifact Uprising and Chatbooks make this easy. The physical object is meaningful in a way that a digital album isn't.
@@ -63,7 +67,7 @@ Long-distance relationships are physically lonely. A high-quality weighted blank
 
 **Matching items you both have**
 
-Matching mugs, matching pajamas, matching phone cases — the specific item matters less than the ritual of using it. A "we both have this" object creates a sense of shared life across the miles.
+Matching mugs, matching pajamas, matching phone cases — the specific item matters less than the ritual of using it. A "we both have this" object creates a sense of shared life across the miles. (We make a few of these ourselves — matching ["Same Moon" mugs, Long Distance Club tees, and Far Fox FC jerseys](/shop) designed specifically for couples who are miles apart.)
 
 ---
 
