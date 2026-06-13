@@ -96,6 +96,8 @@ Count down to your next visit, your anniversary, or moving in together. Having a
 
 ---
 
+Want pure play? We rounded up [47 long-distance relationship games](/blog/long-distance-relationship-games) for every situation — texting games, video-call games, and async ones for opposite time zones.
+
 ## The real secret to long-distance relationships
 
 It's not any single activity. It's **consistency**. The couples who make it aren't the ones who have the best FaceTime dates — they're the ones who show up every day with small gestures.

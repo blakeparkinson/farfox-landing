@@ -104,3 +104,5 @@ The idea matters less than the execution. Four things separate a real date from 
 If remembering to plan dates is the hard part, that's exactly the friction [Far Fox](https://app.lovefarfox.com) removes — daily questions, shared photos, love letters, countdowns, and a fox that grows every time you show up for each other.
 
 For the bigger picture on keeping things alive across distance, see our guides on [keeping the spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship) and the complete guide to [making a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work).
+
+Looking for something more competitive than a date? Try our list of [47 long-distance relationship games](/blog/long-distance-relationship-games).
