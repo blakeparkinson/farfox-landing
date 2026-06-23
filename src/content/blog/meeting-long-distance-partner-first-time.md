@@ -1,7 +1,7 @@
 ---
 title: "Meeting Your Long-Distance Partner for the First Time: What to Expect (and How to Survive It)"
 description: "Meeting your long-distance partner for the first time? Here's what to actually expect — the nerves, the airport moment, the awkward first hours, what to plan, and how to handle it if it feels strange at first."
-date: "2026-06-16"
+date: "2026-06-23"
 tags: ["connection", "milestones", "advice"]
 faqs:
   - question: "Is it normal to be nervous about meeting your long-distance partner for the first time?"
