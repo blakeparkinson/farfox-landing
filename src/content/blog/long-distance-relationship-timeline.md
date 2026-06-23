@@ -23,6 +23,8 @@ There's no "normal" timeline — every couple's pace is different — but the *e
 
 ---
 
+(Haven't met in person yet? That first visit is its own milestone — here's [what to expect when you meet for the first time](/blog/meeting-long-distance-partner-first-time).)
+
 ## Month 2–3: The First Crisis
 
 **What it feels like:** Off. You'll have a fight that feels like it came out of nowhere — usually about communication. "You didn't text me back for six hours." "You sounded distant on the phone." "Why did you sound annoyed?"

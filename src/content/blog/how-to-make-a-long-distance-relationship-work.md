@@ -124,3 +124,5 @@ If you take away nothing else: **long-distance relationships don't fail because 
 The work isn't grand gestures. It's small, consistent, intentional — a real question instead of "wyd," a letter instead of a text, a plan instead of a vague hope. Do that, consistently, and distance becomes just a fact about your relationship rather than the thing that defines it.
 
 [Far Fox](https://app.lovefarfox.com) was built for exactly this work — daily questions, love letters, shared photos, voice notes, countdowns, and a fox that grows alongside your relationship. It's free. Your fox is waiting.
+
+And when you finally close the gap for a visit, here's [what to expect meeting for the first time](/blog/meeting-long-distance-partner-first-time).
