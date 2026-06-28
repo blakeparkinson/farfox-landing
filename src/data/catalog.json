@@ -1,6 +1,25 @@
 {
-  "generatedAt": "2026-06-28T17:59:20.741Z",
+  "generatedAt": "2026-06-28T18:41:07.970Z",
   "products": [
+    {
+      "id": "443213452",
+      "slug": "far-fox-long-distance-fc-jersey-flight-path",
+      "name": "Long Distance FC Jersey (Flight Path)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-443213452.png",
+      "back": "/shop/backs/443213452.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
     {
       "id": "443164966",
       "slug": "far-fox-long-distance-fc-jersey-twilight",
