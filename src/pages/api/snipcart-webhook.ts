@@ -1,4 +1,6 @@
 import type { APIRoute } from 'astro';
+// @ts-ignore - plain-JS module (no heavy deps) shared with shop + generator
+import { kitSlugForName, backUrl } from '../../lib/kits.mjs';
 
 export const prerender = false;
 
@@ -37,30 +39,28 @@ async function pfGet(path: string) {
   return (await r.json()).result;
 }
 
-/** Resolve a Snipcart line item to a Printful sync_variant_id by size + colour. */
+/**
+ * Resolve a Snipcart line item to a Printful sync variant by size + colour.
+ * Returns the full variant object (id, files, …) plus the product name, so
+ * callers can override print files for personalization.
+ */
 async function resolveSyncVariant(
   productId: string,
   size: string | null,
   color: string | null,
-): Promise<number | null> {
+): Promise<{ variant: any; productName: string } | null> {
   const detail = await pfGet(`/store/products/${productId}`);
   const variants = (detail.sync_variants || []).filter((v: any) => !v.is_ignored);
   if (!variants.length) return null;
+  const productName = detail.sync_product?.name || '';
   const eq = (a: string, b: string | null) => !!b && (a || '').toLowerCase() === b.toLowerCase();
+  let variant: any = null;
   // Most specific first: colour + size, then size, then colour, then first.
-  if (size && color) {
-    const m = variants.find((v: any) => eq(v.size, size) && eq(v.color, color));
-    if (m) return m.id;
-  }
-  if (size) {
-    const m = variants.find((v: any) => eq(v.size, size));
-    if (m) return m.id;
-  }
-  if (color) {
-    const m = variants.find((v: any) => eq(v.color, color));
-    if (m) return m.id;
-  }
-  return variants[0].id; // single-variant product, or nothing matched
+  if (size && color) variant = variants.find((v: any) => eq(v.size, size) && eq(v.color, color));
+  if (!variant && size) variant = variants.find((v: any) => eq(v.size, size));
+  if (!variant && color) variant = variants.find((v: any) => eq(v.color, color));
+  if (!variant) variant = variants[0]; // single-variant product, or nothing matched
+  return { variant, productName };
 }
 
 async function validateSnipcart(token: string): Promise<boolean> {
@@ -93,13 +93,34 @@ export const POST: APIRoute = async ({ request }) => {
   const skipped: string[] = [];
   for (const it of items) {
     const cf = it.customFields ?? [];
-    const size = cf.find((f: any) => (f.name || '').toLowerCase() === 'size')?.value ?? null;
-    const color = cf.find((f: any) => (f.name || '').toLowerCase() === 'color')?.value ?? null;
-    let syncVariantId: number | null = null;
-    try { syncVariantId = await resolveSyncVariant(it.id, size, color); }
+    const fv = (n: string) =>
+      cf.find((f: any) => (f.name || '').toLowerCase() === n)?.value ?? null;
+    const size = fv('size');
+    const color = fv('color');
+    const name = fv('name');
+    const number = fv('number');
+
+    let resolved: { variant: any; productName: string } | null = null;
+    try { resolved = await resolveSyncVariant(it.id, size, color); }
     catch (e) { console.error('resolve failed', it.id, String(e)); }
-    if (!syncVariantId) { skipped.push(it.id); continue; }
-    pfItems.push({ sync_variant_id: syncVariantId, quantity: it.quantity ?? 1 });
+    if (!resolved) { skipped.push(it.id); continue; }
+
+    const { variant, productName } = resolved;
+    const item: any = { sync_variant_id: variant.id, quantity: it.quantity ?? 1 };
+
+    // Personalization: if this is a known jersey kit and the customer entered a
+    // name and/or number, override the BACK print file with a generated one.
+    // Front + sleeves are carried over from the sync variant unchanged.
+    const kit = kitSlugForName(productName);
+    if (kit && (name || number)) {
+      const customBack = backUrl(kit, name, number);
+      const files = (variant.files || [])
+        .filter((f: any) => f.type !== 'preview' && f.url)
+        .map((f: any) => ({ type: f.type, url: f.type === 'back' ? customBack : f.url }));
+      if (!files.some((f: any) => f.type === 'back')) files.push({ type: 'back', url: customBack });
+      item.files = files;
+    }
+    pfItems.push(item);
   }
 
   if (!pfItems.length) {

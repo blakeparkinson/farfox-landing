@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import catalog from '../data/catalog.json';
+import { kitSlugForName } from '../lib/kits.mjs';
 
 /**
  * Far Fox Shop — print-on-demand storefront.
@@ -211,6 +212,33 @@ const grouped = [...CATS.map((c) => c.title), 'More']
               </select>
             )}
 
+            {kitSlugForName(p.name) && (
+              <div class="mb-3 rounded-xl border border-fox-pink/15 bg-fox-pink/[0.04] p-3">
+                <div class="text-xs font-800 uppercase tracking-wide text-fox-text-light mb-2">
+                  Personalize <span class="font-600 normal-case tracking-normal text-fox-text-light/70">· optional</span>
+                </div>
+                <div class="flex gap-2">
+                  <input
+                    id={`pname-${p.id}`}
+                    type="text"
+                    maxlength="14"
+                    placeholder="Name"
+                    aria-label={`Name on back for ${p.name}`}
+                    class="flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text uppercase placeholder:normal-case placeholder:font-600 placeholder:text-fox-text-light/60 focus:outline-none focus:border-fox-pink"
+                  />
+                  <input
+                    id={`pnum-${p.id}`}
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="3"
+                    placeholder="#"
+                    aria-label={`Number on back for ${p.name}`}
+                    class="w-16 rounded-lg border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text text-center placeholder:font-600 placeholder:text-fox-text-light/60 focus:outline-none focus:border-fox-pink"
+                  />
+                </div>
+              </div>
+            )}
+
             {cartLive ? (
               <button
                 class="snipcart-add-item mt-auto w-full px-5 py-3 rounded-full bg-fox-pink text-white font-800 hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200"
@@ -227,6 +255,12 @@ const grouped = [...CATS.map((c) => c.title), 'More']
                 data-item-custom2-options={p.colors?.length ? p.colors.map((c) => c.name).join('|') : undefined}
                 data-item-custom2-value={p.colors?.length ? p.colors[0].name : undefined}
                 data-color-input={p.colors?.length ? `color-${p.id}` : undefined}
+                data-item-custom3-name={kitSlugForName(p.name) ? 'Name' : undefined}
+                data-item-custom3-required={kitSlugForName(p.name) ? 'false' : undefined}
+                data-name-input={kitSlugForName(p.name) ? `pname-${p.id}` : undefined}
+                data-item-custom4-name={kitSlugForName(p.name) ? 'Number' : undefined}
+                data-item-custom4-required={kitSlugForName(p.name) ? 'false' : undefined}
+                data-number-input={kitSlugForName(p.name) ? `pnum-${p.id}` : undefined}
               >
                 Add to cart
               </button>
@@ -349,6 +383,16 @@ const grouped = [...CATS.map((c) => c.title), 'More']
             if (colorInput) {
               const ci = document.getElementById(colorInput);
               if (ci) btn.setAttribute('data-item-custom2-value', ci.value);
+            }
+            const nameInput = btn.getAttribute('data-name-input');
+            if (nameInput) {
+              const ni = document.getElementById(nameInput);
+              btn.setAttribute('data-item-custom3-value', ni ? ni.value.toUpperCase().trim() : '');
+            }
+            const numberInput = btn.getAttribute('data-number-input');
+            if (numberInput) {
+              const ni = document.getElementById(numberInput);
+              btn.setAttribute('data-item-custom4-value', ni ? ni.value.replace(/[^0-9]/g, '') : '');
             }
           }, true);
         });
