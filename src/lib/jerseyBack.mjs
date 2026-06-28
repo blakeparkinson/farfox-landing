@@ -30,39 +30,64 @@ const DESIGN = 6000; // native design space; layout numbers are in this space
  * are merged in.
  */
 const KITS = {
+  // --- Concept soccer kits (cat 644) ---
   twilight: {
     pattern: 'sj-twilight-pattern.png', crest: 'fox-crest.png',
     number: '#FAEEC8', numberStroke: '#1C1634', name: '#FAEEC8', nameStroke: '#1C1634',
-    stitch: 'black',
   },
   flight: {
     pattern: 'sj-flight-pattern.png', crest: 'fox-crest-navy.png',
     number: '#1C1A2E', numberStroke: '#F5F1E7', name: '#1C1A2E', nameStroke: '#F5F1E7',
-    stitch: 'white',
   },
   stars: {
     pattern: 'sj-stars-pattern.png', crest: 'fox-crest.png',
     number: '#FAF4E4', numberStroke: '#141432', name: '#FAF4E4', nameStroke: '#141432',
-    stitch: 'black',
   },
   chart: {
     pattern: 'sj-chart-pattern.png', crest: 'fox-crest-navy.png',
     number: '#182642', numberStroke: '#DFE2D7', name: '#182642', nameStroke: '#DFE2D7',
-    stitch: 'white',
+  },
+  // --- Original soccer kits (cat 644) ---
+  orange: {
+    pattern: 'sj-orange-pattern.png', crest: 'fox-crest.png',
+    number: '#FAF1E2', numberStroke: '#14213A', name: '#FAF1E2', nameStroke: '#14213A',
+  },
+  white: {
+    pattern: 'sj-white-pattern.png', crest: 'fox-crest-navy.png',
+    number: '#14213A', numberStroke: '#FFFFFF', name: '#14213A', nameStroke: '#FFFFFF',
+  },
+  champions: {
+    pattern: 'sj-navy-pattern.png', crest: 'fox-crest.png',
+    number: '#FAF1E2', numberStroke: '#E2632E', name: '#FAF1E2', nameStroke: '#E2632E',
+  },
+  // --- Baseball kits (cat 792): slab font, baseball layout, no top crest ---
+  'bb-red': {
+    bg: '#BC2832', crest: null, layout: 'baseball', font: 'slab',
+    number: '#F4ECE0', numberStroke: '#1B2A6B', name: '#F4ECE0', nameStroke: '#1B2A6B',
+  },
+  'bb-royal': {
+    bg: '#143A8C', crest: null, layout: 'baseball', font: 'slab',
+    number: '#F4ECE0', numberStroke: '#C0202E', name: '#F4ECE0', nameStroke: '#C0202E',
+  },
+  'bb-home': {
+    pattern: 'bb-home-pattern.png', crest: null, layout: 'baseball', font: 'slab',
+    number: '#1C4096', numberStroke: '#C0202E', name: '#1C4096', nameStroke: '#C0202E',
   },
 };
 
-// Shared back layout, in 6000-space.
-const LAYOUT = {
-  crestCenterX: DESIGN / 2,
-  crestCenterY: 1083,
-  crestWidth: 420,
-  numberTop: 1640,   // top of the number block
-  numberFont: 2050,  // Oswald cap-height ≈ 0.72em, tuned to match old 143
-  numberStrokeW: 26,
-  nameTop: 4360,
-  nameFont: 430,
-  nameStrokeW: 9,
+// Back layouts, in 6000-space. Soccer: small crest top, big number, name low.
+// Baseball: no crest, chunkier slab number higher up, short "FAR FOX" line.
+const LAYOUTS = {
+  soccer: {
+    crestCenterX: DESIGN / 2, crestCenterY: 1083, crestWidth: 420,
+    numberTop: 1640, numberFont: 2050, numberStrokeW: 26,
+    nameTop: 4360, nameFont: 430, nameStrokeW: 9, nameDefault: 'FAR FOX FC',
+  },
+  baseball: {
+    crestCenterX: DESIGN / 2, crestCenterY: 0, crestWidth: 0,
+    numberTop: 1820, numberFont: 1850, numberStrokeW: 30,
+    nameTop: 3520, nameFont: 360, nameStrokeW: 7, nameDefault: 'FAR FOX',
+  },
 };
 
 export function kitConfig(kit) {
@@ -84,16 +109,20 @@ export function sanitize({ name, number }) {
   return { name: nm, number: num };
 }
 
-let _font = null;
-async function oswald() {
-  if (_font) return _font;
-  const css = await fetch(
-    'https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap',
-    { headers: { 'User-Agent': 'Mozilla/5.0' } },
-  ).then((r) => r.text());
+// Athletic condensed for soccer; slab serif for baseball (open-licensed,
+// serverless-safe stand-ins for DIN Condensed / Rockwell).
+const FONT_FAMILY = { oswald: 'Oswald', slab: 'Roboto Slab' };
+const FONT_CSS = {
+  oswald: 'https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap',
+  slab: 'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap',
+};
+const _fonts = {};
+async function loadFont(key) {
+  if (_fonts[key]) return _fonts[key];
+  const css = await fetch(FONT_CSS[key], { headers: { 'User-Agent': 'Mozilla/5.0' } }).then((r) => r.text());
   const url = css.match(/url\((https:[^)]+\.ttf)\)/)[1];
-  _font = await fetch(url).then((r) => r.arrayBuffer());
-  return _font;
+  _fonts[key] = await fetch(url).then((r) => r.arrayBuffer());
+  return _fonts[key];
 }
 
 async function fetchBuf(url) {
@@ -109,19 +138,22 @@ async function fetchBuf(url) {
 export async function renderJerseyBack({ kit, name, number, size = 4500 }) {
   const cfg = kitConfig(kit);
   if (!cfg) throw new Error(`unknown kit: ${kit}`);
+  const L = LAYOUTS[cfg.layout || 'soccer'];
+  const fontKey = cfg.font || 'oswald';
+  const fontFamily = FONT_FAMILY[fontKey];
   const raw = sanitize({ name, number });
   // A partial customization still ships a complete, branded back: a missing
   // number falls back to the brand's "143" (I-love-you) and a missing name to
-  // "FAR FOX FC", matching the stock back.
-  const clean = { number: raw.number || '143', name: raw.name || 'FAR FOX FC' };
+  // the layout's default ("FAR FOX FC" / "FAR FOX"), matching the stock back.
+  const clean = { number: raw.number || '143', name: raw.name || L.nameDefault };
   const s = size / DESIGN; // design-space → render-space scale
-  const font = await oswald();
+  const font = await loadFont(fontKey);
 
   // Text layer (number + name) via satori → transparent PNG.
   const px = (v) => Math.round(v * s);
   // Name shrinks for longer text so it never runs off the back.
   const nameLen = clean.name.length;
-  const nameFontD = nameLen <= 8 ? LAYOUT.nameFont : nameLen <= 11 ? 360 : 300;
+  const nameFontD = nameLen <= 8 ? L.nameFont : nameLen <= 11 ? L.nameFont * 0.84 : L.nameFont * 0.7;
   const nameTrackD = nameLen > 11 ? 10 : 20;
   const textTree = {
     type: 'div',
@@ -132,12 +164,12 @@ export async function renderJerseyBack({ kit, name, number, size = 4500 }) {
           type: 'div',
           props: {
             style: {
-              position: 'absolute', top: `${px(LAYOUT.numberTop)}px`, left: '0px', width: `${size}px`,
+              position: 'absolute', top: `${px(L.numberTop)}px`, left: '0px', width: `${size}px`,
               display: 'flex', justifyContent: 'center',
-              fontFamily: 'Oswald', fontWeight: 700, fontSize: `${px(LAYOUT.numberFont)}px`,
+              fontFamily, fontWeight: 700, fontSize: `${px(L.numberFont)}px`,
               lineHeight: 1, color: cfg.number,
               // satori draws stroke via -webkit-text-stroke
-              WebkitTextStroke: `${px(LAYOUT.numberStrokeW)}px ${cfg.numberStroke}`,
+              WebkitTextStroke: `${px(L.numberStrokeW)}px ${cfg.numberStroke}`,
             },
             children: clean.number,
           },
@@ -146,11 +178,11 @@ export async function renderJerseyBack({ kit, name, number, size = 4500 }) {
           type: 'div',
           props: {
             style: {
-              position: 'absolute', top: `${px(LAYOUT.nameTop)}px`, left: '0px', width: `${size}px`,
+              position: 'absolute', top: `${px(L.nameTop)}px`, left: '0px', width: `${size}px`,
               display: 'flex', justifyContent: 'center',
-              fontFamily: 'Oswald', fontWeight: 700, fontSize: `${px(nameFontD)}px`,
+              fontFamily, fontWeight: 700, fontSize: `${px(nameFontD)}px`,
               letterSpacing: `${px(nameTrackD)}px`, lineHeight: 1, color: cfg.name,
-              WebkitTextStroke: `${px(LAYOUT.nameStrokeW)}px ${cfg.nameStroke}`,
+              WebkitTextStroke: `${px(L.nameStrokeW)}px ${cfg.nameStroke}`,
             },
             children: clean.name,
           },
@@ -160,26 +192,29 @@ export async function renderJerseyBack({ kit, name, number, size = 4500 }) {
   };
   const svg = await satori(textTree, {
     width: size, height: size,
-    fonts: [{ name: 'Oswald', data: font, weight: 700, style: 'normal' }],
+    fonts: [{ name: fontFamily, data: font, weight: 700, style: 'normal' }],
   });
   const textPng = new Resvg(svg, { fitTo: { mode: 'width', value: size } }).render().asPng();
 
-  // Crest: fetch, scale, composite at top-centre.
-  const crestW = px(LAYOUT.crestWidth);
-  const crestBuf = await fetchBuf(`${SITE}/shop/designs/${cfg.crest}`);
-  const crest = await sharp(crestBuf).resize({ width: crestW }).toBuffer();
-  const crestMeta = await sharp(crest).metadata();
-  const crestLeft = Math.round(px(LAYOUT.crestCenterX) - crestW / 2);
-  const crestTop = Math.round(px(LAYOUT.crestCenterY) - (crestMeta.height || crestW) / 2);
+  // Base: hosted pattern, or a solid colour fill for the plain baseball kits.
+  const base = cfg.pattern
+    ? sharp(await fetchBuf(`${SITE}/shop/designs/${cfg.pattern}`)).resize(size, size, { fit: 'cover' })
+    : sharp({ create: { width: size, height: size, channels: 4, background: cfg.bg } });
 
-  // Base pattern → composite crest + text.
-  const patternBuf = await fetchBuf(`${SITE}/shop/designs/${cfg.pattern}`);
-  return sharp(patternBuf)
-    .resize(size, size, { fit: 'cover' })
-    .composite([
-      { input: crest, left: crestLeft, top: crestTop },
-      { input: Buffer.from(textPng), left: 0, top: 0 },
-    ])
-    .png()
-    .toBuffer();
+  const layers = [];
+  // Optional crest at top-centre (soccer kits only).
+  if (cfg.crest && L.crestWidth) {
+    const crestW = px(L.crestWidth);
+    const crest = await sharp(await fetchBuf(`${SITE}/shop/designs/${cfg.crest}`))
+      .resize({ width: crestW }).toBuffer();
+    const meta = await sharp(crest).metadata();
+    layers.push({
+      input: crest,
+      left: Math.round(px(L.crestCenterX) - crestW / 2),
+      top: Math.round(px(L.crestCenterY) - (meta.height || crestW) / 2),
+    });
+  }
+  layers.push({ input: Buffer.from(textPng), left: 0, top: 0 });
+
+  return base.composite(layers).png().toBuffer();
 }

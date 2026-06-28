@@ -8,10 +8,20 @@ export const SITE = 'https://lovefarfox.com';
 /** Map a Printful sync-product name → kit slug, or null if not personalizable. */
 export function kitSlugForName(name) {
   const n = String(name || '').toLowerCase();
+  // Baseball kits (check before generic "jersey").
+  if (/baseball/.test(n)) {
+    if (/\(red\)/.test(n)) return 'bb-red';
+    if (/\(royal\)/.test(n)) return 'bb-royal';
+    return 'bb-home'; // the plain "Baseball Jersey" (home pinstripe)
+  }
+  // Soccer kits.
   if (/flight\s*path/.test(n)) return 'flight';
   if (/same\s*stars/.test(n)) return 'stars';
   if (/coordinates/.test(n)) return 'chart';
   if (/twilight/.test(n)) return 'twilight';
+  if (/champions/.test(n)) return 'champions';
+  if (/\(orange\)/.test(n)) return 'orange';
+  if (/\(white\)/.test(n)) return 'white';
   return null;
 }
 
