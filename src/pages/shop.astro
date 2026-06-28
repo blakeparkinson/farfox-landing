@@ -348,6 +348,19 @@ const grouped = [...CATS.map((c) => c.title), 'More']
             }
           });
         });
+        // Build the personalized-back image URL from a product's current
+        // name/number inputs, or null if nothing's entered (→ use stock back).
+        const personalizedBack = (pid, w) => {
+          const wrap = document.querySelector(`[data-personalize][data-product="${pid}"]`);
+          if (!wrap) return null;
+          const nameEl = document.getElementById(`pname-${pid}`);
+          const numEl = document.getElementById(`pnum-${pid}`);
+          const name = (nameEl && nameEl.value || '').toUpperCase().trim();
+          const num = (numEl && numEl.value || '').replace(/[^0-9]/g, '');
+          if (!name && !num) return null;
+          const q = new URLSearchParams({ kit: wrap.getAttribute('data-kit'), name, number: num, w: String(w || 720) });
+          return `/api/jersey-back.png?${q.toString()}`;
+        };
         // Front/Back view toggle (jerseys etc.)
         const paintView = (btn) => {
           const on = btn.getAttribute('data-active') === 'true';
@@ -362,7 +375,9 @@ const grouped = [...CATS.map((c) => c.title), 'More']
               b.setAttribute('data-active', b === btn ? 'true' : 'false'); paintView(b);
             });
             const img = document.getElementById(`img-${pid}`);
-            const src = btn.getAttribute('data-view');
+            // The Back view reflects the typed name/number when present.
+            const isBack = (btn.textContent || '').trim().toLowerCase() === 'back';
+            const src = (isBack && personalizedBack(pid)) || btn.getAttribute('data-view');
             if (img && src && img.getAttribute('src') !== src) {
               img.style.opacity = '0';
               const swap = new Image();
@@ -389,7 +404,6 @@ const grouped = [...CATS.map((c) => c.title), 'More']
         };
         document.querySelectorAll('[data-personalize]').forEach((wrap) => {
           const pid = wrap.getAttribute('data-product');
-          const kit = wrap.getAttribute('data-kit');
           const img = document.getElementById(`img-${pid}`);
           const nameI = document.getElementById(`pname-${pid}`);
           const numI = document.getElementById(`pnum-${pid}`);
@@ -401,11 +415,9 @@ const grouped = [...CATS.map((c) => c.title), 'More']
             if (numI.value !== digits) numI.value = digits;
             clearTimeout(t);
             t = setTimeout(() => {
-              const name = (nameI.value || '').toUpperCase().trim();
-              const num = (numI.value || '').replace(/[^0-9]/g, '');
-              if (!name && !num) { swapImage(img, frontSrc); setActiveView(pid, 'front'); return; }
-              const q = new URLSearchParams({ kit, name, number: num, w: '720' });
-              swapImage(img, `/api/jersey-back.png?${q.toString()}`);
+              const src = personalizedBack(pid);
+              if (!src) { swapImage(img, frontSrc); setActiveView(pid, 'front'); return; }
+              swapImage(img, src);
               setActiveView(pid, 'back');
             }, 350);
           };
