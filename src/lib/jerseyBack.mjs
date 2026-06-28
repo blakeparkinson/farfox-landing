@@ -75,18 +75,22 @@ const KITS = {
   },
 };
 
-// Back layouts, in 6000-space. Soccer: small crest top, big number, name low.
-// Baseball: no crest, chunkier slab number higher up, short "FAR FOX" line.
+// Back layouts, in 6000-space. The brand line ("FAR FOX FC" / "FAR FOX") is
+// ALWAYS kept at the bottom; the customer's name sits in the nameplate ABOVE
+// the number (like a real kit). Soccer keeps the small crest up top; baseball
+// has none.
 const LAYOUTS = {
   soccer: {
-    crestCenterX: DESIGN / 2, crestCenterY: 1083, crestWidth: 420,
-    numberTop: 1640, numberFont: 2050, numberStrokeW: 26,
-    nameTop: 4360, nameFont: 430, nameStrokeW: 9, nameDefault: 'FAR FOX FC',
+    crestCenterX: DESIGN / 2, crestCenterY: 900, crestWidth: 360,
+    nameTop: 1470, nameFont: 360, nameStrokeW: 7,      // customer name (nameplate)
+    numberTop: 1980, numberFont: 1820, numberStrokeW: 24,
+    brandTop: 4360, brandFont: 360, brandStrokeW: 7, brand: 'FAR FOX FC',
   },
   baseball: {
     crestCenterX: DESIGN / 2, crestCenterY: 0, crestWidth: 0,
-    numberTop: 1820, numberFont: 1850, numberStrokeW: 30,
-    nameTop: 3520, nameFont: 360, nameStrokeW: 7, nameDefault: 'FAR FOX',
+    nameTop: 1320, nameFont: 320, nameStrokeW: 6,
+    numberTop: 1760, numberFont: 1720, numberStrokeW: 28,
+    brandTop: 3520, brandFont: 360, brandStrokeW: 7, brand: 'FAR FOX',
   },
 };
 
@@ -142,51 +146,39 @@ export async function renderJerseyBack({ kit, name, number, size = 4500 }) {
   const fontKey = cfg.font || 'oswald';
   const fontFamily = FONT_FAMILY[fontKey];
   const raw = sanitize({ name, number });
-  // A partial customization still ships a complete, branded back: a missing
-  // number falls back to the brand's "143" (I-love-you) and a missing name to
-  // the layout's default ("FAR FOX FC" / "FAR FOX"), matching the stock back.
-  const clean = { number: raw.number || '143', name: raw.name || L.nameDefault };
+  // A missing number falls back to the brand's "143" (I-love-you). The brand
+  // line is always shown; the customer name (if any) goes in the nameplate.
+  const number_ = raw.number || '143';
+  const custName = raw.name; // may be empty
   const s = size / DESIGN; // design-space → render-space scale
   const font = await loadFont(fontKey);
 
-  // Text layer (number + name) via satori → transparent PNG.
   const px = (v) => Math.round(v * s);
-  // Name shrinks for longer text so it never runs off the back.
-  const nameLen = clean.name.length;
-  const nameFontD = nameLen <= 8 ? L.nameFont : nameLen <= 11 ? L.nameFont * 0.84 : L.nameFont * 0.7;
-  const nameTrackD = nameLen > 11 ? 10 : 20;
+  // A centred text line at the given design-space top/font/stroke.
+  const line = (text, top, fontD, strokeW, color, stroke, track = 20) => ({
+    type: 'div',
+    props: {
+      style: {
+        position: 'absolute', top: `${px(top)}px`, left: '0px', width: `${size}px`,
+        display: 'flex', justifyContent: 'center',
+        fontFamily, fontWeight: 700, fontSize: `${px(fontD)}px`,
+        letterSpacing: `${px(track)}px`, lineHeight: 1, color,
+        WebkitTextStroke: `${px(strokeW)}px ${stroke}`, // satori stroke
+      },
+      children: text,
+    },
+  });
+  // Nameplate font shrinks for longer names so it never runs off the back.
+  const nl = custName.length;
+  const nameFontD = nl <= 8 ? L.nameFont : nl <= 11 ? L.nameFont * 0.84 : L.nameFont * 0.7;
   const textTree = {
     type: 'div',
     props: {
       style: { display: 'flex', width: `${size}px`, height: `${size}px`, position: 'relative' },
       children: [
-        clean.number && {
-          type: 'div',
-          props: {
-            style: {
-              position: 'absolute', top: `${px(L.numberTop)}px`, left: '0px', width: `${size}px`,
-              display: 'flex', justifyContent: 'center',
-              fontFamily, fontWeight: 700, fontSize: `${px(L.numberFont)}px`,
-              lineHeight: 1, color: cfg.number,
-              // satori draws stroke via -webkit-text-stroke
-              WebkitTextStroke: `${px(L.numberStrokeW)}px ${cfg.numberStroke}`,
-            },
-            children: clean.number,
-          },
-        },
-        clean.name && {
-          type: 'div',
-          props: {
-            style: {
-              position: 'absolute', top: `${px(L.nameTop)}px`, left: '0px', width: `${size}px`,
-              display: 'flex', justifyContent: 'center',
-              fontFamily, fontWeight: 700, fontSize: `${px(nameFontD)}px`,
-              letterSpacing: `${px(nameTrackD)}px`, lineHeight: 1, color: cfg.name,
-              WebkitTextStroke: `${px(L.nameStrokeW)}px ${cfg.nameStroke}`,
-            },
-            children: clean.name,
-          },
-        },
+        line(number_, L.numberTop, L.numberFont, L.numberStrokeW, cfg.number, cfg.numberStroke, 0),
+        custName && line(custName, L.nameTop, nameFontD, L.nameStrokeW, cfg.name, cfg.nameStroke, nl > 11 ? 10 : 20),
+        line(L.brand, L.brandTop, L.brandFont, L.brandStrokeW, cfg.name, cfg.nameStroke, 20),
       ].filter(Boolean),
     },
   };

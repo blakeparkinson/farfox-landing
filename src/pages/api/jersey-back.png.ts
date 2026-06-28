@@ -35,8 +35,10 @@ export const GET: APIRoute = async ({ url }) => {
       status: 200,
       headers: {
         'Content-Type': 'image/png',
-        // Deterministic for a given (kit,name,number) — cache hard at the edge.
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        // Cache at the edge for speed, but not immutable: the render logic can
+        // change, so allow a day for updates to propagate. (A real order's
+        // name/number is unique, so Printful still fetches a fresh file.)
+        'Cache-Control': 'public, max-age=86400',
       },
     });
   } catch (e) {
