@@ -24,8 +24,13 @@ export const GET: APIRoute = async ({ url }) => {
   });
   if (!name && !number) return new Response('name or number required', { status: 400 });
 
+  // Optional render width: the shop live-preview asks for a small fast image;
+  // Printful (no `w`) gets the full print resolution. Clamped to a sane range.
+  const w = parseInt(url.searchParams.get('w') || '', 10);
+  const size = Number.isFinite(w) ? Math.min(4500, Math.max(300, w)) : 4500;
+
   try {
-    const png = await renderJerseyBack({ kit, name, number });
+    const png = await renderJerseyBack({ kit, name, number, size });
     return new Response(new Uint8Array(png), {
       status: 200,
       headers: {

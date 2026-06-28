@@ -213,9 +213,9 @@ const grouped = [...CATS.map((c) => c.title), 'More']
             )}
 
             {kitSlugForName(p.name) && (
-              <div class="mb-3 rounded-xl border border-fox-pink/15 bg-fox-pink/[0.04] p-3">
+              <div class="mb-3 rounded-xl border border-fox-pink/15 bg-fox-pink/[0.04] p-3" data-personalize data-product={p.id} data-kit={kitSlugForName(p.name)}>
                 <div class="text-xs font-800 uppercase tracking-wide text-fox-text-light mb-2">
-                  Personalize <span class="font-600 normal-case tracking-normal text-fox-text-light/70">· optional</span>
+                  Personalize <span class="font-600 normal-case tracking-normal text-fox-text-light/70">· optional, previews on the back</span>
                 </div>
                 <div class="flex gap-2">
                   <input
@@ -371,6 +371,48 @@ const grouped = [...CATS.map((c) => c.title), 'More']
             }
           });
         });
+        // Live personalization preview: as the customer types a name/number,
+        // swap the card image to the generated back (debounced, small render).
+        const swapImage = (img, src) => {
+          if (!img || !src || img.getAttribute('src') === src) return;
+          img.style.opacity = '0';
+          const pre = new Image();
+          pre.onload = () => { img.src = src; img.style.opacity = '1'; };
+          pre.src = src;
+        };
+        const setActiveView = (pid, view) => {
+          document.querySelectorAll(`.view-btn[data-product="${pid}"]`).forEach((b) => {
+            const isFront = (b.textContent || '').trim().toLowerCase() === 'front';
+            b.setAttribute('data-active', (view === 'front') === isFront ? 'true' : 'false');
+            paintView(b);
+          });
+        };
+        document.querySelectorAll('[data-personalize]').forEach((wrap) => {
+          const pid = wrap.getAttribute('data-product');
+          const kit = wrap.getAttribute('data-kit');
+          const img = document.getElementById(`img-${pid}`);
+          const nameI = document.getElementById(`pname-${pid}`);
+          const numI = document.getElementById(`pnum-${pid}`);
+          const frontSrc = img && img.getAttribute('src');
+          let t;
+          const update = () => {
+            // Keep the number field digits-only as the customer types.
+            const digits = (numI.value || '').replace(/[^0-9]/g, '').slice(0, 3);
+            if (numI.value !== digits) numI.value = digits;
+            clearTimeout(t);
+            t = setTimeout(() => {
+              const name = (nameI.value || '').toUpperCase().trim();
+              const num = (numI.value || '').replace(/[^0-9]/g, '');
+              if (!name && !num) { swapImage(img, frontSrc); setActiveView(pid, 'front'); return; }
+              const q = new URLSearchParams({ kit, name, number: num, w: '720' });
+              swapImage(img, `/api/jersey-back.png?${q.toString()}`);
+              setActiveView(pid, 'back');
+            }, 350);
+          };
+          nameI && nameI.addEventListener('input', update);
+          numI && numI.addEventListener('input', update);
+        });
+
         // Before add-to-cart, copy the chosen size + colour into Snipcart fields.
         document.querySelectorAll('.snipcart-add-item').forEach((btn) => {
           btn.addEventListener('click', () => {
