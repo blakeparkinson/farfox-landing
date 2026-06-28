@@ -1,6 +1,25 @@
 {
-  "generatedAt": "2026-06-10T19:48:21.915Z",
+  "generatedAt": "2026-06-28T12:49:21.226Z",
   "products": [
+    {
+      "id": "443164966",
+      "slug": "far-fox-long-distance-fc-jersey-twilight",
+      "name": "Long Distance FC Jersey (Twilight)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-443164966.png",
+      "back": "/shop/backs/443164966.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
     {
       "id": "437126197",
       "slug": "far-fox-long-distance-fc-jersey-orange",
