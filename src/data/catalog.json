@@ -1,6 +1,25 @@
 {
-  "generatedAt": "2026-06-28T18:53:11.847Z",
+  "generatedAt": "2026-06-28T20:06:49.517Z",
   "products": [
+    {
+      "id": "443420345",
+      "slug": "far-fox-long-distance-fc-jersey-drop-zone",
+      "name": "Long Distance FC Jersey (Drop Zone)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-443420345.png",
+      "back": "/shop/backs/443420345.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
     {
       "id": "443266945",
       "slug": "far-fox-long-distance-fc-jersey-coordinates",
