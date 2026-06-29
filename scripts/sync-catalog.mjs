@@ -61,8 +61,12 @@ async function main() {
   }
   mkdirSync(AUTO_DIR, { recursive: true });
   const list = await pf(`/store/products?limit=100`);
+  // Retired kits: hidden from the storefront but kept in Printful so they can
+  // be revived. White (437126174) + Champions (437120257) — weakest soccer kits.
+  const RETIRED = new Set([437126174, 437120257]);
   const products = [];
   for (const p of list) {
+    if (RETIRED.has(Number(p.id))) continue;
     const detail = await pf(`/store/products/${p.id}`);
     const variants = (detail.sync_variants || []).filter((v) => !v.is_ignored);
     if (!variants.length) continue;
