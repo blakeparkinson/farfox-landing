@@ -60,7 +60,7 @@ const KITS = {
     number: '#14213A', numberStroke: '#F5F1E7', name: '#14213A', nameStroke: '#F5F1E7',
   },
   mardigras: {
-    pattern: 'sj-mardigras-pattern.png', crest: 'fox-crest.png',
+    pattern: 'sj-mardigras-pattern.png', crest: 'sj-mardigras-emblem.png',
     number: '#F4B600', numberStroke: '#200C3A', name: '#F4B600', nameStroke: '#200C3A',
   },
   // --- Original soccer kits (cat 644) ---
