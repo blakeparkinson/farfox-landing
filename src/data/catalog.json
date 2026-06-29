@@ -1,6 +1,25 @@
 {
-  "generatedAt": "2026-06-29T00:19:32.247Z",
+  "generatedAt": "2026-06-29T00:29:22.814Z",
   "products": [
+    {
+      "id": "443540637",
+      "slug": "far-fox-long-distance-fc-jersey-paradise",
+      "name": "Long Distance FC Jersey (Paradise)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-443540637.png",
+      "back": "/shop/backs/443540637.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
     {
       "id": "443420345",
       "slug": "far-fox-long-distance-fc-jersey-drop-zone",

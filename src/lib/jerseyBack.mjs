@@ -51,6 +51,10 @@ const KITS = {
     pattern: 'sj-dropzone-pattern.png', crest: 'fox-crest.png',
     number: '#FDE047', numberStroke: '#0A102C', name: '#F5F3FF', nameStroke: '#0A102C',
   },
+  paradise: {
+    pattern: 'sj-paradise-pattern.png', crest: 'fox-crest.png',
+    number: '#FFFDF8', numberStroke: '#1A564E', name: '#FFFDF8', nameStroke: '#1A564E',
+  },
   // --- Original soccer kits (cat 644) ---
   orange: {
     pattern: 'sj-orange-pattern.png', crest: 'fox-crest.png',
