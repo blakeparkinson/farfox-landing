@@ -22,6 +22,7 @@ export function kitSlugForName(name) {
   if (/drop\s*zone/.test(n)) return 'dropzone';
   if (/paradise/.test(n)) return 'paradise';
   if (/dalmatian/.test(n)) return 'dalmatian';
+  if (/mardi\s*gras/.test(n)) return 'mardigras';
   if (/champions/.test(n)) return 'champions';
   if (/\(orange\)/.test(n)) return 'orange';
   if (/\(white\)/.test(n)) return 'white';
