@@ -22,6 +22,8 @@ Below are 120+ texts organized by mood and moment — but first, the one habit t
 
 ## Good morning texts
 
+A good-morning text is the anchor of any long-distance day — and if you're [dating across time zones](/blog/long-distance-relationship-time-zones), it's the message your partner wakes up to while you're already hours into your day.
+
 **Sweet:**
 - "First thought this morning was you. Second was coffee. You won."
 - "Woke up wishing you were the one stealing my blankets."
