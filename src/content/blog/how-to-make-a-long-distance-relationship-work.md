@@ -77,7 +77,7 @@ Checking phones, demanding constant location updates, needing a reply within min
 - **Share proactively.** Tell your partner about your day before they have to ask. Transparency you offer freely is worth more than information they have to extract.
 - **Be honest about hard feelings** instead of going quiet and making them guess.
 
-Trust is consistency, repeated, until it becomes assumed.
+Trust is consistency, repeated, until it becomes assumed. (For the jealousy and insecurity that inevitably creep in, here's [how to build trust and handle it without spiraling](/blog/how-to-build-trust-in-a-long-distance-relationship).)
 
 ---
 
