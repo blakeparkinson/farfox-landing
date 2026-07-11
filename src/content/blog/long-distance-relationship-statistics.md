@@ -27,7 +27,7 @@ We pulled together the most widely-cited long-distance relationship statistics, 
 - An estimated **14 million people in the U.S.** identify as being in a long-distance relationship.
 - Roughly **3.75 million married Americans** live apart from their spouse (for reasons other than separation or divorce).
 - Around **10% of U.S. marriages** are reported to have involved long distance at some point.
-- About **32.5% of college relationships** are long-distance — unsurprising given how many couples split across campuses.
+- About **32.5% of college relationships** are long-distance — unsurprising given how many couples split across campuses. (If that's you, here's [how to make a long-distance relationship work in college](/blog/long-distance-relationship-college).)
 - An estimated **75% of engaged couples** report having been long-distance at some point in their relationship.
 
 **What it means:** Long-distance is far more common than the "it never works" narrative suggests. Tens of millions of people are doing it right now — including a large share of couples who go on to marry.
