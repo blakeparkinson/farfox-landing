@@ -97,7 +97,7 @@ You also start to notice quirks: the way your shared streak feels like a small d
 
 By year 2, your long-distance relationship is no longer "long-distance" in the way it used to be. It's just *your relationship*, and it happens to span miles.
 
-You'll probably have a closing-the-distance plan by now — a job change, a graduation, a move — that's months or years away but real. Your weekly rhythm is built around the count-down to your next visit. Your fox is probably named, leveled-up, and dressed in a tiny graduation cap because you've been at this a while.
+You'll probably have a [closing-the-distance plan](/blog/closing-the-distance-long-distance-relationship) by now — a job change, a graduation, a move — that's months or years away but real. Your weekly rhythm is built around the count-down to your next visit. Your fox is probably named, leveled-up, and dressed in a tiny graduation cap because you've been at this a while.
 
 This is the stage that doesn't get written about much because there's no drama. Just a quiet, sustained relationship across miles. People who've been long-distance for 2+ years rarely describe it as hard anymore. They describe it as their life.
 
