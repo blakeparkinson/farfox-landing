@@ -67,7 +67,7 @@ Long-distance relationships are physically lonely. A high-quality weighted blank
 
 **Matching items you both have**
 
-Matching mugs, matching pajamas, matching phone cases — the specific item matters less than the ritual of using it. A "we both have this" object creates a sense of shared life across the miles. (We make a few of these ourselves — matching ["Same Moon" mugs, Long Distance Club tees, and Far Fox FC jerseys](/shop) designed specifically for couples who are miles apart.)
+Matching mugs, matching pajamas, matching phone cases — the specific item matters less than the ritual of using it. A "we both have this" object creates a sense of shared life across the miles. Our [personalized Long Distance FC jerseys](/personalized-long-distance-jersey) put each partner's name and number on the back, turning a matching gift into something that belongs only to your relationship.
 
 ---
 

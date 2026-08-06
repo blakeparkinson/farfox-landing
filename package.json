@@ -10,6 +10,8 @@
     "sync": "node scripts/sync-catalog.mjs",
     "launch:digital-map": "node scripts/make-digital-map-launch.mjs",
     "test:digital-map": "node scripts/test-digital-map.mjs",
+    "launch:jerseys": "node scripts/make-jersey-launch-videos.mjs",
+    "test:jersey-offer": "node scripts/test-jersey-offer.mjs",
     "build": "node scripts/sync-catalog.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro"
