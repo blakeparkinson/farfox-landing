@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Redeem Your Etsy Map | Far Fox"
+  description="Verify your Etsy purchase and personalize your Far Fox long-distance map."
+>
+  <main class="min-h-screen px-6 py-20 flex items-center bg-gradient-to-br from-fox-bg via-white to-fox-pink/10">
+    <div class="w-full max-w-lg mx-auto rounded-3xl bg-white border border-fox-pink/15 shadow-xl shadow-fox-pink/10 p-6 sm:p-9 text-center">
+      <img src="/fox-letter.png" alt="" class="w-24 h-24 object-contain mx-auto mb-4" />
+      <p class="text-xs uppercase tracking-[0.25em] text-fox-pink font-900 mb-3">Etsy purchase</p>
+      <h1 class="text-3xl sm:text-4xl font-900 tracking-tight mb-3">Make your map</h1>
+      <p class="text-fox-text-light mb-7">Enter the order number and email shown on your Etsy receipt. You only need to verify once.</p>
+      <form id="redeem-form" class="space-y-4 text-left">
+        <label class="block text-sm font-900">
+          Etsy order number
+          <input id="order-number" inputmode="numeric" required class="mt-1.5 w-full rounded-xl border-2 border-fox-pink/15 px-4 py-3 focus:border-fox-pink focus:outline-none" />
+        </label>
+        <label class="block text-sm font-900">
+          Purchase email
+          <input id="order-email" type="email" required class="mt-1.5 w-full rounded-xl border-2 border-fox-pink/15 px-4 py-3 focus:border-fox-pink focus:outline-none" />
+        </label>
+        <p id="redeem-error" class="hidden rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm p-3"></p>
+        <button id="redeem-submit" class="w-full rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-900 px-6 py-4">
+          Verify and personalize →
+        </button>
+      </form>
+      <p class="mt-5 text-xs text-fox-text-light">Need help? Email blake@lovefarfox.com with your Etsy order number.</p>
+    </div>
+  </main>
+  <script>
+    const form = document.getElementById('redeem-form') as HTMLFormElement;
+    const submit = document.getElementById('redeem-submit') as HTMLButtonElement;
+    const error = document.getElementById('redeem-error')!;
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      submit.disabled = true;
+      submit.textContent = 'Verifying…';
+      error.classList.add('hidden');
+      try {
+        const response = await fetch('/api/etsy-map-redeem', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderNumber: (document.getElementById('order-number') as HTMLInputElement).value,
+            email: (document.getElementById('order-email') as HTMLInputElement).value,
+          }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Verification failed');
+        sessionStorage.setItem('farfox_map_redemption', result.token);
+        window.location.href = result.customizeUrl;
+      } catch (reason) {
+        error.textContent = reason instanceof Error ? reason.message : 'Verification failed';
+        error.classList.remove('hidden');
+        submit.disabled = false;
+        submit.textContent = 'Verify and personalize →';
+      }
+    });
+  </script>
+</Layout>

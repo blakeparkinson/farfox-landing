@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 // @ts-ignore - plain-JS module (no heavy deps) shared with shop + generator
 import { kitSlugForName, backUrl } from '../../lib/kits.mjs';
+// @ts-ignore
+import { mapNotification, partitionOrderItems, snipcartAuth } from '../../lib/digitalMapOrder.mjs';
 
 export const prerender = false;
 
@@ -26,6 +28,7 @@ const PF_TOKEN = import.meta.env.PRINTFUL_TOKEN as string | undefined;
 const PF_STORE = (import.meta.env.PRINTFUL_STORE_ID as string | undefined) ?? '18292625';
 const SNIPCART_SECRET = import.meta.env.SNIPCART_SECRET_KEY as string | undefined;
 const AUTOCONFIRM = (import.meta.env.PRINTFUL_AUTOCONFIRM as string | undefined) === 'true';
+const SITE = 'https://lovefarfox.com';
 
 const pfHeaders = () => ({
   Authorization: `Bearer ${PF_TOKEN}`,
@@ -71,9 +74,30 @@ async function validateSnipcart(token: string): Promise<boolean> {
   return r.ok;
 }
 
+async function emailMapDownload(order: any): Promise<boolean> {
+  const orderToken = order.token;
+  if (!orderToken || !SNIPCART_SECRET) return false;
+  const response = await fetch(
+    `https://app.snipcart.com/api/orders/${encodeURIComponent(orderToken)}/notifications`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: snipcartAuth(SNIPCART_SECRET),
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(mapNotification(SITE, orderToken)),
+    },
+  );
+  if (!response.ok) {
+    console.error('snipcart-webhook: map email failed', response.status, (await response.text()).slice(0, 300));
+  }
+  return response.ok;
+}
+
 export const POST: APIRoute = async ({ request }) => {
-  if (!PF_TOKEN || !SNIPCART_SECRET) {
-    console.warn('snipcart-webhook: missing PRINTFUL_TOKEN or SNIPCART_SECRET_KEY');
+  if (!SNIPCART_SECRET) {
+    console.warn('snipcart-webhook: missing SNIPCART_SECRET_KEY');
     return new Response('not configured', { status: 200 });
   }
   const token = request.headers.get('x-snipcart-requesttoken');
@@ -88,10 +112,24 @@ export const POST: APIRoute = async ({ request }) => {
   const order = body.content ?? {};
   const ship = order.shippingAddress ?? {};
   const items = order.items ?? [];
+  const { digital: digitalItems, physical: physicalItems } = partitionOrderItems(items);
+
+  let digitalDelivered = false;
+  if (digitalItems.length) {
+    digitalDelivered = await emailMapDownload(order);
+  }
+
+  if (!physicalItems.length) {
+    return new Response(digitalDelivered ? 'digital order fulfilled' : 'digital email failed; download remains in checkout', { status: 200 });
+  }
+  if (!PF_TOKEN) {
+    console.error('snipcart-webhook: physical order received without PRINTFUL_TOKEN');
+    return new Response('physical fulfillment not configured', { status: 200 });
+  }
 
   const pfItems: any[] = [];
   const skipped: string[] = [];
-  for (const it of items) {
+  for (const it of physicalItems) {
     const cf = it.customFields ?? [];
     const fv = (n: string) =>
       cf.find((f: any) => (f.name || '').toLowerCase() === n)?.value ?? null;

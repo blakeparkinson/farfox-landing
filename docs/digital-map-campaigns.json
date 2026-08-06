@@ -1,0 +1,47 @@
+{
+  "landingPage": "https://lovefarfox.com/personalized-long-distance-map",
+  "campaign": "personalized_map_validation",
+  "etsy": {
+    "dailyBudgetUsd": 5,
+    "hardCapUsd": 75,
+    "utmUrl": "https://lovefarfox.com/personalized-long-distance-map?utm_source=etsy&utm_medium=marketplace&utm_campaign=personalized_map_validation&utm_content=listing"
+  },
+  "search": {
+    "dailyBudgetUsd": 5,
+    "hardCapUsd": 75,
+    "matchTypes": ["exact", "phrase"],
+    "keywords": [
+      "personalized long distance map",
+      "custom long distance relationship map",
+      "two cities couple gift",
+      "long distance map gift",
+      "personalized miles apart gift"
+    ],
+    "negativeKeywords": [
+      "free",
+      "template",
+      "tutorial",
+      "jobs",
+      "world map",
+      "driving distance"
+    ],
+    "headlines": [
+      "Personalized Map of Your Two Cities",
+      "A Long-Distance Gift Made in Minutes",
+      "Preview Your Custom Map Before Buying",
+      "Instant Print-Ready Download for $19"
+    ],
+    "descriptions": [
+      "Connect your two locations, names and message in a one-of-one digital keepsake. Preview it live.",
+      "No shipping or waiting. Create and download a personalized 4800 × 6000 map in minutes."
+    ],
+    "utmUrl": "https://lovefarfox.com/personalized-long-distance-map?utm_source=google&utm_medium=paid_search&utm_campaign=personalized_map_validation&utm_content=exact_intent"
+  },
+  "stopRules": {
+    "maxTotalValidationSpendUsd": 150,
+    "maxSpendPerKeywordWithoutPreviewUsd": 20,
+    "maxCustomerAcquisitionCostUsd": 8,
+    "maxQualifiedVisitsWithoutSale": 300,
+    "reserveBudgetUsd": 150
+  }
+}

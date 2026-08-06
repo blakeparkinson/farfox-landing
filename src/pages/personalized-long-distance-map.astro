@@ -1,0 +1,354 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { DIGITAL_MAP_PRICE, DIGITAL_MAP_SKU, MAP_PALETTES } from '../lib/coupleMap.mjs';
+
+const SITE = 'https://lovefarfox.com';
+const SNIPCART_KEY = import.meta.env.PUBLIC_SNIPCART_KEY ?? 'ZDBhODA3ZGEtNzM5Zi00MGYxLTg4ODItOGY3NTYyMTQwNmRmNjM5MTYzNzE4NTA1NTczODE3';
+const sample = new URLSearchParams({
+  from: 'New York, USA', to: 'London, UK',
+  fromLat: '40.7128', fromLon: '-74.006',
+  toLat: '51.5072', toLon: '-0.1276',
+  names: 'Alex & Jordan', message: 'Same sky. Different cities. Still us.',
+  date: 'EST. 2024', palette: 'sunset',
+});
+const previewUrl = `/api/couple-map-preview.png?${sample}`;
+---
+
+<Layout
+  title="Personalized Long-Distance Map — Instant Digital Gift | Far Fox"
+  description="Create a personalized map of your two cities in minutes. Preview it live, add your names and message, and download a print-ready file instantly for $19."
+  image={`${SITE}${previewUrl}`}
+>
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://app.snipcart.com" />
+    <link rel="preconnect" href="https://cdn.snipcart.com" />
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.css" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: 'Personalized Long-Distance Map',
+      description: 'An automatically generated, print-ready digital map connecting two meaningful locations.',
+      image: `${SITE}${previewUrl}`,
+      brand: { '@type': 'Brand', name: 'Far Fox' },
+      offers: {
+        '@type': 'Offer',
+        price: DIGITAL_MAP_PRICE,
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        url: `${SITE}/personalized-long-distance-map`,
+      },
+    })} />
+  </Fragment>
+
+  <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/85 border-b border-fox-pink/10">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/fox-logo.png" alt="" class="w-8 h-8" />
+        <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
+      </a>
+      <button class="snipcart-checkout flex items-center gap-2 text-sm font-800 hover:text-fox-pink">
+        Cart <span class="snipcart-items-count rounded-full bg-fox-pink text-white min-w-6 h-6 px-1 flex items-center justify-center">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="pt-28 pb-14 px-6 relative overflow-hidden">
+      <div class="absolute top-8 -left-24 w-96 h-96 bg-fox-pink/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 -right-24 w-96 h-96 bg-fox-purple/10 rounded-full blur-3xl"></div>
+      <div class="max-w-6xl mx-auto grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16 items-center relative">
+        <div>
+          <p class="text-xs uppercase tracking-[0.25em] text-fox-pink font-900 mb-4">Personalized in minutes</p>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-900 tracking-tight leading-[1.03] mb-5">
+            Two places.
+            <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">One story.</span>
+          </h1>
+          <p class="text-lg sm:text-xl text-fox-text-light leading-relaxed mb-7">
+            Turn the miles between you into a one-of-one keepsake. Add your cities, names, and the words only the two of you understand.
+          </p>
+          <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm font-700 text-fox-text-light mb-8">
+            <span>✓ Live preview</span><span>✓ Instant download</span><span>✓ Print-ready PNG</span>
+          </div>
+          <a href="#create" class="inline-flex px-8 py-4 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-900 text-lg hover:shadow-xl hover:shadow-fox-pink/30 transition-all hover:-translate-y-0.5">
+            Create yours — ${DIGITAL_MAP_PRICE} →
+          </a>
+          <p class="mt-3 text-xs text-fox-text-light/70">One-time purchase · No shipping · Secure checkout</p>
+        </div>
+        <div class="relative">
+          <div class="absolute inset-8 bg-gradient-to-br from-fox-pink/25 to-fox-purple/20 rounded-full blur-3xl"></div>
+          <img src={previewUrl} alt="Example personalized long-distance map connecting New York and London" class="relative w-full max-w-lg mx-auto rounded-2xl shadow-2xl shadow-fox-pink/20 border-8 border-white" />
+        </div>
+      </div>
+    </section>
+
+    <section id="create" class="py-16 sm:py-24 px-6 bg-white">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-10">
+          <p class="text-xs uppercase tracking-[0.25em] text-fox-pink font-900 mb-3">Make it yours</p>
+          <h2 class="text-3xl sm:text-5xl font-900 tracking-tight mb-3">Your map, live as you type</h2>
+          <p class="text-fox-text-light text-lg">The example is prefilled. Change every detail to tell your story.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-[1fr_1.05fr] gap-8 lg:gap-12 items-start">
+          <form id="map-form" class="rounded-3xl bg-fox-bg/50 border border-fox-pink/10 p-5 sm:p-7 space-y-5">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <label class="block text-sm font-900">
+                Your location
+                <input id="map-from" value="New York, USA" maxlength="100" autocomplete="off" class="map-input mt-1.5 w-full rounded-xl border-2 border-fox-pink/15 bg-white px-4 py-3 focus:border-fox-pink focus:outline-none" />
+                <span id="from-status" class="block mt-1 text-xs text-fox-text-light">Location found</span>
+              </label>
+              <label class="block text-sm font-900">
+                Their location
+                <input id="map-to" value="London, UK" maxlength="100" autocomplete="off" class="map-input mt-1.5 w-full rounded-xl border-2 border-fox-pink/15 bg-white px-4 py-3 focus:border-fox-pink focus:outline-none" />
+                <span id="to-status" class="block mt-1 text-xs text-fox-text-light">Location found</span>
+              </label>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <label class="block text-sm font-900">
+                Names
+                <input id="map-names" value="Alex & Jordan" maxlength="50" class="map-input mt-1.5 w-full rounded-xl border-2 border-fox-pink/15 bg-white px-4 py-3 focus:border-fox-pink focus:outline-none" />
+              </label>
+              <label class="block text-sm font-900">
+                Date or short detail
+                <input id="map-date" value="EST. 2024" maxlength="30" class="map-input mt-1.5 w-full rounded-xl border-2 border-fox-pink/15 bg-white px-4 py-3 focus:border-fox-pink focus:outline-none" />
+              </label>
+            </div>
+            <label class="block text-sm font-900">
+              Your message
+              <input id="map-message" value="Same sky. Different cities. Still us." maxlength="90" class="map-input mt-1.5 w-full rounded-xl border-2 border-fox-pink/15 bg-white px-4 py-3 focus:border-fox-pink focus:outline-none" />
+            </label>
+            <fieldset>
+              <legend class="text-sm font-900 mb-2">Color palette</legend>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {Object.entries(MAP_PALETTES).map(([key, palette], index) => (
+                  <label class="cursor-pointer">
+                    <input type="radio" name="palette" value={key} checked={index === 0} class="peer sr-only" />
+                    <span class="flex items-center gap-2 rounded-xl border-2 border-fox-pink/10 bg-white p-2 peer-checked:border-fox-pink text-xs font-800">
+                      <span class="w-6 h-6 rounded-full border border-black/5" style={`background:linear-gradient(135deg,${palette.bg} 50%,${palette.accent} 50%)`}></span>
+                      {palette.label}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <div id="map-error" class="hidden rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm p-3"></div>
+            <button
+              id="map-buy"
+              type="button"
+              class="snipcart-add-item w-full px-6 py-4 rounded-full bg-fox-pink text-white font-900 text-lg hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              data-item-id={DIGITAL_MAP_SKU}
+              data-item-name="Personalized Long-Distance Map"
+              data-item-price={DIGITAL_MAP_PRICE}
+              data-item-url="/personalized-long-distance-map"
+              data-item-image={`${SITE}${previewUrl}`}
+              data-item-description="A custom, print-ready digital map connecting two locations"
+              data-item-shippable="false"
+              data-item-stackable="false"
+              data-item-custom1-name="From" data-item-custom1-value="New York, USA"
+              data-item-custom2-name="To" data-item-custom2-value="London, UK"
+              data-item-custom3-name="From Latitude" data-item-custom3-type="hidden" data-item-custom3-value="40.7128"
+              data-item-custom4-name="From Longitude" data-item-custom4-type="hidden" data-item-custom4-value="-74.006"
+              data-item-custom5-name="To Latitude" data-item-custom5-type="hidden" data-item-custom5-value="51.5072"
+              data-item-custom6-name="To Longitude" data-item-custom6-type="hidden" data-item-custom6-value="-0.1276"
+              data-item-custom7-name="Names" data-item-custom7-value="Alex & Jordan"
+              data-item-custom8-name="Message" data-item-custom8-value="Same sky. Different cities. Still us."
+              data-item-custom9-name="Date" data-item-custom9-required="false" data-item-custom9-value="EST. 2024"
+              data-item-custom10-name="Palette" data-item-custom10-value="sunset"
+            >
+              Buy my print-ready map — ${DIGITAL_MAP_PRICE}
+            </button>
+            <p class="text-xs text-center text-fox-text-light">Your download link appears after payment and is also emailed to you.</p>
+          </form>
+
+          <div class="lg:sticky lg:top-24">
+            <div class="relative rounded-3xl bg-gradient-to-br from-fox-pink/8 to-fox-purple/8 p-4 sm:p-6">
+              <div id="preview-loading" class="hidden absolute inset-0 z-10 rounded-3xl bg-white/70 backdrop-blur-sm items-center justify-center font-900 text-fox-pink">Updating your map…</div>
+              <img id="map-preview" src={previewUrl} alt="Live preview of your personalized map" class="w-full rounded-xl shadow-xl bg-fox-bg" />
+            </div>
+            <p class="text-center text-xs text-fox-text-light mt-3">Preview is watermarked by size. Your download is a 4800 × 6000 print-ready PNG.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="download-ready" class="hidden py-16 px-6 bg-gradient-to-br from-fox-pink to-fox-purple text-white text-center">
+      <div class="max-w-xl mx-auto">
+        <img src="/fox-letter.png" alt="" class="w-28 h-28 object-contain mx-auto mb-4" />
+        <h2 class="text-3xl sm:text-4xl font-900 mb-3">Your map is ready.</h2>
+        <p class="text-white/85 mb-6">Save the print-ready file now. We also sent this link to the email on your order.</p>
+        <a id="download-link" href="#" class="inline-flex px-8 py-4 rounded-full bg-white text-fox-pink font-900 text-lg">Download my map</a>
+      </div>
+    </section>
+
+    <section class="py-16 sm:py-24 px-6">
+      <div class="max-w-4xl mx-auto grid sm:grid-cols-3 gap-8 text-center">
+        <div><div class="text-3xl mb-3">1</div><h3 class="font-900 text-lg mb-1">Make it personal</h3><p class="text-sm text-fox-text-light">Choose two locations and add the details only you share.</p></div>
+        <div><div class="text-3xl mb-3">2</div><h3 class="font-900 text-lg mb-1">Preview before buying</h3><p class="text-sm text-fox-text-light">See the finished composition update before checkout.</p></div>
+        <div><div class="text-3xl mb-3">3</div><h3 class="font-900 text-lg mb-1">Download instantly</h3><p class="text-sm text-fox-text-light">Print it at home, locally, or through your favorite print service.</p></div>
+      </div>
+    </section>
+
+    <section class="py-16 px-6 bg-white">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-3xl font-900 text-center mb-8">Questions before you create</h2>
+        <div class="space-y-3">
+          <details class="rounded-2xl border border-fox-pink/10 p-5"><summary class="font-900 cursor-pointer">Is anything shipped?</summary><p class="mt-3 text-fox-text-light">No. This is a digital PNG delivered immediately after payment, so there are no shipping fees or delays.</p></details>
+          <details class="rounded-2xl border border-fox-pink/10 p-5"><summary class="font-900 cursor-pointer">What can I print it on?</summary><p class="mt-3 text-fox-text-light">The 4:5 file works beautifully as an 8×10, 12×15, or 16×20 print. You can also use it for cards, canvases, or digital sharing.</p></details>
+          <details class="rounded-2xl border border-fox-pink/10 p-5"><summary class="font-900 cursor-pointer">What if my download fails?</summary><p class="mt-3 text-fox-text-light">Your order email includes the same protected download link. If it still fails, contact blake@lovefarfox.com with your order number.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-10 px-6 text-center text-sm text-fox-text-light border-t border-fox-pink/10">
+    <a href="/" class="font-900 text-fox-pink">Far Fox</a> · Made for the miles between you
+  </footer>
+
+  <div hidden id="snipcart" data-api-key={SNIPCART_KEY} data-config-modal-style="side"></div>
+  <script is:inline src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
+  <script is:inline>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const form = $('map-form');
+      const buy = $('map-buy');
+      const preview = $('map-preview');
+      const loading = $('preview-loading');
+      const error = $('map-error');
+      const search = new URLSearchParams(location.search);
+      const redemption = search.get('etsy') === '1' ? sessionStorage.getItem('farfox_map_redemption') : null;
+      const coords = {
+        from: { lat: 40.7128, lon: -74.006, resolved: 'New York, USA' },
+        to: { lat: 51.5072, lon: -0.1276, resolved: 'London, UK' },
+      };
+      let previewTimer;
+      const geocodeTimers = {};
+      let previewMade = false;
+
+      const track = (name, data = {}) => {
+        if (typeof window.umami?.track === 'function') window.umami.track(name, data);
+      };
+      track('map_offer_view', { source: search.get('utm_source') || 'direct' });
+      if (redemption) {
+        buy.classList.remove('snipcart-add-item');
+        buy.textContent = 'Download my Etsy map';
+      }
+
+      const value = (id) => $(id).value.trim();
+      const palette = () => form.querySelector('input[name="palette"]:checked').value;
+      const params = () => new URLSearchParams({
+        from: value('map-from'), to: value('map-to'),
+        fromLat: String(coords.from.lat), fromLon: String(coords.from.lon),
+        toLat: String(coords.to.lat), toLon: String(coords.to.lon),
+        names: value('map-names'), message: value('map-message'),
+        date: value('map-date'), palette: palette(),
+      });
+      const setError = (message = '') => {
+        error.textContent = message;
+        error.classList.toggle('hidden', !message);
+      };
+      const setReady = () => {
+        buy.disabled = !coords.from.resolved || !coords.to.resolved || !value('map-names');
+      };
+      const updatePreview = () => {
+        clearTimeout(previewTimer);
+        previewTimer = setTimeout(() => {
+          if (!coords.from.resolved || !coords.to.resolved) return;
+          loading.classList.remove('hidden');
+          loading.classList.add('flex');
+          const next = new Image();
+          next.onload = () => {
+            preview.src = next.src;
+            loading.classList.add('hidden');
+            loading.classList.remove('flex');
+            if (!previewMade) {
+              previewMade = true;
+              track('map_preview_completed', { palette: palette() });
+            }
+          };
+          next.onerror = () => {
+            loading.classList.add('hidden');
+            loading.classList.remove('flex');
+            setError('The preview could not update. Please try again.');
+          };
+          next.src = `/api/couple-map-preview.png?${params()}`;
+        }, 300);
+      };
+      const geocode = async (side) => {
+        const input = $(`map-${side}`);
+        const status = $(`${side}-status`);
+        const query = input.value.trim();
+        if (query.length < 2) return;
+        status.textContent = 'Finding location…';
+        try {
+          const response = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Location not found');
+          coords[side] = { lat: result.lat, lon: result.lon, resolved: query };
+          status.textContent = 'Location found';
+          status.className = 'block mt-1 text-xs text-green-700';
+          setError();
+          setReady();
+          updatePreview();
+        } catch (reason) {
+          coords[side].resolved = '';
+          status.textContent = reason.message || 'Location not found';
+          status.className = 'block mt-1 text-xs text-red-600';
+          setReady();
+        }
+      };
+
+      ['from', 'to'].forEach((side) => {
+        $(`map-${side}`).addEventListener('input', () => {
+          coords[side].resolved = '';
+          $(`${side}-status`).textContent = 'Keep typing…';
+          setReady();
+          clearTimeout(geocodeTimers[side]);
+          geocodeTimers[side] = setTimeout(() => geocode(side), 700);
+        });
+        $(`map-${side}`).addEventListener('blur', () => {
+          clearTimeout(geocodeTimers[side]);
+          geocode(side);
+        });
+      });
+      ['map-names', 'map-date', 'map-message'].forEach((id) => $(id).addEventListener('input', () => {
+        setReady();
+        updatePreview();
+      }));
+      form.querySelectorAll('input[name="palette"]').forEach((input) => input.addEventListener('change', updatePreview));
+
+      buy.addEventListener('click', (event) => {
+        if (buy.disabled) {
+          event.preventDefault();
+          setError('Choose two valid locations and add your names first.');
+          return;
+        }
+        const p = params();
+        if (redemption) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          p.set('etsy', redemption);
+          track('map_download', { source: 'etsy' });
+          window.location.href = `/api/couple-map-download.png?${p}`;
+          return;
+        }
+        const names = ['From', 'To', 'From Latitude', 'From Longitude', 'To Latitude', 'To Longitude', 'Names', 'Message', 'Date', 'Palette'];
+        const keys = ['from', 'to', 'fromLat', 'fromLon', 'toLat', 'toLon', 'names', 'message', 'date', 'palette'];
+        names.forEach((_, index) => buy.setAttribute(`data-item-custom${index + 1}-value`, p.get(keys[index]) || ''));
+        track('map_checkout_started', { palette: palette(), source: search.get('utm_source') || 'direct' });
+      }, true);
+
+      document.addEventListener('snipcart.ready', () => {
+        window.Snipcart?.events?.on('cart.confirmed', (order) => {
+          const token = order?.token;
+          track('map_purchase', { order: order?.invoiceNumber || 'confirmed', total: order?.total || 19 });
+          if (!token) return;
+          const link = $('download-link');
+          link.href = `/api/couple-map-download.png?order=${encodeURIComponent(token)}`;
+          link.addEventListener('click', () => track('map_download', { order: order?.invoiceNumber || 'confirmed' }), { once: true });
+          $('download-ready').classList.remove('hidden');
+          $('download-ready').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    })();
+  </script>
+</Layout>
