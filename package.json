@@ -8,6 +8,8 @@
   "scripts": {
     "dev": "astro dev",
     "sync": "node scripts/sync-catalog.mjs",
+    "launch:jerseys": "node scripts/make-jersey-launch-videos.mjs",
+    "test:jersey-offer": "node scripts/test-jersey-offer.mjs",
     "build": "node scripts/sync-catalog.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro"
