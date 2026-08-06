@@ -103,3 +103,44 @@ export function ritualsTagline(answers: Record<string, string>): string {
   }
   return 'A picture of how I feel loved — in my own words.';
 }
+
+export interface RitualComparison {
+  matches: number;
+  total: number;
+  percent: number;
+  rows: {
+    prompt: string;
+    left: RitualChoice;
+    right: RitualChoice;
+    matches: boolean;
+  }[];
+}
+
+/**
+ * Compare two love profiles without pretending this is a scientific
+ * compatibility score. It measures answer overlap only: differences are
+ * conversation starters, not failures.
+ */
+export function compareRituals(
+  left: Record<string, string>,
+  right: Record<string, string>,
+): RitualComparison {
+  const rows = RITUAL_QUESTIONS.flatMap((question) => {
+    const leftChoice = findChoice(question.key, left[question.key] ?? '');
+    const rightChoice = findChoice(question.key, right[question.key] ?? '');
+    if (!leftChoice || !rightChoice) return [];
+    return [{
+      prompt: question.prompt,
+      left: leftChoice,
+      right: rightChoice,
+      matches: leftChoice.key === rightChoice.key,
+    }];
+  });
+  const matches = rows.filter((row) => row.matches).length;
+  return {
+    matches,
+    total: rows.length,
+    percent: rows.length ? Math.round((matches / rows.length) * 100) : 0,
+    rows,
+  };
+}

@@ -24,7 +24,7 @@ With that in mind, here's what's out there.
 
 **Best for: Couples who want a full relationship toolkit**
 
-[Far Fox](https://app.lovefarfox.com) is the most feature-complete long-distance relationship app available in 2026. It's built around daily rituals — not messaging — which makes it feel different from anything else in the category.
+[Far Fox](/long-distance-relationship-app?utm_source=organic_search&utm_medium=blog&utm_campaign=best_ldr_apps) is the most feature-complete long-distance relationship app available in 2026. It's built around daily rituals — not messaging — which makes it feel different from anything else in the category.
 
 **What's included:**
 - **Daily questions** — a new prompt every day; you can't see your partner's answer until you've both responded
@@ -134,4 +134,4 @@ If you want minimal and just need a private space, Couple or Between both work. 
 
 The best long-distance relationship app isn't the one with the most features — it's the one you and your partner will actually open every day. That usually means something with low friction, a reason to return daily, and a shared sense of progression.
 
-Try [Far Fox](https://app.lovefarfox.com) free — it takes about five minutes to set up, and your first daily question drops the moment your partner joins.
+Try [Far Fox](/long-distance-relationship-app?utm_source=organic_search&utm_medium=blog&utm_campaign=best_ldr_apps&utm_content=bottom_cta) free — it takes about five minutes to set up, and your first daily question drops the moment your partner joins.

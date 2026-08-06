@@ -12,6 +12,8 @@
     "test:digital-map": "node scripts/test-digital-map.mjs",
     "launch:jerseys": "node scripts/make-jersey-launch-videos.mjs",
     "test:jersey-offer": "node scripts/test-jersey-offer.mjs",
+    "launch:acquisition": "node scripts/make-user-acquisition-videos.mjs",
+    "test:acquisition": "node scripts/test-acquisition-loop.mjs",
     "build": "node scripts/sync-catalog.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro"

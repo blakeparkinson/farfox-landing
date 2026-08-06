@@ -1,0 +1,140 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { fetchProfileBySlug } from '../../../lib/supabase';
+import { compareRituals } from '../../../lib/connectionRituals';
+
+export const prerender = false;
+
+const { left, right } = Astro.params;
+if (!left || !right || left === right) {
+  return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+const [leftProfile, rightProfile] = await Promise.all([
+  fetchProfileBySlug(left),
+  fetchProfileBySlug(right),
+]);
+if (
+  !leftProfile?.connection_rituals ||
+  !rightProfile?.connection_rituals
+) {
+  return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+const leftName = leftProfile.name.split(' ')[0];
+const rightName = rightProfile.name.split(' ')[0];
+const comparison = compareRituals(
+  leftProfile.connection_rituals,
+  rightProfile.connection_rituals,
+);
+const isFresh = Astro.url.searchParams.get('just_made') === '1';
+const signupUrl = `https://app.lovefarfox.com/signup?ref=match&pair=${encodeURIComponent(`${left}.${right}`)}`;
+const matchUrl = `https://lovefarfox.com/match/${left}/${right}`;
+---
+
+<Layout
+  title={`${leftName} + ${rightName}'s love profile match | Far Fox`}
+  description={`${leftName} and ${rightName} matched on ${comparison.matches} of ${comparison.total} daily connection rituals. See where they align and what they can learn from each other.`}
+>
+  <main class="min-h-screen py-16 sm:py-20 px-6 bg-gradient-to-b from-fox-bg via-white to-fox-bg">
+    <div class="max-w-3xl mx-auto">
+      <header class="text-center mb-10">
+        <img src="/fox-face.png" alt="Far Fox companion" class="w-24 h-24 mx-auto mb-4 drop-shadow-lg" />
+        <p class="uppercase tracking-[0.28em] text-xs font-900 text-fox-pink mb-3">Your love overlap</p>
+        <h1 class="text-4xl sm:text-6xl font-900 tracking-tight leading-tight mb-3">
+          <span class="text-fox-pink">{leftName}</span>
+          <span class="text-fox-text-light/40"> + </span>
+          <span class="text-fox-purple">{rightName}</span>
+        </h1>
+        <p class="text-fox-text-light text-lg">Not a compatibility verdict. A map for better conversations.</p>
+      </header>
+
+      <section class="rounded-3xl bg-gradient-to-br from-fox-pink to-fox-purple text-white p-7 sm:p-10 text-center shadow-2xl shadow-fox-pink/25 mb-8">
+        <p class="text-white/75 text-sm font-800 uppercase tracking-widest mb-2">You chose the same answer</p>
+        <div class="text-6xl sm:text-7xl font-900 mb-2">{comparison.matches}<span class="text-white/50 text-3xl">/{comparison.total}</span></div>
+        <p class="text-white/90 max-w-md mx-auto">
+          {comparison.matches === comparison.total
+            ? 'You are unusually in sync. The interesting part is how you act on it.'
+            : comparison.matches === 0
+              ? 'You need different things—and now you know exactly where to start talking.'
+              : 'You share some instincts and differ on others. Both are useful to know.'}
+        </p>
+      </section>
+
+      <section class="space-y-3 mb-9">
+        {comparison.rows.map((row) => (
+          <article class={`rounded-2xl border p-5 ${row.matches ? 'bg-green-50/60 border-green-200' : 'bg-white border-fox-pink/10'}`}>
+            <div class="flex items-start justify-between gap-3 mb-4">
+              <p class="text-xs uppercase tracking-wide font-800 text-fox-text-light">{row.prompt}</p>
+              <span class={`text-xs font-900 rounded-full px-2.5 py-1 ${row.matches ? 'bg-green-100 text-green-700' : 'bg-fox-pink/10 text-fox-pink'}`}>
+                {row.matches ? 'Same instinct' : 'Talk about this'}
+              </span>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="rounded-xl bg-white/80 p-3">
+                <p class="text-[11px] font-900 text-fox-pink uppercase mb-1">{leftName}</p>
+                <p class="font-800"><span class="text-xl mr-1">{row.left.emoji}</span>{row.left.label}</p>
+              </div>
+              <div class="rounded-xl bg-white/80 p-3">
+                <p class="text-[11px] font-900 text-fox-purple uppercase mb-1">{rightName}</p>
+                <p class="font-800"><span class="text-xl mr-1">{row.right.emoji}</span>{row.right.label}</p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section class="rounded-3xl bg-fox-text text-white p-7 sm:p-10 text-center relative overflow-hidden">
+        <div class="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-fox-pink/20 blur-3xl"></div>
+        <img src="/fox-letter.png" alt="" class="relative w-24 h-24 object-contain mx-auto mb-3" />
+        <h2 class="relative text-2xl sm:text-3xl font-900 mb-3">Turn this insight into a daily ritual.</h2>
+        <p class="relative text-white/75 mb-6 max-w-lg mx-auto">
+          Start Far Fox together. Your first daily question arrives when both of you connect, and your shared fox grows every time you show up.
+        </p>
+        <div class="relative flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            href={signupUrl}
+            data-app-cta="match"
+            class="px-7 py-3.5 rounded-full bg-white text-fox-pink font-900 hover:-translate-y-0.5 transition-transform"
+          >
+            Start Far Fox together →
+          </a>
+          <button
+            id="share-match"
+            data-share-url={matchUrl}
+            class="px-7 py-3.5 rounded-full border-2 border-white/25 font-900 hover:bg-white/10"
+          >
+            Share your match
+          </button>
+        </div>
+        <p class="mt-4 text-xs text-white/60">Free · No ads · Both partners join</p>
+      </section>
+    </div>
+  </main>
+
+  <script define:vars={{ isFresh }}>
+    const track = (name, data = {}) => {
+      if (typeof window.umami?.track === 'function') window.umami.track(name, data);
+    };
+    track('match_revealed', { fresh: Boolean(isFresh) });
+    const button = document.getElementById('share-match');
+    button?.addEventListener('click', async () => {
+      const url = button.dataset.shareUrl;
+      if (!url) return;
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: 'Our love profile match', text: 'Look at where we match—and where we need different things.', url });
+          track('match_shared', { method: 'native' });
+          return;
+        } catch (_) {}
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        track('match_shared', { method: 'clipboard' });
+        button.textContent = 'Link copied';
+      } catch (_) {
+        window.prompt('Copy this link:', url);
+      }
+    });
+  </script>
+</Layout>
