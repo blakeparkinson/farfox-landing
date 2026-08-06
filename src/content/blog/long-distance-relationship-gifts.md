@@ -43,7 +43,7 @@ Not a photo dump — a curated story. Pick 20–30 photos that tell the arc of y
 
 **A map with pins**
 
-A custom map marking where you met, where you both live now, places you've traveled together, and places you want to go. It's a visual representation of your relationship geography — and a reminder that the distance is just one chapter.
+A custom map marking where you met, where you both live now, places you've traveled together, and places you want to go. It's a visual representation of your relationship geography — and a reminder that the distance is just one chapter. You can [make a personalized map of your two cities](/personalized-long-distance-map) on Far Fox, preview it live, and download the print-ready file instantly.
 
 **A letter bundle**
 
