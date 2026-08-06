@@ -6,7 +6,7 @@ import catalog from '../data/catalog.json';
 // Featured merch for the homepage shop teaser — a few hero products that
 // link into /shop (drives traffic to the store from the strongest page).
 const allProducts = (catalog.products as any[]);
-const HERO_IDS = ['437120257', '437126197', '436908856', '436908860'];
+const HERO_IDS = ['443266866', '443266945', '443213452', '443164966'];
 let featuredProducts = HERO_IDS.map((id) => allProducts.find((p) => p.id === id)).filter(Boolean);
 for (const p of allProducts) { if (featuredProducts.length >= 4) break; if (!featuredProducts.includes(p)) featuredProducts.push(p); }
 featuredProducts = featuredProducts.slice(0, 4);
@@ -532,17 +532,17 @@ const featureGroups = [
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-10 sm:mb-14">
         <h2 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4">
-          The Far Fox
-          <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Shop</span>
+          One relationship.
+          <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">One team.</span>
         </h2>
         <p class="text-fox-text-light text-lg max-w-lg mx-auto">
-          Carry the fox with you. Jerseys, tees, mugs, prints & stickers — printed to order, shipped worldwide.
+          Put their name and number on a Long Distance FC jersey—or make a matching set for both of you.
         </p>
       </div>
 
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {featuredProducts.map((p) => (
-          <a href="/shop" class="group flex flex-col rounded-2xl bg-white/70 border border-fox-pink/8 overflow-hidden hover:border-fox-pink/25 hover:shadow-lg hover:shadow-fox-pink/10 transition-all duration-200 hover:-translate-y-1">
+          <a href="/personalized-long-distance-jersey" class="group flex flex-col rounded-2xl bg-white/70 border border-fox-pink/8 overflow-hidden hover:border-fox-pink/25 hover:shadow-lg hover:shadow-fox-pink/10 transition-all duration-200 hover:-translate-y-1">
             <div class="aspect-square bg-gradient-to-br from-fox-bg to-white overflow-hidden">
               <img src={p.image} alt={p.name} class="w-full h-full object-contain p-2" loading="lazy" />
             </div>
@@ -555,8 +555,8 @@ const featureGroups = [
       </div>
 
       <div class="text-center mt-10">
-        <a href="/shop" class="inline-flex items-center gap-1.5 px-6 py-3 rounded-full bg-fox-pink text-white font-800 hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5">
-          Shop all merch
+        <a href="/personalized-long-distance-jersey" class="inline-flex items-center gap-1.5 px-6 py-3 rounded-full bg-fox-pink text-white font-800 hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5">
+          Personalize your jersey
           <span aria-hidden="true">&rarr;</span>
         </a>
       </div>

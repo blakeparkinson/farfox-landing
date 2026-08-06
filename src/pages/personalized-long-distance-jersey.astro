@@ -1,0 +1,299 @@
+---
+import Layout from '../layouts/Layout.astro';
+import catalog from '../data/catalog.json';
+import { kitSlugForName } from '../lib/kits.mjs';
+
+const SITE = 'https://lovefarfox.com';
+const SNIPCART_KEY = import.meta.env.PUBLIC_SNIPCART_KEY ?? 'ZDBhODA3ZGEtNzM5Zi00MGYxLTg4ODItOGY3NTYyMTQwNmRmNjM5MTYzNzE4NTA1NTczODE3';
+
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  back?: string | null;
+  sizes?: string[];
+};
+
+const FEATURED_IDS = ['443266866', '443266945', '443213452', '443164966'];
+const allProducts = catalog.products as Product[];
+const jerseys = FEATURED_IDS
+  .map((id) => allProducts.find((product) => product.id === id))
+  .filter((product): product is Product => Boolean(product));
+
+if (!jerseys.length) {
+  throw new Error('No featured personalized jerseys found in the Printful catalog');
+}
+
+const fmt = (price: number) => Number.isInteger(price) ? `$${price}` : `$${price.toFixed(2)}`;
+const faqs = [
+  {
+    question: 'Can I put any name and number on the back?',
+    answer: 'Yes. Add up to 14 characters and a number up to three digits. Leave either field blank if you only want a name or a number.',
+  },
+  {
+    question: 'Can we order matching jerseys?',
+    answer: 'Absolutely. Add one personalized jersey for each partner to the cart, changing the size, name, and number before each add.',
+  },
+  {
+    question: 'How is the jersey made?',
+    answer: 'Each jersey is printed to order by Printful using an all-over print process, then shipped directly to you. That means less waste and no mass-produced inventory.',
+  },
+  {
+    question: 'Where do you ship?',
+    answer: 'Printful fulfills worldwide from the nearest available facility. Exact shipping options and delivery estimates appear during checkout.',
+  },
+];
+---
+
+<Layout
+  title="Personalized Long-Distance Couple Jersey | Far Fox"
+  description="Make a one-of-one Long Distance FC jersey with their name and number. A personalized gift for couples who are worth every mile."
+  image={`${SITE}${jerseys[0].image}`}
+>
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://app.snipcart.com" />
+    <link rel="preconnect" href="https://cdn.snipcart.com" />
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.css" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: 'Personalized Long Distance FC Jersey',
+      description: 'A personalized jersey for long-distance couples with a custom name and number.',
+      image: jerseys.map((jersey) => `${SITE}${jersey.image}`),
+      brand: { '@type': 'Brand', name: 'Far Fox' },
+      offers: {
+        '@type': 'AggregateOffer',
+        lowPrice: Math.min(...jerseys.map((jersey) => jersey.price)),
+        highPrice: Math.max(...jerseys.map((jersey) => jersey.price)),
+        priceCurrency: 'USD',
+        offerCount: jerseys.length,
+        availability: 'https://schema.org/InStock',
+      },
+    })} />
+  </Fragment>
+
+  <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/85 border-b border-fox-pink/10">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/fox-logo.png" alt="" class="w-8 h-8" />
+        <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
+      </a>
+      <button class="snipcart-checkout flex items-center gap-2 text-sm font-800 hover:text-fox-pink transition-colors">
+        Cart <span class="rounded-full bg-fox-pink text-white min-w-6 h-6 px-1 flex items-center justify-center snipcart-items-count">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="pt-28 pb-16 px-6 overflow-hidden relative">
+      <div class="absolute top-12 -left-24 w-96 h-96 rounded-full bg-fox-pink/10 blur-3xl"></div>
+      <div class="absolute bottom-0 -right-24 w-96 h-96 rounded-full bg-fox-purple/10 blur-3xl"></div>
+      <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 lg:gap-16 items-center relative">
+        <div class="order-2 lg:order-1">
+          <p class="text-xs uppercase tracking-[0.25em] text-fox-pink font-900 mb-4">Made for the miles between you</p>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-900 tracking-tight leading-[1.03] mb-5">
+            Their name. Their number.
+            <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Your team.</span>
+          </h1>
+          <p class="text-lg sm:text-xl text-fox-text-light leading-relaxed mb-7 max-w-xl">
+            Turn the distance into something you wear with pride. Personalize a Long Distance FC jersey for them—or make a matching pair for both of you.
+          </p>
+          <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm font-700 text-fox-text-light mb-8">
+            <span>✓ Live personalization preview</span>
+            <span>✓ Printed to order</span>
+            <span>✓ Ships worldwide</span>
+          </div>
+          <a href="#make-yours" class="inline-flex px-8 py-4 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-900 text-lg hover:shadow-xl hover:shadow-fox-pink/30 transition-all hover:-translate-y-0.5">
+            Make yours — {fmt(jerseys[0].price)} →
+          </a>
+          <p class="mt-3 text-xs text-fox-text-light/70">Secure checkout · No account required</p>
+        </div>
+
+        <div class="order-1 lg:order-2 relative">
+          <div class="absolute inset-8 bg-gradient-to-br from-fox-pink/25 to-fox-purple/20 rounded-full blur-3xl"></div>
+          <div class="relative rounded-[2.5rem] bg-white/70 border border-fox-pink/15 shadow-2xl shadow-fox-pink/15 p-4 sm:p-8">
+            <img src={jerseys[0].image} alt="Personalized Long Distance FC jersey" class="w-full aspect-square object-contain" />
+            <div class="absolute bottom-7 left-7 right-7 sm:bottom-12 sm:left-12 sm:right-12 rounded-2xl bg-white/90 backdrop-blur p-4 shadow-lg text-center">
+              <p class="text-xs uppercase tracking-widest text-fox-text-light font-800">One relationship. One team.</p>
+              <p class="font-900 text-lg mt-1">LONG DISTANCE FC</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="make-yours" class="py-16 sm:py-24 px-6 bg-white">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-10">
+          <p class="text-xs uppercase tracking-[0.25em] text-fox-pink font-900 mb-3">Make it theirs</p>
+          <h2 class="text-3xl sm:text-5xl font-900 tracking-tight mb-3">Choose your kit</h2>
+          <p class="text-fox-text-light text-lg">Pick a design, type their name and number, then preview the back.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-6 lg:gap-8">
+          {jerseys.map((jersey, index) => {
+            const kit = kitSlugForName(jersey.name);
+            return (
+              <article class="jersey-card rounded-3xl border-2 border-fox-pink/10 bg-fox-bg/40 overflow-hidden hover:border-fox-pink/30 transition-colors" data-product={jersey.id} data-kit={kit}>
+                <div class="relative aspect-square bg-gradient-to-br from-fox-bg to-white">
+                  <img id={`offer-img-${jersey.id}`} src={jersey.image} alt={jersey.name} class="w-full h-full object-contain p-3 transition-opacity duration-150" loading={index > 1 ? 'lazy' : 'eager'} />
+                  <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 rounded-full bg-white/90 p-1 shadow-md">
+                    <button type="button" class="offer-view px-4 py-1.5 rounded-full text-xs font-900 bg-fox-pink text-white" data-product={jersey.id} data-src={jersey.image} data-side="front">Front</button>
+                    <button type="button" class="offer-view px-4 py-1.5 rounded-full text-xs font-900 text-fox-text-light" data-product={jersey.id} data-src={jersey.back} data-side="back">Back</button>
+                  </div>
+                </div>
+                <div class="p-5 sm:p-6">
+                  <div class="flex items-start justify-between gap-4 mb-5">
+                    <h3 class="font-900 text-xl leading-tight">{jersey.name.replace('Long Distance FC Jersey ', '')}</h3>
+                    <span class="font-900 text-fox-pink text-xl">{fmt(jersey.price)}</span>
+                  </div>
+                  <label class="block text-xs uppercase tracking-wider font-800 text-fox-text-light mb-1.5" for={`size-${jersey.id}`}>Size</label>
+                  <select id={`size-${jersey.id}`} class="w-full rounded-xl border border-fox-pink/20 bg-white px-3 py-3 text-sm font-800 mb-4">
+                    {jersey.sizes?.map((size) => <option value={size}>{size}</option>)}
+                  </select>
+                  <div class="grid grid-cols-[1fr_5rem] gap-3 mb-4">
+                    <label class="text-xs uppercase tracking-wider font-800 text-fox-text-light">
+                      Name
+                      <input id={`name-${jersey.id}`} type="text" maxlength="14" placeholder="ALEX" class="offer-personalize mt-1.5 w-full rounded-xl border border-fox-pink/20 bg-white px-3 py-3 text-sm font-800 uppercase placeholder:text-fox-text-light/40" />
+                    </label>
+                    <label class="text-xs uppercase tracking-wider font-800 text-fox-text-light">
+                      Number
+                      <input id={`number-${jersey.id}`} type="text" inputmode="numeric" maxlength="3" placeholder="22" class="offer-personalize mt-1.5 w-full rounded-xl border border-fox-pink/20 bg-white px-3 py-3 text-sm font-800 text-center placeholder:text-fox-text-light/40" />
+                    </label>
+                  </div>
+                  <button
+                    class="snipcart-add-item offer-add w-full px-6 py-3.5 rounded-full bg-fox-pink text-white font-900 hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/25 transition-all"
+                    data-item-id={jersey.id}
+                    data-item-name={jersey.name}
+                    data-item-price={jersey.price}
+                    data-item-url="/personalized-long-distance-jersey"
+                    data-item-image={`${SITE}${jersey.image}`}
+                    data-item-description="Personalized Long Distance FC jersey"
+                    data-item-custom1-name="Size"
+                    data-item-custom1-options={jersey.sizes?.join('|')}
+                    data-item-custom1-value={jersey.sizes?.[0]}
+                    data-item-custom2-name="Name"
+                    data-item-custom2-required="false"
+                    data-item-custom2-value=""
+                    data-item-custom3-name="Number"
+                    data-item-custom3-required="false"
+                    data-item-custom3-value=""
+                  >
+                    Add personalized jersey to cart
+                  </button>
+                  <p class="text-center text-xs text-fox-text-light/70 mt-3">Want a matching set? Personalize and add the second jersey next.</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 sm:py-24 px-6 bg-fox-text text-white">
+      <div class="max-w-4xl mx-auto text-center">
+        <img src="/fox-letter.png" alt="" class="w-28 h-28 mx-auto mb-5 object-contain" loading="lazy" />
+        <h2 class="text-3xl sm:text-5xl font-900 tracking-tight mb-5">A gift that only makes sense for the two of you.</h2>
+        <p class="text-white/70 text-lg max-w-2xl mx-auto leading-relaxed">Not another generic “miss you” gift. It carries their name, your shared number, and the team you keep choosing across every mile.</p>
+      </div>
+    </section>
+
+    <section class="py-16 sm:py-24 px-6">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-900 tracking-tight text-center mb-10">Before you order</h2>
+        <div class="space-y-3">
+          {faqs.map((faq) => (
+            <details class="group rounded-2xl bg-white border border-fox-pink/10">
+              <summary class="flex items-center justify-between gap-4 p-5 sm:p-6 cursor-pointer list-none font-900">
+                {faq.question}<span class="text-fox-pink text-2xl group-open:rotate-45 transition-transform">+</span>
+              </summary>
+              <p class="px-5 sm:px-6 pb-5 sm:pb-6 text-fox-text-light leading-relaxed">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-10 px-6 border-t border-fox-pink/10 text-center text-sm text-fox-text-light">
+    <p><a href="/" class="font-900 text-fox-pink">Far Fox</a> · Built for couples who refuse to drift · <a href="/shop" class="hover:text-fox-pink">Shop all</a></p>
+  </footer>
+
+  <div hidden id="snipcart" data-api-key={SNIPCART_KEY} data-config-modal-style="side"></div>
+  <script is:inline src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
+  <script is:inline>
+    (() => {
+      const track = (name, data = {}) => {
+        if (typeof window.umami?.track === 'function') window.umami.track(name, data);
+      };
+      track('jersey_offer_view', { source: new URLSearchParams(location.search).get('utm_source') || 'direct' });
+
+      const swapImage = (image, src) => {
+        if (!image || !src || image.getAttribute('src') === src) return;
+        image.style.opacity = '0';
+        const preload = new Image();
+        preload.onload = () => { image.src = src; image.style.opacity = '1'; };
+        preload.src = src;
+      };
+
+      const personalizedBack = (card) => {
+        const id = card.dataset.product;
+        const name = (document.getElementById(`name-${id}`)?.value || '').toUpperCase().trim();
+        const number = (document.getElementById(`number-${id}`)?.value || '').replace(/[^0-9]/g, '');
+        if (!name && !number) return null;
+        return `/api/jersey-back.png?${new URLSearchParams({ kit: card.dataset.kit, name, number, w: '720' })}`;
+      };
+
+      document.querySelectorAll('.jersey-card').forEach((card) => {
+        const id = card.dataset.product;
+        const image = document.getElementById(`offer-img-${id}`);
+        const buttons = card.querySelectorAll('.offer-view');
+        const activate = (active) => buttons.forEach((button) => {
+          const on = button === active;
+          button.classList.toggle('bg-fox-pink', on);
+          button.classList.toggle('text-white', on);
+          button.classList.toggle('text-fox-text-light', !on);
+        });
+
+        buttons.forEach((button) => button.addEventListener('click', () => {
+          const back = button.dataset.side === 'back';
+          swapImage(image, (back && personalizedBack(card)) || button.dataset.src);
+          activate(button);
+          track('jersey_design_view', { product: id, side: button.dataset.side });
+        }));
+
+        let timer;
+        card.querySelectorAll('.offer-personalize').forEach((input) => input.addEventListener('input', () => {
+          if (input.id.startsWith('number-')) input.value = input.value.replace(/[^0-9]/g, '').slice(0, 3);
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            const src = personalizedBack(card);
+            if (src) {
+              swapImage(image, src);
+              activate(buttons[1]);
+              track('jersey_personalized', { product: id });
+            }
+          }, 350);
+        }));
+
+        const add = card.querySelector('.offer-add');
+        add.addEventListener('click', () => {
+          const size = document.getElementById(`size-${id}`)?.value || '';
+          const name = (document.getElementById(`name-${id}`)?.value || '').toUpperCase().trim();
+          const number = (document.getElementById(`number-${id}`)?.value || '').replace(/[^0-9]/g, '');
+          add.setAttribute('data-item-custom1-value', size);
+          add.setAttribute('data-item-custom2-value', name);
+          add.setAttribute('data-item-custom3-value', number);
+          track('jersey_add_to_cart', { product: id, size, personalized: Boolean(name || number) });
+        }, true);
+      });
+
+      document.addEventListener('snipcart.ready', () => {
+        window.Snipcart?.events?.on('cart.confirmed', (order) => {
+          track('jersey_purchase', { order: order?.invoiceNumber || 'confirmed', total: order?.total || 0 });
+        });
+      });
+    })();
+  </script>
+</Layout>
