@@ -1,0 +1,72 @@
+{
+  "goal": {
+    "activatedCouples": 25,
+    "days": 30,
+    "maxBudgetUsd": 300,
+    "maxCostPerActivatedCoupleUsd": 12
+  },
+  "social": {
+    "hardCapUsd": 60,
+    "budgetPerCreativeUsd": 20,
+    "destination": "https://lovefarfox.com/couple-quiz?utm_source=paid_social&utm_medium=video&utm_campaign=love_profile_loop",
+    "creatives": [
+      {
+        "file": "01-send-to-partner.mp4",
+        "utmContent": "send_to_partner",
+        "destination": "https://lovefarfox.com/couple-quiz?utm_source=paid_social&utm_medium=video&utm_campaign=love_profile_loop&utm_content=send_to_partner",
+        "caption": "Send this to your long-distance partner. Six honest questions each, then reveal where your love profiles match."
+      },
+      {
+        "file": "02-love-overlap.mp4",
+        "utmContent": "love_overlap",
+        "destination": "https://lovefarfox.com/couple-quiz?utm_source=paid_social&utm_medium=video&utm_campaign=love_profile_loop&utm_content=love_overlap",
+        "caption": "We matched on four. The other two answers started the conversation we actually needed."
+      },
+      {
+        "file": "03-better-than-how-was-your-day.mp4",
+        "utmContent": "better_question",
+        "destination": "https://lovefarfox.com/couple-quiz?utm_source=paid_social&utm_medium=video&utm_campaign=love_profile_loop&utm_content=better_question",
+        "caption": "When “how was your day?” stops working, try one question that gives you something real to say."
+      }
+    ]
+  },
+  "search": {
+    "hardCapUsd": 90,
+    "destination": "https://lovefarfox.com/long-distance-relationship-app?utm_source=google&utm_medium=paid_search&utm_campaign=ldr_app_acquisition",
+    "keywords": [
+      "long distance relationship app",
+      "app for long distance couples",
+      "best app for long distance relationship",
+      "couples app for long distance",
+      "long distance couple questions app"
+    ],
+    "negativeKeywords": [
+      "jobs",
+      "tracker",
+      "cheating",
+      "spy",
+      "download apk",
+      "source code",
+      "reddit",
+      "free games"
+    ],
+    "headlines": [
+      "A Daily App for Couples Apart",
+      "More Meaningful Than “How Was Your Day?”",
+      "Questions, Letters and a Shared Fox",
+      "Start Far Fox Together for Free"
+    ],
+    "descriptions": [
+      "Daily questions, love letters, photos, games and countdowns for couples who live apart.",
+      "Both partners join one private space and raise a shared fox through daily connection rituals."
+    ]
+  },
+  "reserve": {
+    "amountUsd": 150,
+    "releaseRequirements": {
+      "minimumMatchReveals": 3,
+      "maximumCostPerMatchRevealUsd": 6,
+      "minimumConnectedCouples": 1
+    }
+  }
+}

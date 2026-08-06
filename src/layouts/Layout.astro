@@ -98,5 +98,32 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
   </head>
   <body class="bg-fox-bg text-fox-text font-display antialiased">
     <slot />
+    <script>
+      // Preserve acquisition context across the marketing → app boundary and
+      // measure every app handoff consistently, regardless of which page owns
+      // the CTA. The app can read these query params without a shared cookie.
+      const campaignParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      const current = new URLSearchParams(window.location.search);
+      document.querySelectorAll<HTMLAnchorElement>('a[href^="https://app.lovefarfox.com"]').forEach((link) => {
+        const destination = new URL(link.href);
+        campaignParams.forEach((key) => {
+          const value = current.get(key);
+          if (value && !destination.searchParams.has(key)) destination.searchParams.set(key, value);
+        });
+        destination.searchParams.set('landing_path', window.location.pathname);
+        link.href = destination.toString();
+        link.addEventListener('click', () => {
+          const analytics = (window as Window & { umami?: { track: (event: string, data?: object) => void } }).umami;
+          const eventName = destination.pathname.startsWith('/signup')
+            ? 'app_signup_clicked'
+            : 'app_open_clicked';
+          analytics?.track(eventName, {
+            cta: link.dataset.appCta || destination.searchParams.get('ref') || 'unlabeled',
+            path: window.location.pathname,
+            source: current.get('utm_source') || 'direct',
+          });
+        });
+      });
+    </script>
   </body>
 </html>

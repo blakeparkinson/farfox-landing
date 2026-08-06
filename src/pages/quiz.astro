@@ -30,6 +30,9 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
     <div class="max-w-xl mx-auto" id="quiz-root">
       <!-- ── INTRO (default visible) ─────────────────────────────── -->
       <section id="step-intro" class="text-center">
+        <div id="partner-invite" class="hidden mb-6 rounded-2xl border border-fox-pink/20 bg-white/80 px-5 py-4 text-sm font-800 text-fox-text">
+          💌 Your partner made a love profile and invited you to compare.
+        </div>
         <img
           src="/fox-face.png"
           alt="Far Fox companion"
@@ -37,14 +40,14 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
           width="112"
           height="112"
         />
-        <div class="uppercase tracking-[0.3em] text-xs font-900 text-fox-pink mb-3">
+        <div id="quiz-eyebrow" class="uppercase tracking-[0.3em] text-xs font-900 text-fox-pink mb-3">
           The Love Profile Quiz
         </div>
-        <h1 class="text-4xl sm:text-5xl font-900 tracking-tight mb-4 leading-tight">
+        <h1 id="quiz-title" class="text-4xl sm:text-5xl font-900 tracking-tight mb-4 leading-tight">
           How do you
           <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">feel loved?</span>
         </h1>
-        <p class="text-fox-text-light text-lg leading-snug mb-8 max-w-md mx-auto">
+        <p id="quiz-description" class="text-fox-text-light text-lg leading-snug mb-8 max-w-md mx-auto">
           Six honest questions. Two minutes. A shareable picture of how you actually want to be loved — built for couples who refuse to drift.
         </p>
         <button
@@ -204,6 +207,24 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
     const QUESTIONS: RitualQuestion[] = JSON.parse(
       document.getElementById('quiz-data')!.textContent!,
     );
+    const searchParams = new URLSearchParams(window.location.search);
+    const rawPartnerOf = searchParams.get('partner_of') || '';
+    const partnerOf = /^[a-zA-Z0-9_-]{4,64}$/.test(rawPartnerOf) ? rawPartnerOf : '';
+    const track = (name: string, data: Record<string, string | number | boolean> = {}) => {
+      const analytics = (window as Window & { umami?: { track: (event: string, data?: object) => unknown } }).umami;
+      return Promise.resolve(analytics?.track(name, data));
+    };
+
+    if (partnerOf) {
+      document.getElementById('partner-invite')!.classList.remove('hidden');
+      document.getElementById('quiz-eyebrow')!.textContent = 'Your partner invited you';
+      document.getElementById('quiz-title')!.innerHTML =
+        'See how your <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">love profiles match</span>';
+      document.getElementById('quiz-description')!.textContent =
+        'Answer the same six questions. Your private comparison appears the moment you finish.';
+      document.getElementById('quiz-start')!.textContent = 'Take my side of the quiz →';
+      track('partner_quiz_landed', { source: searchParams.get('utm_source') || 'direct' });
+    }
 
     // ── State ─────────────────────────────────────────────────────
     let questionIndex = 0;
@@ -296,6 +317,9 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
     });
 
     startBtn.addEventListener('click', () => {
+      track(partnerOf ? 'partner_quiz_started' : 'quiz_started', {
+        source: searchParams.get('utm_source') || 'direct',
+      });
       showStep('question');
       renderQuestion();
     });
@@ -345,10 +369,25 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
         if (!slug || typeof slug !== 'string') {
           throw new Error('No slug returned');
         }
+        await Promise.race([
+          track(partnerOf ? 'partner_quiz_completed' : 'quiz_completed', {
+            source: searchParams.get('utm_source') || 'direct',
+          }),
+          new Promise((resolve) => setTimeout(resolve, 350)),
+        ]);
         // Redirect to the result page. `just_made=1` query string
         // tells the profile page to surface the "Save this with an
         // account" upsell at the top.
-        window.location.href = `/profile/${slug}?just_made=1`;
+        const resultParams = new URLSearchParams({ just_made: '1' });
+        for (const key of ['source', 'medium', 'campaign', 'content', 'term']) {
+          const value = partnerOf
+            ? searchParams.get(`origin_${key}`) || searchParams.get(`utm_${key}`)
+            : searchParams.get(`utm_${key}`);
+          if (value) resultParams.set(`utm_${key}`, value);
+        }
+        window.location.href = partnerOf
+          ? `/match/${partnerOf}/${slug}?${resultParams}`
+          : `/profile/${slug}?${resultParams}`;
       } catch (err) {
         console.error(err);
         showStep('name');
