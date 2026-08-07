@@ -79,6 +79,19 @@ const blogPost = readFileSync(
 );
 assert.ok(blogPost.includes('utm_campaign=love_profile_loop'), 'Blog posts include the quiz CTA');
 
+// Match links unfurl with a personalized card, not the generic brand image.
+const matchOg = read('src/pages/match/[left]/[right]/og.png.ts');
+assert.ok(matchOg.includes('compareRituals'), 'Match OG image renders the real overlap');
+assert.ok(match.includes('/og.png'), 'Match page points social crawlers at the personalized card');
+
+// Dedicated LDR-quiz search page builds, carries schema, and enters the loop.
+const ldrQuiz = readFileSync(
+  resolve(root, 'dist/client/long-distance-relationship-quiz/index.html'),
+  'utf8',
+);
+assert.ok(ldrQuiz.includes('FAQPage'), 'LDR quiz landing includes FAQ schema');
+assert.ok(ldrQuiz.includes('utm_campaign=love_profile_loop'), 'LDR quiz landing routes into the quiz loop');
+
 // IndexNow key file ships with the site so submissions verify.
 assert.ok(
   existsSync(resolve(root, 'dist/client/48b9419823aeadbf6e06192ccaa88c6e.txt')),
