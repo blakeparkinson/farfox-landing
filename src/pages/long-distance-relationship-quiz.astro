@@ -1,0 +1,125 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const quizUrl = '/quiz?utm_source=ldr_quiz_landing&utm_medium=onsite&utm_campaign=love_profile_loop';
+
+const faqs: [string, string][] = [
+  [
+    'Is this long-distance relationship quiz free?',
+    'Yes — completely free with no signup. You answer six questions and get a shareable love profile in about two minutes.',
+  ],
+  [
+    'Can we take the quiz together from different countries?',
+    'That is exactly how it is designed. You take your side, send your partner a private link, they take theirs, and your side-by-side comparison unlocks the moment they finish — no matter the timezone.',
+  ],
+  [
+    'What does the quiz actually measure?',
+    'It maps how each of you most naturally feels loved across six everyday situations: what you want when you miss each other, what helps on hard days, your favorite kinds of messages, and more. Differences are conversation starters, not failures.',
+  ],
+  [
+    'Is a high match score better?',
+    'Not necessarily. Couples who match on few answers often learn the most, because the quiz shows exactly where you each need different things — which is the conversation most long-distance couples never have explicitly.',
+  ],
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(([question, answer]) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: { '@type': 'Answer', text: answer },
+  })),
+};
+---
+
+<Layout
+  title="Long-Distance Relationship Quiz for Couples (Free, 2 Minutes)"
+  description="A free long-distance relationship quiz you take as a couple: six questions each, then a side-by-side reveal of how you each feel loved. No signup required."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <main class="min-h-screen pt-24 pb-20 px-6 bg-gradient-to-b from-fox-bg via-white to-fox-bg">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-12">
+        <img src="/fox-face.png" alt="Far Fox companion" class="w-24 h-24 mx-auto mb-5 drop-shadow-lg" width="96" height="96" />
+        <p class="uppercase tracking-[0.28em] text-xs font-900 text-fox-pink mb-3">Built for couples apart</p>
+        <h1 class="text-4xl sm:text-5xl font-900 tracking-tight leading-tight mb-4">
+          The long-distance
+          <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">relationship quiz</span>
+          you take together
+        </h1>
+        <p class="text-fox-text-light text-lg leading-relaxed max-w-xl mx-auto mb-8">
+          Six honest questions each. Then a side-by-side reveal of where your instincts match — and
+          where you quietly need different things. Two minutes, free, no signup.
+        </p>
+        <a
+          href={quizUrl}
+          class="inline-flex px-10 py-4 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-900 text-lg hover:shadow-2xl hover:shadow-fox-pink/40 transition-all duration-200 hover:-translate-y-0.5"
+        >
+          Start the quiz →
+        </a>
+        <p class="mt-3 text-sm text-fox-text-light/70">Your partner takes their side from a private link you send them</p>
+      </div>
+
+      <section class="mb-14">
+        <h2 class="text-2xl sm:text-3xl font-900 tracking-tight mb-5">Why distance makes this quiz matter more</h2>
+        <p class="text-fox-text-light leading-relaxed mb-4">
+          When you live together, mismatched instincts get corrected by accident — you notice what lands
+          and what doesn't. Across distance, there are no accidents. If your partner needs a voice note
+          when they miss you and you keep sending memes, nobody finds out until it has already hurt.
+        </p>
+        <p class="text-fox-text-light leading-relaxed mb-4">
+          This quiz surfaces those instincts explicitly. You each answer the same six situations —
+          what you want most when you miss each other, what helps on a hard day, which messages
+          actually land — and the comparison shows you, question by question, where you're in sync
+          and where you should talk.
+        </p>
+        <p class="text-fox-text-light leading-relaxed">
+          It is not a compatibility verdict. Couples who match 2/6 aren't doomed and couples who match
+          6/6 aren't finished — the score is a map for the conversation most long-distance couples
+          never have out loud.
+        </p>
+      </section>
+
+      <section class="mb-14">
+        <h2 class="text-2xl sm:text-3xl font-900 tracking-tight mb-5">How it works</h2>
+        <ol class="space-y-4">
+          {[
+            ['You take your side', 'Six questions, about two minutes. You get a shareable love profile immediately.'],
+            ['Send your partner their link', 'One tap shares a private quiz link — they don\'t need an account either.'],
+            ['The reveal unlocks', 'The moment they finish, you both see the side-by-side comparison with every match and mismatch.'],
+          ].map(([title, description], index) => (
+            <li class="flex gap-4 rounded-2xl bg-white border border-fox-pink/10 p-5">
+              <span class="text-2xl font-900 text-fox-pink">{index + 1}</span>
+              <div>
+                <h3 class="font-900 mb-1">{title}</h3>
+                <p class="text-fox-text-light text-sm leading-relaxed">{description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="mb-14 space-y-3">
+        <h2 class="text-2xl sm:text-3xl font-900 tracking-tight mb-5">Common questions</h2>
+        {faqs.map(([question, answer]) => (
+          <details class="rounded-2xl bg-white border border-fox-pink/10 p-5">
+            <summary class="font-800 cursor-pointer">{question}</summary>
+            <p class="mt-3 text-fox-text-light leading-relaxed">{answer}</p>
+          </details>
+        ))}
+      </section>
+
+      <div class="rounded-3xl bg-gradient-to-br from-fox-pink to-fox-purple text-white p-8 text-center">
+        <h2 class="text-2xl sm:text-3xl font-900 mb-3">Find out where you match.</h2>
+        <p class="text-white/90 mb-6 max-w-md mx-auto">Free, two minutes, no signup. The reveal is worth it.</p>
+        <a href={quizUrl} class="inline-flex px-9 py-3.5 rounded-full bg-white text-fox-pink font-900 text-lg hover:-translate-y-0.5 transition-transform">Take the quiz together →</a>
+      </div>
+
+      <p class="mt-10 text-fox-text-light text-sm text-center">
+        Want more? Try <a href="/blog/long-distance-relationship-questions" class="text-fox-pink font-700 hover:underline">100 questions for long-distance couples</a>
+        or see <a href="/long-distance-relationship-app" class="text-fox-pink font-700 hover:underline">everything Far Fox does</a>.
+      </p>
+    </div>
+  </main>
+</Layout>
