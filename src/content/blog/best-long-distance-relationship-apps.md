@@ -128,6 +128,8 @@ If you want an app that gives you something to *do* together every day — not j
 
 If you want minimal and just need a private space, Couple or Between both work. If you're in "let's actively work on our relationship" mode, Lasting is worth the investment.
 
+Want a deeper side-by-side? We wrote honest one-on-one breakdowns: [Far Fox vs Paired](/compare/paired), [Far Fox vs Couple](/compare/couple), [Far Fox vs Between](/compare/between), [Far Fox vs Lasting](/compare/lasting), and [Far Fox vs LokLok](/compare/loklok).
+
 ---
 
 ## The bottom line

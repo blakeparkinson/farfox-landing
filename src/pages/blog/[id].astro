@@ -170,15 +170,27 @@ const breadcrumbSchema = {
         </section>
       )}
 
+      <!-- Quiz first: a no-signup step converts cold blog readers far
+           better than a straight app-signup ask, and it feeds the
+           partner-referral loop. -->
       <div class="mt-16 p-8 rounded-2xl bg-gradient-to-r from-fox-pink/5 to-fox-purple/5 border border-fox-pink/10 text-center">
-        <p class="font-800 text-xl mb-2">Make distance feel smaller</p>
-        <p class="text-fox-text-light mb-6">Daily photos, love letters, questions, and a fox that grows with your love.</p>
-        <a
-          href="https://app.lovefarfox.com"
-          class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-800 hover:shadow-xl hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
-        >
-          Try Far Fox Free
-        </a>
+        <p class="font-800 text-xl mb-2">How do you two actually match?</p>
+        <p class="text-fox-text-light mb-6">Take the free 2-minute couple quiz, send it to your partner, and see your love profiles side by side. No signup.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+          <a
+            href={`/quiz?utm_source=blog&utm_medium=onsite&utm_campaign=love_profile_loop&utm_content=${post.id}`}
+            class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-800 hover:shadow-xl hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
+          >
+            Take the couple quiz →
+          </a>
+          <a
+            href="https://app.lovefarfox.com"
+            data-app-cta="blog_post"
+            class="inline-block px-8 py-3 rounded-full border-2 border-fox-pink/30 text-fox-text font-800 hover:border-fox-pink transition-all duration-200"
+          >
+            Try Far Fox Free
+          </a>
+        </div>
       </div>
 
       {relatedPosts.length > 0 && (

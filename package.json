@@ -14,6 +14,7 @@
     "test:jersey-offer": "node scripts/test-jersey-offer.mjs",
     "launch:acquisition": "node scripts/make-user-acquisition-videos.mjs",
     "test:acquisition": "node scripts/test-acquisition-loop.mjs",
+    "seo:indexnow": "node scripts/submit-indexnow.mjs",
     "build": "node scripts/sync-catalog.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro"

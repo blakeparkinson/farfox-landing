@@ -56,4 +56,33 @@ assert.ok(
   'Production build contains the paid-search acquisition page',
 );
 
+// Comparison pages: every competitor page builds, links to the quiz loop,
+// and carries FAQ schema for rich results.
+const { COMPETITORS } = await import('../src/lib/competitors.ts');
+assert.ok(COMPETITORS.length >= 5, 'At least five competitor comparisons exist');
+for (const { slug } of COMPETITORS) {
+  const page = resolve(root, `dist/client/compare/${slug}/index.html`);
+  assert.ok(existsSync(page), `Comparison page for ${slug} is in the build`);
+  const html = readFileSync(page, 'utf8');
+  assert.ok(html.includes('utm_campaign=love_profile_loop'), `${slug} comparison routes into the quiz loop`);
+  assert.ok(html.includes('FAQPage'), `${slug} comparison includes FAQ schema`);
+}
+assert.ok(
+  existsSync(resolve(root, 'dist/client/compare/index.html')),
+  'Comparison hub page is in the build',
+);
+
+// Blog posts funnel readers into the quiz before the app ask.
+const blogPost = readFileSync(
+  resolve(root, 'dist/client/blog/long-distance-relationship-questions/index.html'),
+  'utf8',
+);
+assert.ok(blogPost.includes('utm_campaign=love_profile_loop'), 'Blog posts include the quiz CTA');
+
+// IndexNow key file ships with the site so submissions verify.
+assert.ok(
+  existsSync(resolve(root, 'dist/client/48b9419823aeadbf6e06192ccaa88c6e.txt')),
+  'IndexNow key file is in the build',
+);
+
 console.log('Partner referral, match reveal, attribution, and acquisition landing contracts passed.');
