@@ -35,7 +35,7 @@ You're both still in love. But suddenly the constant contact feels like obligati
 
 **The trap:** Reading every shift in communication as a sign something's wrong. Demanding more contact when what you actually need is *better* contact. Letting a small misread of tone spiral into a 3am argument.
 
-**What to do:** Replace volume with intentionality. A 5-minute voice note where you actually say something real beats two hours of "wyd?" texting. [Daily questions](/blog/long-distance-relationship-questions) are powerful here — they give you something specific to talk about that isn't "how was your day." Shared rituals like writing a love letter or playing Would You Rather create connection that doesn't depend on constant contact.
+**What to do:** Replace volume with intentionality. A 5-minute voice note where you actually say something real beats two hours of "wyd?" texting. [Daily questions](/blog/long-distance-relationship-questions) are powerful here — they give you something specific to talk about that isn't "how was your day." Shared rituals like writing a love letter or playing Would You Rather create connection that doesn't depend on constant contact. And when a fight does land — it will — [how you argue from far away](/blog/how-to-handle-arguments-in-a-long-distance-relationship) is the difference between a hard night and a hard month.
 
 This is the stage where most short-distance relationships break. The ones that survive learn to communicate differently — not more.
 
