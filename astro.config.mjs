@@ -10,7 +10,18 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()]
   },
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      customPages: ['https://lovefarfox.com/rss.xml'],
+      filter: (page) =>
+        ![
+          '/jersey/',
+          '/map/',
+          '/couple-quiz/',
+          '/etsy-map-redeem/',
+        ].some((skip) => page.includes(skip)),
+    }),
+  ],
   adapter: vercel({
     webAnalytics: { enabled: true },
   })

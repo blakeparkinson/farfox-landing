@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 
-const publishDate = new Date(post.data.date).toLocaleDateString('en-US', {
+const publishDate = new Date(`${post.data.date}T12:00:00`).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -214,6 +214,7 @@ const breadcrumbSchema = {
       <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
       <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light/50">
         <a href="/quiz" class="hover:text-fox-pink transition-colors">Couple Quiz</a>
+        <a href="/long-distance-time-zone-calculator" class="hover:text-fox-pink transition-colors">Time Zones</a>
         <a href="/compare" class="hover:text-fox-pink transition-colors">Compare</a>
         <a href="/shop" class="hover:text-fox-pink transition-colors">Shop</a>
         <a href="/blog" class="hover:text-fox-pink transition-colors">Blog</a>

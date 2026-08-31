@@ -83,4 +83,6 @@ A good way to *find* those moments? Keep talking about the specifics — the sma
 
 For the bigger picture on building intimacy across distance, see our complete guide on [making a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work).
 
+If you need a line to go with the nickname — a caption, a letter closing, a text when the screen is blank — we keep [100 long-distance relationship quotes](/blog/long-distance-relationship-quotes) you can copy as-is.
+
 [Far Fox](https://app.lovefarfox.com) gives you daily questions, shared photos, and letters — the little daily moments that inside jokes (and the perfect nickname) come from. It's free.

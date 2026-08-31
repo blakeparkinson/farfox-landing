@@ -76,7 +76,7 @@ We lean into exactly this idea in our shop — the [**"Two Time Zones" tee** and
 
 ## The tools that actually help
 
-- **A world clock or a widget** with your partner's time on your home screen. Never do the mental math again — and never text "you up?" at their 4 a.m.
+- **A [time zone overlap calculator](/long-distance-time-zone-calculator)** — pick two cities and see the hours you're both actually awake. Never do the mental math again, and never text "you up?" at their 4 a.m.
 - **A shared calendar** for your golden hours and your next visit. A [countdown to the reunion](/blog/long-distance-relationship-timeline) reframes the gap as temporary.
 - **Scheduled messages and a daily ritual in one place.** This is the core of what [Far Fox](https://app.lovefarfox.com) is built for: write a love letter now and schedule it to land at *their* morning, answer a shared daily question on your own time, drop voice notes and photos into a shared timeline, and grow a little fox companion together the more you both show up. It's designed so connection never depends on you being awake at the same second. Free on iOS, Android, and web.
 
