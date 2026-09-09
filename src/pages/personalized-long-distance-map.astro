@@ -225,7 +225,16 @@ const previewUrl = `/api/couple-map-preview.png?${sample}`;
       let previewMade = false;
 
       const track = (name, data = {}) => {
-        if (typeof window.umami?.track === 'function') window.umami.track(name, data);
+        if (typeof window.umami?.track === 'function') {
+          const campaign = window.farfoxAcquisition || {};
+          window.umami.track(name, {
+            ...data,
+            source: campaign.utm_source || data.source || 'direct',
+            medium: campaign.utm_medium || '',
+            campaign: campaign.utm_campaign || '',
+            content: campaign.utm_content || '',
+          });
+        }
       };
       track('map_offer_view', { source: search.get('utm_source') || 'direct' });
       if (redemption) {

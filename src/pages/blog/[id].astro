@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { DIGITAL_MAP_PRICE } from '../../lib/coupleMap.mjs';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -12,6 +13,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const hasGiftIntent = /gift|anniversary|valentine|birthday|christmas|care.package/i.test(`${post.id} ${post.data.title}`);
 
 const publishDate = new Date(`${post.data.date}T12:00:00`).toLocaleDateString('en-US', {
   year: 'numeric',
@@ -150,6 +152,16 @@ const breadcrumbSchema = {
       ">
         <Content />
       </div>
+
+      {hasGiftIntent && (
+        <aside aria-label="A personalized gift from Far Fox" class="mt-10 p-6 sm:p-8 rounded-2xl bg-fox-pink/5 border border-fox-pink/20">
+          <p class="text-sm font-700 text-fox-text-light mb-2">A gift from Far Fox</p>
+          <h2 class="text-2xl font-800 mb-3">Two cities. One map made for you.</h2>
+          <p class="text-fox-text-light mb-5">Add your cities, names, and a message. Preview your map free, then download the print-ready PNG for ${DIGITAL_MAP_PRICE} USD. Digital file only; no shipping or frame included.</p>
+          <a href="/personalized-long-distance-map" data-umami-event="blog_map_clicked" data-umami-event-article={post.id} class="inline-block px-6 py-3 rounded-full bg-fox-pink text-white font-800 hover:bg-fox-purple transition-colors">Preview your map free →</a>
+          <p class="mt-4 text-sm"><a href="/personalized-long-distance-jersey" data-umami-event="blog_jersey_clicked" data-umami-event-article={post.id} class="text-fox-pink font-700 underline underline-offset-4">Prefer something to wear? Personalize a couple jersey.</a></p>
+        </aside>
+      )}
 
       {faqs && faqs.length > 0 && (
         <section class="mt-16">

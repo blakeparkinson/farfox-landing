@@ -144,7 +144,7 @@ const featureGroups = [
 ];
 ---
 
-<Layout>
+<Layout title="Far Fox — Free Long-Distance Relationship App for Couples">
   <!-- Nav -->
   <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
     <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -155,7 +155,7 @@ const featureGroups = [
         </span>
       </a>
       <div class="flex items-center gap-4 sm:gap-6">
-        <a href="/shop" class="hidden sm:inline text-sm font-700 text-fox-text-light hover:text-fox-pink transition-colors">Shop</a>
+        <a href="/shop" class="text-sm font-700 text-fox-text-light hover:text-fox-pink transition-colors" data-umami-event="homepage_shop_clicked">Gifts</a>
         <a href="/blog" class="hidden sm:inline text-sm font-700 text-fox-text-light hover:text-fox-pink transition-colors">Blog</a>
         <a
           href="https://app.lovefarfox.com"
@@ -225,6 +225,10 @@ const featureGroups = [
               <span class="text-fox-pink group-hover:translate-x-0.5 transition-transform">→</span>
             </a>
           </div>
+          <p class="mt-6 text-sm text-fox-text-light">
+            Looking for a gift?
+            <a href="/personalized-long-distance-map" data-umami-event="homepage_map_clicked" class="font-800 text-fox-pink underline underline-offset-4">Preview your personalized two-city map →</a>
+          </p>
         </div>
 
         <!-- Right: phone screenshot mockup -->

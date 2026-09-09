@@ -55,6 +55,9 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 
+<!-- Capture campaign context before page-specific event handlers run. -->
+    <script is:inline src="/acquisition.js"></script>
+
 <!-- Analytics -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="9094af54-517f-4e51-bc4b-f2bf5f86d7f8"></script>
 
@@ -105,10 +108,11 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
       // the CTA. The app can read these query params without a shared cookie.
       const campaignParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
       const current = new URLSearchParams(window.location.search);
+      const acquisition = (window as Window & { farfoxAcquisition?: Record<string, string> }).farfoxAcquisition || {};
       document.querySelectorAll<HTMLAnchorElement>('a[href^="https://app.lovefarfox.com"]').forEach((link) => {
         const destination = new URL(link.href);
         campaignParams.forEach((key) => {
-          const value = current.get(key);
+          const value = acquisition[key] || current.get(key);
           if (value && !destination.searchParams.has(key)) destination.searchParams.set(key, value);
         });
         destination.searchParams.set('landing_path', window.location.pathname);
@@ -121,7 +125,8 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
           analytics?.track(eventName, {
             cta: link.dataset.appCta || destination.searchParams.get('ref') || 'unlabeled',
             path: window.location.pathname,
-            source: current.get('utm_source') || 'direct',
+            source: acquisition.utm_source || current.get('utm_source') || 'direct',
+            campaign: acquisition.utm_campaign || '',
           });
         });
       });
