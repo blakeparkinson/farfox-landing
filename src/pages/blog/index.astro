@@ -5,6 +5,44 @@ import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
+
+const collections = [
+  {
+    title: 'Visits & milestones',
+    description: 'The first meeting, hard goodbyes, and the road to closing the distance.',
+    paths: [
+      'meeting-long-distance-partner-first-time',
+      'post-visit-blues-long-distance-relationship',
+      'long-distance-relationship-timeline',
+      'closing-the-distance-long-distance-relationship',
+    ],
+  },
+  {
+    title: 'Stay close day to day',
+    description: 'Questions, letters, games, dates, and rituals that make ordinary days feel shared.',
+    paths: [
+      'long-distance-relationship-questions',
+      'long-distance-date-ideas',
+      'love-letter-prompts-long-distance',
+      'long-distance-relationship-games',
+    ],
+  },
+  {
+    title: 'Work through the hard parts',
+    description: 'Clear, practical guidance for trust, conflict, time zones, and keeping your connection steady.',
+    paths: [
+      'how-to-handle-arguments-in-a-long-distance-relationship',
+      'how-to-build-trust-in-a-long-distance-relationship',
+      'long-distance-relationship-time-zones',
+      'how-to-keep-the-spark-alive-in-a-long-distance-relationship',
+    ],
+  },
+].map((collection) => ({
+  ...collection,
+  posts: collection.paths
+    .map((path) => posts.find((post) => post.id === path))
+    .filter((post): post is (typeof posts)[number] => Boolean(post)),
+}));
 ---
 
 <Layout title="Long-Distance Relationship Blog — Tips, Questions & Ideas | Far Fox" description="Practical advice for long-distance couples: conversation questions, date ideas, love letter prompts, gift guides, and daily rituals that keep your relationship strong across any distance.">
@@ -34,6 +72,24 @@ const posts = (await getCollection('blog')).sort(
         Practical, honest advice for couples making long-distance work — questions to ask, love letters to write, gifts that mean something, and daily rituals that keep you close across any distance.
       </p>
 
+      <section aria-labelledby="guide-collections" class="mb-14">
+        <h2 id="guide-collections" class="text-2xl font-900 tracking-tight mb-6">Start with what you need</h2>
+        <div class="grid gap-5 sm:grid-cols-3">
+          {collections.map((collection) => (
+            <section class="rounded-2xl bg-gradient-to-br from-fox-pink/5 to-fox-purple/5 border border-fox-pink/10 p-5">
+              <h3 class="font-800 text-lg mb-2">{collection.title}</h3>
+              <p class="text-sm text-fox-text-light leading-relaxed mb-4">{collection.description}</p>
+              <ul class="space-y-2">
+                {collection.posts.map((post) => (
+                  <li><a href={`/blog/${post.id}`} class="text-sm font-700 text-fox-pink hover:underline">{post.data.title}</a></li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </section>
+
+      <h2 class="text-2xl font-900 tracking-tight mb-6">Latest guides</h2>
       <div class="space-y-8">
         {posts.map((post) => (
           <a href={`/blog/${post.id}`} class="block group p-6 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1">

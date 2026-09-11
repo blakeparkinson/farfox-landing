@@ -84,7 +84,7 @@ The goodbye after a first visit is brutal in a specific way: now you know *exact
 Two things make it survivable:
 
 1. **Book (or roughly plan) the next visit before this one ends.** This single move changes everything. The goodbye stops being "when will I ever see you again?" and becomes "okay — six weeks." A date on the calendar is the difference between grief and a countdown. (Our [date-ideas guide](/blog/long-distance-date-ideas) has plenty to fill the wait.)
-2. **Expect the post-visit slump.** The few days after are often the hardest of the entire long-distance cycle — a real, grief-shaped dip. It's not a sign anything's wrong. It's the cost of something good. Be extra gentle with each other through it, and lean back into the [rituals that keep the spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship).
+2. **Expect the post-visit slump.** The few days after are often the hardest of the entire long-distance cycle — a real, grief-shaped dip. It's not a sign anything's wrong. It's the cost of something good. Be extra gentle with each other through it, and use our guide to [handling post-visit blues](/blog/post-visit-blues-long-distance-relationship) when you are back home.
 
 ## After you're apart again
 

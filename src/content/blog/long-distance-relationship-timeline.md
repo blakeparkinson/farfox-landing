@@ -53,7 +53,7 @@ You're not in honeymoon mode anymore, but you're not in crisis mode either. It's
 
 **What to do:** Add *one new ritual a month*. A new question, a new game, a new tradition. Watch a movie together. Cook the same meal on a video call. Send a physical letter for an anniversary that isn't a real anniversary. The relationship needs novelty as much as it needs stability.
 
-This is also when most long-distance couples plan their first *real* visit. The reunion is everything you imagine and also strangely awkward in the first hour. That's normal too.
+This is also when most long-distance couples plan their first *real* visit. The reunion is everything you imagine and also strangely awkward in the first hour. That's normal too. Plan for the return as well: [post-visit blues](/blog/post-visit-blues-long-distance-relationship) can hit hard after the goodbye, especially when you do not yet have the next visit on the calendar.
 
 ---
 
