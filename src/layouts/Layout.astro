@@ -10,7 +10,7 @@ interface Props {
 const {
   title = 'Far Fox — Stay Connected, No Matter the Distance',
   description = 'The couples app for long-distance relationships. Share photos, love letters, daily questions, mood tracking, and more — all wrapped around your own little fox companion.',
-  image = 'https://lovefarfox.com/og-image.png',
+  image = 'https://lovefarfox.com/brand-preview.png',
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
@@ -46,8 +46,8 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
     <meta name="twitter:image" content={image} />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/fox-logo.png" />
-    <link rel="apple-touch-icon" href="/fox-logo.png" />
+    <link rel="icon" type="image/png" href="/brand/foxy-icon-v1.png" />
+    <link rel="apple-touch-icon" href="/brand/foxy-icon-v1.png" />
 
     <!-- Fonts — preload for speed -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -70,7 +70,7 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "iOS, Android, Web",
       "description": description,
-      "image": "https://lovefarfox.com/fox-logo.png",
+      "image": "https://lovefarfox.com/brand/foxy-icon-v1.png",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -85,7 +85,7 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
       "@type": "Organization",
       "name": "Far Fox",
       "url": "https://lovefarfox.com",
-      "logo": "https://lovefarfox.com/fox-logo.png",
+      "logo": "https://lovefarfox.com/brand/foxy-icon-v1.png",
       "description": "Far Fox is a couples app for long-distance relationships — daily questions, love letters, shared photos, and a fox companion that grows with your relationship.",
       "sameAs": ["https://app.lovefarfox.com"]
     })} />

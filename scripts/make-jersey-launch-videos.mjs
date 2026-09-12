@@ -185,7 +185,7 @@ async function main() {
   if (existsSync(out)) rmSync(out, { recursive: true });
   mkdirSync(frames, { recursive: true });
   const fonts = await loadFonts();
-  const fox = dataUrl(readFileSync(resolve(root, 'public/fox-face.png')));
+  const fox = dataUrl(readFileSync(resolve(root, 'public/brand/foxy-face-v1.png')));
 
   for (const campaign of campaigns) {
     console.log(`Rendering ${campaign.slug}...`);

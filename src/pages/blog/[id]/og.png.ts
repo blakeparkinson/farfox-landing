@@ -13,6 +13,7 @@ import type { APIRoute } from 'astro';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { getCollection } from 'astro:content';
+import { foxyIconData } from '../../../lib/foxyBrand';
 
 // Per-blog-post OG images are generated at build time so they can be
 // served from the static CDN edge — fast, free, and never cold.
@@ -129,7 +130,7 @@ export const GET: APIRoute = async ({ props }) => {
                 {
                   type: 'img',
                   props: {
-                    src: 'https://lovefarfox.com/fox-face.png',
+                    src: foxyIconData,
                     width: 60,
                     height: 60,
                     style: {

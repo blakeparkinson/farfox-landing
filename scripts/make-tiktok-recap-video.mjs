@@ -44,7 +44,7 @@ const FOX_TEXT = '#2D1B4E';
 const FOX_TEXT_LIGHT = '#6B5B7B';
 const GOLD = '#FFC78A';
 
-const FOX_FACE = `data:image/png;base64,${readFileSync(resolve(PUBLIC_DIR, 'fox-face.png')).toString('base64')}`;
+const FOX_FACE = `data:image/png;base64,${readFileSync(resolve(PUBLIC_DIR, 'brand/foxy-face-v1.png')).toString('base64')}`;
 
 // ── The actual recap content variants ────────────────────────────────
 const RECAPS = {

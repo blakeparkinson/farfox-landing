@@ -9,6 +9,7 @@
 
 import type { APIRoute } from 'astro';
 import satori from 'satori';
+import { foxyIconData } from '../../../../lib/foxyBrand';
 import { Resvg } from '@resvg/resvg-js';
 import { fetchProfileBySlug } from '../../../../lib/supabase';
 import { compareRituals } from '../../../../lib/connectionRituals';
@@ -234,7 +235,7 @@ export const GET: APIRoute = async ({ params }) => {
                 fontWeight: 800,
               },
               children: [
-                { type: 'div', props: { style: { fontSize: 28 }, children: '🦊' } },
+                { type: 'img', props: { src: foxyIconData, width: 36, height: 36 } },
                 'Take yours free · lovefarfox.com/couple-quiz',
               ],
             },

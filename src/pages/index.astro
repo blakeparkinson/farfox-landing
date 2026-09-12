@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PlayableHero from '../components/PlayableHero.astro';
 import { getCollection } from 'astro:content';
 import catalog from '../data/catalog.json';
 
@@ -149,7 +150,7 @@ const featureGroups = [
   <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
     <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="/" class="flex items-center gap-2">
-        <img src="/fox-logo.png" alt="Far Fox — couples app for long-distance relationships" class="w-8 h-8" />
+        <img src="/brand/foxy-icon-v1.png" alt="Far Fox — couples app for long-distance relationships" class="w-8 h-8" />
         <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">
           Far Fox
         </span>
@@ -167,90 +168,7 @@ const featureGroups = [
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="min-h-screen flex items-center justify-center pt-20 pb-16 px-6 relative overflow-hidden hero-hearts">
-    <!-- Subtle gradient orbs -->
-    <div class="absolute top-20 left-10 w-72 h-72 bg-fox-pink/10 rounded-full blur-3xl will-change-transform"></div>
-    <div class="absolute bottom-20 right-10 w-96 h-96 bg-fox-purple/10 rounded-full blur-3xl will-change-transform"></div>
-    <div class="absolute top-40 right-20 w-48 h-48 bg-fox-orange/15 rounded-full blur-3xl will-change-transform"></div>
-
-    <div class="max-w-6xl mx-auto relative z-10">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <!-- Left: text + CTA -->
-        <div class="text-center lg:text-left">
-          <!-- Hero fox: big, prominent, the literal face of the brand. -->
-          <img
-            src="/fox-face.png"
-            alt="Far Fox kawaii fox mascot — the couples app for staying connected long distance"
-            class="w-28 h-28 sm:w-32 sm:h-32 mx-auto lg:mx-0 mb-6 drop-shadow-xl fade-in fox-float"
-            width="128"
-            height="128"
-          />
-          <h1 class="text-4xl sm:text-5xl md:text-6xl font-900 leading-tight tracking-tight mb-6 fade-in" style="animation-delay: 0.1s;">
-            Daily rituals for couples who
-            <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">
-              live apart
-            </span>
-          </h1>
-          <p class="text-lg sm:text-xl text-fox-text-light max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed fade-in" style="animation-delay: 0.2s;">
-            Far Fox is more than messaging. Daily questions, love letters,
-            shared photos, voice notes, and a fox that grows with your
-            relationship — built for couples who refuse to drift.
-          </p>
-          <div class="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 fade-in" style="animation-delay: 0.3s;">
-            <div class="flex flex-col items-center sm:items-start">
-              <a
-                href="https://app.lovefarfox.com/signup?ref=homepage_hero"
-                data-app-cta="homepage_hero"
-                class="px-8 py-3.5 rounded-full bg-fox-pink text-white font-800 text-lg hover:bg-fox-purple hover:shadow-xl hover:shadow-fox-pink/40 transition-all duration-200 hover:-translate-y-0.5"
-              >
-                Try Far Fox Free
-              </a>
-              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-1.5 gap-y-0.5 mt-2 text-xs text-fox-text-light/70 max-w-[260px] sm:max-w-none">
-                <span class="inline-flex items-center gap-1.5">
-                  <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                  <span class="font-700">100% free</span>
-                </span>
-                <span>·</span>
-                <span>No ads</span>
-                <span>·</span>
-                <span>iOS, Android, Web</span>
-              </div>
-            </div>
-            <a
-              href="/quiz?utm_source=homepage&utm_medium=onsite&utm_campaign=love_profile_loop"
-              class="group px-8 py-3.5 rounded-full border-2 border-fox-pink/30 text-fox-text font-800 text-lg hover:border-fox-pink hover:bg-fox-pink/5 transition-all duration-200 inline-flex items-center gap-2"
-            >
-              <span>Take the love quiz</span>
-              <span class="text-fox-pink group-hover:translate-x-0.5 transition-transform">→</span>
-            </a>
-          </div>
-          <p class="mt-6 text-sm text-fox-text-light">
-            Looking for a gift?
-            <a href="/personalized-long-distance-map" data-umami-event="homepage_map_clicked" class="font-800 text-fox-pink underline underline-offset-4">Preview your personalized two-city map →</a>
-          </p>
-        </div>
-
-        <!-- Right: phone screenshot mockup -->
-        <div class="flex justify-center lg:justify-end fade-in" style="animation-delay: 0.4s;">
-          <div class="relative">
-            <!-- Soft glow behind phone -->
-            <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/20 via-fox-purple/15 to-fox-orange/15 blur-3xl scale-110"></div>
-            <!-- Phone frame -->
-            <div class="relative bg-fox-text rounded-[2.5rem] p-2 shadow-2xl shadow-fox-pink/25 w-[240px] sm:w-[260px] md:w-[280px]">
-              <div class="relative rounded-[2rem] overflow-hidden w-full" style="aspect-ratio: 928 / 1698;">
-                <img src="/screenshots/hero-home.png" alt="Far Fox app home, love letters, explore activities, travel map, and would you rather screens" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 1;" />
-                <img src="/screenshots/love-letters.png" alt="" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 0;" loading="lazy" />
-                <img src="/screenshots/explore.png" alt="" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 0;" loading="lazy" />
-                <img src="/screenshots/travel-map.png" alt="" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 0;" loading="lazy" />
-                <img src="/screenshots/would-you-rather.png" alt="" class="hero-screen absolute inset-0 w-full h-full transition-opacity duration-[800ms] ease-in-out" style="opacity: 0;" loading="lazy" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <PlayableHero />
 
   <!-- App showcase -->
   <section class="py-16 sm:py-24 px-6 bg-gradient-to-b from-fox-bg/0 via-fox-pink/5 to-fox-bg/0">
@@ -453,7 +371,7 @@ const featureGroups = [
         <div class="text-center scroll-reveal" style="transition-delay: 0.05s;">
           <div class="relative mx-auto w-full max-w-[140px] aspect-square flex items-center justify-center">
             <div class="absolute inset-2 bg-fox-pink/10 rounded-full"></div>
-            <img src="/fox-logo.png" alt="Newly hatched fox companion" class="relative w-14 h-14 sm:w-20 sm:h-20 z-10 opacity-80" loading="lazy" />
+            <img src="/brand/foxy-icon-v1.png" alt="Newly hatched fox companion" class="relative w-14 h-14 sm:w-20 sm:h-20 z-10 opacity-80" loading="lazy" />
             <span class="absolute bottom-[6%] left-1/2 -translate-x-1/2 text-base sm:text-2xl z-20 select-none" aria-hidden="true">🥚</span>
           </div>
           <p class="mt-3 font-800 text-xs sm:text-sm text-fox-text">Day 1</p>
@@ -464,7 +382,7 @@ const featureGroups = [
         <div class="text-center scroll-reveal" style="transition-delay: 0.1s;">
           <div class="relative mx-auto w-full max-w-[140px] aspect-square flex items-center justify-center">
             <div class="absolute inset-2 bg-fox-pink/20 rounded-full"></div>
-            <img src="/fox-face.png" alt="Curious heart-eyed fox companion" class="relative w-20 h-20 sm:w-28 sm:h-28 z-10 drop-shadow-md" loading="lazy" />
+            <img src="/brand/foxy-face-v1.png" alt="Curious heart-eyed fox companion" class="relative w-20 h-20 sm:w-28 sm:h-28 z-10 drop-shadow-md" loading="lazy" />
             <span class="absolute top-[8%] left-[8%] text-base sm:text-2xl z-20 rotate-[-15deg] select-none" aria-hidden="true">🌸</span>
           </div>
           <p class="mt-3 font-800 text-xs sm:text-sm text-fox-text">Day 30</p>
@@ -476,7 +394,7 @@ const featureGroups = [
           <div class="relative mx-auto w-full max-w-[140px] aspect-square flex items-center justify-center">
             <div class="absolute inset-1 bg-gradient-to-br from-fox-pink/30 via-fox-purple/25 to-fox-pink/20 rounded-full blur-md"></div>
             <div class="absolute inset-2 bg-gradient-to-br from-fox-pink/15 to-fox-purple/15 rounded-full"></div>
-            <img src="/fox-letter.png" alt="Fox companion delivering a love letter" class="relative w-24 h-24 sm:w-32 sm:h-32 z-10 drop-shadow-md" loading="lazy" />
+            <img src="/brand/foxy-letter-v1.png" alt="Fox companion delivering a love letter" class="relative w-24 h-24 sm:w-32 sm:h-32 z-10 drop-shadow-md" loading="lazy" />
             <span class="absolute top-[2%] right-[8%] text-xl sm:text-3xl z-20 select-none" aria-hidden="true">💌</span>
           </div>
           <p class="mt-3 font-800 text-xs sm:text-sm text-fox-text">Day 100</p>
@@ -488,7 +406,7 @@ const featureGroups = [
           <div class="relative mx-auto w-full max-w-[140px] aspect-square flex items-center justify-center fox-mystic">
             <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/50 via-fox-purple/40 to-fox-orange/40 rounded-full blur-xl"></div>
             <div class="absolute inset-1 bg-gradient-to-br from-fox-pink/25 via-fox-purple/20 to-fox-orange/20 rounded-full"></div>
-            <img src="/fox-face.png" alt="Fully evolved mystic fox companion" class="relative w-28 h-28 sm:w-36 sm:h-36 z-10 drop-shadow-lg" style="filter: saturate(1.15);" loading="lazy" />
+            <img src="/brand/foxy-face-v1.png" alt="Fully evolved mystic fox companion" class="relative w-28 h-28 sm:w-36 sm:h-36 z-10 drop-shadow-lg" style="filter: saturate(1.15);" loading="lazy" />
             <span class="absolute top-[-6%] left-1/2 -translate-x-1/2 text-2xl sm:text-4xl z-20 select-none" aria-hidden="true">👑</span>
             <span class="absolute top-[15%] right-[2%] text-sm sm:text-xl z-20 select-none" aria-hidden="true">✨</span>
             <span class="absolute bottom-[15%] left-[2%] text-sm sm:text-xl z-20 select-none" aria-hidden="true">✨</span>
@@ -510,8 +428,8 @@ const featureGroups = [
         <div class="relative mx-auto w-40 h-40 sm:w-48 sm:h-48 flex items-center justify-center">
           <div class="absolute inset-2 bg-gradient-to-br from-fox-purple/20 via-fox-pink/15 to-fox-orange/10 rounded-full blur-2xl"></div>
           <img
-            src="/fox-sleeping.png"
-            alt="Sleeping fox companion curled up with little Z's floating above"
+            src="/brand/foxy-face-v1.png"
+            alt="Foxy, your heart-eyed relationship companion"
             class="relative w-full h-full object-contain drop-shadow-lg fox-breathe"
             loading="lazy"
           />
@@ -674,7 +592,7 @@ const featureGroups = [
       <div class="relative mx-auto w-44 h-44 sm:w-52 sm:h-52 mb-6 flex items-center justify-center">
         <div class="absolute inset-0 bg-gradient-to-br from-fox-pink/30 via-fox-purple/20 to-fox-orange/20 rounded-full blur-2xl scale-110"></div>
         <img
-          src="/fox-letter.png"
+          src="/brand/foxy-letter-v1.png"
           alt="Far Fox companion holding a love letter envelope, waiting to deliver it"
           class="relative w-full h-full object-contain drop-shadow-xl fox-float"
           loading="lazy"

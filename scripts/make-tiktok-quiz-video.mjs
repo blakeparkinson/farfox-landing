@@ -42,8 +42,8 @@ function loadImageDataUrl(name) {
   const bytes = readFileSync(resolve(PUBLIC_DIR, name));
   return `data:image/png;base64,${bytes.toString('base64')}`;
 }
-const FOX_FACE = loadImageDataUrl('fox-face.png');
-const FOX_LETTER = loadImageDataUrl('fox-letter.png');
+const FOX_FACE = loadImageDataUrl('brand/foxy-face-v1.png');
+const FOX_LETTER = loadImageDataUrl('brand/foxy-letter-v1.png');
 
 // ── Fonts (Nunito 400 + 800 + 900) ───────────────────────────────────
 async function loadFonts() {

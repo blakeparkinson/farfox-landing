@@ -26,7 +26,7 @@ const ink = '#2D1B4E';
 const muted = '#6B5B7B';
 const gold = '#C78A2E';
 const bg = 'linear-gradient(160deg, #FFF6E2 0%, #FDE6CB 45%, #FFD9D9 100%)';
-const fox = `data:image/png;base64,${readFileSync(resolve(root, 'public/fox-face.png')).toString('base64')}`;
+const fox = `data:image/png;base64,${readFileSync(resolve(root, 'public/brand/foxy-face-v1.png')).toString('base64')}`;
 
 const SITE = 'https://lovefarfox.com';
 const pinLink = (path, content) =>

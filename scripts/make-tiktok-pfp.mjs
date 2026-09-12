@@ -21,7 +21,7 @@ const OUT_DIR = resolve(__dirname, '../out');
 const W = 800;
 const H = 800;
 
-const FOX_FACE = `data:image/png;base64,${readFileSync(resolve(PUBLIC_DIR, 'fox-face.png')).toString('base64')}`;
+const FOX_FACE = `data:image/png;base64,${readFileSync(resolve(PUBLIC_DIR, 'brand/foxy-face-v1.png')).toString('base64')}`;
 
 async function loadFonts() {
   const css = await fetch(

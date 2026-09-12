@@ -18,7 +18,7 @@ const pink = '#FF6B8A';
 const purple = '#B76CFD';
 const ink = '#2D1B4E';
 const muted = '#6B5B7B';
-const fox = `data:image/png;base64,${readFileSync(resolve(root, 'public/fox-face.png')).toString('base64')}`;
+const fox = `data:image/png;base64,${readFileSync(resolve(root, 'public/brand/foxy-face-v1.png')).toString('base64')}`;
 
 const campaigns = [
   {

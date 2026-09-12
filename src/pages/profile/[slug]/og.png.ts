@@ -11,6 +11,7 @@
 
 import type { APIRoute } from 'astro';
 import satori from 'satori';
+import { foxyIconData } from '../../../lib/foxyBrand';
 import { Resvg } from '@resvg/resvg-js';
 import { fetchProfileBySlug } from '../../../lib/supabase';
 import {
@@ -232,13 +233,8 @@ export const GET: APIRoute = async ({ params }) => {
               },
               children: [
                 {
-                  type: 'div',
-                  props: {
-                    style: {
-                      fontSize: 28,
-                    },
-                    children: '🦊',
-                  },
+                  type: 'img',
+                  props: { src: foxyIconData, width: 36, height: 36 },
                 },
                 'Far Fox · lovefarfox.com',
               ],
