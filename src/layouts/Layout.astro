@@ -60,7 +60,8 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
     <script is:inline src="/acquisition.js"></script>
 
 <!-- Analytics -->
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="9094af54-517f-4e51-bc4b-f2bf5f86d7f8"></script>
+    <script is:inline src="/analytics-privacy.js"></script>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="9094af54-517f-4e51-bc4b-f2bf5f86d7f8" data-exclude-hash="true"></script>
 
 <!-- Schema.org -->
     <script type="application/ld+json" set:html={JSON.stringify({

@@ -1,0 +1,15 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+const tools = [
+  ['Would You Rather', 'Pick an answer, send a link and see whether your partner agrees.', '/blog/long-distance-relationship-games/#couples-game'],
+  ['Couple quiz', 'Compare your love profiles with a short quiz you can both take.', '/quiz/'],
+  ['Time-zone calculator', 'Find the hours you are both awake, including daylight saving changes.', '/long-distance-time-zone-calculator/'],
+];
+---
+<ToolLayout title="Free Tools for Long-Distance Couples | Far Fox" description="Free reunion countdown, couples game, love profile quiz and time-zone calculator. Find something to share with your long-distance partner, no signup needed.">
+  <h1>A little something for you two.</h1><p>Free tools for long-distance couples. Make a plan, start a conversation or count down to your next visit.</p>
+  <section class="featured"><div><h2>Your next hug has a date.</h2><p>Create a reunion countdown and send it to your partner. Save a Foxy card to share the excitement.</p><a href="/reunion-countdown/">Make your reunion countdown →</a></div><img src="/brand/foxy-letter-v1.png" width="220" height="220" alt="Foxy holding a love letter" /></section>
+  <section aria-label="More free tools" class="tools">{tools.map(([name, description, url]) => <article><h2><a href={url}>{name} →</a></h2><p>{description}</p></article>)}</section>
+  <p>Looking for more ideas? Browse our <a href="/blog/long-distance-date-ideas/">virtual date ideas</a> and <a href="/blog/love-letter-prompts-long-distance/">love-letter prompts</a>.</p>
+</ToolLayout>
+<style>.featured{display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:32px;margin:32px 0}.featured a{font-weight:800}.tools{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:48px 0}.tools article:last-child{grid-column:1/-1}.tools h2{font-size:1.3rem}.tools p{max-width:500px}@media(max-width:767px){.featured{grid-template-columns:1fr;padding:24px}.featured img{width:140px;height:140px;grid-row:1}.tools{grid-template-columns:1fr}}</style>
