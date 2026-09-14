@@ -1,0 +1,144 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+<ToolLayout title="Free Reunion Countdown for Long-Distance Couples | Far Fox" description="Count the days until your next visit. Create a free reunion countdown, share it with your partner and download a Foxy Story card. No signup needed.">
+  <header><h1>Count down to your next hug.</h1><p>Pick your reunion date. Share the countdown with your person. No signup needed.</p></header>
+  <div class="countdown-grid">
+    <form id="countdown-form">
+      <div class="names"><label>Your name (optional)<input name="you" maxlength="32" autocomplete="off" /></label><label>Their name (optional)<input name="partner" maxlength="32" autocomplete="off" /></label></div>
+      <label>Reunion date<input type="date" name="date" required min="2000-01-01" max="2099-12-31" aria-describedby="date-help" /></label>
+      <label>Count down in this time zone<select name="zone" required aria-describedby="date-help"><option value="UTC">UTC</option></select></label>
+      <small id="date-help">We count calendar days, not hours. Pick your reunion’s time zone so you both see the same number.</small>
+      <button type="submit" id="create" disabled>Create countdown</button>
+      <p id="form-status" role="status"></p>
+      <small>Names and dates stay in your browser until you share. Anyone with the link can read them. Use nicknames if you prefer.</small>
+      <noscript><p>Enable JavaScript to create and share a countdown. You can still explore our <a href="/tools/">other free tools</a>.</p></noscript>
+    </form>
+    <section class="preview" aria-label="Your reunion countdown">
+      <p id="card-names">You &amp; me</p>
+      <img id="countdown-foxy" src="/brand/foxy-letter-v1.png" width="224" height="224" alt="Foxy holding a heart-sealed letter" fetchpriority="high" />
+      <h2 id="card-heading" tabindex="-1">One date to look forward to.</h2>
+      <p id="card-date">Your countdown will appear here.</p>
+      <p id="card-zone"></p>
+      <div id="actions" hidden><button type="button" id="share-countdown">Copy link</button><button type="button" id="download-card">Save Story card</button></div>
+      <p id="share-status" role="status"></p>
+      <label id="copy-wrap" hidden>Copy your countdown link<input id="copy-link" readonly /></label>
+      <small id="story-help" hidden>The PNG is a snapshot, not a live timer. Add your countdown link as a Story link sticker so friends can open it.</small>
+    </section>
+  </div>
+  <section class="after"><h2>A little closer while you wait</h2><p><a href="/blog/long-distance-relationship-games/#couples-game">Send a Would You Rather question</a>, <a href="/long-distance-time-zone-calculator/">find your next call time</a>, or <a href="/blog/love-letter-prompts-long-distance/">write a letter for reunion day</a>.</p>
+    <h2>Keep your countdown handy</h2><p>Send the link to your partner and bookmark it. The number updates when you open it and while the page is visible. Edit the date here if plans change, then send a new link; old links keep their original date.</p>
+    <details><summary>Can I keep the names off my countdown?</summary><p>Yes. Leave both names blank for “You &amp; me.” Your link still contains the reunion date and time zone. We do not include those details in our analytics events.</p></details>
+    <details><summary>What happens on reunion day?</summary><p>You'll see a reunion-day message instead of zero days. After the date passes, your link shows “A reunion to remember.” Choose a new date to start another countdown.</p></details>
+  </section>
+</ToolLayout>
+<script>
+  import { calendarDate, daysUntil, readReunion, reunionUrl, reunionHeading, reunionLabel, validZone, type Reunion } from '../lib/reunionCountdown';
+  import { campaignAttribution } from '../lib/campaignAttribution';
+  const form = document.querySelector<HTMLFormElement>('#countdown-form')!;
+  const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement;
+  const get = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  let current: Reunion | null = null;
+  let busy = false;
+  let dirty = false;
+  const zoneSelect = field('zone') as unknown as HTMLSelectElement;
+  const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const zones = [...new Set(['UTC', localZone, ...(typeof Intl.supportedValuesOf === 'function' ? Intl.supportedValuesOf('timeZone') : [])])].sort();
+  for (const zone of zones.filter(zone => zone !== 'UTC')) zoneSelect.add(new Option(zone.replaceAll('_', ' '), zone));
+  zoneSelect.value = validZone(localZone) ? localZone : 'UTC';
+  function track(name: string) {
+    try { const w = window as any; Promise.resolve(w.umami?.track(name, campaignAttribution(w.farfoxAcquisition || {}, new URLSearchParams(location.search)))).catch(() => {}); } catch {}
+  }
+  function render() {
+    if (!current || dirty) return;
+    const days = daysUntil(current.date, current.zone);
+    get('card-names').textContent = reunionHeading(current);
+    get('card-heading').textContent = reunionLabel(days);
+    get('card-date').textContent = new Intl.DateTimeFormat('en', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${current.date}T00:00:00Z`));
+    get('card-zone').textContent = `Calendar days in ${current.zone.replaceAll('_', ' ')}`;
+    get('actions').hidden = false;
+    get('story-help').hidden = false;
+  }
+  function load() {
+    dirty = false;
+    current = readReunion(location.hash);
+    document.querySelector('.countdown-grid')!.classList.toggle('invited', !!current);
+    get('share-status').textContent = '';
+    get('copy-wrap').hidden = true;
+    if (current) {
+      if (![...zoneSelect.options].some(option => option.value === current!.zone)) zoneSelect.add(new Option(current.zone, current.zone));
+      for (const name of ['you', 'partner', 'date', 'zone'] as const) field(name).value = current[name];
+      render(); track('countdown_partner_landed');
+    } else {
+      form.reset(); zoneSelect.value = localZone;
+      get('card-names').textContent = 'You & me';
+      get('card-heading').textContent = 'One date to look forward to.';
+      get('card-date').textContent = 'Your countdown will appear here.';
+      get('card-zone').textContent = '';
+      get('actions').hidden = true; get('story-help').hidden = true;
+    }
+    get('form-status').textContent = location.hash && !current ? 'This countdown link is incomplete or invalid. Create a new one below.' : '';
+  }
+  form.addEventListener('input', () => { dirty = true; get('actions').hidden = true; get('copy-wrap').hidden = true; get('share-status').textContent = ''; if (current) get('form-status').textContent = 'Create the countdown again to apply your changes.'; });
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const draft = { you: field('you').value, partner: field('partner').value, date: field('date').value, zone: zoneSelect.value };
+    try {
+      if (daysUntil(draft.date, draft.zone) < 0) { get('form-status').textContent = 'Choose today or a future reunion date.'; field('date').focus(); return; }
+      current = readReunion(new URL(reunionUrl(location.origin, draft)).hash);
+      dirty = false;
+      render(); get('form-status').textContent = 'Your countdown is ready. Share it or save a card.'; get('card-heading').focus(); track('countdown_created');
+    } catch { get('form-status').textContent = 'Choose a valid date and time zone.'; }
+  });
+  get('share-countdown').addEventListener('click', async () => {
+    if (!current || busy) return;
+    busy = true;
+    const url = reunionUrl(location.origin, current);
+    try {
+      await navigator.clipboard.writeText(url); get('share-status').textContent = 'Link copied. Send it to your partner or bookmark it.';
+      track('countdown_link_copied');
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') { get('copy-wrap').hidden = false; const input = get<HTMLInputElement>('copy-link'); input.value = url; input.focus(); input.select(); get('share-status').textContent = 'Copy the link below.'; }
+    } finally { busy = false; }
+  });
+  get('download-card').addEventListener('click', async () => {
+    if (!current || busy) return;
+    busy = true;
+    const snapshot = { ...current };
+    const button = get<HTMLButtonElement>('download-card'); button.disabled = true;
+    try {
+      await document.fonts.ready;
+      const fox = get<HTMLImageElement>('countdown-foxy'); await fox.decode();
+      const canvas = document.createElement('canvas'); canvas.width = 1080; canvas.height = 1920;
+      const ctx = canvas.getContext('2d'); if (!ctx) throw new Error('Canvas unavailable');
+      ctx.fillStyle = '#fff5f0'; ctx.fillRect(0, 0, 1080, 1920);
+      ctx.fillStyle = '#ffe5ec'; ctx.beginPath(); ctx.roundRect(60, 180, 960, 1510, 56); ctx.fill();
+      ctx.textAlign = 'center';
+      function text(value: string, y: number, size: number, color = '#2d1b4e') {
+        ctx!.fillStyle = color; ctx!.font = `900 ${size}px Nunito, sans-serif`;
+        while (ctx!.measureText(value).width > 840 && size > 16) { size -= 2; ctx!.font = `900 ${size}px Nunito, sans-serif`; }
+        ctx!.fillText(value, 540, y);
+      }
+      text(reunionHeading(snapshot), 330, 64);
+      ctx.drawImage(fox, 270, 410, 540, 540);
+      const days = daysUntil(snapshot.date, snapshot.zone);
+      if (days > 0) { text(String(days), 1170, 210, '#963655'); text(days === 1 ? 'day until we’re together' : 'days until we’re together', 1280, 56); }
+      else { text(days === 0 ? 'Today is the day.' : 'A reunion to remember.', 1150, 70, '#963655'); }
+      text(new Intl.DateTimeFormat('en', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${snapshot.date}T00:00:00Z`)), 1430, 44);
+      text(`As of ${calendarDate(new Date(), snapshot.zone)} in ${snapshot.zone}`, 1540, 28, '#6b5b7b');
+      text('Make yours at lovefarfox.com/reunion-countdown', 1780, 36, '#963655');
+      const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Export failed')), 'image/png'));
+      const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = 'farfox-reunion-countdown.png'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 60000);
+      get('share-status').textContent = 'Story card saved. Add your shared countdown link when you post it.'; track('countdown_card_downloaded');
+    } catch { get('share-status').textContent = 'We couldn’t save the card. Try again, or share your countdown link.'; }
+    finally { busy = false; button.disabled = false; }
+  });
+  get<HTMLButtonElement>('create').disabled = false;
+  load(); window.addEventListener('hashchange', load);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) render(); });
+  setInterval(() => { if (!document.hidden) render(); }, 60000);
+</script>
+<style>
+  header{margin-bottom:32px}header p{max-width:600px}.countdown-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:start}form{display:grid;gap:20px}.names{display:grid;grid-template-columns:1fr 1fr;gap:16px}#form-status{margin:0;min-height:1.65em}form button{justify-self:start}.preview{background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:28px;text-align:center;overflow-wrap:anywhere}.preview img{display:block;margin:0 auto;width:192px;height:192px}.preview h2{font-size:clamp(1.8rem,4vw,2.5rem);letter-spacing:-.03em}.preview #card-names{font-size:1.1rem;font-weight:800;color:var(--accent);margin-top:0}#card-zone{font-size:.8rem}#actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:24px}#download-card{background:transparent;color:var(--accent)}#share-status{font-size:.9rem;min-height:1.65em}#copy-wrap{text-align:left;margin-bottom:16px}#story-help{font-size:.75rem}.after{max-width:720px;margin-top:64px}.after h2:not(:first-child){margin-top:40px}details{padding:16px 0}summary{cursor:pointer;font-weight:800;min-height:44px}.preview h2:focus{outline:0}
+  @media(max-width:767px){.countdown-grid{grid-template-columns:1fr;gap:28px}.countdown-grid.invited .preview{grid-row:1}.preview{padding:24px}.names{grid-template-columns:1fr}.after{margin-top:40px}}
+</style>

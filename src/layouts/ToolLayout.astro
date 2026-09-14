@@ -1,0 +1,33 @@
+---
+import Layout from './Layout.astro';
+interface Props { title: string; description: string; }
+const { title, description } = Astro.props;
+---
+<Layout title={title} description={description}>
+  <div class="tool-page">
+    <nav aria-label="Main navigation"><a href="/" class="wordmark"><img src="/brand/foxy-icon-v1.png" width="32" height="32" alt="" />Far Fox</a><a href="/tools/">Free tools</a><a href="https://app.lovefarfox.com" data-app-cta="free_tools_nav" class="app-link">Open App</a></nav>
+    <main><slot /></main>
+    <footer><a href="/blog/">Relationship guides</a><a href="/privacy/">Privacy</a><a href="/">About Far Fox</a><button id="tool-theme" type="button" hidden>Use dark theme</button></footer>
+  </div>
+</Layout>
+<script>
+  const page = document.querySelector<HTMLElement>('.tool-page');
+  const toggle = document.querySelector<HTMLButtonElement>('#tool-theme');
+  if (page && toggle) {
+    let dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const label = () => { toggle.textContent = dark ? 'Use light theme' : 'Use dark theme'; };
+    label(); toggle.hidden = false;
+    toggle.addEventListener('click', () => { dark = !dark; page.dataset.theme = dark ? 'dark' : 'light'; label(); });
+  }
+</script>
+<style is:global>
+  .tool-page{--paper:#fff5f0;--panel:#fffcfa;--ink:#2d1b4e;--muted:#6b5b7b;--accent:#963655;--line:#dbbac4;--tint:#ffe5ec;background:var(--paper);color:var(--ink);min-height:100dvh}
+  .tool-page nav{max-width:1080px;margin:auto;padding:20px 24px;display:flex;align-items:center;gap:24px;font-size:.9rem;font-weight:800}.tool-page .wordmark{display:flex;align-items:center;gap:8px;margin-right:auto;font-size:1.15rem;text-decoration:none}.tool-page .app-link{background:var(--accent);color:var(--panel);padding:10px 16px;border-radius:16px;text-decoration:none}
+  .tool-page main{max-width:1080px;margin:auto;padding:32px 24px 72px}.tool-page h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.1;font-weight:900;letter-spacing:-.04em;max-width:700px}.tool-page h2{font-weight:900;font-size:1.5rem;line-height:1.25}.tool-page p{color:var(--muted);line-height:1.65;margin:16px 0}.tool-page a{color:var(--accent);text-underline-offset:3px}.tool-page footer{max-width:1080px;margin:auto;padding:24px;display:flex;flex-wrap:wrap;gap:24px;border-top:1px solid var(--line);font-size:.875rem}
+  .tool-page button,.tool-page input,.tool-page select{font:inherit}.tool-page button{cursor:pointer;min-height:48px;padding:12px 18px;border:1px solid var(--accent);border-radius:16px;background:var(--accent);color:var(--panel);font-weight:800}.tool-page button:disabled{opacity:.55;cursor:default}.tool-page :is(a,button,input,select):focus-visible{outline:3px solid var(--accent);outline-offset:4px}.tool-page input,.tool-page select{width:100%;min-width:0;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:48px}.tool-page label{display:block;font-size:.9rem;font-weight:800}.tool-page label input,.tool-page label select{margin-top:8px}.tool-page small{display:block;line-height:1.6;color:var(--muted)}.tool-page [hidden]{display:none!important}
+  @media(max-width:767px){.tool-page nav{gap:16px;padding:16px}.tool-page main{padding:24px 16px 48px}.tool-page .app-link{padding:10px 12px}}
+  .tool-page[data-theme=dark]{--paper:#21182b;--panel:#302239;--ink:#fff2f3;--muted:#d9bfd2;--accent:#ffb2c6;--line:#73576a;--tint:#422b3c}
+  @media(prefers-color-scheme:dark){.tool-page:not([data-theme=light]){--paper:#21182b;--panel:#302239;--ink:#fff2f3;--muted:#d9bfd2;--accent:#ffb2c6;--line:#73576a;--tint:#422b3c}}
+  .tool-page #tool-theme{padding:0;min-height:24px;border:0;background:none;color:var(--accent);font-size:inherit;text-decoration:underline}
+  @media(prefers-reduced-motion:no-preference){.tool-page button{transition:transform .15s}.tool-page button:active:not(:disabled){transform:translateY(2px)}}
+</style>
