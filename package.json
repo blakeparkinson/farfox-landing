@@ -16,6 +16,7 @@
     "launch:assets": "node scripts/make-launch-assets.mjs",
     "test:acquisition": "node scripts/test-acquisition-loop.mjs",
     "test:hero": "node scripts/test-hero-game.mjs",
+    "test:growth": "node scripts/test-couples-game.mjs && node scripts/test-growth-pages.mjs",
     "test:brand": "node scripts/test-foxy-brand.mjs",
     "seo:indexnow": "node scripts/submit-indexnow.mjs",
     "build": "node scripts/sync-catalog.mjs && astro build",

@@ -1,6 +1,6 @@
 ---
 title: "47 Long-Distance Relationship Games to Play When You're Miles Apart"
-description: "The best long-distance relationship games — video-call games, texting games, app games, and games for two players online. Organized by how you connect, with rules for each."
+description: "Play a free Would You Rather game with your partner, no login needed. Plus 47 long-distance relationship games for texts, video calls and virtual date nights."
 date: "2026-06-13"
 tags: ["activities", "connection", "fun"]
 faqs:
@@ -14,9 +14,16 @@ faqs:
     answer: "Yes. Couples apps like Far Fox build the game in as a daily habit — shared daily questions, this-or-that prompts, challenges, and a fox companion you grow together — so you don't have to think up a new game every night. There are also classic two-player game apps (chess, word games, trivia) and party-game platforms like Jackbox you can screen-share on a call."
 ---
 
-There's a specific kind of long-distance silence that every couple knows: you're on a video call, you've both said how your day was, and then... nothing. Not because you've run out of love — because you've run out of *prompts*. Talking is the only thing on the menu, and after a few hours of separate days, the menu is thin.
+Play the free Would You Rather game above: pick an answer and send the link to your partner. They make their own choice before seeing yours. You can play across time zones without logging in or arranging a call.
 
-Games fix that. Not because the game matters, but because a game gives you a reason to take turns, react, compete, and laugh — the texture of being together that distance strips away. The right long-distance relationship game turns "what do we even talk about" into "okay your turn, hurry up."
+## Pick a game for the time you have
+
+| Time together | Start with | Setup |
+| --- | --- | --- |
+| A minute between messages | [Would You Rather](#couples-game) | Pick an answer and send your link |
+| Five minutes over text | 20 Questions | One person chooses something; the other asks yes-or-no questions |
+| Fifteen minutes on a call | Drawing challenge | Paper, pens and one shared prompt |
+| A slow evening | Cook-off | Choose a recipe and get ingredients beforehand |
 
 Here are 47 of them, organized by *how* you're connecting — because the best game on a 3-hour video call is useless when you've got 90 seconds between classes.
 

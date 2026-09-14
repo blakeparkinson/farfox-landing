@@ -1,93 +1,59 @@
 ---
-title: "Long-Distance Relationship Statistics (2026): The Data, Explained"
-description: "How many couples are long-distance? What's the real success rate? We rounded up the most-cited long-distance relationship statistics — prevalence, success rates, communication habits, and what the research actually says."
+title: "Long-Distance Relationship Statistics: Success Rates & Research"
+description: "What research says about long-distance relationship success and communication, with original sources, study sizes and limits on popular statistics."
 date: "2026-05-17"
+updatedDate: "2026-09-14"
 tags: ["advice", "connection"]
 faqs:
-  - question: "How many couples are in long-distance relationships?"
-    answer: "An estimated 14 million people in the United States consider themselves to be in a long-distance relationship, according to figures widely attributed to Dr. Gregory Guldner's Center for the Study of Long-Distance Relationships. Roughly 3.75 million married Americans live apart, and around 10% of all U.S. marriages are reported to involve a period of long distance at some point."
   - question: "What is the success rate of long-distance relationships?"
-    answer: "Commonly cited research places the long-distance relationship success rate at around 58–60%, meaning more than half endure. The reverse figure — that roughly 40% of long-distance relationships end in a breakup — comes from the same body of work. Importantly, studies find distance itself is not the strongest predictor of breakup; the lack of a plan to eventually close the distance is."
-  - question: "Are long-distance relationships less happy than close ones?"
-    answer: "Not according to the research. A frequently-cited 2013 study by Crystal Jiang (City University of Hong Kong) and Jeffrey Hancock (then at Cornell) found that long-distance couples often report equal or greater intimacy and more meaningful communication than geographically close couples — partly because they're more intentional about how and what they communicate."
-  - question: "How far apart is the average long-distance couple?"
-    answer: "The average distance separating long-distance couples is often cited as around 125 miles. But distance is relative — what matters far more for relationship health is communication quality and a shared timeline for closing the gap, not the exact number of miles."
+    answer: "The studies cited here do not establish a success rate for all couples. A 2013 study of 870 participants found similar breakup likelihood at follow-up for long-distance and nearby relationships. That comparison cannot predict an individual couple's future."
+  - question: "Are these new statistics for 2026?"
+    answer: "No. We reviewed this guide in September 2026, but the studies below date to 2013. A page update is not new research."
 ---
 
-How many couples are actually long-distance? What are the real odds of making it work? The internet is full of confident-sounding numbers, many of them recycled without a source.
+**There is no single success rate you can use to predict your long-distance relationship.** The studies below compare particular groups over particular periods. They do not establish that 60% of all long-distance couples succeed, or that 40% break up.
 
-We pulled together the most widely-cited long-distance relationship statistics, noted where they come from, and added context on what the research actually means. Where a figure traces back to a specific study or researcher, we've said so.
+We reviewed these sources on September 14, 2026. We removed figures from an earlier version of this page when we could not verify their original source and scope.
 
-> **A note on sources:** Many popular LDR statistics trace back to Dr. Gregory Guldner's Center for the Study of Long-Distance Relationships and to a 2013 communication study by Crystal Jiang and Jeffrey Hancock. Some widely-repeated figures are estimates rather than peer-reviewed findings — we've flagged the difference where it matters.
+## Long-distance relationship research at a glance
 
----
+| Study | Sample | Finding | Limit |
+| --- | --- | --- | --- |
+| Kelmer and colleagues, 2013 | 870 participants across long-distance and nearby relationships | Similar breakup likelihood at follow-up | A group comparison, not a lifetime success rate |
+| Jiang and Hancock, 2013 | 63 couples: 30 long-distance and 33 geographically close | Greater reported intimacy among long-distance participants | A diary study, not proof that distance improves relationships |
+
+Sources: [Kelmer et al., Family Process](https://doi.org/10.1111/j.1545-5300.2012.01418.x); [Jiang and Hancock, full paper](https://socialmedialab.sites.stanford.edu/sites/g/files/sbiybj22976/files/media/file/jiang-jc-absence.pdf).
 
 ## How common are long-distance relationships?
 
-- An estimated **14 million people in the U.S.** identify as being in a long-distance relationship.
-- Roughly **3.75 million married Americans** live apart from their spouse (for reasons other than separation or divorce).
-- Around **10% of U.S. marriages** are reported to have involved long distance at some point.
-- About **32.5% of college relationships** are long-distance — unsurprising given how many couples split across campuses. (If that's you, here's [how to make a long-distance relationship work in college](/blog/long-distance-relationship-college).)
-- An estimated **75% of engaged couples** report having been long-distance at some point in their relationship.
-
-**What it means:** Long-distance is far more common than the "it never works" narrative suggests. Tens of millions of people are doing it right now — including a large share of couples who go on to marry.
-
----
+We have not verified a current, population-wide count suitable for this guide. Surveys of college students and counts of spouses living apart measure different groups. Check who the researchers counted, where participants lived and when they collected the data before sharing a prevalence figure.
 
 ## What's the real success rate?
 
-- The long-distance relationship success rate is most commonly cited at **58–60%**.
-- Conversely, roughly **40% of long-distance relationships end in a breakup**.
-- About **37% of long-distance relationships** are reported to end within the first **3 months** of returning to the same location — the "reunion" can be its own test.
+Kelmer and colleagues studied relationship quality, commitment and stability among 870 participants. Long-distance participants reported higher quality on several measures and initially perceived less risk of breaking up. At follow-up, the groups had similar breakup likelihood. [Original study abstract.](https://doi.org/10.1111/j.1545-5300.2012.01418.x)
 
-**What it means:** A ~60% success rate is *not* meaningfully worse than relationships overall. And the reunion statistic reveals something important — sometimes the hardest part isn't the distance, it's renegotiating the relationship once the distance ends. Distance itself is rarely the killer; the absence of a shared plan is.
-
----
+“Success” needs a definition. Staying together six months, moving to the same city and getting married are different outcomes. A percentage without an outcome and follow-up period leaves out the information you need to interpret it.
 
 ## Are long-distance couples actually less happy?
 
-This is where the data pushes back hardest on the stereotype.
-
-- A widely-cited **2013 study by Crystal Jiang and Jeffrey Hancock** found long-distance couples reported **equal or greater intimacy** than geographically close couples.
-- Long-distance partners often report **more meaningful, more disclosing conversations** — roughly **58%** say their communication feels deeper than that of close couples.
-- The same research suggests distance can make couples **idealize each other** more, which can boost satisfaction (though it cuts both ways at reunion).
-
-**What it means:** Distance forces intentional communication. When you can't rely on shared dinners and lazy Sundays, the words you exchange *become* the relationship — and that intentionality often produces deeper connection, not less.
-
----
+Jiang and Hancock studied 63 couples through communication diaries. Long-distance participants reported greater intimacy; the researchers examined self-disclosure and idealized perceptions of a partner as part of that process. Observational research cannot show that moving apart would make a couple happier. [Full research paper.](https://socialmedialab.sites.stanford.edu/sites/g/files/sbiybj22976/files/media/file/jiang-jc-absence.pdf)
 
 ## How do long-distance couples communicate?
 
-- About **88% of long-distance couples text daily.**
-- Roughly **the same share** video call at least once a week.
-- The **average distance** between long-distance partners is often cited at around **125 miles** — though it ranges from a few hours' drive to opposite sides of the planet.
-- **Lack of physical intimacy** is the most-cited hardest part of long-distance, named by about **66% of couples.**
+Cornell's account of the diary study reports **876 diaries covering 3,024 interactions**. Long-distance participants reported fewer interactions per day overall than nearby participants, while using more mediated communication. These counts describe the sample, not a recommended texting quota. [Cornell research summary.](https://news.cornell.edu/stories/2013/08/new-media-allows-requited-love-know-no-distance)
 
-**What it means:** Daily contact is near-universal, but the couples who thrive emphasize *quality over quantity*. Want better conversations? Our [100 long-distance relationship questions](/blog/long-distance-relationship-questions) are built to break the "how was your day" loop, and our guide on [keeping the spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship) covers the rest.
-
----
+For your own week, agree on a time you can both protect and a way to say you're busy. Try a [conversation question](/blog/long-distance-relationship-questions), or [play Would You Rather](/blog/long-distance-relationship-games/#couples-game) for something lighter. Those are activity suggestions, not outcomes tested by these studies.
 
 ## What actually predicts success?
 
-Pulling the research together, a few factors consistently separate the relationships that last from the ones that don't:
+These sources do not establish a single strongest predictor for all couples. Discuss the decisions you can make together: visit costs, communication expectations and whether you want to live in the same place.
 
-1. **A plan to close the distance.** The single strongest predictor. Couples with an agreed-upon end date dramatically outperform those treating distance as permanent.
-2. **Communication quality, not quantity.** Intentional, vulnerable, varied — not just more.
-3. **Trust without surveillance.** Built through consistency and transparency, not phone-checking.
-4. **Rituals.** Repeatable shared moments that survive busy or bad days.
-
-We go deep on all of these in our complete guide on [how to make a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work), and map the emotional arc month-by-month in the [long-distance relationship timeline](/blog/long-distance-relationship-timeline).
-
----
+Our [relationship timeline](/blog/long-distance-relationship-timeline) offers planning checkpoints rather than deadlines. For a move, use the [closing-the-distance guide](/blog/closing-the-distance-long-distance-relationship).
 
 ## Cite this page
 
-Writing about long-distance relationships? You're welcome to cite these figures — a link back to this page (`https://lovefarfox.com/blog/long-distance-relationship-statistics`) is appreciated. Where a statistic originates from a specific researcher or study, please cite the original source directly.
-
----
+Cite the original paper when you use a finding. Include its year, sample and measured outcome. Far Fox did not conduct these studies.
 
 ## The bottom line
 
-The data tells a more hopeful story than the stereotype. Long-distance relationships are common, succeed at rates comparable to other relationships, and often produce *deeper* communication than living together does. What separates the couples who make it isn't luck or proximity — it's intention, trust, and a plan.
-
-[Far Fox](https://app.lovefarfox.com) is built to make that intention easy — daily questions, love letters, shared photos, and a fox that grows with your relationship. It's free. Your fox is waiting.
+Check a study's scope before applying its numbers to your life. The research above gives reasons to question blanket pessimism about distance, while leaving your own choices and circumstances open.

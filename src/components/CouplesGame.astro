@@ -1,0 +1,154 @@
+---
+import { QUESTIONS } from '../lib/couplesGame';
+---
+<section id="couples-game" class="couples-game" aria-labelledby="couples-game-title">
+  <header>
+    <img src="/brand/foxy-letter-v1.png" width="88" height="88" alt="Foxy holding a love letter" />
+    <div><p class="kicker">A little game for you two</p><h2 id="couples-game-title">Would you rather?</h2></div>
+  </header>
+  <p>Pick one, then send your partner the question. They answer before seeing your choice. Free, no login.</p>
+  <div class="question-area">
+    <p data-progress class="kicker">Question 1 of {QUESTIONS.length}</p>
+    <h3 data-question tabindex="-1" aria-live="polite">{QUESTIONS[0].prompt}</h3>
+    <div class="choices" role="group" aria-label="Choose your answer">
+      {QUESTIONS[0].choices.map((choice, index) => <button type="button" data-pick={index} disabled>{choice}</button>)}
+    </div>
+    <p data-result role="status" class="result"></p>
+  </div>
+  <div class="controls" hidden>
+    <label><input type="checkbox" data-auto checked /> Auto-advance</label>
+    <button type="button" data-skip class="quiet">Skip question</button>
+    <button type="button" data-restart class="quiet" hidden>Play again</button>
+  </div>
+  <aside class="share-area" aria-label="Share your answer">
+    <p data-share-description>Choose an answer to make a link for your partner.</p>
+    <button type="button" data-share disabled>Send this question</button>
+    <p data-share-status role="status"></p>
+    <label data-copy hidden>Copy this link<input data-link readonly type="text" aria-label="Partner invitation link" /></label>
+    <small>Your choice is included in the link, so only share answers you’re happy for others to see. This page won’t receive your partner’s answer.</small>
+  </aside>
+  <noscript><p>Enable JavaScript to play and share links, or text your partner either choice above. The 47 games below work without it.</p></noscript>
+</section>
+
+<script>
+  import { QUESTIONS, readGameInvite, gameInviteUrl, type Pick } from '../lib/couplesGame';
+  import { campaignAttribution } from '../lib/campaignAttribution';
+  const root = document.querySelector<HTMLElement>('#couples-game')!;
+  if (root) {
+  const el = <T extends HTMLElement>(selector: string) => root.querySelector<T>(selector)!;
+  const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-pick]')];
+  const auto = el<HTMLInputElement>('[data-auto]');
+  const share = el<HTMLButtonElement>('[data-share]');
+  const result = el('[data-result]');
+  let index = 0;
+  let invite: Pick | null = null;
+  let last: Pick | null = null;
+  let answered = false;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let sharing = false;
+  function track(name: string) {
+    try {
+      const w = window as any;
+      Promise.resolve(w.umami?.track(name, campaignAttribution(w.farfoxAcquisition || {}, new URLSearchParams(location.search)))).catch(() => {});
+    } catch { /* Analytics must never prevent play. */ }
+  }
+  function render() {
+    clearTimeout(timer);
+    answered = false;
+    root.classList.remove('answered');
+    el('[data-question]').textContent = QUESTIONS[index].prompt;
+    el('[data-progress]').textContent = invite ? 'Your partner sent you a question' : `Question ${index + 1} of ${QUESTIONS.length}`;
+    buttons.forEach((button, i) => { button.textContent = QUESTIONS[index].choices[i]; button.disabled = false; button.setAttribute('aria-disabled', 'false'); button.setAttribute('aria-pressed', 'false'); });
+    result.textContent = '';
+    el('[data-restart]').hidden = true;
+    el('[data-skip]').hidden = false;
+    el('[data-skip]').textContent = invite ? 'Play other questions' : 'Skip question';
+  }
+  function advance() {
+    if (sharing) return;
+    if (index === QUESTIONS.length - 1 && !invite) {
+      result.textContent = 'That’s the full set! Send a favorite, or play again.';
+      el('[data-restart]').hidden = false;
+      el('[data-skip]').hidden = true;
+      buttons.forEach(button => button.disabled = true);
+      return;
+    }
+    index = invite ? 0 : index + 1;
+    invite = null;
+    render();
+  }
+  function schedule() {
+    clearTimeout(timer);
+    if (auto.checked && answered && !invite && !sharing && !document.hidden) timer = setTimeout(advance, 2200);
+  }
+  function initialize() {
+    invite = readGameInvite(location.hash);
+    index = invite ? QUESTIONS.findIndex(q => q.id === invite!.id) : 0;
+    last = null;
+    share.disabled = true;
+    el('[data-share-description]').textContent = 'Choose an answer to make a link for your partner.';
+    el('[data-copy]').hidden = true;
+    el('[data-share-status]').textContent = '';
+    render();
+    if (invite) { track('wyr_partner_landed'); root.scrollIntoView({ block: 'start' }); }
+  }
+  buttons.forEach((button, choice) => button.addEventListener('click', () => {
+    if (answered) return;
+    answered = true;
+    last = { id: QUESTIONS[index].id, choice };
+    buttons.forEach((b, i) => { b.setAttribute('aria-disabled', 'true'); b.setAttribute('aria-pressed', String(i === choice)); });
+    root.classList.add('answered');
+    result.textContent = invite ? `${invite.choice === choice ? 'You picked the same thing!' : 'Different picks. Ask them why!'} Your partner chose: ${QUESTIONS[index].choices[invite.choice]}.` : 'Saved for sharing below.';
+    el('[data-share-description]').textContent = `Your last pick: ${QUESTIONS[index].choices[choice]}`;
+    el('[data-copy]').hidden = true;
+    el('[data-share-status]').textContent = '';
+    share.disabled = false;
+    track(invite ? 'wyr_partner_completed' : 'wyr_answered');
+    schedule();
+  }));
+  auto.addEventListener('change', schedule);
+  document.addEventListener('visibilitychange', schedule);
+  el('[data-skip]').addEventListener('click', advance);
+  el('[data-restart]').addEventListener('click', () => { index = 0; invite = null; render(); });
+  share.addEventListener('click', async () => {
+    if (!last || sharing) return;
+    const url = gameInviteUrl(location.origin, last);
+    const status = el('[data-share-status]');
+    sharing = true;
+    clearTimeout(timer);
+    // Stop auto-advance while the user copies or chooses an app in the share sheet.
+    auto.checked = false;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Would you rather? A question for us', text: 'I picked mine. What would you choose?', url });
+        status.textContent = 'Invitation shared.';
+      } else {
+        await navigator.clipboard.writeText(url);
+        status.textContent = 'Link copied. Paste it in a message to your partner.';
+      }
+      track('wyr_invite_shared');
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        el('[data-copy]').hidden = false;
+        const input = el<HTMLInputElement>('[data-link]');
+        input.value = url; input.focus(); input.select();
+        status.textContent = 'Copy the link below and send it to your partner.';
+      }
+    } finally { sharing = false; }
+  });
+  el('.controls').hidden = false;
+  initialize();
+  window.addEventListener('hashchange', initialize);
+  }
+</script>
+
+<style>
+  .couples-game{margin:0 0 3rem;padding:clamp(20px,4vw,32px);border:1px solid #efd2d9;border-radius:28px;background:#fffaf7;color:#2d1b4e;scroll-margin-top:90px;box-shadow:0 6px 0 #f3e1e5}
+  header{display:flex;align-items:center;gap:16px}header img{flex-shrink:0;object-fit:contain}h2{font-size:clamp(1.6rem,5vw,2.2rem);font-weight:900;line-height:1.15}p{line-height:1.6;margin:12px 0;color:#6b5b7b}.kicker{font-size:.85rem;font-weight:800;margin:0 0 4px;color:#963655}
+  .question-area{margin-top:24px}h3{font-size:1.25rem;line-height:1.4;font-weight:800;min-height:3.5em}.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+  button{font:inherit;font-weight:800;cursor:pointer;min-height:48px;border-radius:16px;border:1px solid #d6b3bd;padding:12px 16px;background:white;color:#2d1b4e}button:disabled{cursor:default}button[aria-pressed=true]{background:#ffe5ec;border:2px solid #963655;color:#963655}button:focus-visible,input:focus-visible{outline:3px solid #963655;outline-offset:4px}.choices button{min-height:84px;box-shadow:0 3px 0 #edd4db}.result{min-height:3.2em;color:#963655;font-weight:700;margin-bottom:0}
+  .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.controls label{display:flex;align-items:center;gap:8px;min-height:44px;font-size:.875rem}input[type=checkbox]{accent-color:#963655;width:18px;height:18px}.quiet{border:0;background:none;text-decoration:underline;font-size:.875rem;padding:8px}
+  .share-area{margin-top:16px;padding-top:16px;border-top:1px solid #efd2d9}.share-area p{font-size:.9rem;min-height:1.6em}.share-area button{background:#963655;color:white;border-color:#963655}.share-area button:disabled{background:#f0e2e6;border-color:#f0e2e6;color:#73606a}.share-area small{display:block;color:#6b5b7b;line-height:1.5;font-size:.75rem}.share-area input{display:block;width:100%;min-width:0;padding:12px;border:1px solid #963655;border-radius:8px;margin:8px 0}.share-area label{font-size:.85rem}[hidden]{display:none!important}
+  @media(max-width:480px){.choices{grid-template-columns:1fr}.choices button{min-height:64px}header img{width:68px;height:68px}.share-area button{width:100%}}
+  @media(prefers-reduced-motion:no-preference){.answered header img{animation:foxy-nod .45s ease-out}@keyframes foxy-nod{50%{transform:rotate(-5deg) translateY(-3px)}}button{transition:background .15s,transform .15s}button:active:not(:disabled){transform:translateY(2px)}}
+</style>
