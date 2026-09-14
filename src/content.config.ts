@@ -7,6 +7,7 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.string(),
+    updatedDate: z.string().optional(),
     image: z.string().optional(),
     // Topic tags used to compute "Related reading" (shared-tag scoring)
     // and to build the internal-link cluster between posts. Optional so
