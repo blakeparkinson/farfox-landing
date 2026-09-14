@@ -23,6 +23,7 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="p:domain_verify" content="066bfaf318189f87479893e0d094e5b6" />
 
     <!-- Canonical -->
     <link rel="canonical" href={canonicalURL.href} />
@@ -103,6 +104,7 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
   <body class="bg-fox-bg text-fox-text font-display antialiased">
     <slot />
     <script>
+      import { campaignAttribution } from '../lib/campaignAttribution';
       // Preserve acquisition context across the marketing → app boundary and
       // measure every app handoff consistently, regardless of which page owns
       // the CTA. The app can read these query params without a shared cookie.
@@ -125,8 +127,7 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
           analytics?.track(eventName, {
             cta: link.dataset.appCta || destination.searchParams.get('ref') || 'unlabeled',
             path: window.location.pathname,
-            source: acquisition.utm_source || current.get('utm_source') || 'direct',
-            campaign: acquisition.utm_campaign || '',
+            ...campaignAttribution(acquisition, current),
           });
         });
       });

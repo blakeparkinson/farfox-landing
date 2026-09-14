@@ -193,6 +193,7 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
   <script type="application/json" id="quiz-data" set:html={quizData} />
 
   <script>
+    import { campaignAttribution } from '../lib/campaignAttribution';
     interface RitualChoice {
       key: string;
       emoji: string;
@@ -208,11 +209,14 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
       document.getElementById('quiz-data')!.textContent!,
     );
     const searchParams = new URLSearchParams(window.location.search);
+    const acquisition = (window as Window & { farfoxAcquisition?: Record<string, string> }).farfoxAcquisition || {};
     const rawPartnerOf = searchParams.get('partner_of') || '';
     const partnerOf = /^[a-zA-Z0-9_-]{4,64}$/.test(rawPartnerOf) ? rawPartnerOf : '';
     const track = (name: string, data: Record<string, string | number | boolean> = {}) => {
       const analytics = (window as Window & { umami?: { track: (event: string, data?: object) => unknown } }).umami;
-      return Promise.resolve(analytics?.track(name, data));
+      try {
+        return Promise.resolve(analytics?.track(name, { ...data, ...campaignAttribution(acquisition, searchParams) })).catch(() => undefined);
+      } catch { return Promise.resolve(); }
     };
 
     if (partnerOf) {
@@ -382,7 +386,7 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
         for (const key of ['source', 'medium', 'campaign', 'content', 'term']) {
           const value = partnerOf
             ? searchParams.get(`origin_${key}`) || searchParams.get(`utm_${key}`)
-            : searchParams.get(`utm_${key}`);
+            : acquisition[`utm_${key}`] || searchParams.get(`utm_${key}`);
           if (value) resultParams.set(`utm_${key}`, value);
         }
         window.location.href = partnerOf
