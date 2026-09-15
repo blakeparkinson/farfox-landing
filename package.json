@@ -20,7 +20,7 @@
     "test:growth": "node scripts/test-couples-game.mjs && node scripts/test-growth-pages.mjs",
     "test:brand": "node scripts/test-foxy-brand.mjs",
     "seo:indexnow": "node scripts/submit-indexnow.mjs",
-    "build": "node scripts/sync-catalog.mjs && astro build",
+    "build": "node scripts/sync-catalog.mjs && astro build && node scripts/test-analytics-output.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
