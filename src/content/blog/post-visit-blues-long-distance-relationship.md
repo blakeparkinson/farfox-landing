@@ -44,6 +44,8 @@ Talk about the next visit before the last night. Book it if you can. If money, v
 
 Put the plan somewhere visible. A shared countdown turns a vague loss into time you can move through together. The [long-distance relationship timeline](/blog/long-distance-relationship-timeline) has more on why a relationship needs a future you can both name.
 
+For the next trip, use our [reunion visit checklist](/blog/long-distance-reunion-checklist/) to agree on dates and costs, then [create a free reunion countdown](/reunion-countdown/) you can both bookmark.
+
 Leave a little room on the final day, too. Couples often try to cram every minute full so they do not have to think about leaving. A calm breakfast, an early bag pack, and one honest conversation will serve you better than a frantic last day. Say goodbye before you are forced to say it at the gate.
 
 ## Give the first 48 hours a plan
