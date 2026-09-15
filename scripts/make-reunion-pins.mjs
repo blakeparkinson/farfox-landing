@@ -27,7 +27,7 @@ for (const [i, pin] of pins.entries()) {
   const tree = box([
     box('farfox / YOUR NEXT VISIT', { fontSize: 27, color: '#A84354', letterSpacing: 2 }),
     box(pin.headline, { fontSize: 82, lineHeight: 1.08, marginTop: 35, letterSpacing: -2 }),
-    box(pin.items.map((item, index) => box(`${index + 1}. ${item}`, { fontSize: 35, padding: '21px 24px', background: '#FFFFFF', borderRadius: 20 })), { flexDirection: 'column', gap: 16, marginTop: 42 }),
+    box(pin.items.map(item => box(item, { fontSize: 35, padding: '21px 24px', background: '#FFFFFF', borderRadius: 20 })), { flexDirection: 'column', gap: 16, marginTop: 42 }),
     { type: 'img', props: { src: fox, width: 360, height: 360, style: { alignSelf: 'center', marginTop: 28 } } },
     box('Get the free visit checklist', { fontSize: 34, marginTop: 'auto' }),
     box('lovefarfox.com', { fontSize: 26, color: '#756579', marginTop: 12 }),
