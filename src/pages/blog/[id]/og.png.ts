@@ -60,6 +60,7 @@ export const GET: APIRoute = async ({ props }) => {
 
   const { w400, w800, w900 } = await loadFonts();
   const publishDate = new Date(post.data.date).toLocaleDateString('en-US', {
+    timeZone: 'UTC',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
