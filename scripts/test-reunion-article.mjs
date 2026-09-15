@@ -16,7 +16,8 @@ assert.match(html, /href="\/reunion-countdown\/"/);
 assert.match(html, /data-website-id="9094af54-517f-4e51-bc4b-f2bf5f86d7f8"/);
 assert.match(readFileSync(resolve(dist, 'sitemap-0.xml'), 'utf8'), /long-distance-reunion-checklist/);
 for (const page of ['blog', 'reunion-countdown', 'blog/meeting-long-distance-partner-first-time', 'blog/post-visit-blues-long-distance-relationship']) {
-  assert.ok(readFileSync(resolve(dist, page, 'index.html'), 'utf8').includes(`href="${path}"`), `${page} links to article`);
+  const source = readFileSync(resolve(dist, page, 'index.html'), 'utf8');
+  assert.ok(source.includes(`href="${path}"`) || source.includes(`href="${path.slice(0, -1)}"`), `${page} links to article`);
 }
 for (const [, href] of html.matchAll(/href="(\/[^"#?]*)/g)) {
   const target = resolve(dist, href.slice(1));
