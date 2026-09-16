@@ -21,8 +21,9 @@ import { QUESTIONS } from '../lib/couplesGame';
     <button type="button" data-restart class="quiet" hidden>Play again</button>
   </div>
   <aside class="share-area" aria-label="Share your answer">
-    <p data-share-description>Choose an answer to make a link for your partner.</p>
-    <button type="button" data-share disabled>Send this question</button>
+    <strong>Send a private reveal</strong>
+    <p data-share-description>Choose an answer to make a partner link.</p>
+    <button type="button" data-share disabled>Copy partner link</button>
     <p data-share-status role="status"></p>
     <label data-copy hidden>Copy this link<input data-link readonly type="text" aria-label="Partner invitation link" /></label>
     <small>Your choice is included in the link, so only share answers you’re happy for others to see. This page won’t receive your partner’s answer.</small>
@@ -86,7 +87,7 @@ import { QUESTIONS } from '../lib/couplesGame';
     index = invite ? QUESTIONS.findIndex(q => q.id === invite!.id) : 0;
     last = null;
     share.disabled = true;
-    el('[data-share-description]').textContent = 'Choose an answer to make a link for your partner.';
+    el('[data-share-description]').textContent = 'Choose an answer to make a partner link.';
     el('[data-copy]').hidden = true;
     el('[data-share-status]').textContent = '';
     render();
@@ -99,7 +100,7 @@ import { QUESTIONS } from '../lib/couplesGame';
     buttons.forEach((b, i) => { b.setAttribute('aria-disabled', 'true'); b.setAttribute('aria-pressed', String(i === choice)); });
     root.classList.add('answered');
     result.textContent = invite ? `${invite.choice === choice ? 'You picked the same thing!' : 'Different picks. Ask them why!'} Your partner chose: ${QUESTIONS[index].choices[invite.choice]}.` : 'Saved for sharing below.';
-    el('[data-share-description]').textContent = `Your last pick: ${QUESTIONS[index].choices[choice]}`;
+    el('[data-share-description]').textContent = 'They answer before seeing your pick. Then they get the reveal.';
     el('[data-copy]').hidden = true;
     el('[data-share-status]').textContent = '';
     share.disabled = false;
@@ -116,16 +117,11 @@ import { QUESTIONS } from '../lib/couplesGame';
     const status = el('[data-share-status]');
     sharing = true;
     clearTimeout(timer);
-    // Stop auto-advance while the user copies or chooses an app in the share sheet.
+    // Keep the chosen question in place while the partner link is copied.
     auto.checked = false;
     try {
-      if (navigator.share) {
-        await navigator.share({ title: 'Would you rather? A question for us', text: 'I picked mine. What would you choose?', url });
-        status.textContent = 'Invitation shared.';
-      } else {
-        await navigator.clipboard.writeText(url);
-        status.textContent = 'Link copied. Paste it in a message to your partner.';
-      }
+      await navigator.clipboard.writeText(url);
+      status.textContent = 'Partner link copied. Paste it into your chat.';
       track('wyr_invite_shared');
     } catch (error) {
       if ((error as Error).name !== 'AbortError') {
@@ -148,7 +144,7 @@ import { QUESTIONS } from '../lib/couplesGame';
   .question-area{margin-top:24px}h3{font-size:1.25rem;line-height:1.4;font-weight:800;min-height:3.5em}.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
   button{font:inherit;font-weight:800;cursor:pointer;min-height:48px;border-radius:16px;border:1px solid #d6b3bd;padding:12px 16px;background:white;color:#2d1b4e}button:disabled{cursor:default}button[aria-pressed=true]{background:#ffe5ec;border:2px solid #963655;color:#963655}button:focus-visible,input:focus-visible{outline:3px solid #963655;outline-offset:4px}.choices button{min-height:84px;box-shadow:0 3px 0 #edd4db}.result{min-height:3.2em;color:#963655;font-weight:700;margin-bottom:0}
   .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.controls label{display:flex;align-items:center;gap:8px;min-height:44px;font-size:.875rem}input[type=checkbox]{accent-color:#963655;width:18px;height:18px}.quiet{border:0;background:none;text-decoration:underline;font-size:.875rem;padding:8px}
-  .share-area{margin-top:16px;padding-top:16px;border-top:1px solid #efd2d9}.share-area p{font-size:.9rem;min-height:1.6em}.share-area button{background:#963655;color:white;border-color:#963655}.share-area button:disabled{background:#f0e2e6;border-color:#f0e2e6;color:#73606a}.share-area small{display:block;color:#6b5b7b;line-height:1.5;font-size:.75rem}.share-area input{display:block;width:100%;min-width:0;padding:12px;border:1px solid #963655;border-radius:8px;margin:8px 0}.share-area label{font-size:.85rem}[hidden]{display:none!important}
+  .share-area{margin-top:16px;padding:16px;border-radius:16px;background:#f9edf0}.share-area strong{display:block;font-size:.95rem;color:#2d1b4e}.share-area p{font-size:.9rem;min-height:1.6em;margin:4px 0 12px}.share-area button{background:#963655;color:white;border-color:#963655}.share-area button:disabled{background:#e8d9de;border-color:#e8d9de;color:#66545d}.share-area small{display:block;color:#6b5b7b;line-height:1.5;font-size:.75rem;margin-top:10px}.share-area input{display:block;width:100%;min-width:0;padding:12px;border:1px solid #963655;border-radius:8px;margin:8px 0}.share-area label{font-size:.85rem}[hidden]{display:none!important}
   @media(max-width:480px){.choices{grid-template-columns:1fr}.choices button{min-height:64px}header img{width:68px;height:68px}.share-area button{width:100%}}
   @media(prefers-reduced-motion:no-preference){.answered header img{animation:foxy-nod .45s ease-out}@keyframes foxy-nod{50%{transform:rotate(-5deg) translateY(-3px)}}button{transition:background .15s,transform .15s}button:active:not(:disabled){transform:translateY(2px)}}
 </style>

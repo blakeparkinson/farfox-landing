@@ -20,7 +20,11 @@ import ToolLayout from '../layouts/ToolLayout.astro';
       <h2 id="card-heading" tabindex="-1">One date to look forward to.</h2>
       <p id="card-date">Your countdown will appear here.</p>
       <p id="card-zone"></p>
-      <div id="actions" hidden><button type="button" id="share-countdown">Copy link</button><button type="button" id="download-card">Save Story card</button></div>
+      <div id="share-moment" hidden>
+        <h3>Send the countdown to your person</h3>
+        <p>The link stays live as the date gets closer. The Story card is a shareable snapshot.</p>
+        <div id="actions"><button type="button" id="share-countdown">Copy partner link</button><button type="button" id="download-card">Save Story card</button></div>
+      </div>
       <p id="share-status" role="status"></p>
       <label id="copy-wrap" hidden>Copy your countdown link<input id="copy-link" readonly /></label>
       <small id="story-help" hidden>The PNG is a snapshot, not a live timer. Add your countdown link as a Story link sticker so friends can open it.</small>
@@ -57,7 +61,7 @@ import ToolLayout from '../layouts/ToolLayout.astro';
     get('card-heading').textContent = reunionLabel(days);
     get('card-date').textContent = new Intl.DateTimeFormat('en', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${current.date}T00:00:00Z`));
     get('card-zone').textContent = `Calendar days in ${current.zone.replaceAll('_', ' ')}`;
-    get('actions').hidden = false;
+    get('share-moment').hidden = false;
     get('story-help').hidden = false;
   }
   function load() {
@@ -76,11 +80,11 @@ import ToolLayout from '../layouts/ToolLayout.astro';
       get('card-heading').textContent = 'One date to look forward to.';
       get('card-date').textContent = 'Your countdown will appear here.';
       get('card-zone').textContent = '';
-      get('actions').hidden = true; get('story-help').hidden = true;
+      get('share-moment').hidden = true; get('story-help').hidden = true;
     }
     get('form-status').textContent = location.hash && !current ? 'This countdown link is incomplete or invalid. Create a new one below.' : '';
   }
-  form.addEventListener('input', () => { dirty = true; get('actions').hidden = true; get('copy-wrap').hidden = true; get('share-status').textContent = ''; if (current) get('form-status').textContent = 'Create the countdown again to apply your changes.'; });
+  form.addEventListener('input', () => { dirty = true; get('share-moment').hidden = true; get('copy-wrap').hidden = true; get('share-status').textContent = ''; if (current) get('form-status').textContent = 'Create the countdown again to apply your changes.'; });
   form.addEventListener('submit', event => {
     event.preventDefault();
     const draft = { you: field('you').value, partner: field('partner').value, date: field('date').value, zone: zoneSelect.value };
@@ -96,7 +100,7 @@ import ToolLayout from '../layouts/ToolLayout.astro';
     busy = true;
     const url = reunionUrl(location.origin, current);
     try {
-      await navigator.clipboard.writeText(url); get('share-status').textContent = 'Link copied. Send it to your partner or bookmark it.';
+      await navigator.clipboard.writeText(url); get('share-status').textContent = 'Partner link copied. Paste it into your chat.';
       track('countdown_link_copied');
     } catch (error) {
       if ((error as Error).name !== 'AbortError') { get('copy-wrap').hidden = false; const input = get<HTMLInputElement>('copy-link'); input.value = url; input.focus(); input.select(); get('share-status').textContent = 'Copy the link below.'; }
@@ -140,6 +144,6 @@ import ToolLayout from '../layouts/ToolLayout.astro';
   setInterval(() => { if (!document.hidden) render(); }, 60000);
 </script>
 <style>
-  header{margin-bottom:32px}header p{max-width:600px}.countdown-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:start}form{display:grid;gap:20px}.names{display:grid;grid-template-columns:1fr 1fr;gap:16px}#form-status{margin:0;min-height:1.65em}form button{justify-self:start}.preview{background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:28px;text-align:center;overflow-wrap:anywhere}.preview img{display:block;margin:0 auto;width:192px;height:192px}.preview h2{font-size:clamp(1.8rem,4vw,2.5rem);letter-spacing:-.03em}.preview #card-names{font-size:1.1rem;font-weight:800;color:var(--accent);margin-top:0}#card-zone{font-size:.8rem}#actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:24px}#download-card{background:transparent;color:var(--accent)}#share-status{font-size:.9rem;min-height:1.65em}#copy-wrap{text-align:left;margin-bottom:16px}#story-help{font-size:.75rem}.after{max-width:720px;margin-top:64px}.after h2:not(:first-child){margin-top:40px}details{padding:16px 0}summary{cursor:pointer;font-weight:800;min-height:44px}.preview h2:focus{outline:0}
+  header{margin-bottom:32px}header p{max-width:600px}.countdown-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:start}form{display:grid;gap:20px}.names{display:grid;grid-template-columns:1fr 1fr;gap:16px}#form-status{margin:0;min-height:1.65em}form button{justify-self:start}.preview{background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:28px;text-align:center;overflow-wrap:anywhere}.preview img{display:block;margin:0 auto;width:192px;height:192px}.preview h2{font-size:clamp(1.8rem,4vw,2.5rem);letter-spacing:-.03em}.preview #card-names{font-size:1.1rem;font-weight:800;color:var(--accent);margin-top:0}#card-zone{font-size:.8rem}#share-moment{margin-top:24px;padding:18px;border-radius:16px;background:var(--tint)}#share-moment h3{font-size:1rem;font-weight:900}#share-moment p{font-size:.85rem;margin:5px auto 0;max-width:390px}#actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:16px}#download-card{background:transparent;color:var(--accent)}#share-status{font-size:.9rem;min-height:1.65em}#copy-wrap{text-align:left;margin-bottom:16px}#story-help{font-size:.75rem}.after{max-width:720px;margin-top:64px}.after h2:not(:first-child){margin-top:40px}details{padding:16px 0}summary{cursor:pointer;font-weight:800;min-height:44px}.preview h2:focus{outline:0}
   @media(max-width:767px){.countdown-grid{grid-template-columns:1fr;gap:28px}.countdown-grid.invited .preview{grid-row:1}.preview{padding:24px}.names{grid-template-columns:1fr}.after{margin-top:40px}}
 </style>
