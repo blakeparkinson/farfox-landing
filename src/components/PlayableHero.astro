@@ -19,9 +19,11 @@ import { GAME_CHOICES } from '../lib/heroGame';
     </div>
     <div class="game-result" aria-live="polite" aria-atomic="true"><p id="game-response">Pick your favorite. Then ask your person.</p></div>
     <div id="game-actions" hidden>
-      <button type="button" class="share-button" id="game-share">Ask your person →</button>
-      <button type="button" class="copy-button" id="game-copy-button">Copy link instead</button>
-      <p class="share-note">The link includes your choice. They’ll see it after picking theirs.</p>
+      <div class="share-prompt">
+        <p class="share-title">Send the same question to your person</p>
+        <p class="share-note">They answer before seeing your choice. Then you both get the reveal.</p>
+      </div>
+      <button type="button" class="share-button" id="game-share">Copy partner link</button>
       <div id="game-copy" hidden><label for="game-link">Copy this link to send it yourself</label><input id="game-link" readonly /></div>
       <p id="share-status" role="status"></p>
       <a class="text-link quiz-link" href="/quiz?utm_source=homepage&utm_medium=onsite&utm_campaign=reunion_game" data-umami-event="hero_quiz_clicked">Take the couple quiz →</a>
@@ -53,21 +55,6 @@ import { GAME_CHOICES } from '../lib/heroGame';
     if (invited !== null) track('hero_partner_landed');
   }
   reset();
-  root.querySelector('#game-copy-button')!.addEventListener('click', async () => {
-    if (selected === null) return;
-    const url = invitationUrl(location.origin, selected);
-    try {
-      await navigator.clipboard.writeText(url);
-      status.textContent = 'Link copied. Paste it into a message to your person.';
-      track('hero_invite_shared', { method: 'clipboard' });
-    } catch {
-      const field = root.querySelector<HTMLInputElement>('#game-link')!;
-      field.value = url;
-      root.querySelector<HTMLElement>('#game-copy')!.hidden = false;
-      field.focus(); field.select();
-      status.textContent = 'Select and copy the link above.';
-    }
-  });
   window.addEventListener('hashchange', reset);
   root.querySelectorAll<HTMLButtonElement>('[data-choice]').forEach(button => button.addEventListener('click', () => {
     const first = selected === null;
@@ -77,7 +64,7 @@ import { GAME_CHOICES } from '../lib/heroGame';
     root.querySelector<HTMLElement>('#game-actions')!.hidden = false;
     root.querySelector<HTMLElement>('#game-copy')!.hidden = true;
     status.textContent = '';
-    share.textContent = invited === null ? 'Ask your person →' : 'Send your choice →';
+    share.textContent = invited === null ? 'Copy partner link' : 'Copy a new partner link';
     if (first) track(invited === null ? 'hero_answered' : 'hero_partner_completed');
   }));
   share.addEventListener('click', async () => {
@@ -87,17 +74,9 @@ import { GAME_CHOICES } from '../lib/heroGame';
     share.disabled = true;
     status.textContent = '';
     try {
-      if (navigator.share) {
-        try {
-          await navigator.share({ title: 'Our first night together', text: 'I picked our reunion date. What would you choose?', url });
-          track('hero_invite_shared', { method: 'native' });
-          status.textContent = 'Shared. Your person can play without an account.';
-          return;
-        } catch (error) { if (error instanceof DOMException && error.name === 'AbortError') return; }
-      }
       try {
         await navigator.clipboard.writeText(url);
-        status.textContent = 'Link copied. Paste it into a message to your person.';
+        status.textContent = 'Partner link copied. Paste it into your chat.';
         track('hero_invite_shared', { method: 'clipboard' });
       } catch {
         const field = root.querySelector<HTMLInputElement>('#game-link')!;
@@ -130,8 +109,10 @@ import { GAME_CHOICES } from '../lib/heroGame';
   button:hover:not(:disabled) { border-color: #a63b60; }
   :is(button,a,input):focus-visible { outline: 3px solid #963655; outline-offset: 5px; }
   .game-result { min-height: 64px; padding-top: 20px; font-size: .92rem; font-weight: 700; line-height: 1.5; }
+  .share-prompt { margin-top: 2px; padding: 14px 16px; border-radius: 16px; background: #f9edf0; }
+  .share-title { color: #2d1b4e; font-weight: 900; font-size: .92rem; }
+  .share-prompt .share-note { margin-top: 3px; }
   .share-button { width: 100%; border-radius: 16px; background: #963655; color: #fff; font-weight: 900; padding: 14px; cursor: pointer; margin-top: 12px; }
-  .copy-button { color: #963655; font-size: .8rem; font-weight: 800; padding: 10px 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
   .share-note, #share-status, #game-copy { font-size: .78rem; color: #6b5b7b; margin-top: 10px; line-height: 1.5; }
   #share-status:empty { display: none; }
   .quiz-link { font-size: .9rem; margin-top: 6px; }

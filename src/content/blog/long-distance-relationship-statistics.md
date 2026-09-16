@@ -1,8 +1,8 @@
 ---
-title: "Long-Distance Relationship Statistics: Success Rates & Research"
-description: "What research says about long-distance relationship success and communication, with original sources, study sizes and limits on popular statistics."
+title: "Long-Distance Relationship Statistics: What Studies Show"
+description: "Read the original studies behind common long-distance relationship statistics, including sample sizes, breakup findings and research limits."
 date: "2026-05-17"
-updatedDate: "2026-09-14"
+updatedDate: "2026-09-16"
 tags: ["advice", "connection"]
 faqs:
   - question: "What is the success rate of long-distance relationships?"
@@ -13,7 +13,9 @@ faqs:
 
 **There is no single success rate you can use to predict your long-distance relationship.** The studies below compare particular groups over particular periods. They do not establish that 60% of all long-distance couples succeed, or that 40% break up.
 
-We reviewed these sources on September 14, 2026. We removed figures from an earlier version of this page when we could not verify their original source and scope.
+The clearest finding in the research reviewed here is less dramatic: one 2013 study of 870 participants found similar breakup likelihood at follow-up for long-distance and nearby relationships. A smaller diary study found greater reported intimacy among its long-distance participants. Neither result predicts what will happen to a particular couple.
+
+We reviewed these sources on September 16, 2026. We removed figures from an earlier version of this page when we could not verify their original source and scope.
 
 ## Long-distance relationship research at a glance
 
