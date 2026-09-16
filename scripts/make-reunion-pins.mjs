@@ -2,12 +2,23 @@
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const out = resolve(root, 'out/reunion-pins');
 const pins = JSON.parse(readFileSync(resolve(root, 'docs/growth/reunion-pins.json'), 'utf8'));
+// Isolate Satori's font caches between images to avoid missing repeated glyphs.
+if (!process.argv[3]) {
+  for (const pin of pins) {
+    const result = spawnSync(process.execPath, [fileURLToPath(import.meta.url), process.argv[2] || '', pin.id], { stdio: 'inherit' });
+    if (result.status !== 0) throw new Error(`Could not render ${pin.id}`);
+  }
+  writeFileSync(resolve(out, 'pins.json'), JSON.stringify(pins, null, 2) + '\n');
+  console.log(`Generated ${pins.length} draft pins in ${out}. Not published.`);
+  process.exit(0);
+}
 const fox = `data:image/png;base64,${readFileSync(resolve(root, 'public/brand/foxy-letter-v1.png')).toString('base64')}`;
 async function loadFont() {
   // Optional path to an existing Nunito Bold TTF for offline rendering.
@@ -24,6 +35,7 @@ const fonts = [{ name: 'Nunito', weight: 700, style: 'normal', data: await loadF
 const box = (children, style = {}) => ({ type: 'div', props: { style: { display: 'flex', ...style }, children } });
 mkdirSync(out, { recursive: true });
 for (const [i, pin] of pins.entries()) {
+  if (pin.id !== process.argv[3]) continue;
   const tree = box([
     box('farfox / YOUR NEXT VISIT', { fontSize: 27, color: '#A84354', letterSpacing: 2 }),
     box(pin.headline, { fontSize: 82, lineHeight: 1.08, marginTop: 35, letterSpacing: -2 }),
@@ -35,5 +47,3 @@ for (const [i, pin] of pins.entries()) {
   const png = new Resvg(await satori(tree, { width: 1000, height: 1500, fonts })).render().asPng();
   writeFileSync(resolve(out, `${pin.id}.png`), png);
 }
-writeFileSync(resolve(out, 'pins.json'), JSON.stringify(pins, null, 2) + '\n');
-console.log(`Generated ${pins.length} draft pins in ${out}. Not published.`);
