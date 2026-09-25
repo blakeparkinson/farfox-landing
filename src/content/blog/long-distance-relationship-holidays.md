@@ -56,7 +56,7 @@ Halloween is low stakes, which makes it a good first run for the rest of the sea
 - **Matching costumes, separate cities.** Pick a pair costume (salt and pepper, a movie duo, two halves of a meme) and send each other photos from your nights out.
 - **Horror movie night.** Start the same film at the same time on a video call. Whoever screams first picks the next one.
 - **Carve pumpkins together.** Same design, or carve something for each other. Share the results before they go soft.
-- **Swap a small care package.** Their favourite candy from your city is cheap to mail and arrives before November.
+- **Swap a small care package.** Their favourite candy from your city is cheap to mail and arrives before November. Our [care package ideas](/blog/long-distance-care-package-ideas/) cover what else to put in the box.
 
 ## Thanksgiving and Friendsgiving
 
