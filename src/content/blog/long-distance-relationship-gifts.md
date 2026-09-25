@@ -69,6 +69,10 @@ Long-distance relationships are physically lonely. A high-quality weighted blank
 
 Matching mugs, matching pajamas, matching phone cases — the specific item matters less than the ritual of using it. A "we both have this" object creates a sense of shared life across the miles. Our [personalized Long Distance FC jerseys](/personalized-long-distance-jersey) put each partner's name and number on the back, turning a matching gift into something that belongs only to your relationship.
 
+**A themed care package**
+
+A box built around a moment: a bad week, exam season, a birthday, the countdown to your next visit. Our [care package ideas](/blog/long-distance-care-package-ideas/) include ten themes and tips for shipping them.
+
 ---
 
 ## Experience gifts to look forward to

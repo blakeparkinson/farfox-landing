@@ -1,14 +1,15 @@
 // Reuse the approved Foxy artwork and the existing Pinterest pack's fonts/palette.
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const out = resolve(root, 'out/reunion-pins');
-const pins = JSON.parse(readFileSync(resolve(root, 'docs/growth/reunion-pins.json'), 'utf8'));
+const pinsFile = resolve(root, process.env.PINS_FILE || 'docs/growth/reunion-pins.json');
+const out = resolve(root, 'out', basename(pinsFile, '.json'));
+const pins = JSON.parse(readFileSync(pinsFile, 'utf8'));
 // Isolate Satori's font caches between images to avoid missing repeated glyphs.
 if (!process.argv[3]) {
   for (const pin of pins) {
@@ -37,13 +38,13 @@ mkdirSync(out, { recursive: true });
 for (const [i, pin] of pins.entries()) {
   if (pin.id !== process.argv[3]) continue;
   const tree = box([
-    box('farfox / YOUR NEXT VISIT', { fontSize: 27, color: '#A84354', letterSpacing: 2 }),
+    box(pin.label ?? 'farfox / YOUR NEXT VISIT', { fontSize: 27, color: '#A84354', letterSpacing: 2 }),
     box(pin.headline, { fontSize: 82, lineHeight: 1.08, marginTop: 35, letterSpacing: -2 }),
     box(pin.items.map(item => box(item, { fontSize: 35, padding: '21px 24px', background: '#FFFFFF', borderRadius: 20 })), { flexDirection: 'column', gap: 16, marginTop: 42 }),
     { type: 'img', props: { src: fox, width: 360, height: 360, style: { alignSelf: 'center', marginTop: 28 } } },
-    box('Get the free visit checklist', { fontSize: 34, marginTop: 'auto' }),
+    box(pin.cta ?? 'Get the free visit checklist', { fontSize: 34, marginTop: 'auto' }),
     box('lovefarfox.com', { fontSize: 26, color: '#756579', marginTop: 12 }),
-  ], { width: 1000, height: 1500, padding: '60px 64px', flexDirection: 'column', background: ['#FFF5E8', '#F3ECFF', '#FFF0F2'][i], color: '#34243C', fontFamily: 'Nunito', fontWeight: 700 });
+  ], { width: 1000, height: 1500, padding: '60px 64px', flexDirection: 'column', background: ['#FFF5E8', '#F3ECFF', '#FFF0F2'][i % 3], color: '#34243C', fontFamily: 'Nunito', fontWeight: 700 });
   const png = new Resvg(await satori(tree, { width: 1000, height: 1500, fonts })).render().asPng();
   writeFileSync(resolve(out, `${pin.id}.png`), png);
 }

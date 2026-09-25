@@ -41,7 +41,7 @@ You don't need to be eloquent. If the page goes blank, our [50 love letter promp
 
 ## 3. Care packages and tangible connection
 
-Physical things carry weight across distance. A care package, a worn hoodie that smells like home, a printed photo book of your year. These are the love-language-of-physical-touch substitutes that actually reach a deployment. Our [long-distance gifts guide](/blog/long-distance-relationship-gifts) has ideas that ship and survive.
+Physical things carry weight across distance. A care package, a worn hoodie that smells like home, a printed photo book of your year. These are the love-language-of-physical-touch substitutes that actually reach a deployment. Our [long-distance gifts guide](/blog/long-distance-relationship-gifts) has ideas that ship and survive. For themed box ideas and shipping tips, see our [long-distance care package guide](/blog/long-distance-care-package-ideas/).
 
 ## 4. Build a life, not just a wait
 
