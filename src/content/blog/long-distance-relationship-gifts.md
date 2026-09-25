@@ -108,4 +108,6 @@ Before you buy anything, ask yourself: **would this gift make sense for someone 
 
 Start with what they've mentioned wanting, what you've experienced together, and what makes them feel known. Then find the object, experience, or gesture that carries that.
 
+Shopping for the holidays? Our guide to [spending the holidays apart](/blog/long-distance-relationship-holidays/) covers when to ship so gifts arrive on time, and how to open them together over video.
+
 And if you want to give them something that works every single day — not just the day the package arrives — try [Far Fox](https://app.lovefarfox.com) together. It's free, and the daily rituals it creates are worth more than most things you can ship.
