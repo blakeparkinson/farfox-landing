@@ -18,7 +18,7 @@ faqs:
 
 It's 11 p.m. They usually text back within the hour. It's been three. And your brain — helpful as ever — has quietly written an entire story about why.
 
-That's the thing nobody warns you about with [long-distance relationships](/blog/how-to-make-a-long-distance-relationship-work): the hardest part often isn't the missing. It's the *not knowing*. When you're together, you get a thousand tiny reassurances a day without noticing — a glance, a hand on your back, just seeing them exist near you. Distance strips all of that away, and your imagination rushes in to fill the silence.
+That's the thing nobody warns you about with [long-distance relationships](/blog/how-to-make-a-long-distance-relationship-work/): the hardest part often isn't the missing. It's the *not knowing*. When you're together, you get a thousand tiny reassurances a day without noticing — a glance, a hand on your back, just seeing them exist near you. Distance strips all of that away, and your imagination rushes in to fill the silence.
 
 Trust is the muscle that holds a long-distance relationship together. Here's how to actually build it — and how to handle the jealousy and insecurity that creep in when you can't see the person you love.
 
@@ -36,7 +36,7 @@ A partner who sends a good-morning text every single day, keeps the call they sa
 
 - Pick a rhythm you can both truly sustain (a daily check-in, a couple of real calls a week) and then **honor it** — a small kept promise beats a big broken one.
 - If you're going to be unreachable, say so in advance. "Heads up, I'm out with friends till late" costs five seconds and prevents the entire 11 p.m. spiral.
-- Consistent, warm [daily texts](/blog/long-distance-relationship-texts) do more for trust than one heartfelt paragraph a month.
+- Consistent, warm [daily texts](/blog/long-distance-relationship-texts/) do more for trust than one heartfelt paragraph a month.
 
 ## Transparency, not surveillance
 
@@ -63,13 +63,13 @@ And ask yourself honestly: is this fear about *them*, or about *me*? A huge amou
 
 Here's the trap: making your partner's next text the thing that determines whether you feel okay. If your entire sense of worth is riding on their reply speed, every silence becomes an emergency — and no amount of reassurance will ever be enough, because the hole isn't really about them.
 
-The healthiest long-distance people have a **full life of their own**: friends, work, hobbies, a routine that doesn't revolve around waiting for the phone to light up. Ironically, that independence makes the relationship *stronger* — you show up to your golden hour with something to bring, not just a day spent refreshing the chat. It's one of the quiet [ways distance can actually keep a relationship healthy](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship).
+The healthiest long-distance people have a **full life of their own**: friends, work, hobbies, a routine that doesn't revolve around waiting for the phone to light up. Ironically, that independence makes the relationship *stronger* — you show up to your golden hour with something to bring, not just a day spent refreshing the chat. It's one of the quiet [ways distance can actually keep a relationship healthy](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship/).
 
 ## Define commitment together — out loud
 
 A lot of jealousy grows in the space where two people never actually agreed on the rules. What counts as crossing a line? Is it okay to have drinks with friends of an ex? What does "exclusive" mean to each of you, concretely?
 
-Don't assume you share the same definitions. Have the direct conversation — early, and again as things evolve. Couples who explicitly agree on their boundaries have far less to be jealous *about*, because there's no ambiguous grey zone for the imagination to colonize. (A round of [deeper questions](/blog/long-distance-relationship-questions) is a low-pressure way to surface where you each stand.)
+Don't assume you share the same definitions. Have the direct conversation — early, and again as things evolve. Couples who explicitly agree on their boundaries have far less to be jealous *about*, because there's no ambiguous grey zone for the imagination to colonize. (A round of [deeper questions](/blog/long-distance-relationship-questions/) is a low-pressure way to surface where you each stand.)
 
 ## Repair when trust wobbles
 
@@ -87,9 +87,9 @@ Normal insecurity gets named and soothed. Unhealthy jealousy tries to *control*:
 
 Trust isn't a talk you have once; it's a thing you *do* daily. A few anchors:
 
-- **A predictable daily touchpoint** — the good-morning/good-night bookends, especially if you're across [different time zones](/blog/long-distance-relationship-time-zones).
+- **A predictable daily touchpoint** — the good-morning/good-night bookends, especially if you're across [different time zones](/blog/long-distance-relationship-time-zones/).
 - **A shared window into each other's ordinary days** — the mundane photo, the "here's what I'm up to," so their life never feels like a black box.
-- **A visible finish line** — a [countdown to your next visit](/blog/long-distance-relationship-timeline) reframes the distance as temporary, which takes the desperate edge off the insecurity.
+- **A visible finish line** — a [countdown to your next visit](/blog/long-distance-relationship-timeline/) reframes the distance as temporary, which takes the desperate edge off the insecurity.
 
 This is a lot of what [Far Fox](https://app.lovefarfox.com) is built to make effortless: a shared daily question so you stay current with each other, a photo timeline so their world isn't a mystery, love letters you can send on a schedule, and a little fox you grow together the more consistently you both show up. It turns "trust" from a vague feeling into a daily habit you can actually see. Free on iOS, Android, and web.
 

@@ -38,6 +38,6 @@ export const POST: APIRoute = async ({ request }) => {
   }, MAP_REDEMPTION_SECRET);
   return json({
     token,
-    customizeUrl: '/personalized-long-distance-map?etsy=1&utm_source=etsy&utm_medium=marketplace&utm_campaign=personalized_map',
+    customizeUrl: '/personalized-long-distance-map/?etsy=1&utm_source=etsy&utm_medium=marketplace&utm_campaign=personalized_map',
   });
 };

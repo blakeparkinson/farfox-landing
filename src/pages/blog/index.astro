@@ -84,7 +84,7 @@ const collections = [
               <p class="text-sm text-fox-text-light leading-relaxed mb-4">{collection.description}</p>
               <ul class="space-y-2">
                 {collection.posts.map((post) => (
-                  <li><a href={`/blog/${post.id}`} class="text-sm font-700 text-fox-pink hover:underline">{post.data.title}</a></li>
+                  <li><a href={`/blog/${post.id}/`} class="text-sm font-700 text-fox-pink hover:underline">{post.data.title}</a></li>
                 ))}
               </ul>
             </section>
@@ -95,7 +95,7 @@ const collections = [
       <h2 class="text-2xl font-900 tracking-tight mb-6">Latest guides</h2>
       <div class="space-y-8">
         {posts.map((post) => (
-          <a href={`/blog/${post.id}`} class="block group p-6 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1">
+          <a href={`/blog/${post.id}/`} class="block group p-6 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1">
             <p class="text-sm text-fox-text-light/60 mb-2">
               {new Date(`${post.data.date}T12:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
@@ -111,12 +111,12 @@ const collections = [
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
       <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light/50">
-        <a href="/quiz" class="hover:text-fox-pink transition-colors">Couple Quiz</a>
-        <a href="/long-distance-time-zone-calculator" class="hover:text-fox-pink transition-colors">Time Zones</a>
-        <a href="/shop" class="hover:text-fox-pink transition-colors">Shop</a>
-        <a href="/blog" class="hover:text-fox-pink transition-colors">Blog</a>
-        <a href="/privacy" class="hover:text-fox-pink transition-colors">Privacy</a>
-        <a href="/terms" class="hover:text-fox-pink transition-colors">Terms</a>
+        <a href="/quiz/" class="hover:text-fox-pink transition-colors">Couple Quiz</a>
+        <a href="/long-distance-time-zone-calculator/" class="hover:text-fox-pink transition-colors">Time Zones</a>
+        <a href="/shop/" class="hover:text-fox-pink transition-colors">Shop</a>
+        <a href="/blog/" class="hover:text-fox-pink transition-colors">Blog</a>
+        <a href="/privacy/" class="hover:text-fox-pink transition-colors">Privacy</a>
+        <a href="/terms/" class="hover:text-fox-pink transition-colors">Terms</a>
         <a href="mailto:blake@lovefarfox.com" class="hover:text-fox-pink transition-colors">Contact</a>
         <span>&copy; {new Date().getFullYear()} Far Fox</span>
       </div>

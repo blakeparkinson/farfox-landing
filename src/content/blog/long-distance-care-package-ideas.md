@@ -113,7 +113,7 @@ Sometimes the cost, the customs rules, or the timing just don't work. You can st
 - **Send something they can print.** A [personalized map of your two cities](/personalized-long-distance-map/) downloads as a print-ready file, so they can print it at a shop near them.
 - **Go digital.** A playlist, a short video message, and a letter they can only open on a date you choose. Our [long-distance gift guide](/blog/long-distance-relationship-gifts/) has more digital gift ideas that don't feel like an afterthought.
 
-If you do want a physical piece of Far Fox in the box, the [Far Fox shop](/shop) has mugs, stickers, tees, and prints that ship worldwide, and you can make a one-of-one [Long Distance FC jersey](/personalized-long-distance-jersey/) with their name and number on the back.
+If you do want a physical piece of Far Fox in the box, the [Far Fox shop](/shop/) has mugs, stickers, tees, and prints that ship worldwide, and you can make a one-of-one [Long Distance FC jersey](/personalized-long-distance-jersey/) with their name and number on the back.
 
 ---
 

@@ -42,7 +42,7 @@ A next-visit date cannot remove the pain, but it gives the pain an edge. “I wi
 
 Talk about the next visit before the last night. Book it if you can. If money, visas, work, or school make that impossible, decide on the next useful thing: the month you will look at flights, the weekend you will compare schedules, or the savings target you will both reach.
 
-Put the plan somewhere visible. A shared countdown turns a vague loss into time you can move through together. The [long-distance relationship timeline](/blog/long-distance-relationship-timeline) has more on why a relationship needs a future you can both name.
+Put the plan somewhere visible. A shared countdown turns a vague loss into time you can move through together. The [long-distance relationship timeline](/blog/long-distance-relationship-timeline/) has more on why a relationship needs a future you can both name.
 
 For the next trip, use our [reunion visit checklist](/blog/long-distance-reunion-checklist/) to agree on dates and costs, then [create a free reunion countdown](/reunion-countdown/) you can both bookmark.
 
@@ -61,7 +61,7 @@ That last point saves a lot of unnecessary hurt. After a visit, someone may fall
 
 Within a day or two, have a fuller call. Share the moment that is sticking with you. Talk about anything awkward without treating it as a verdict. A visit can bring up practical questions about money, alone time, family, intimacy, or the future. Those conversations matter. They also deserve rested people on a voice or video call, not two exhausted people typing from separate airports.
 
-If your goodbye led straight into a text spiral, use the same repair rule you would use for any other conflict: get off text and speak out loud. Our guide to [handling arguments from a distance](/blog/how-to-handle-arguments-in-a-long-distance-relationship) can help when the sadness starts coming out sideways.
+If your goodbye led straight into a text spiral, use the same repair rule you would use for any other conflict: get off text and speak out loud. Our guide to [handling arguments from a distance](/blog/how-to-handle-arguments-in-a-long-distance-relationship/) can help when the sadness starts coming out sideways.
 
 ## Rebuild ordinary connection, slowly
 
@@ -74,7 +74,7 @@ Pick one or two anchors:
 - A photo from the ordinary part of the day.
 - A protected date night later in the week.
 
-The goal is not to pretend you are still in the same room. The goal is to return to the rituals that make your separate lives feel shared. [Long-distance activities](/blog/long-distance-relationship-activities) and [date ideas](/blog/long-distance-date-ideas) can give you a gentle place to restart.
+The goal is not to pretend you are still in the same room. The goal is to return to the rituals that make your separate lives feel shared. [Long-distance activities](/blog/long-distance-relationship-activities/) and [date ideas](/blog/long-distance-date-ideas/) can give you a gentle place to restart.
 
 One useful rule: do not make the first week after a visit a referendum on the relationship. You are both missing someone, catching up on life, and feeling the contrast. Wait for the emotional weather to settle before you decide that a slightly flat call means you have lost your spark.
 

@@ -97,8 +97,8 @@ const breadcrumbSchema = {
   "@type": "BreadcrumbList",
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://lovefarfox.com" },
-    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://lovefarfox.com/blog" },
-    { "@type": "ListItem", "position": 3, "name": post.data.title, "item": `https://lovefarfox.com/blog/${post.id}` },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://lovefarfox.com/blog/" },
+    { "@type": "ListItem", "position": 3, "name": post.data.title, "item": `https://lovefarfox.com/blog/${post.id}/` },
   ],
 };
 ---
@@ -134,7 +134,7 @@ const breadcrumbSchema = {
         <ol class="flex flex-wrap items-center gap-1.5 text-sm text-fox-text-light">
           <li><a href="/" class="hover:text-fox-pink transition-colors">Home</a></li>
           <li aria-hidden="true" class="text-fox-text-light/30">/</li>
-          <li><a href="/blog" class="hover:text-fox-pink transition-colors">Blog</a></li>
+          <li><a href="/blog/" class="hover:text-fox-pink transition-colors">Blog</a></li>
           <li aria-hidden="true" class="text-fox-text-light/30">/</li>
           <li aria-current="page" class="text-fox-text-light truncate max-w-[60%]">{post.data.title}</li>
         </ol>
@@ -162,8 +162,8 @@ const breadcrumbSchema = {
           <p class="text-sm font-700 text-fox-text-light mb-2">A gift from Far Fox</p>
           <h2 class="text-2xl font-800 mb-3">Two cities. One map made for you.</h2>
           <p class="text-fox-text-light mb-5">Add your cities, names, and a message. Preview your map free, then download the print-ready PNG for ${DIGITAL_MAP_PRICE} USD. Digital file only; no shipping or frame included.</p>
-          <a href="/personalized-long-distance-map" data-umami-event="blog_map_clicked" data-umami-event-article={post.id} class="inline-block px-6 py-3 rounded-full bg-fox-pink text-white font-800 hover:bg-fox-purple transition-colors">Preview your map free →</a>
-          <p class="mt-4 text-sm"><a href="/personalized-long-distance-jersey" data-umami-event="blog_jersey_clicked" data-umami-event-article={post.id} class="text-fox-pink font-700 underline underline-offset-4">Prefer something to wear? Personalize a couple jersey.</a></p>
+          <a href="/personalized-long-distance-map/" data-umami-event="blog_map_clicked" data-umami-event-article={post.id} class="inline-block px-6 py-3 rounded-full bg-fox-pink text-white font-800 hover:bg-fox-purple transition-colors">Preview your map free →</a>
+          <p class="mt-4 text-sm"><a href="/personalized-long-distance-jersey/" data-umami-event="blog_jersey_clicked" data-umami-event-article={post.id} class="text-fox-pink font-700 underline underline-offset-4">Prefer something to wear? Personalize a couple jersey.</a></p>
         </aside>
       )}
 
@@ -194,7 +194,7 @@ const breadcrumbSchema = {
         <p class="text-fox-text-light mb-6">Take the free 2-minute couple quiz, send it to your partner, and see your love profiles side by side. No signup.</p>
         <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
           <a
-            href={`/quiz?utm_source=blog&utm_medium=onsite&utm_campaign=love_profile_loop&utm_content=${post.id}`}
+            href={`/quiz/?utm_source=blog&utm_medium=onsite&utm_campaign=love_profile_loop&utm_content=${post.id}`}
             class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-800 hover:shadow-xl hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
           >
             Take the couple quiz →
@@ -214,7 +214,7 @@ const breadcrumbSchema = {
           <h2 class="text-2xl font-800 tracking-tight mb-6">Keep reading</h2>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {relatedPosts.map((rp) => (
-              <a href={`/blog/${rp.id}`} class="block group p-5 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1">
+              <a href={`/blog/${rp.id}/`} class="block group p-5 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1">
                 <h3 class="font-800 text-base leading-snug mb-2 group-hover:text-fox-pink transition-colors">{rp.data.title}</h3>
                 <p class="text-fox-text-light text-sm leading-relaxed line-clamp-3">{rp.data.description}</p>
               </a>
@@ -229,13 +229,13 @@ const breadcrumbSchema = {
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
       <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light">
-        <a href="/quiz" class="hover:text-fox-pink transition-colors">Couple Quiz</a>
-        <a href="/long-distance-time-zone-calculator" class="hover:text-fox-pink transition-colors">Time Zones</a>
-        <a href="/compare" class="hover:text-fox-pink transition-colors">Compare</a>
-        <a href="/shop" class="hover:text-fox-pink transition-colors">Shop</a>
-        <a href="/blog" class="hover:text-fox-pink transition-colors">Blog</a>
-        <a href="/privacy" class="hover:text-fox-pink transition-colors">Privacy</a>
-        <a href="/terms" class="hover:text-fox-pink transition-colors">Terms</a>
+        <a href="/quiz/" class="hover:text-fox-pink transition-colors">Couple Quiz</a>
+        <a href="/long-distance-time-zone-calculator/" class="hover:text-fox-pink transition-colors">Time Zones</a>
+        <a href="/compare/" class="hover:text-fox-pink transition-colors">Compare</a>
+        <a href="/shop/" class="hover:text-fox-pink transition-colors">Shop</a>
+        <a href="/blog/" class="hover:text-fox-pink transition-colors">Blog</a>
+        <a href="/privacy/" class="hover:text-fox-pink transition-colors">Privacy</a>
+        <a href="/terms/" class="hover:text-fox-pink transition-colors">Terms</a>
         <a href="mailto:blake@lovefarfox.com" class="hover:text-fox-pink transition-colors">Contact</a>
         <span>&copy; {new Date().getFullYear()} Far Fox</span>
       </div>

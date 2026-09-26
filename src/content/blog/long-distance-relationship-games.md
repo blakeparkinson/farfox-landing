@@ -35,7 +35,7 @@ These need zero setup and live in the cracks of your day. Perfect when you can't
 2. **20 Questions** — One picks a person/place/thing; the other gets 20 yes-or-no questions. Stretched across a workday, it's a slow-burn delight.
 3. **Two truths and a lie** — Even after years together, people have untold stories. This game finds them.
 4. **The song lyric game** — Send a lyric, they guess the song. Loser sends the next.
-5. **This or That, rapid-fire** — "Mountains or ocean? Texts or calls? Big wedding or elope?" The fast pace surfaces real preferences you've never asked about. (We've got [50 of these as conversation starters](/blog/long-distance-relationship-questions) too.)
+5. **This or That, rapid-fire** — "Mountains or ocean? Texts or calls? Big wedding or elope?" The fast pace surfaces real preferences you've never asked about. (We've got [50 of these as conversation starters](/blog/long-distance-relationship-questions/) too.)
 6. **The emoji story** — Describe your day in only emojis; they have to translate it back.
 7. **Would You Rather** — The classic, and a sneaky way to learn what your partner actually values.
 8. **Kiss, Marry, Cliff (fictional only)** — Keep it to movie characters and it's pure fun.
@@ -54,7 +54,7 @@ A game on a call removes the pressure of nonstop conversation — you get to jus
 16. **Online trivia night** — Pull up a free trivia site and keep score. Bonus: pick categories you each think you'll win.
 17. **Catan / Ticket to Ride** (board-game apps with online play) — A longer, cozy weekend game.
 18. **GeoGuessr** — Get dropped somewhere on Street View and guess where you are. Surprisingly addictive together.
-19. **Watch-and-react** — Sync a show or movie ([here's how to set up a synced watch party](/blog/long-distance-date-ideas)) and treat each other's reactions as the game.
+19. **Watch-and-react** — Sync a show or movie ([here's how to set up a synced watch party](/blog/long-distance-date-ideas/)) and treat each other's reactions as the game.
 20. **Cook-off** — Same recipe, two kitchens, camera on. First to plate wins; both of you eat dinner "together."
 21. **The drawing challenge** — Both draw the same prompt in 5 minutes, reveal at once, vote on the worse one.
 22. **Show and tell** — Each grabs an object from your space with a story behind it. Distance makes you forget you haven't seen each other's stuff in months.
@@ -87,10 +87,10 @@ The best long-distance games do double duty — they're fun *and* they close emo
 
 37. **36 Questions to Fall in Love** — The famous NYT set, spread over a few nights. Skip to the deep ones.
 38. **"Tell me about a time…"** — Take turns finishing the prompt with a real memory. A game that's secretly a love letter.
-39. **The highlight/lowlight game** — Best and worst part of the day, every day. Simple, and it keeps you in each other's ordinary moments — [the thing distance steals most](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship).
+39. **The highlight/lowlight game** — Best and worst part of the day, every day. Simple, and it keeps you in each other's ordinary moments — [the thing distance steals most](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship/).
 40. **Future-building** — Take turns adding one detail to your imagined future home/trip/life. It's a game *and* a reassurance that there's a finish line.
 41. **The appreciation volley** — Alternate naming things you appreciate about each other until someone runs dry. Nobody runs dry.
-42. **Love language guessing** — Guess how your partner would rank their [love languages](/blog/love-languages-long-distance-relationship), then compare. Eye-opening.
+42. **Love language guessing** — Guess how your partner would rank their [love languages](/blog/love-languages-long-distance-relationship/), then compare. Eye-opening.
 
 ## Flirty & romantic games (for the two of you only)
 
@@ -112,6 +112,6 @@ A list of 47 games is useless if you play one once and forget. The couples who m
 
 If keeping the habit alive is the hard part, that's exactly the problem [Far Fox](https://app.lovefarfox.com) is built to solve. It hands you a daily question, a this-or-that, and little challenges automatically — plus a shared photo timeline and a fox companion that grows the more you both show up. It's the "default game" that never makes you think of what to play. Free on iOS, Android, and web.
 
-And if you want more ways to spend the time, our guides to [long-distance date ideas](/blog/long-distance-date-ideas) and [25 activities for couples apart](/blog/long-distance-relationship-activities) pick up where the games end.
+And if you want more ways to spend the time, our guides to [long-distance date ideas](/blog/long-distance-date-ideas/) and [25 activities for couples apart](/blog/long-distance-relationship-activities/) pick up where the games end.
 
 The distance is real. But "your turn" is a small, repeatable way to keep reaching across it — 47 times over.

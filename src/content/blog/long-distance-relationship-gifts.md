@@ -15,7 +15,7 @@ Here's what actually works.
 
 ## Gifts that create an experience together
 
-The loneliest part of long-distance isn't missing someone in a general way — it's missing the *shared experience*. These gifts address that directly — and if you want free ways to share experiences too, here are [25 long-distance activities](/blog/long-distance-relationship-activities).
+The loneliest part of long-distance isn't missing someone in a general way — it's missing the *shared experience*. These gifts address that directly — and if you want free ways to share experiences too, here are [25 long-distance activities](/blog/long-distance-relationship-activities/).
 
 **A subscription you both use**
 
@@ -35,7 +35,7 @@ Virtual cooking classes, online wine tastings, escape rooms designed for remote 
 
 **A stack of open when letters**
 
-A bundle of sealed envelopes labeled for future moments — "open when you miss me," "open when you can't sleep," "open the night before we see each other." It costs almost nothing and lands harder than most things you can buy. ([Here's our full guide with 60+ ideas](/blog/open-when-letters).)
+A bundle of sealed envelopes labeled for future moments — "open when you miss me," "open when you can't sleep," "open the night before we see each other." It costs almost nothing and lands harder than most things you can buy. ([Here's our full guide with 60+ ideas](/blog/open-when-letters/).)
 
 **A custom photo book**
 
@@ -43,7 +43,7 @@ Not a photo dump — a curated story. Pick 20–30 photos that tell the arc of y
 
 **A map with pins**
 
-A custom map marking where you met, where you both live now, places you've traveled together, and places you want to go. It's a visual representation of your relationship geography — and a reminder that the distance is just one chapter. You can [make a personalized map of your two cities](/personalized-long-distance-map) on Far Fox, preview it live, and download the print-ready file instantly.
+A custom map marking where you met, where you both live now, places you've traveled together, and places you want to go. It's a visual representation of your relationship geography — and a reminder that the distance is just one chapter. You can [make a personalized map of your two cities](/personalized-long-distance-map/) on Far Fox, preview it live, and download the print-ready file instantly.
 
 **A letter bundle**
 
@@ -67,7 +67,7 @@ Long-distance relationships are physically lonely. A high-quality weighted blank
 
 **Matching items you both have**
 
-Matching mugs, matching pajamas, matching phone cases — the specific item matters less than the ritual of using it. A "we both have this" object creates a sense of shared life across the miles. Our [personalized Long Distance FC jerseys](/personalized-long-distance-jersey) put each partner's name and number on the back, turning a matching gift into something that belongs only to your relationship.
+Matching mugs, matching pajamas, matching phone cases — the specific item matters less than the ritual of using it. A "we both have this" object creates a sense of shared life across the miles. Our [personalized Long Distance FC jerseys](/personalized-long-distance-jersey/) put each partner's name and number on the back, turning a matching gift into something that belongs only to your relationship.
 
 **A themed care package**
 

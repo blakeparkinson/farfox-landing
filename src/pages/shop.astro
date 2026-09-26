@@ -71,7 +71,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
       "@context": "https://schema.org",
       "@type": "ItemList",
       "name": "Far Fox Shop",
-      "url": "https://lovefarfox.com/shop",
+      "url": "https://lovefarfox.com/shop/",
       "numberOfItems": PRODUCTS.length,
       "itemListElement": PRODUCTS.map((p, i) => ({
         "@type": "ListItem",
@@ -80,7 +80,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
           "@type": "Product",
           "name": p.name,
           "image": `${SITE}${p.image}`,
-          "url": "https://lovefarfox.com/shop",
+          "url": "https://lovefarfox.com/shop/",
           "brand": { "@type": "Brand", "name": "Far Fox" },
           "offers": {
             "@type": "Offer",
@@ -110,7 +110,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
         </span>
       </a>
       <div class="flex items-center gap-4">
-        <a href="/blog" class="hidden sm:inline text-sm font-700 text-fox-text-light hover:text-fox-pink transition-colors">Blog</a>
+        <a href="/blog/" class="hidden sm:inline text-sm font-700 text-fox-text-light hover:text-fox-pink transition-colors">Blog</a>
         {cartLive && (
           <button class="snipcart-checkout flex items-center gap-1.5 text-sm font-800 text-fox-text hover:text-fox-pink transition-colors">
             <span aria-hidden="true">🛒</span>
@@ -245,7 +245,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
                 data-item-id={p.id}
                 data-item-name={p.name}
                 data-item-price={p.price}
-                data-item-url="/shop"
+                data-item-url="/shop/"
                 data-item-image={`${SITE}${p.image}`}
                 data-item-description={p.name}
                 data-item-custom1-name={p.sizes?.length ? 'Size' : undefined}
@@ -307,10 +307,10 @@ const grouped = [...CATS.map((c) => c.title), 'More']
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
       <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light/50">
-        <a href="/shop" class="hover:text-fox-pink transition-colors">Shop</a>
-        <a href="/blog" class="hover:text-fox-pink transition-colors">Blog</a>
-        <a href="/privacy" class="hover:text-fox-pink transition-colors">Privacy</a>
-        <a href="/terms" class="hover:text-fox-pink transition-colors">Terms</a>
+        <a href="/shop/" class="hover:text-fox-pink transition-colors">Shop</a>
+        <a href="/blog/" class="hover:text-fox-pink transition-colors">Blog</a>
+        <a href="/privacy/" class="hover:text-fox-pink transition-colors">Privacy</a>
+        <a href="/terms/" class="hover:text-fox-pink transition-colors">Terms</a>
         <a href="mailto:blake@lovefarfox.com" class="hover:text-fox-pink transition-colors">Contact</a>
         <span>&copy; {new Date().getFullYear()} Far Fox</span>
       </div>

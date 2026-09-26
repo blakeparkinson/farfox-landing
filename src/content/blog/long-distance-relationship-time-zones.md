@@ -1,6 +1,6 @@
 ---
-title: "Long-Distance Relationship Time Zones: Call Schedules"
-description: "Find a call schedule across time zones, map the hours when you are both awake, and stay close with voice notes and daily rituals."
+title: "Long-Distance Relationship Time Difference: How to Make It Work"
+description: "How to make a long-distance relationship work across a time difference: find the hours you're both awake with a free calculator, set a call schedule, and stay close with voice notes and rituals."
 date: "2026-07-01"
 updatedDate: "2026-09-16"
 tags: ["communication", "advice", "connection"]
@@ -21,7 +21,7 @@ A time difference works when you agree on a repeatable call window and stop trea
 
 [Compare your cities with the free time-zone calculator](/long-distance-time-zone-calculator/). It shows your shared waking hours without mental math.
 
-Time zones are one of the most underestimated challenges in [long-distance relationships](/blog/how-to-make-a-long-distance-relationship-work). It is not just the distance. It is the *desync*. The practical answer is to design a rhythm around the gap instead of expecting constant availability.
+Time zones are one of the most underestimated challenges in [long-distance relationships](/blog/how-to-make-a-long-distance-relationship-work/). It is not just the distance. It is the *desync*. The practical answer is to design a rhythm around the gap instead of expecting constant availability.
 
 Here's how.
 
@@ -49,7 +49,7 @@ The mistake is treating a call as the *only* real connection. When your waking h
 - **Photo drops.** A picture of your lunch, the sky, a dog you passed. It says "I wanted you here for this" without needing a reply.
 - **Scheduled messages.** Write something now, have it arrive at *their* morning. It's the digital version of leaving a note on the pillow. (More on this below.)
 
-The goal: your partner should wake up to a little trail of you, and fall asleep having left one for you. For a whole toolkit of these, our guide to [long-distance texts that keep you connected](/blog/long-distance-relationship-texts) goes deeper.
+The goal: your partner should wake up to a little trail of you, and fall asleep having left one for you. For a whole toolkit of these, our guide to [long-distance texts that keep you connected](/blog/long-distance-relationship-texts/) goes deeper.
 
 ## Build two rituals that survive any gap
 
@@ -58,7 +58,7 @@ Rituals beat spontaneity across time zones, because spontaneity requires you bot
 1. **The good-morning message.** Whoever wakes first opens the day for the other. Even a single line means the first thing your partner sees is you.
 2. **The good-night message.** Whoever's day ends first "tucks the other in." There's something quietly powerful about knowing someone said goodnight to you while you were on the other side of noon.
 
-These two touchpoints mean the day always begins and ends with each other, regardless of who's ahead on the clock. Add a shared **daily question** or a synced show and you've got a rhythm that doesn't depend on catching each other live. (Here are [25 activities for couples apart](/blog/long-distance-relationship-activities) and [async games for opposite time zones](/blog/long-distance-relationship-games) to fill it out.)
+These two touchpoints mean the day always begins and ends with each other, regardless of who's ahead on the clock. Add a shared **daily question** or a synced show and you've got a rhythm that doesn't depend on catching each other live. (Here are [25 activities for couples apart](/blog/long-distance-relationship-activities/) and [async games for opposite time zones](/blog/long-distance-relationship-games/) to fill it out.)
 
 ## Handle the hard parts
 
@@ -66,7 +66,7 @@ These two touchpoints mean the day always begins and ends with each other, regar
 
 **The out-of-sync days.** Some days you'll feel like ships passing. You're winding down as they're ramping up. It's normal to feel briefly disconnected. The rituals are what carry you through the low days; keep them even when it feels one-sided.
 
-**The lonely gap.** The hours with no realistic contact are the hardest. Fill them with your own life, not with refreshing the chat. Having a full life in your own time zone gives you more to bring to your golden hour. It's one of the [hidden ways distance keeps a spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship).
+**The lonely gap.** The hours with no realistic contact are the hardest. Fill them with your own life, not with refreshing the chat. Having a full life in your own time zone gives you more to bring to your golden hour. It's one of the [hidden ways distance keeps a spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship/).
 
 ## Turn the time difference into something romantic
 
@@ -75,12 +75,12 @@ Here's the reframe that changes everything: the gap is proof you're moving throu
 - **"Your sunrise, my sunset."** When it's morning for one and evening for the other, you're handing the day back and forth. It is a relay of the same 24 hours.
 - **Same moon, same sky.** You look up at night; hours later, they look at the same moon. It's a small, real thing that makes the miles feel thinner.
 
-We lean into this idea in our shop. The [**"Two Time Zones" tee** and the **Twilight "your sunset, my sunrise" jersey**](/shop) were designed for couples living on different clocks. Wearing the thing that names your situation can make it feel less lonely.
+We lean into this idea in our shop. The [**"Two Time Zones" tee** and the **Twilight "your sunset, my sunrise" jersey**](/shop/) were designed for couples living on different clocks. Wearing the thing that names your situation can make it feel less lonely.
 
 ## The tools that actually help
 
-- **A [time zone overlap calculator](/long-distance-time-zone-calculator)** lets you pick two cities and see the hours you're both awake. Never do the mental math again, and never text "you up?" at their 4 a.m.
-- **A shared calendar** for your golden hours and your next visit. A [countdown to the reunion](/blog/long-distance-relationship-timeline) reframes the gap as temporary.
+- **A [time zone overlap calculator](/long-distance-time-zone-calculator/)** lets you pick two cities and see the hours you're both awake. Never do the mental math again, and never text "you up?" at their 4 a.m.
+- **A shared calendar** for your golden hours and your next visit. A [countdown to the reunion](/blog/long-distance-relationship-timeline/) reframes the gap as temporary.
 - **Scheduled messages and a daily ritual in one place.** This is the core of what [Far Fox](https://app.lovefarfox.com) is built for: write a love letter now and schedule it to land at *their* morning, answer a shared daily question on your own time, drop voice notes and photos into a shared timeline, and grow a little fox companion together the more you both show up. It's designed so connection never depends on you being awake at the same second. Free on iOS, Android, and web.
 
 ## The bottom line

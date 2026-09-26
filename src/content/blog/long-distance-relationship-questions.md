@@ -1,6 +1,6 @@
 ---
-title: "100 Long-Distance Relationship Questions to Ask Your Partner"
-description: "100 thoughtful questions for long-distance couples — from deep and vulnerable to playful and flirty. The perfect way to skip small talk and actually connect."
+title: "100 Long-Distance Relationship Questions to Ask Your Boyfriend or Girlfriend"
+description: "100 long-distance relationship questions to ask your boyfriend or girlfriend, from deep and serious to playful and flirty. Skip the small talk and actually connect."
 date: "2026-04-18"
 tags: ["connection", "conversation", "fun"]
 ---
@@ -9,7 +9,7 @@ When you live apart, conversations carry more weight. You can't rely on shared d
 
 The problem? Most long-distance couples get stuck in the same loop: "how was your day," "what did you eat," "miss you," "goodnight." It's comfortable. It's also how you stop *really* knowing each other.
 
-Here are 100 questions to break that loop — grouped by mood, from light and silly to deep and vulnerable. Use them on a call, in a text, or take turns answering one every day. (For more ways to connect, see our [long-distance relationship activities](/blog/long-distance-relationship-activities).)
+Here are 100 questions to break that loop — grouped by mood, from light and silly to deep and vulnerable. Use them on a call, in a text, or take turns answering one every day. (For more ways to connect, see our [long-distance relationship activities](/blog/long-distance-relationship-activities/).)
 
 ## Deep questions to ask your long-distance partner
 
