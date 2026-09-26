@@ -95,7 +95,7 @@ const faqSchema = {
     </ul>
 
     <h2>Plan the next step together</h2>
-    <p><a href="/reunion-countdown/">Start a countdown once it's booked</a>, compare call times with our <a href="/long-distance-time-zone-calculator/">time-zone calculator</a>, or meet daily with the <a href="https://app.lovefarfox.com" data-app-cta="halfway_tool">Far Fox app</a>.</p>
+    <p><a href="/reunion-countdown/">Start a countdown once it's booked</a>, compare call times with our <a href="/long-distance-time-zone-calculator/">time-zone calculator</a>, or stay close between visits with the <a href="https://app.lovefarfox.com" data-app-cta="halfway_tool">Far Fox app</a>.</p>
 
     <h2>Common questions</h2>
     {faqs.map(([question, answer]) => (
@@ -156,7 +156,7 @@ const faqSchema = {
     const list = get<HTMLOListElement>('hub-list');
     list.replaceChildren(...hubs.map(hub => {
       const item = document.createElement('li');
-      item.textContent = `${hub.city}, ${hub.country} — you travel ${formatDistance(hub.fromKm)}, they travel ${formatDistance(hub.toKm)}`;
+      item.textContent = `${hub.city}, ${hub.country} — ${formatDistance(hub.fromKm)} from ${a.label}, ${formatDistance(hub.toKm)} from ${b.label}`;
       return item;
     }));
     get('no-hubs').hidden = hubs.length > 0;
