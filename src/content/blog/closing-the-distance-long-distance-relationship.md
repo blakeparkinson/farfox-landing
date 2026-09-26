@@ -18,7 +18,7 @@ faqs:
 
 Every long-distance relationship is quietly pointed at the same finish line: the day the distance ends. The airport goodbyes stop. The countdown hits zero and doesn't reset. You wake up in the same city, and "when will I see you again?" is no longer a question you have to answer.
 
-Closing the distance is the goal of the whole thing — and, weirdly, one of the hardest, least-talked-about stages of a [long-distance relationship](/blog/how-to-make-a-long-distance-relationship-work). Everyone tells you how to survive the distance. Almost no one prepares you for what it takes to actually *end* it well.
+Closing the distance is the goal of the whole thing — and, weirdly, one of the hardest, least-talked-about stages of a [long-distance relationship](/blog/how-to-make-a-long-distance-relationship-work/). Everyone tells you how to survive the distance. Almost no one prepares you for what it takes to actually *end* it well.
 
 Here's how to move from long-distance to same-city on purpose — the planning, the hard conversations, and the adjustment nobody warns you about.
 
@@ -53,7 +53,7 @@ The single most powerful thing you can do for a long-distance relationship is gi
 
 You don't need the exact day. You need a *target*: a season, tied to a real milestone. "After graduation." "When the lease is up in September." "Once the visa clears." Anchor it to something concrete so it can't quietly slide into "someday."
 
-Then make it visible. A [countdown to the move](/blog/long-distance-relationship-timeline) does the same thing a visit countdown does, but bigger — every day that ticks off is a day closer to the version of the relationship you've both been working for. On the hard nights, that number is the thing that makes the distance feel temporary instead of permanent.
+Then make it visible. A [countdown to the move](/blog/long-distance-relationship-timeline/) does the same thing a visit countdown does, but bigger — every day that ticks off is a day closer to the version of the relationship you've both been working for. On the hard nights, that number is the thing that makes the distance feel temporary instead of permanent.
 
 ## Plan the money before you pack a box
 
@@ -76,7 +76,7 @@ This is not a sign you made a mistake. It's the normal, near-universal adjustmen
 - **Expect it.** Just knowing the dip is coming defuses most of the panic when it arrives.
 - **Keep the space.** You've both been fiercely independent by necessity — don't smother that overnight. Alone time is still allowed; it always was.
 - **Keep communicating the way you did apart.** The intentional check-ins, the naming of feelings, the deliberate connection — don't let those habits lapse just because you can now tap each other on the shoulder. The couples who struggle most are the ones who stop *trying* the moment trying got easier.
-- **Rebuild trust in the new context.** If jealousy or insecurity shows up in a new form, handle it the way you always have — [with transparency, not surveillance](/blog/how-to-build-trust-in-a-long-distance-relationship).
+- **Rebuild trust in the new context.** If jealousy or insecurity shows up in a new form, handle it the way you always have — [with transparency, not surveillance](/blog/how-to-build-trust-in-a-long-distance-relationship/).
 
 The distance taught you how to be intentional. That skill doesn't stop being useful when you close it — it's exactly what makes the transition work.
 
@@ -84,7 +84,7 @@ The distance taught you how to be intentional. That skill doesn't stop being use
 
 When you were apart, you *planned* connection. Dates had a start time and your full attention because they had to. In the same city, it's dangerously easy to let "we live together now" quietly replace actually spending quality time together — and slide into two people who share a couch and a Wi-Fi password.
 
-Keep the intentionality. Plan real dates. Keep asking the [questions that go somewhere](/blog/long-distance-relationship-questions). Mark the milestone of finally being together, and mark the ones that come after. The habits that kept you close across a thousand miles are the same ones that'll keep you close across the dinner table.
+Keep the intentionality. Plan real dates. Keep asking the [questions that go somewhere](/blog/long-distance-relationship-questions/). Mark the milestone of finally being together, and mark the ones that come after. The habits that kept you close across a thousand miles are the same ones that'll keep you close across the dinner table.
 
 ## Don't lose the rituals that got you here
 

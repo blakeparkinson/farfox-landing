@@ -46,7 +46,7 @@ Here are 47 long-distance date ideas organized by type — from low-effort weekn
 14. **Online co-op game** — Stardew Valley, It Takes Two, Overcooked (relationship stress-tested).
 15. **Mobile game tournament** — chess, Words With Friends, a trivia app.
 16. **Jackbox party games** — hilarious even with two people.
-17. **Would You Rather rounds** — quick, revealing, and weirdly bonding. (More in our [questions guide](/blog/long-distance-relationship-questions).)
+17. **Would You Rather rounds** — quick, revealing, and weirdly bonding. (More in our [questions guide](/blog/long-distance-relationship-questions/).)
 18. **Online escape room** — several companies run video-call escape rooms for two.
 19. **Geoguessr together** — guess where in the world the street view is.
 20. **Build something in Minecraft.** A shared house you'll "live in" until the real one.
@@ -55,8 +55,8 @@ Here are 47 long-distance date ideas organized by type — from low-effort weekn
 
 21. **Draw each other** without looking at the paper. Compare disasters.
 22. **Make a shared playlist** — take turns adding songs that remind you of each other.
-23. **Start a shared photo album** of your separate days. (Our [activities guide](/blog/long-distance-relationship-activities) has more on this.)
-24. **Write each other a letter** during the date and read them aloud at the end. Stuck? Try these [love letter prompts](/blog/love-letter-prompts-long-distance).
+23. **Start a shared photo album** of your separate days. (Our [activities guide](/blog/long-distance-relationship-activities/) has more on this.)
+24. **Write each other a letter** during the date and read them aloud at the end. Stuck? Try these [love letter prompts](/blog/love-letter-prompts-long-distance/).
 25. **Paint and sip** — same paint-by-numbers kit, glass of something, two hours.
 26. **Plan your dream trip** on a shared map, even if it's years away.
 27. **Design your future place** — browse listings or Pinterest a home you'd share.
@@ -74,7 +74,7 @@ Here are 47 long-distance date ideas organized by type — from low-effort weekn
 33. **Body-doubling.** Both work or study on call in comfortable silence — surprisingly intimate.
 34. **Get ready together** in the morning or wind down at night on video.
 35. **Fall asleep on call.** Cheesy. Also genuinely comforting.
-36. **Daily question date** — answer the same prompt and compare. (We have [100 of them](/blog/long-distance-relationship-questions).)
+36. **Daily question date** — answer the same prompt and compare. (We have [100 of them](/blog/long-distance-relationship-questions/).)
 37. **Window-shop together** — browse a store's site and "shop" for each other.
 38. **Same sunset, two cities** — watch it at the same moment and send photos.
 39. **Workout date** — same YouTube workout, suffer together.
@@ -96,13 +96,13 @@ Here are 47 long-distance date ideas organized by type — from low-effort weekn
 
 The idea matters less than the execution. Four things separate a real date from a call:
 
-- **Schedule it.** A specific time you both protect. Put it on a [shared calendar](/blog/how-to-make-a-long-distance-relationship-work) so it's a ritual, not a maybe.
+- **Schedule it.** A specific time you both protect. Put it on a [shared calendar](/blog/how-to-make-a-long-distance-relationship-work/) so it's a ritual, not a maybe.
 - **Get ready for it.** Dress up a little. The effort is the affection.
 - **Kill the distractions.** Phone on a stand, other notifications off, full attention.
 - **End on something personal.** A letter read aloud, one appreciation each, a real goodnight.
 
 If remembering to plan dates is the hard part, that's exactly the friction [Far Fox](https://app.lovefarfox.com) removes — daily questions, shared photos, love letters, countdowns, and a fox that grows every time you show up for each other.
 
-For the bigger picture on keeping things alive across distance, see our guides on [keeping the spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship) and the complete guide to [making a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work).
+For the bigger picture on keeping things alive across distance, see our guides on [keeping the spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship/) and the complete guide to [making a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work/).
 
-Looking for something more competitive than a date? Try our list of [47 long-distance relationship games](/blog/long-distance-relationship-games).
+Looking for something more competitive than a date? Try our list of [47 long-distance relationship games](/blog/long-distance-relationship-games/).

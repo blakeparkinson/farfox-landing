@@ -28,7 +28,7 @@ Here are 30 ideas, organized by how you want the day to feel.
 6. **Slideshow date** — build a shared photo recap of your year and watch it together.
 7. **Take an online class together** — a cooking or cocktail class makes a memorable anniversary activity.
 
-For more on pulling off a great virtual date, see our [long-distance date ideas](/blog/long-distance-date-ideas) guide.
+For more on pulling off a great virtual date, see our [long-distance date ideas](/blog/long-distance-date-ideas/) guide.
 
 ## Surprise them from afar
 
@@ -47,7 +47,7 @@ For more on pulling off a great virtual date, see our [long-distance date ideas]
 17. **A piece of jewelry or a watch** set to their time zone.
 18. **A star map** of the night you met, or your first date.
 
-Need more gift inspiration? Our [long-distance relationship gifts](/blog/long-distance-relationship-gifts) guide has ideas that travel well.
+Need more gift inspiration? Our [long-distance relationship gifts](/blog/long-distance-relationship-gifts/) guide has ideas that travel well.
 
 ## Make it a tradition
 
@@ -76,6 +76,6 @@ Whatever you choose, two moves elevate it from "nice phone call" to "I'll rememb
 - **Coordinate the timing** so it genuinely feels shared, in real time.
 - **Add something they can keep** — a letter, a photo book, a recording — so the day outlasts the call.
 
-This is also a good moment to understand *how* your partner most feels loved — a gift person and a words-of-affirmation person want very different anniversaries. Our guide to [love languages in long-distance relationships](/blog/love-languages-long-distance-relationship) breaks it down.
+This is also a good moment to understand *how* your partner most feels loved — a gift person and a words-of-affirmation person want very different anniversaries. Our guide to [love languages in long-distance relationships](/blog/love-languages-long-distance-relationship/) breaks it down.
 
 [Far Fox](https://app.lovefarfox.com) keeps your shared photos, letters, countdowns, and a time capsule in one place — so when the anniversary comes, the material for something meaningful is already there. It's free.

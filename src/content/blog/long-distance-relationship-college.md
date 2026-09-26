@@ -20,7 +20,7 @@ You're either about to leave for college with someone you love staying behind, o
 
 College long-distance relationships get a bad rap ("nobody stays together," "the turkey drop is real"), and yes, a lot of them end. But a lot of them don't. The difference almost never comes down to how much you love each other. It comes down to whether you handle a few specific things well.
 
-Here's how to make a [long-distance relationship](/blog/how-to-make-a-long-distance-relationship-work) survive college — without letting it swallow the college part.
+Here's how to make a [long-distance relationship](/blog/how-to-make-a-long-distance-relationship-work/) survive college — without letting it swallow the college part.
 
 ## The one rule that matters most: don't shrink your college experience
 
@@ -35,7 +35,7 @@ The healthiest college long-distance couples are almost paradoxically *independe
 Have the real conversation *before* the semester starts, not in a panicked 2 a.m. text in October.
 
 - **Communication rhythm:** roughly how often will you talk? (See below — be realistic about a busy week, not a summer week.)
-- **Commitment and boundaries:** what does "together" mean when you're both meeting hundreds of new people? What's okay, what's not? Don't assume you share definitions — [say them out loud](/blog/how-to-build-trust-in-a-long-distance-relationship).
+- **Commitment and boundaries:** what does "together" mean when you're both meeting hundreds of new people? What's okay, what's not? Don't assume you share definitions — [say them out loud](/blog/how-to-build-trust-in-a-long-distance-relationship/).
 - **Visits:** roughly when will you see each other? Even a loose plan turns "when will I see you again?" into "Thanksgiving."
 - **The honest one:** are you both actually in this because you want to be, or out of fear of the goodbye? Name it now.
 
@@ -48,9 +48,9 @@ The instinct is to talk constantly to feel safe. It backfires. A rhythm built fo
 Build for a busy week from the start:
 - A quick **daily check-in** — good morning, good night, a few texts through the day. Low effort, high reassurance.
 - **One or two real calls a week**, ideally at a set time you both protect.
-- **Async everything else** — voice notes between classes, a photo from the dining hall, a meme at midnight. It keeps you woven into each other's days without either of you chained to the phone. (Our [long-distance texts guide](/blog/long-distance-relationship-texts) has a ton of these.)
+- **Async everything else** — voice notes between classes, a photo from the dining hall, a meme at midnight. It keeps you woven into each other's days without either of you chained to the phone. (Our [long-distance texts guide](/blog/long-distance-relationship-texts/) has a ton of these.)
 
-Consistency beats volume. A reliable 15-minute call every Tuesday does more than a marathon FaceTime that only happens when you're both free (i.e., never, during the semester). If you end up on different [time zones](/blog/long-distance-relationship-time-zones), this matters even more.
+Consistency beats volume. A reliable 15-minute call every Tuesday does more than a marathon FaceTime that only happens when you're both free (i.e., never, during the semester). If you end up on different [time zones](/blog/long-distance-relationship-time-zones/), this matters even more.
 
 ## Trust, the party scene, and jealousy
 
@@ -58,20 +58,20 @@ This is the college-specific minefield: your partner is now surrounded by new pe
 
 - **Agree on boundaries up front** so there's no grey zone for anxiety to colonize.
 - **Share proactively.** Tell them about your new friends, post the group photo, mention the party *before* they see it and wonder. Openness you offer freely is worth infinitely more than information they have to extract.
-- **Skip the surveillance.** Demanding location, reading DMs, needing a reply mid-party — it reads as suspicion and breeds exactly the distance you fear. Real [trust is built through consistency, not monitoring](/blog/how-to-build-trust-in-a-long-distance-relationship).
+- **Skip the surveillance.** Demanding location, reading DMs, needing a reply mid-party — it reads as suspicion and breeds exactly the distance you fear. Real [trust is built through consistency, not monitoring](/blog/how-to-build-trust-in-a-long-distance-relationship/).
 - **Accept the truth:** you'll both go out, make friends, and have a social life without each other in the room. That's college, not betrayal. Trying to prevent it is the fastest route to resentment.
 
 ## Plan visits around the academic calendar
 
 The academic calendar is secretly your best friend — it's *full* of built-in reunions. Long weekends, reading weeks, Thanksgiving, winter break, spring break, summer. Map them at the start of the term so there's always a next visit on the horizon.
 
-A [visible countdown to your next reunion](/blog/long-distance-relationship-timeline) does more for morale than almost anything — it reframes the distance as a series of short gaps between visits rather than an endless stretch. Bonus: coordinate with the cheaper travel windows and split costs fairly so money doesn't become its own quiet resentment.
+A [visible countdown to your next reunion](/blog/long-distance-relationship-timeline/) does more for morale than almost anything — it reframes the distance as a series of short gaps between visits rather than an endless stretch. Bonus: coordinate with the cheaper travel windows and split costs fairly so money doesn't become its own quiet resentment.
 
 ## Let each other change
 
 You are both about to change *a lot* — new ideas, new confidence, new versions of yourselves. That's not a threat to the relationship; it's the whole point of college. The couples who make it are the ones who stay curious about who the other is becoming, rather than clinging to who they were in high school.
 
-Grow as individuals, and keep sharing that growth with each other. Ask the [deeper questions](/blog/long-distance-relationship-questions) as you both evolve. A relationship that has room for two people to become themselves is far stronger than one that requires you both to stay frozen.
+Grow as individuals, and keep sharing that growth with each other. Ask the [deeper questions](/blog/long-distance-relationship-questions/) as you both evolve. A relationship that has room for two people to become themselves is far stronger than one that requires you both to stay frozen.
 
 ## When to reassess (honestly)
 

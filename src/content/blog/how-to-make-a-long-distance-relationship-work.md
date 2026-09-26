@@ -32,7 +32,7 @@ What actually keeps you connected is **intentional** communication:
 
 - **A few real touchpoints a day** beat constant low-effort pinging. A good-morning message, a photo of something you saw, a single thoughtful question.
 - **A five-minute voice note** where you say something true does more than two hours of "wyd."
-- **Questions that go somewhere.** The fastest way to stop knowing each other is to ask "how was your day" every day. Our list of [100 long-distance relationship questions](/blog/long-distance-relationship-questions) exists precisely to break that loop.
+- **Questions that go somewhere.** The fastest way to stop knowing each other is to ask "how was your day" every day. Our list of [100 long-distance relationship questions](/blog/long-distance-relationship-questions/) exists precisely to break that loop.
 
 If your conversations have started to feel transactional, that's not a sign the relationship is failing — it's a sign you need better *prompts*, not more *minutes*.
 
@@ -49,7 +49,7 @@ A ritual is anything you do together, consistently, that's just yours:
 - A love letter every Sunday
 - A running Would You Rather streak
 
-The point of a ritual is that it survives your bad days. When you're tired, stressed, or busy, willpower fails — but a habit holds. For a full menu of ideas, see our guides to [long-distance relationship activities](/blog/long-distance-relationship-activities) and [couple challenges](/blog/couple-challenge-ideas).
+The point of a ritual is that it survives your bad days. When you're tired, stressed, or busy, willpower fails — but a habit holds. For a full menu of ideas, see our guides to [long-distance relationship activities](/blog/long-distance-relationship-activities/) and [couple challenges](/blog/couple-challenge-ideas/).
 
 This is also the entire design philosophy behind [Far Fox](https://app.lovefarfox.com) — daily prompts, shared photos, and a fox companion that grows the more you show up, so connection doesn't depend on remembering to be connected.
 
@@ -61,9 +61,9 @@ Distance doesn't kill the spark. Routine without intention does.
 
 The spark lives in three things: **novelty, vulnerability, and play.** None of those happen by accident when you're a thousand miles apart — you have to build them in. That means rotating in new things to talk about and do, being honest about the hard stuff instead of performing happiness, and keeping a sense of fun.
 
-Our full guide on [how to keep the spark alive in a long-distance relationship](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship) goes deep on this, but the short version: surprise each other, write things down, and never let the relationship become the same three texts on repeat.
+Our full guide on [how to keep the spark alive in a long-distance relationship](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship/) goes deep on this, but the short version: surprise each other, write things down, and never let the relationship become the same three texts on repeat.
 
-It also helps enormously to understand *how* your partner feels loved. Speaking the wrong love language across distance is like sending letters to the wrong address — see [love languages in long-distance relationships](/blog/love-languages-long-distance-relationship) for how to translate each one across the miles.
+It also helps enormously to understand *how* your partner feels loved. Speaking the wrong love language across distance is like sending letters to the wrong address — see [love languages in long-distance relationships](/blog/love-languages-long-distance-relationship/) for how to translate each one across the miles.
 
 ---
 
@@ -77,7 +77,7 @@ Checking phones, demanding constant location updates, needing a reply within min
 - **Share proactively.** Tell your partner about your day before they have to ask. Transparency you offer freely is worth more than information they have to extract.
 - **Be honest about hard feelings** instead of going quiet and making them guess.
 
-Trust is consistency, repeated, until it becomes assumed. (For the jealousy and insecurity that inevitably creep in, here's [how to build trust and handle it without spiraling](/blog/how-to-build-trust-in-a-long-distance-relationship).)
+Trust is consistency, repeated, until it becomes assumed. (For the jealousy and insecurity that inevitably creep in, here's [how to build trust and handle it without spiraling](/blog/how-to-build-trust-in-a-long-distance-relationship/).)
 
 ---
 
@@ -85,9 +85,9 @@ Trust is consistency, repeated, until it becomes assumed. (For the jealousy and 
 
 There is a reason letters have survived every era of long-distance love. A message in a chat thread disappears. A letter gets read slowly, alone, and kept.
 
-You don't need to be a poet. Three honest sentences, written with intention, land harder than a paragraph in iMessage. If you freeze up at the blank page, our [50 love letter prompts for long-distance couples](/blog/love-letter-prompts-long-distance) will get you unstuck tonight.
+You don't need to be a poet. Three honest sentences, written with intention, land harder than a paragraph in iMessage. If you freeze up at the blank page, our [50 love letter prompts for long-distance couples](/blog/love-letter-prompts-long-distance/) will get you unstuck tonight.
 
-Gifts work the same way when they're chosen with thought rather than panic — see our guide to [long-distance relationship gifts that actually mean something](/blog/long-distance-relationship-gifts) for ideas that travel well.
+Gifts work the same way when they're chosen with thought rather than panic — see our guide to [long-distance relationship gifts that actually mean something](/blog/long-distance-relationship-gifts/) for ideas that travel well.
 
 ---
 
@@ -105,7 +105,7 @@ Two kinds of planning keep a long-distance relationship alive.
 
 Almost every long-distance relationship moves through the same emotional stages — the honeymoon, the first communication crisis around month three, the comfortable routine, the drift point around months 7–12, and finally the lived-in "new normal."
 
-Knowing this is genuinely comforting. The wall you hit at month three isn't a sign you're failing; it's the wall *every* couple hits at month three. Our [long-distance relationship timeline](/blog/long-distance-relationship-timeline) walks through each stage and what to do at each one.
+Knowing this is genuinely comforting. The wall you hit at month three isn't a sign you're failing; it's the wall *every* couple hits at month three. Our [long-distance relationship timeline](/blog/long-distance-relationship-timeline/) walks through each stage and what to do at each one.
 
 ---
 
@@ -113,7 +113,7 @@ Knowing this is genuinely comforting. The wall you hit at month three isn't a si
 
 You can do all of this with a notebook, a calendar, and a phone. But the friction adds up, and friction is what kills rituals.
 
-Purpose-built couples apps reduce that friction — they hold the daily questions, the letters, the shared photos, the countdowns, and the streaks in one place so you don't have to organize it yourself. We reviewed the main options in our guide to the [best long-distance relationship apps](/blog/best-long-distance-relationship-apps).
+Purpose-built couples apps reduce that friction — they hold the daily questions, the letters, the shared photos, the countdowns, and the streaks in one place so you don't have to organize it yourself. We reviewed the main options in our guide to the [best long-distance relationship apps](/blog/best-long-distance-relationship-apps/).
 
 ---
 
@@ -125,4 +125,4 @@ The work isn't grand gestures. It's small, consistent, intentional — a real qu
 
 [Far Fox](https://app.lovefarfox.com) was built for exactly this work — daily questions, love letters, shared photos, voice notes, countdowns, and a fox that grows alongside your relationship. It's free. Your fox is waiting.
 
-And when you finally close the gap for a visit, here's [what to expect meeting for the first time](/blog/meeting-long-distance-partner-first-time).
+And when you finally close the gap for a visit, here's [what to expect meeting for the first time](/blog/meeting-long-distance-partner-first-time/).

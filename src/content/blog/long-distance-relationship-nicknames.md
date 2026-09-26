@@ -79,10 +79,10 @@ Here's the honest truth about nicknames — the ones that *stick* are almost nev
 
 So treat the lists above as a starting point, not the destination. The category that fits their personality gets you close; a real moment between you gets you the one that lasts.
 
-A good way to *find* those moments? Keep talking about the specifics — the small stuff inside jokes are made of. Our [100 long-distance relationship questions](/blog/long-distance-relationship-questions) are practically a nickname-generating machine, and a running [Would You Rather](/blog/long-distance-relationship-questions) habit surfaces the quirks that become pet names.
+A good way to *find* those moments? Keep talking about the specifics — the small stuff inside jokes are made of. Our [100 long-distance relationship questions](/blog/long-distance-relationship-questions/) are practically a nickname-generating machine, and a running [Would You Rather](/blog/long-distance-relationship-questions/) habit surfaces the quirks that become pet names.
 
-For the bigger picture on building intimacy across distance, see our complete guide on [making a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work).
+For the bigger picture on building intimacy across distance, see our complete guide on [making a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work/).
 
-If you need a line to go with the nickname — a caption, a letter closing, a text when the screen is blank — we keep [100 long-distance relationship quotes](/blog/long-distance-relationship-quotes) you can copy as-is.
+If you need a line to go with the nickname — a caption, a letter closing, a text when the screen is blank — we keep [100 long-distance relationship quotes](/blog/long-distance-relationship-quotes/) you can copy as-is.
 
 [Far Fox](https://app.lovefarfox.com) gives you daily questions, shared photos, and letters — the little daily moments that inside jokes (and the perfect nickname) come from. It's free.

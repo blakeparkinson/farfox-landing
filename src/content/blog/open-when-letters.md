@@ -18,7 +18,7 @@ Somewhere in a desk drawer, in a dorm room or a barracks or an apartment six tim
 
 That's the whole idea of open when letters: you write them now, your partner opens them later — at the exact moment each one is meant for. It's the closest thing long-distance has to being there at 2 a.m. when they can't sleep, because in a way, you are. Past-you showed up early and left a note.
 
-They work because they solve the central problem of [long-distance relationships](/blog/how-to-make-a-long-distance-relationship-work): you can't be there for the moments you can't predict. A text after a bad day is great. A letter they open *during* the bad day — one you wrote weeks ago, sealed, waiting — feels like something else entirely.
+They work because they solve the central problem of [long-distance relationships](/blog/how-to-make-a-long-distance-relationship-work/): you can't be there for the moments you can't predict. A text after a bad day is great. A letter they open *during* the bad day — one you wrote weeks ago, sealed, waiting — feels like something else entirely.
 
 Here's how to make a set worth opening.
 
@@ -125,13 +125,13 @@ The letter is the point — but one small, flat extra per envelope makes opening
 - **"Doubting us"** → your ticket stub or receipt from your first date
 - **"Night before we meet"** → a spritz of the cologne or perfume you wear
 
-Keep everything flat and light if you're mailing internationally — and if your partner is deployed, check what's allowed first (our [military long-distance guide](/blog/military-long-distance-relationship) covers care-package rules).
+Keep everything flat and light if you're mailing internationally — and if your partner is deployed, check what's allowed first (our [military long-distance guide](/blog/military-long-distance-relationship/) covers care-package rules).
 
 ## How to write them so they land
 
 **Write in their voice's gaps, not yours.** Before you start, picture the specific moment they'll open it. "Open when you can't sleep" gets read by someone exhausted at 2 a.m. — write *for that person*, not for yourself at a coffee shop on a Saturday.
 
-**Be specific or be skipped.** Generic comfort ("everything will be okay!") reads like a greeting card. Specific memory ("remember the night bus in Lisbon when you fell asleep on my arm and I didn't move for two hours") reads like you. If you get stuck, steal from our [50 love letter prompts](/blog/love-letter-prompts-long-distance) — most map directly onto open-when envelopes.
+**Be specific or be skipped.** Generic comfort ("everything will be okay!") reads like a greeting card. Specific memory ("remember the night bus in Lisbon when you fell asleep on my arm and I didn't move for two hours") reads like you. If you get stuck, steal from our [50 love letter prompts](/blog/love-letter-prompts-long-distance/) — most map directly onto open-when envelopes.
 
 **Vary the lengths.** Some letters should be a page. Some should be one sentence. "Open when you're procrastinating" should be: *"Go. You can do this. I love you. — Me."*
 

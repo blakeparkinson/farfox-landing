@@ -19,7 +19,7 @@ export const GET: APIRoute = async () => {
 
   const items = posts
     .map((post) => {
-      const url = `https://lovefarfox.com/blog/${post.id}`;
+      const url = `https://lovefarfox.com/blog/${post.id}/`;
       return `    <item>
       <title>${xmlEscape(post.data.title)}</title>
       <link>${url}</link>
@@ -34,7 +34,7 @@ export const GET: APIRoute = async () => {
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Far Fox — Long-Distance Relationship Guides</title>
-    <link>https://lovefarfox.com/blog</link>
+    <link>https://lovefarfox.com/blog/</link>
     <atom:link href="https://lovefarfox.com/rss.xml" rel="self" type="application/rss+xml"/>
     <description>Practical guides for couples making long-distance work: questions, dates, letters, time zones, and daily rituals.</description>
     <language>en-us</language>

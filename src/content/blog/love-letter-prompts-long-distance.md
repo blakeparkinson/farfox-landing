@@ -14,7 +14,7 @@ faqs:
   - question: "Are these prompts good for couples who aren't long-distance?"
     answer: "Yes. They're written with the long-distance frame because that's the audience where letters are most life-or-death — but every prompt works for couples who live together too. The \"future plans\" section reads differently when you already share a couch, but it still reads."
   - question: "Where can I get more prompts like these?"
-    answer: "Far Fox ships with 200+ daily letter prompts organized by mood — gratitude, memories, future, missing, anniversary, playful, deep, and more. A new one is surfaced every day on a fresh stationery theme. You can also see how you and your partner like to feel loved with the free love profile quiz at lovefarfox.com/quiz, which tunes the prompts you see."
+    answer: "Far Fox ships with 200+ daily letter prompts organized by mood — gratitude, memories, future, missing, anniversary, playful, deep, and more. A new one is surfaced every day on a fresh stationery theme. You can also see how you and your partner like to feel loved with the free love profile quiz at lovefarfox.com/quiz/, which tunes the prompts you see."
 ---
 
 You sit down to write your partner a real letter — the kind that isn't a text message, the kind they'll keep — and the page just stares back. You know what you *feel*. You don't know where to start.
@@ -86,7 +86,7 @@ The trick is to be specific. "I miss you" is generic. "I miss the way you reach 
 20. What do you miss about their body that has nothing to do with sex?
 21. Write about a moment from your last visit you keep replaying.
 
-For more along these lines: [Long-Distance Relationship Questions](/blog/long-distance-relationship-questions) covers 100 questions that pair well with these letters.
+For more along these lines: [Long-Distance Relationship Questions](/blog/long-distance-relationship-questions/) covers 100 questions that pair well with these letters.
 
 ## Future-plans prompts (the antidote to limbo)
 
@@ -149,7 +149,7 @@ The prompt isn't the letter. The prompt is the door. Three rules:
 
 **3. Send it before you re-read it more than twice.** If you re-read it three times, you'll talk yourself out of half of it. Send the version that scares you a little.
 
-(Writing a batch instead of one? These prompts pair perfectly with [open when letters](/blog/open-when-letters) — sealed envelopes your partner opens at specific moments, like "open when you can't sleep.")
+(Writing a batch instead of one? These prompts pair perfectly with [open when letters](/blog/open-when-letters/) — sealed envelopes your partner opens at specific moments, like "open when you can't sleep.")
 
 ## How long should a love letter be?
 

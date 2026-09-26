@@ -98,7 +98,7 @@ Holiday shipping is where long-distance plans quietly fall apart. A few rules:
 - **Agree on a budget.** You don't need to match gifts dollar for dollar, but you should both be comfortable. It's fine to set a limit and stick to it.
 - **Have a back-up.** If a parcel is late, a digital gift or a printed photo of what's coming keeps the moment intact.
 
-Need ideas? Our [long-distance gift guide](/blog/long-distance-relationship-gifts/) covers sentimental, comfort, experience, and digital gifts. If you've left it late, a [personalized map of your two cities](/personalized-long-distance-map/) downloads as a print-ready file instantly, so shipping delays can't touch it. For something they can wear on the video call, make a one-of-one [Long Distance FC jersey](/personalized-long-distance-jersey/) with their name and number, or browse tees and mugs in the [Far Fox shop](/shop). Order physical gifts early.
+Need ideas? Our [long-distance gift guide](/blog/long-distance-relationship-gifts/) covers sentimental, comfort, experience, and digital gifts. If you've left it late, a [personalized map of your two cities](/personalized-long-distance-map/) downloads as a print-ready file instantly, so shipping delays can't touch it. For something they can wear on the video call, make a one-of-one [Long Distance FC jersey](/personalized-long-distance-jersey/) with their name and number, or browse tees and mugs in the [Far Fox shop](/shop/). Order physical gifts early.
 
 ## New Year's Eve across time zones
 

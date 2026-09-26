@@ -56,7 +56,7 @@ for (const key of ['source', 'medium', 'campaign', 'content', 'term']) {
   const value = Astro.url.searchParams.get(`utm_${key}`);
   if (value) inviteParams.set(`origin_${key}`, value);
 }
-const inviteUrl = `https://lovefarfox.com/quiz?${inviteParams}`;
+const inviteUrl = `https://lovefarfox.com/quiz/?${inviteParams}`;
 ---
 
 <Layout title={pageTitle} description={pageDesc} image={ogImage}>

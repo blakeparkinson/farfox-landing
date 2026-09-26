@@ -20,7 +20,7 @@ It's 1:14 a.m. The original message was four words. You're now 40 messages deep,
 
 That's the shape of a long-distance fight. No slammed door. No chance to catch their expression and realize you misread it. Just a glowing screen, a delay, and a story your brain is writing in the gap.
 
-[Long-distance relationships](/blog/how-to-make-a-long-distance-relationship-work) don't create more conflict than other relationships. They make the same conflict harder to finish. You can still fight well from far away. You just can't fight the way you would on a couch.
+[Long-distance relationships](/blog/how-to-make-a-long-distance-relationship-work/) don't create more conflict than other relationships. They make the same conflict harder to finish. You can still fight well from far away. You just can't fight the way you would on a couch.
 
 ## Get off text the second it turns
 
@@ -35,11 +35,11 @@ Use text for one job only: name that there's a problem, and pick a time to talk.
 
 If they can't talk right then, that's allowed. A scheduled call in three hours beats a worse fight in the next three minutes. The rule is simple: **the argument happens out loud.**
 
-(The same goes for [day-to-day texts](/blog/long-distance-relationship-texts). Warm, specific, short. If a thread is getting sharp, stop typing.)
+(The same goes for [day-to-day texts](/blog/long-distance-relationship-texts/). Warm, specific, short. If a thread is getting sharp, stop typing.)
 
 ## Wait until you can hear them, not just reply to them
 
-Distance makes it tempting to dump the feeling the second it arrives. You can't tap them on the shoulder, so you send the paragraph. Then they're in a meeting, or asleep in another [time zone](/blog/long-distance-relationship-time-zones), and they wake up to a novel of accusations.
+Distance makes it tempting to dump the feeling the second it arrives. You can't tap them on the shoulder, so you send the paragraph. Then they're in a meeting, or asleep in another [time zone](/blog/long-distance-relationship-time-zones/), and they wake up to a novel of accusations.
 
 If you're too angry to listen, you're too angry to call. Take the walk. Eat something. Sleep if it's after midnight. Write the mean draft in your notes app and do not send it.
 
@@ -55,7 +55,7 @@ There's the event: they cancelled the call, they sounded short, they posted a st
 
 Then there's the story: they don't care, they're pulling away, you're the only one trying.
 
-The event might be real. The story is usually fear wearing a costume. Distance [removes the thousand tiny reassurances](/blog/how-to-build-trust-in-a-long-distance-relationship) you'd get from sharing a room, so your brain fills the blank with the worst available plot.
+The event might be real. The story is usually fear wearing a costume. Distance [removes the thousand tiny reassurances](/blog/how-to-build-trust-in-a-long-distance-relationship/) you'd get from sharing a room, so your brain fills the blank with the worst available plot.
 
 Lead with the event and the feeling. Leave the character analysis out of it.
 
@@ -79,11 +79,11 @@ Close it in words.
 
 If you were wrong, own it in one sentence. No speech, no "but you also." The but-clause is how an apology turns back into a fight.
 
-Then reconnect with something that isn't the argument: a voice note, a photo from the next morning, a [question that goes somewhere](/blog/long-distance-relationship-questions) besides "are we okay?" The point is to put a real moment after the hard one, so the last thing between you isn't the conflict.
+Then reconnect with something that isn't the argument: a voice note, a photo from the next morning, a [question that goes somewhere](/blog/long-distance-relationship-questions/) besides "are we okay?" The point is to put a real moment after the hard one, so the last thing between you isn't the conflict.
 
 ## Notice when the fight is about the distance itself
 
-A lot of early LDR fights aren't about cancelled calls. They're about [communication fatigue](/blog/long-distance-relationship-timeline): the honeymoon volume of contact collapsing into a more human rhythm, and one person reading the drop as a loss of love.
+A lot of early LDR fights aren't about cancelled calls. They're about [communication fatigue](/blog/long-distance-relationship-timeline/): the honeymoon volume of contact collapsing into a more human rhythm, and one person reading the drop as a loss of love.
 
 If you're having the same fight every two weeks, zoom out.
 
