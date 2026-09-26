@@ -50,6 +50,8 @@ Copy these prompts into the note you both use. Put booking references and addres
 
 Count more than the ticket. Add accommodation, transport at both ends, food, and any paid activities before you decide the visit is affordable. Include the cost of taking time off if that affects either person's pay.
 
+If you live far apart, meeting in the middle can split the journey more evenly. Our [halfway point calculator](/halfway-point-calculator/) shows the fairest cities to meet in.
+
 You don't have to split each receipt in half. One person might pay for travel while the other pays for groceries and the stay, but compare the totals: a flight and a week's food can cost different amounts. Agree on a split that leaves both of you comfortable saying, “That restaurant is more than I want to spend.”
 
 Try this wording on your planning call:

@@ -1,0 +1,265 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+
+const faqs: [string, string][] = [
+  [
+    'How do I find the halfway point between two cities?',
+    'Enter both cities. We look up their coordinates, calculate the geographic midpoint along the globe, then rank nearby major hubs by the longer of the two trips.',
+  ],
+  [
+    'Why is our halfway point in the ocean?',
+    'The exact midpoint is based on the shortest path across the Earth’s surface, not on where people live or where flights go. It can fall in the ocean or somewhere remote, so the nearby city suggestions may be more useful.',
+  ],
+  [
+    'Is meeting halfway cheaper than one person visiting?',
+    'Not always. Two tickets can cost more than one person travelling, and a halfway city may add accommodation or ground transport. Compare the total cost of both options before booking.',
+  ],
+  [
+    'Is it safe to meet a long-distance partner halfway for the first time?',
+    'Meet in a public place, keep your own accommodation and return ticket, and tell someone you trust where you will be. You can change your plans or leave at any time.',
+  ],
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(([question, answer]) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: { '@type': 'Answer', text: answer },
+  })),
+};
+---
+
+<ToolLayout
+  title="Halfway Point Between Two Cities: Meet-in-the-Middle Calculator | Far Fox"
+  description="Find the halfway point between you and your long-distance partner, plus the fairest cities to meet in, with how far each of you travels. Free, no signup."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <header class="intro">
+    <h1>Meet in the middle.</h1>
+    <p>Enter your city and your partner's. See the exact halfway point between you and the fairest real cities to meet in, where neither of you travels much further than the other.</p>
+  </header>
+
+  <div class="calculator-grid">
+    <form id="halfway-form">
+      <label>
+        Your city
+        <input id="your-city" name="your-city" type="text" placeholder="City, country" required minlength="2" maxlength="100" autocomplete="off" />
+        <small id="your-found" role="status" aria-live="polite"></small>
+        <small id="your-error" class="field-error" role="status" aria-live="polite"></small>
+      </label>
+      <label>
+        Their city
+        <input id="their-city" name="their-city" type="text" placeholder="City, country" required minlength="2" maxlength="100" autocomplete="off" />
+        <small id="their-found" role="status" aria-live="polite"></small>
+        <small id="their-error" class="field-error" role="status" aria-live="polite"></small>
+      </label>
+      <button id="calculate" type="submit" disabled>Find our halfway point</button>
+      <p id="form-status" role="status" aria-live="polite"></p>
+      <small class="privacy-note">The cities you enter are looked up with OpenStreetMap. Your share link contains both cities, so anyone with it can see them.</small>
+      <noscript><p>Enable JavaScript to calculate a halfway point. You can still explore our <a href="/tools/">other free tools</a>.</p></noscript>
+    </form>
+
+    <section id="results" class="results" aria-labelledby="results-title" hidden>
+      <h2 id="results-title">Your halfway point</h2>
+      <p class="total-label">Total straight-line distance</p>
+      <p id="total-distance" class="total-distance"></p>
+      <h3>Geographic midpoint</h3>
+      <p id="midpoint-coordinates" class="coordinates"></p>
+      <a id="map-link" href="#" target="_blank" rel="noopener">See the halfway point on a map</a>
+      <p class="midpoint-note">The exact midpoint is often in the ocean or somewhere remote, which is why the cities below matter.</p>
+      <h3>Fairest cities to meet in</h3>
+      <ol id="hub-list"></ol>
+      <p id="no-hubs" hidden>You're close enough that no major hub beats one of you just making the trip. Take turns visiting, or pick a town between you on the map.</p>
+      <div class="share-actions">
+        <button id="copy-partner-link" type="button" disabled>Copy partner link</button>
+        <p id="share-status" role="status" aria-live="polite"></p>
+        <label id="copy-wrap" hidden>Copy your partner link<input id="copy-link" type="text" readonly /></label>
+      </div>
+    </section>
+  </div>
+
+  <section class="after">
+    <h2>How we pick the fairest meeting city</h2>
+    <p>The geographic midpoint follows the globe's surface. We rank cities by the longer of the two trips, so neither person carries most of the journey. These are straight-line distances, not flight times or prices; check direct flights and fares before booking.</p>
+
+    <h2>Tips for meeting halfway</h2>
+    <ul>
+      <li>Check both passports and visa rules for the country where you plan to meet.</li>
+      <li>Compare the total cost of two tickets with the cost of one person flying, including accommodation and local transport.</li>
+      <li>Favor hubs with direct flights from both of you, and check the actual schedules before choosing a city.</li>
+      <li>Agree on how to split the costs beforehand. Our <a href="/blog/long-distance-reunion-checklist/">reunion checklist</a> can help you plan the budget together.</li>
+      <li>If you meet again, alternate who travels further. For a first meeting, meet in public and keep your own accommodation and return ticket; see our <a href="/blog/meeting-long-distance-partner-first-time/">first-meeting guide</a>.</li>
+    </ul>
+
+    <h2>Plan the next step together</h2>
+    <p><a href="/reunion-countdown/">Start a countdown once it's booked</a>, compare call times with our <a href="/long-distance-time-zone-calculator/">time-zone calculator</a>, or stay close between visits with the <a href="https://app.lovefarfox.com" data-app-cta="halfway_tool">Far Fox app</a>.</p>
+
+    <h2>Common questions</h2>
+    {faqs.map(([question, answer]) => (
+      <details>
+        <summary>{question}</summary>
+        <p>{answer}</p>
+      </details>
+    ))}
+  </section>
+</ToolLayout>
+
+<script>
+  import { campaignAttribution } from '../lib/campaignAttribution';
+  import { cleanLabel, distanceKm, fairestHubs, formatDistance, halfwayUrl, midpoint, readHalfway, validPoint, type Place } from '../lib/halfwayPoint';
+
+  type GeocodeResult = { label?: string; lat?: number; lon?: number; error?: string };
+  const form = document.querySelector<HTMLFormElement>('#halfway-form')!;
+  const yourCity = document.querySelector<HTMLInputElement>('#your-city')!;
+  const theirCity = document.querySelector<HTMLInputElement>('#their-city')!;
+  const get = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  let current: { a: Place; b: Place } | null = null;
+  let busy = false;
+
+  function track(name: string) {
+    try {
+      const w = window as any;
+      Promise.resolve(w.umami?.track(name, campaignAttribution(w.farfoxAcquisition || {}, new URLSearchParams(location.search)))).catch(() => {});
+    } catch {}
+  }
+
+  async function geocode(input: HTMLInputElement, found: HTMLElement, error: HTMLElement): Promise<Place | null> {
+    const query = input.value.trim();
+    found.textContent = '';
+    error.textContent = '';
+    try {
+      const response = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
+      const result = await response.json() as GeocodeResult;
+      if (!response.ok) throw new Error(result.error || 'Location not found');
+      if (typeof result.label !== 'string' || !validPoint(result.lat!, result.lon!)) throw new Error('Location not found');
+      found.textContent = `Found: ${result.label}`;
+      return { label: cleanLabel(query), lat: result.lat!, lon: result.lon! };
+    } catch (reason) {
+      error.textContent = reason instanceof Error ? reason.message : 'Location not found';
+      return null;
+    }
+  }
+
+  function render(a: Place, b: Place) {
+    current = { a, b };
+    const total = distanceKm(a, b);
+    const halfway = midpoint(a, b);
+    const lat = halfway.lat.toFixed(2);
+    const lon = halfway.lon.toFixed(2);
+    get('total-distance').textContent = formatDistance(total);
+    get('midpoint-coordinates').textContent = `${lat}, ${lon}`;
+    get<HTMLAnchorElement>('map-link').href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=5/${lat}/${lon}`;
+    const hubs = fairestHubs(a, b);
+    const list = get<HTMLOListElement>('hub-list');
+    list.replaceChildren(...hubs.map(hub => {
+      const item = document.createElement('li');
+      item.textContent = `${hub.city}, ${hub.country} — ${formatDistance(hub.fromKm)} from ${a.label}, ${formatDistance(hub.toKm)} from ${b.label}`;
+      return item;
+    }));
+    get('no-hubs').hidden = hubs.length > 0;
+    get('results').hidden = false;
+    get<HTMLButtonElement>('copy-partner-link').disabled = false;
+    get('copy-wrap').hidden = true;
+    get('share-status').textContent = '';
+  }
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (busy) return;
+    busy = true;
+    const button = get<HTMLButtonElement>('calculate');
+    button.disabled = true;
+    get('form-status').textContent = 'Finding both cities…';
+    const [a, b] = await Promise.all([
+      geocode(yourCity, get('your-found'), get('your-error')),
+      geocode(theirCity, get('their-found'), get('their-error')),
+    ]);
+    if (!a || !b) {
+      get('form-status').textContent = 'Check each city and try again.';
+      if (!a) yourCity.focus();
+      else theirCity.focus();
+    } else {
+      render(a, b);
+      get('form-status').textContent = 'Your halfway point is ready.';
+      track('halfway_calculated');
+    }
+    busy = false;
+    button.disabled = false;
+  });
+
+  form.addEventListener('input', () => {
+    current = null;
+    get('results').hidden = true;
+    get<HTMLButtonElement>('copy-partner-link').disabled = true;
+    get('form-status').textContent = '';
+    get('share-status').textContent = '';
+    get('copy-wrap').hidden = true;
+    get('your-error').textContent = '';
+    get('their-error').textContent = '';
+    get('your-found').textContent = '';
+    get('their-found').textContent = '';
+  });
+
+  get<HTMLButtonElement>('copy-partner-link').addEventListener('click', async () => {
+    if (!current || busy) return;
+    busy = true;
+    const url = halfwayUrl(location.origin, current.a, current.b);
+    try {
+      await navigator.clipboard.writeText(url);
+      get('share-status').textContent = 'Partner link copied. Paste it into your chat.';
+      track('halfway_link_copied');
+    } catch {
+      get('copy-wrap').hidden = false;
+      const input = get<HTMLInputElement>('copy-link');
+      input.value = url;
+      input.focus();
+      input.select();
+      get('share-status').textContent = 'Copy the link below.';
+    } finally {
+      busy = false;
+    }
+  });
+
+  function loadShared() {
+    const shared = readHalfway(location.hash);
+    if (!shared) {
+      if (location.hash) get('form-status').textContent = 'This partner link is incomplete or invalid. Enter both cities below.';
+      return;
+    }
+    yourCity.value = shared.a.label;
+    theirCity.value = shared.b.label;
+    get('your-found').textContent = '';
+    get('their-found').textContent = '';
+    get('your-error').textContent = '';
+    get('their-error').textContent = '';
+    render(shared.a, shared.b);
+    get('form-status').textContent = 'Partner link loaded without looking up either city again.';
+    track('halfway_partner_landed');
+  }
+
+  get<HTMLButtonElement>('calculate').disabled = false;
+  loadShared();
+  window.addEventListener('hashchange', loadShared);
+</script>
+
+<style>
+  .intro{margin-bottom:32px}.intro p{max-width:760px}
+  .calculator-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:start}
+  form{display:grid;gap:20px;background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:28px}
+  form label{display:grid;gap:6px}.field-error{color:#a21d35}#form-status{margin:0;min-height:1.65em}
+  .privacy-note{padding-top:4px}
+  .results{background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:28px;overflow-wrap:anywhere}
+  .results h2{margin-top:0}.results h3{font-size:1.1rem;margin:24px 0 8px}
+  .results p{margin:8px 0}.total-label{font-size:.9rem}.total-distance{font-weight:900;font-size:1.4rem;color:var(--accent)!important}
+  .coordinates{font-variant-numeric:tabular-nums}.midpoint-note{padding:14px;border-radius:14px;background:var(--tint)}
+  #hub-list{padding-left:1.5rem;display:grid;gap:12px}#hub-list li{padding-left:4px}
+  .share-actions{border-top:1px solid var(--line);margin-top:24px;padding-top:20px}
+  #share-status{min-height:1.5em;font-size:.9rem}#copy-wrap{margin-top:12px}
+  .after{max-width:780px;margin-top:64px}.after h2:not(:first-child){margin-top:40px}
+  .after li{margin:10px 0;line-height:1.6}.after details{padding:16px 0;border-bottom:1px solid var(--line)}
+  .after summary{cursor:pointer;font-weight:800;min-height:44px}
+  @media(max-width:767px){.calculator-grid{grid-template-columns:1fr;gap:24px}form,.results{padding:22px}.after{margin-top:44px}}
+</style>

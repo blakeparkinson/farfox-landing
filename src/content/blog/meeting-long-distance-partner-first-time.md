@@ -56,6 +56,8 @@ The couples who panic are the ones who didn't know to expect this and read the a
 
 Before booking, work through our [long-distance reunion checklist](/blog/long-distance-reunion-checklist/) together. It covers the shared budget, arrival plan, and expectations to discuss before you travel.
 
+Thinking of meeting somewhere between you? The [halfway point calculator](/halfway-point-calculator/) suggests fair cities to meet in. Keep your own room and return ticket either way.
+
 The instinct is to pack the visit with Big Romantic Activities to prove the trip was worth it. Resist it.
 
 The real value of a first visit isn't the candlelit dinner. It's the discovery that you're just as easy together doing *nothing*. The grocery run. The lazy morning where neither of you wants to get up. Cooking dinner and bumping into each other in a small kitchen. Those ordinary moments tell you more about normal life together.
