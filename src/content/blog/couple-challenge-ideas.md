@@ -20,7 +20,7 @@ Looking for couple challenge ideas that go beyond the Pinterest printables? You'
 
 Couple challenges work because they turn good intentions into daily habits. Instead of vaguely promising to "spend more quality time together," you commit to something specific — and you do it together.
 
-Whether you're in a long-distance relationship, living together, or just want to shake up your routine, here are 50 couple challenge ideas organized by category, effort level, and how long they take. Looking for lower-key ideas? Start with these [long-distance relationship activities](/blog/long-distance-relationship-activities).
+Whether you're in a long-distance relationship, living together, or just want to shake up your routine, here are 50 couple challenge ideas organized by category, effort level, and how long they take. Looking for lower-key ideas? Start with these [long-distance relationship activities](/blog/long-distance-relationship-activities/).
 
 ## Quick daily challenges (5 minutes or less)
 
@@ -33,7 +33,7 @@ Every morning, text your partner one specific thing you're grateful for about th
 Answer one conversation-starter question together every day. The rule: you can't see your partner's answer until you've both responded. Apps like [Far Fox](https://app.lovefarfox.com) send you both the same daily question and hide answers until both of you respond — which makes it feel like a game instead of homework.
 
 **3. The photo-of-my-day challenge**
-Send one photo of what you're seeing right now. Not a selfie — your lunch, your desk, the sunset from your commute. It's a tiny window into each other's world, especially powerful for [long-distance couples](https://lovefarfox.com/blog/long-distance-relationship-activities).
+Send one photo of what you're seeing right now. Not a selfie — your lunch, your desk, the sunset from your commute. It's a tiny window into each other's world, especially powerful for [long-distance couples](https://lovefarfox.com/blog/long-distance-relationship-activities/).
 
 **4. The compliment challenge**
 One genuine compliment per day for 30 days. The catch: you can't repeat yourself. By day 15, you'll be noticing things about your partner you'd stopped seeing.
@@ -55,7 +55,7 @@ One Would You Rather question per day. Sounds silly, but these get surprisingly 
 These go deeper than daily check-ins. They're about learning how to talk — and listen — better.
 
 **9. The love letter challenge**
-Write your partner one short love letter per week for a month. Not a text — an actual letter. Three sentences is enough. The act of writing on paper (or [themed digital stationery](https://app.lovefarfox.com)) changes the way it lands. Some couples have written each other [over a hundred letters this way](https://lovefarfox.com/blog/love-letter-prompts-long-distance).
+Write your partner one short love letter per week for a month. Not a text — an actual letter. Three sentences is enough. The act of writing on paper (or [themed digital stationery](https://app.lovefarfox.com)) changes the way it lands. Some couples have written each other [over a hundred letters this way](https://lovefarfox.com/blog/love-letter-prompts-long-distance/).
 
 **10. The "ask instead of assume" challenge**
 For one week, every time you think you know what your partner is thinking or feeling, ask them instead of assuming. You'll be surprised how often you're wrong.
@@ -63,7 +63,7 @@ For one week, every time you think you know what your partner is thinking or fee
 **11. The active listening challenge**
 When your partner talks about their day, repeat back the most important thing they said before responding with your own story. One week of this will change how heard they feel.
 
-**12. The [love language](https://lovefarfox.com/blog/love-languages-long-distance-relationship) challenge**
+**12. The [love language](https://lovefarfox.com/blog/love-languages-long-distance-relationship/) challenge**
 Take a love language quiz together, then spend 7 days speaking your *partner's* love language instead of your own. If their language is acts of service and yours is words of affirmation, you'll need to show love differently than how you naturally express it.
 
 **13. The "no criticism" challenge**
@@ -126,7 +126,7 @@ Write each other a letter to be opened on a specific future date — your annive
 Every evening, share your high (best moment) and low (hardest moment) of the day. Takes 2 minutes. Over a month, you'll have a detailed map of each other's emotional landscape.
 
 **30. The vulnerability challenge**
-Answer one deep question per day for 7 days. Start with something like "What's something you're afraid to tell me?" and work up to "What do you need from me that you're not getting?" These questions build the kind of trust that surface-level conversations never reach. [Here are more deep questions for couples](https://lovefarfox.com/blog/long-distance-relationship-questions).
+Answer one deep question per day for 7 days. Start with something like "What's something you're afraid to tell me?" and work up to "What do you need from me that you're not getting?" These questions build the kind of trust that surface-level conversations never reach. [Here are more deep questions for couples](https://lovefarfox.com/blog/long-distance-relationship-questions/).
 
 ## Fun and playful challenges
 
@@ -161,13 +161,13 @@ Create a list of 20 things to photograph (something red, something that makes yo
 Missing your person? These challenges are designed for couples who can't be in the same room. All of them work asynchronously — no scheduled FaceTime required.
 
 **39. The letter-a-day challenge**
-Write each other one short letter every day for a week. Three sentences minimum. Use [love letter prompts](https://lovefarfox.com/blog/love-letter-prompts-long-distance) if you get stuck. By day 7, you'll both have a stack of letters that feel like a time capsule of that week.
+Write each other one short letter every day for a week. Three sentences minimum. Use [love letter prompts](https://lovefarfox.com/blog/love-letter-prompts-long-distance/) if you get stuck. By day 7, you'll both have a stack of letters that feel like a time capsule of that week.
 
 **40. The "thinking of you" challenge**
 Every time your partner crosses your mind, send them a quick tap or buzz — no words needed. Just a signal that says "hey, you're on my mind." [Far Fox's Thinking of You feature](https://app.lovefarfox.com) lets you send a tap that buzzes their phone with a heart.
 
 **41. The countdown challenge**
-Set a countdown to your next visit and do one thing every day to make the wait more bearable — plan an activity, research a restaurant, write a packing list. Having something concrete to look forward to makes [distance more manageable](https://lovefarfox.com/blog/long-distance-relationship-timeline).
+Set a countdown to your next visit and do one thing every day to make the wait more bearable — plan an activity, research a restaurant, write a packing list. Having something concrete to look forward to makes [distance more manageable](https://lovefarfox.com/blog/long-distance-relationship-timeline/).
 
 **42. The shared playlist challenge**
 Start an empty playlist. Each day, one person adds a song. No explanation needed — let the music speak. By the end of the month, you have a 30-song soundtrack of your relationship.

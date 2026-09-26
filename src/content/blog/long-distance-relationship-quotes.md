@@ -18,7 +18,7 @@ faqs:
 
 You searched for a line because the blank screen won. That is allowed. Distance makes you reach for words more often than people who share a kitchen, and a good sentence can carry a night that would otherwise end in "wyd."
 
-Use these [long-distance relationship](/blog/how-to-make-a-long-distance-relationship-work) quotes as captions, letter closings, or a text when you cannot find your own. Then add one specific thing only the two of you would recognize. That last part is what makes it land.
+Use these [long-distance relationship](/blog/how-to-make-a-long-distance-relationship-work/) quotes as captions, letter closings, or a text when you cannot find your own. Then add one specific thing only the two of you would recognize. That last part is what makes it land.
 
 ## Short enough to send right now
 
@@ -103,7 +103,7 @@ Use these [long-distance relationship](/blog/how-to-make-a-long-distance-relatio
 - Sleep. I’ll still be yours in the morning.
 - The next time I say this, I want it to be in a kitchen.
 
-If the page is still blank after that, use a [love letter prompt](/blog/love-letter-prompts-long-distance) and write three honest sentences. The prompt is the door. The quote is just the handle.
+If the page is still blank after that, use a [love letter prompt](/blog/love-letter-prompts-long-distance/) and write three honest sentences. The prompt is the door. The quote is just the handle.
 
 ## Funny (when the mood can take it)
 
@@ -135,7 +135,7 @@ If the page is still blank after that, use a [love letter prompt](/blog/love-let
 - I put your name in the delivery instructions like you still live here.
 - If missing you had a loyalty program I would be insufferable about the points.
 
-For more sendable lines that aren’t quotes, the [good morning and goodnight text list](/blog/long-distance-relationship-texts) is built for nightly use.
+For more sendable lines that aren’t quotes, the [good morning and goodnight text list](/blog/long-distance-relationship-texts/) is built for nightly use.
 
 ## Classic lines (the ones people actually recognize)
 
@@ -158,10 +158,10 @@ A famous line on a caption is fine. A famous line every morning is a feed, not a
 3. **Match the channel.** Short for texts. Slightly longer for letters. Captions get the shortest of all.
 4. **Stop when you have your own sentence.** The quote did its job if it unstuck you.
 
-Nicknames work the same way — a private word beats a public poem. If you still need one, we keep a [list of long-distance nicknames](/blog/long-distance-relationship-nicknames).
+Nicknames work the same way — a private word beats a public poem. If you still need one, we keep a [list of long-distance nicknames](/blog/long-distance-relationship-nicknames/).
 
 ## The bottom line
 
-Borrowed words are a bridge for the nights you can’t build one. They are not the relationship. Send the quote. Add the thing only you would know. Then go back to the [daily questions](/blog/long-distance-relationship-questions), the visit on the calendar, and the unglamorous check-ins that actually keep you close.
+Borrowed words are a bridge for the nights you can’t build one. They are not the relationship. Send the quote. Add the thing only you would know. Then go back to the [daily questions](/blog/long-distance-relationship-questions/), the visit on the calendar, and the unglamorous check-ins that actually keep you close.
 
 [Far Fox](https://app.lovefarfox.com) is for the days after the caption: a shared question, a letter that arrives on their morning, a fox that grows when you both show up. Free on iOS, Android, and web.

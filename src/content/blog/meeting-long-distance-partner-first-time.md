@@ -1,6 +1,6 @@
 ---
-title: "Meeting Your Long-Distance Partner for the First Time"
-description: "Plan the first visit, manage nerves and awkward first hours, discuss safety and expectations, and make the goodbye easier."
+title: "Meeting Your Long-Distance Partner for the First Time: What to Expect"
+description: "Meeting your long-distance boyfriend or girlfriend for the first time? What to expect at the airport and in the first awkward hours, how to plan the visit and stay safe, and how to handle the goodbye."
 date: "2026-06-23"
 updatedDate: "2026-09-16"
 tags: ["connection", "milestones", "advice"]
@@ -34,7 +34,7 @@ You are about to meet someone you genuinely love in a form you've never experien
 The nerves aren't a red flag. They're the natural response to something that matters enormously. If you felt nothing, *that* would be the warning sign.
 
 What helps in the lead-up:
-- **Keep your routines going.** Don't let the whole week become a pressure cooker of anticipation. Your [daily rhythms](/blog/long-distance-relationship-activities) are steadying, so keep them.
+- **Keep your routines going.** Don't let the whole week become a pressure cooker of anticipation. Your [daily rhythms](/blog/long-distance-relationship-activities/) are steadying, so keep them.
 - **Say the nervous thing out loud.** "I'm so excited and also kind of terrified" is a gift to your partner, because they're feeling it too. Naming it together dissolves half of it.
 - **Lower the stakes on the *moment*.** It doesn't have to be a movie scene. It just has to be the two of you, finally.
 
@@ -63,7 +63,7 @@ The instinct is to pack the visit with Big Romantic Activities to prove the trip
 The real value of a first visit isn't the candlelit dinner. It's the discovery that you're just as easy together doing *nothing*. The grocery run. The lazy morning where neither of you wants to get up. Cooking dinner and bumping into each other in a small kitchen. Those ordinary moments tell you more about normal life together.
 
 A good ratio: **one or two real plans, lots of open space.**
-- Have a couple of anchors, like a [proper date](/blog/long-distance-date-ideas) or two and something you've both wanted to do.
+- Have a couple of anchors, like a [proper date](/blog/long-distance-date-ideas/) or two and something you've both wanted to do.
 - Leave the rest unstructured. Let a day be aimless. Take a nap together. Run a boring errand. *That's* the data you came for.
 
 Over-scheduling a first visit is the most common mistake. You don't need to see the city. You need to see *each other*, in normal life.
@@ -73,7 +73,7 @@ Over-scheduling a first visit is the most common mistake. You don't need to see 
 Months of buildup can create pressure around the physical side of finally being together. Two things to hold:
 
 1. **There's no timeline you have to hit.** Some couples fall into each other immediately; others need a day to physically relax into being around each other after only ever knowing a screen. Both are completely normal.
-2. **Talk about it beforehand, even briefly.** A quick, honest conversation about what you're each hoping for and what you're nervous about removes a huge amount of unspoken pressure. You've gotten good at hard conversations by necessity ([it's one of long-distance's hidden strengths](/blog/how-to-make-a-long-distance-relationship-work)); use that skill here.
+2. **Talk about it beforehand, even briefly.** A quick, honest conversation about what you're each hoping for and what you're nervous about removes a huge amount of unspoken pressure. You've gotten good at hard conversations by necessity ([it's one of long-distance's hidden strengths](/blog/how-to-make-a-long-distance-relationship-work/)); use that skill here.
 
 Let it unfold. The buildup is not a debt that has to be paid on day one.
 
@@ -90,8 +90,8 @@ The goodbye after a first visit is brutal in a specific way: now you know *exact
 
 Two things make it survivable:
 
-1. **Book (or roughly plan) the next visit before this one ends.** This single move changes everything. The goodbye stops being "when will I ever see you again?" and becomes "okay, six weeks." A date on the calendar is the difference between grief and a countdown. (Our [date-ideas guide](/blog/long-distance-date-ideas) has plenty to fill the wait.)
-2. **Expect the post-visit slump.** The few days after are often the hardest of the entire long-distance cycle, a real grief-shaped dip. It's not a sign anything's wrong. It's the cost of something good. Be extra gentle with each other through it, and use our guide to [handling post-visit blues](/blog/post-visit-blues-long-distance-relationship) when you are back home.
+1. **Book (or roughly plan) the next visit before this one ends.** This single move changes everything. The goodbye stops being "when will I ever see you again?" and becomes "okay, six weeks." A date on the calendar is the difference between grief and a countdown. (Our [date-ideas guide](/blog/long-distance-date-ideas/) has plenty to fill the wait.)
+2. **Expect the post-visit slump.** The few days after are often the hardest of the entire long-distance cycle, a real grief-shaped dip. It's not a sign anything's wrong. It's the cost of something good. Be extra gentle with each other through it, and use our guide to [handling post-visit blues](/blog/post-visit-blues-long-distance-relationship/) when you are back home.
 
 ## After you're apart again
 

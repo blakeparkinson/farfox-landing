@@ -22,7 +22,7 @@ Below are 120+ texts organized by mood and moment — but first, the one habit t
 
 ## Good morning texts
 
-A good-morning text is the anchor of any long-distance day — and if you're [dating across time zones](/blog/long-distance-relationship-time-zones), it's the message your partner wakes up to while you're already hours into your day.
+A good-morning text is the anchor of any long-distance day — and if you're [dating across time zones](/blog/long-distance-relationship-time-zones/), it's the message your partner wakes up to while you're already hours into your day.
 
 **Sweet:**
 - "First thought this morning was you. Second was coffee. You won."
@@ -76,14 +76,14 @@ The most powerful texts aren't scheduled. Mid-afternoon, out of nowhere:
 Sometimes the blank screen wins. When it does, don't force a paragraph — send a **prompt** instead:
 - A photo of your day with no caption.
 - A voice note. Tone does what text can't.
-- A single [daily question](/blog/long-distance-relationship-questions) — "what's the best thing that happened to you today?"
+- A single [daily question](/blog/long-distance-relationship-questions/) — "what's the best thing that happened to you today?"
 
 ---
 
 ## Why texting alone isn't enough
 
-Here's the honest part: even 120 perfect texts can't carry a long-distance relationship by themselves. Texting is the *baseline*, not the connection. The couples who thrive layer in things text can't do — a [love letter](/blog/love-letter-prompts-long-distance) that gets re-read, a [virtual date night](/blog/long-distance-date-ideas), a voice note that captures the pause before "I love you."
+Here's the honest part: even 120 perfect texts can't carry a long-distance relationship by themselves. Texting is the *baseline*, not the connection. The couples who thrive layer in things text can't do — a [love letter](/blog/love-letter-prompts-long-distance/) that gets re-read, a [virtual date night](/blog/long-distance-date-ideas/), a voice note that captures the pause before "I love you."
 
-If you want the why behind all of this, our complete guide on [making a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work) covers how communication quality beats quantity every time.
+If you want the why behind all of this, our complete guide on [making a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work/) covers how communication quality beats quantity every time.
 
 [Far Fox](https://app.lovefarfox.com) is built to make the deeper stuff effortless — daily questions, love letters, voice notes, and a "thinking of you" tap for the moments a text isn't enough. It's free.

@@ -1,6 +1,6 @@
 ---
-title: "Long-Distance Relationship Timeline: Dating, Visits & Moving"
-description: "How many months should long-distance dating take? Use flexible checkpoints to discuss exclusivity, a first visit, routines and closing the distance."
+title: "Long-Distance Relationship Stages by Month: A Realistic Timeline"
+description: "Long-distance relationship stages month by month, from the honeymoon phase to year two, and when to talk about exclusivity, a first visit and closing the distance."
 date: "2026-05-16"
 updatedDate: "2026-09-14"
 tags: ["advice", "connection"]
@@ -36,15 +36,15 @@ This heading describes a worry some readers bring to the page, not an inevitable
 
 **Try this:** Set aside 20 minutes to compare expectations. Each person names one part of the routine they enjoy and one they want to change. Agree on how to handle a missed call without turning response times into a test.
 
-For a [first visit](/blog/meeting-long-distance-partner-first-time), keep your own transport and accommodation options, meet in public first and tell someone you trust your plans. Either person can postpone.
+For a [first visit](/blog/meeting-long-distance-partner-first-time/), keep your own transport and accommodation options, meet in public first and tell someone you trust your plans. Either person can postpone.
 
 ## Month 4–6: Building the Routine
 
 A routine that worked during a quiet semester may not fit a new job. You can change the schedule without treating that as a change in commitment.
 
-**Try this:** Pick one shared activity for the week. [Play Would You Rather](/blog/long-distance-relationship-games/#couples-game), cook the same meal or choose a [virtual date](/blog/long-distance-date-ideas). Keep the plan small enough that you both want to do it.
+**Try this:** Pick one shared activity for the week. [Play Would You Rather](/blog/long-distance-relationship-games/#couples-game), cook the same meal or choose a [virtual date](/blog/long-distance-date-ideas/). Keep the plan small enough that you both want to do it.
 
-After a visit, leave room for rest. Discuss the next call before saying goodbye; our [post-visit guide](/blog/post-visit-blues-long-distance-relationship) has ideas for the days that follow.
+After a visit, leave room for rest. Discuss the next call before saying goodbye; our [post-visit guide](/blog/post-visit-blues-long-distance-relationship/) has ideas for the days that follow.
 
 ## Month 7–12: The Real Test
 
@@ -52,7 +52,7 @@ You may want a clearer picture of the future. Name the constraints: tuition, a l
 
 **Try this:** Write two lists together: “We can decide now” and “We need more information.” Set a date to revisit the second list. You do not need to promise a move before you know whether it is workable.
 
-Use a [love-letter prompt](/blog/love-letter-prompts-long-distance) to explain what you hope for, then make time to hear your partner's view.
+Use a [love-letter prompt](/blog/love-letter-prompts-long-distance/) to explain what you hope for, then make time to hear your partner's view.
 
 ## Year 1: The New Normal
 
@@ -64,10 +64,10 @@ An anniversary gives you a reason to review the year. It does not prove that the
 
 Some couples want to close the distance; others choose separate homes. Discuss whether the arrangement still fits both of you. Time invested does not obligate either person to stay or move.
 
-If you want to relocate, make a [closing-the-distance plan](/blog/closing-the-distance-long-distance-relationship). Include work, housing, expenses and personal space. Spend ordinary days together before making a large commitment where possible.
+If you want to relocate, make a [closing-the-distance plan](/blog/closing-the-distance-long-distance-relationship/). Include work, housing, expenses and personal space. Spend ordinary days together before making a large commitment where possible.
 
 ## What's actually true at every stage
 
 You can ask for a different routine, privacy or time to think. Your partner can do the same. Avoid treating a timeline, streak or app score as proof that the relationship is healthy.
 
-For tonight, choose one of our [100 relationship questions](/blog/long-distance-relationship-questions). Both people can skip a question. The aim is to hear each other, not finish a checklist.
+For tonight, choose one of our [100 relationship questions](/blog/long-distance-relationship-questions/). Both people can skip a question. The aim is to hear each other, not finish a checklist.

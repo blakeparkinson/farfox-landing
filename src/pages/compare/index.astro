@@ -19,7 +19,7 @@ import { COMPETITORS } from '../../lib/competitors';
       </p>
       <div class="space-y-4">
         {COMPETITORS.map((competitor) => (
-          <a href={`/compare/${competitor.slug}`} class="block rounded-2xl bg-white border border-fox-pink/10 p-6 hover:border-fox-pink/30 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fox-pink/10 transition-all">
+          <a href={`/compare/${competitor.slug}/`} class="block rounded-2xl bg-white border border-fox-pink/10 p-6 hover:border-fox-pink/30 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fox-pink/10 transition-all">
             <h2 class="font-900 text-xl mb-1.5">Far Fox vs {competitor.name}</h2>
             <p class="text-fox-text-light text-sm leading-relaxed">{competitor.name}: {competitor.tagline}.</p>
           </a>
@@ -27,7 +27,7 @@ import { COMPETITORS } from '../../lib/competitors';
       </div>
       <p class="mt-10 text-fox-text-light">
         Want the full landscape first? Read the
-        <a href="/blog/best-long-distance-relationship-apps" class="text-fox-pink font-700 hover:underline">complete long-distance app roundup</a>.
+        <a href="/blog/best-long-distance-relationship-apps/" class="text-fox-pink font-700 hover:underline">complete long-distance app roundup</a>.
       </p>
     </div>
   </main>

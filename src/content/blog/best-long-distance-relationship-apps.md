@@ -24,7 +24,7 @@ With that in mind, here's what's out there.
 
 **Best for: Couples who want a full relationship toolkit**
 
-[Far Fox](/long-distance-relationship-app?utm_source=organic_search&utm_medium=blog&utm_campaign=best_ldr_apps) is the most feature-complete long-distance relationship app available in 2026. It's built around daily rituals — not messaging — which makes it feel different from anything else in the category.
+[Far Fox](/long-distance-relationship-app/?utm_source=organic_search&utm_medium=blog&utm_campaign=best_ldr_apps) is the most feature-complete long-distance relationship app available in 2026. It's built around daily rituals — not messaging — which makes it feel different from anything else in the category.
 
 **What's included:**
 - **Daily questions** — a new prompt every day; you can't see your partner's answer until you've both responded
@@ -128,7 +128,7 @@ If you want an app that gives you something to *do* together every day — not j
 
 If you want minimal and just need a private space, Couple or Between both work. If you're in "let's actively work on our relationship" mode, Lasting is worth the investment.
 
-Want a deeper side-by-side? We wrote honest one-on-one breakdowns: [Far Fox vs Paired](/compare/paired), [Far Fox vs Couple](/compare/couple), [Far Fox vs Between](/compare/between), [Far Fox vs Lasting](/compare/lasting), and [Far Fox vs LokLok](/compare/loklok).
+Want a deeper side-by-side? We wrote honest one-on-one breakdowns: [Far Fox vs Paired](/compare/paired/), [Far Fox vs Couple](/compare/couple/), [Far Fox vs Between](/compare/between/), [Far Fox vs Lasting](/compare/lasting/), and [Far Fox vs LokLok](/compare/loklok/).
 
 ---
 
@@ -136,4 +136,4 @@ Want a deeper side-by-side? We wrote honest one-on-one breakdowns: [Far Fox vs P
 
 The best long-distance relationship app isn't the one with the most features — it's the one you and your partner will actually open every day. That usually means something with low friction, a reason to return daily, and a shared sense of progression.
 
-Try [Far Fox](/long-distance-relationship-app?utm_source=organic_search&utm_medium=blog&utm_campaign=best_ldr_apps&utm_content=bottom_cta) free — it takes about five minutes to set up, and your first daily question drops the moment your partner joins.
+Try [Far Fox](/long-distance-relationship-app/?utm_source=organic_search&utm_medium=blog&utm_campaign=best_ldr_apps&utm_content=bottom_cta) free — it takes about five minutes to set up, and your first daily question drops the moment your partner joins.

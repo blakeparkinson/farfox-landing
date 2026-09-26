@@ -9,7 +9,7 @@ Gary Chapman's five love languages were written for couples who share a home. Ph
 
 Long-distance doesn't get that luxury.
 
-But here's the thing: knowing your partner's love language matters *more* when you're apart, not less. When you can't rely on proximity to do the work, you have to be intentional. (Our guide to [keeping the spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship) goes deeper on this.) The couples who stay close across distance are usually the ones who've figured out how to translate their love language into something that travels.
+But here's the thing: knowing your partner's love language matters *more* when you're apart, not less. When you can't rely on proximity to do the work, you have to be intentional. (Our guide to [keeping the spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship/) goes deeper on this.) The couples who stay close across distance are usually the ones who've figured out how to translate their love language into something that travels.
 
 Here's how to do it for all five.
 
@@ -21,7 +21,7 @@ Most couples think they do. Most are partly wrong.
 
 It's common to confuse what we like to *give* with what our partner needs to *receive*. A words-of-affirmation person who's with a physical touch person will pour out compliments and wonder why their partner still feels distant.
 
-Before you read the rest of this, it's worth taking a proper [love language quiz](/quiz) together — separately, then compare. [Far Fox](https://app.lovefarfox.com) has a built-in couple love language quiz that shows you both your results side by side, which usually sparks more conversation than the result itself.
+Before you read the rest of this, it's worth taking a proper [love language quiz](/quiz/) together — separately, then compare. [Far Fox](https://app.lovefarfox.com) has a built-in couple love language quiz that shows you both your results side by side, which usually sparks more conversation than the result itself.
 
 Now, to the languages.
 

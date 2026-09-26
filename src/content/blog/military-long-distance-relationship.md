@@ -31,17 +31,17 @@ The couples who do best lean on **asynchronous** tools — things that work when
 - Letters (physical and digital)
 - Recorded voice notes and short videos
 - A shared photo timeline
-- A [daily question](/blog/long-distance-relationship-questions) you each answer whenever you can
+- A [daily question](/blog/long-distance-relationship-questions/) you each answer whenever you can
 
 ## 2. Write letters — they still matter most
 
 Ask any military couple and letters come up. There's a reason they've survived every war: a letter doesn't need a signal, doesn't expire, and gets read and re-read in moments when nothing else is there.
 
-You don't need to be eloquent. If the page goes blank, our [50 love letter prompts](/blog/love-letter-prompts-long-distance) will get you started. Write about ordinary things — the dog, the weather, what you had for lunch. Normalcy is a gift when someone's far from home.
+You don't need to be eloquent. If the page goes blank, our [50 love letter prompts](/blog/love-letter-prompts-long-distance/) will get you started. Write about ordinary things — the dog, the weather, what you had for lunch. Normalcy is a gift when someone's far from home.
 
 ## 3. Care packages and tangible connection
 
-Physical things carry weight across distance. A care package, a worn hoodie that smells like home, a printed photo book of your year. These are the love-language-of-physical-touch substitutes that actually reach a deployment. Our [long-distance gifts guide](/blog/long-distance-relationship-gifts) has ideas that ship and survive. For themed box ideas and shipping tips, see our [long-distance care package guide](/blog/long-distance-care-package-ideas/).
+Physical things carry weight across distance. A care package, a worn hoodie that smells like home, a printed photo book of your year. These are the love-language-of-physical-touch substitutes that actually reach a deployment. Our [long-distance gifts guide](/blog/long-distance-relationship-gifts/) has ideas that ship and survive. For themed box ideas and shipping tips, see our [long-distance care package guide](/blog/long-distance-care-package-ideas/).
 
 ## 4. Build a life, not just a wait
 
@@ -51,13 +51,13 @@ Lean on the military spouse/partner community. They understand things civilians 
 
 ## 5. Understand the emotional timeline
 
-Deployments have an emotional arc — the anxious lead-up, the adjustment, the mid-deployment slump, the "reintegration" of homecoming (which is harder than people expect). Knowing the arc helps you not panic at each stage. Our general [long-distance relationship timeline](/blog/long-distance-relationship-timeline) maps the broader version of this.
+Deployments have an emotional arc — the anxious lead-up, the adjustment, the mid-deployment slump, the "reintegration" of homecoming (which is harder than people expect). Knowing the arc helps you not panic at each stage. Our general [long-distance relationship timeline](/blog/long-distance-relationship-timeline/) maps the broader version of this.
 
 **Homecoming is its own adjustment.** After months of independence on both sides, falling back into shared rhythms takes time and grace. Expect awkwardness in the first days. It's normal, and it passes.
 
 ## 6. Trust, without surveillance
 
-Military relationships demand a higher grade of trust because you genuinely cannot be in constant contact. Trust here isn't built by checking up — it's built by consistency, honesty, and giving each other the benefit of the doubt during silence. Our complete guide on [making a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work) goes deeper on building trust without surveillance.
+Military relationships demand a higher grade of trust because you genuinely cannot be in constant contact. Trust here isn't built by checking up — it's built by consistency, honesty, and giving each other the benefit of the doubt during silence. Our complete guide on [making a long-distance relationship work](/blog/how-to-make-a-long-distance-relationship-work/) goes deeper on building trust without surveillance.
 
 ---
 

@@ -44,13 +44,13 @@ Jiang and Hancock studied 63 couples through communication diaries. Long-distanc
 
 Cornell's account of the diary study reports **876 diaries covering 3,024 interactions**. Long-distance participants reported fewer interactions per day overall than nearby participants, while using more mediated communication. These counts describe the sample, not a recommended texting quota. [Cornell research summary.](https://news.cornell.edu/stories/2013/08/new-media-allows-requited-love-know-no-distance)
 
-For your own week, agree on a time you can both protect and a way to say you're busy. Try a [conversation question](/blog/long-distance-relationship-questions), or [play Would You Rather](/blog/long-distance-relationship-games/#couples-game) for something lighter. Those are activity suggestions, not outcomes tested by these studies.
+For your own week, agree on a time you can both protect and a way to say you're busy. Try a [conversation question](/blog/long-distance-relationship-questions/), or [play Would You Rather](/blog/long-distance-relationship-games/#couples-game) for something lighter. Those are activity suggestions, not outcomes tested by these studies.
 
 ## What actually predicts success?
 
 These sources do not establish a single strongest predictor for all couples. Discuss the decisions you can make together: visit costs, communication expectations and whether you want to live in the same place.
 
-Our [relationship timeline](/blog/long-distance-relationship-timeline) offers planning checkpoints rather than deadlines. For a move, use the [closing-the-distance guide](/blog/closing-the-distance-long-distance-relationship).
+Our [relationship timeline](/blog/long-distance-relationship-timeline/) offers planning checkpoints rather than deadlines. For a move, use the [closing-the-distance guide](/blog/closing-the-distance-long-distance-relationship/).
 
 ## Cite this page
 
