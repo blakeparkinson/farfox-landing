@@ -22,11 +22,18 @@ const publishDate = new Date(`${post.data.date}T12:00:00`).toLocaleDateString('e
   day: 'numeric',
 });
 
-// Related posts — internal-link cluster. Score every other post by how
-// many tags it shares with this one, break ties by recency, take top 3.
-// Falls back gracefully to the most recent posts when tags are sparse.
+// Related posts rank by shared tags, then deterministic pseudo-random ties
+// so the top three vary across the archive instead of favoring recent posts.
 const allPosts = await getCollection('blog');
 const currentTags = post.data.tags ?? [];
+const hash = (value: string) => {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < value.length; i++) {
+    h ^= value.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+};
 const relatedPosts = allPosts
   .filter((p) => p.id !== post.id)
   .map((p) => ({
@@ -35,7 +42,7 @@ const relatedPosts = allPosts
   }))
   .sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
-    return new Date(b.post.data.date).getTime() - new Date(a.post.data.date).getTime();
+    return hash(post.id + '|' + a.post.id) - hash(post.id + '|' + b.post.id);
   })
   .slice(0, 3)
   .map((x) => x.post);
@@ -230,7 +237,9 @@ const breadcrumbSchema = {
       <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
       <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light">
         <a href="/quiz/" class="hover:text-fox-pink transition-colors">Couple Quiz</a>
+        <a href="/long-distance-relationship-quiz/" class="hover:text-fox-pink transition-colors">LDR Quiz</a>
         <a href="/long-distance-time-zone-calculator/" class="hover:text-fox-pink transition-colors">Time Zones</a>
+        <a href="/tools/" class="hover:text-fox-pink transition-colors">Free Tools</a>
         <a href="/compare/" class="hover:text-fox-pink transition-colors">Compare</a>
         <a href="/shop/" class="hover:text-fox-pink transition-colors">Shop</a>
         <a href="/blog/" class="hover:text-fox-pink transition-colors">Blog</a>

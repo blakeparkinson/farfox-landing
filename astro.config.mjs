@@ -12,7 +12,6 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      customPages: ['https://lovefarfox.com/rss.xml'],
       filter: (page) =>
         ![
           '/jersey/',

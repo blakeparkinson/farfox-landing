@@ -93,7 +93,7 @@ Not just "we should go to Portugal someday" but a folder with flight options, a 
 
 ## Digital gifts that feel personal
 
-Digital gifts have a bad reputation because most of them feel like last-minute decisions. But a digital gift that's clearly chosen with intention can be more personal than anything shipped from a warehouse.
+Digital gifts have a bad reputation because most of them feel like last-minute decisions. But a digital gift that's clearly chosen with intention can be more personal than anything shipped from a warehouse. If you're marking a relationship milestone, browse our [long-distance anniversary ideas](/blog/long-distance-relationship-anniversary-ideas/).
 
 - **A custom Spotify playlist** that tells the story of your relationship, song by song, with a note explaining each one
 - **A video compilation** of clips from your time together, set to a song that means something

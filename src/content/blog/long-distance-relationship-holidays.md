@@ -124,6 +124,6 @@ If arguments come up, as they sometimes do during stressful weeks, our guide to 
 
 ## Small daily rituals for the whole season
 
-Big holiday moments matter, but the days in between are where distance shows up most. A daily ritual keeps you connected when calls are short and schedules are packed.
+Big holiday moments matter, but the days in between are where distance shows up most. A daily ritual keeps you connected when calls are short and schedules are packed. For a milestone outside the holiday season, explore our [long-distance anniversary ideas](/blog/long-distance-relationship-anniversary-ideas/).
 
 Far Fox is built for this. Answer a [daily question](/blog/long-distance-relationship-questions/) together, share a photo from your day, write each other a love letter, and look after your fox companion as a team, even on days when you only have a few minutes. It's free and works on iOS, Android, and the web.

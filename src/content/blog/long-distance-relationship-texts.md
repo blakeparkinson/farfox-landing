@@ -71,6 +71,8 @@ The most powerful texts aren't scheduled. Mid-afternoon, out of nowhere:
 - "Counting down. [X] days. I've checked twice."
 - "Miss you in the specific way of wanting to tell you something and you're not in the room."
 
+For name ideas you can work into a message, browse our [long-distance relationship nicknames](/blog/long-distance-relationship-nicknames/).
+
 ## When you don't know what to say
 
 Sometimes the blank screen wins. When it does, don't force a paragraph — send a **prompt** instead:

@@ -121,8 +121,10 @@ Purpose-built couples apps reduce that friction — they hold the daily question
 
 If you take away nothing else: **long-distance relationships don't fail because of distance. They fail when one or both partners stop doing the work the distance requires.**
 
-The work isn't grand gestures. It's small, consistent, intentional — a real question instead of "wyd," a letter instead of a text, a plan instead of a vague hope. Do that, consistently, and distance becomes just a fact about your relationship rather than the thing that defines it.
+The work isn't grand gestures. It's small, consistent, intentional — a real question instead of "wyd," a letter instead of a text, a plan instead of a vague hope. Do that, consistently, and distance becomes just a fact about your relationship rather than the thing that defines it. For more context, see our [long-distance relationship statistics](/blog/long-distance-relationship-statistics/).
 
 [Far Fox](https://app.lovefarfox.com) was built for exactly this work — daily questions, love letters, shared photos, voice notes, countdowns, and a fox that grows alongside your relationship. It's free. Your fox is waiting.
+
+For deployment-specific communication context, read our [military long-distance relationship guide](/blog/military-long-distance-relationship/).
 
 And when you finally close the gap for a visit, here's [what to expect meeting for the first time](/blog/meeting-long-distance-partner-first-time/).

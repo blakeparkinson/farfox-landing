@@ -94,6 +94,8 @@ Apps like Far Fox give you a shared fox companion that grows as you use the app 
 **25. Build a countdown**
 Count down to your next visit, your anniversary, or moving in together. Having a number to watch shrink makes the distance feel temporary — because it is.
 
+For more structured ideas to try together, browse our [couple challenge ideas](/blog/couple-challenge-ideas/).
+
 ---
 
 Want pure play? We rounded up [47 long-distance relationship games](/blog/long-distance-relationship-games/) for every situation — texting games, video-call games, and async ones for opposite time zones.

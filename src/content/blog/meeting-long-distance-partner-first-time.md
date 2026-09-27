@@ -97,7 +97,7 @@ Two things make it survivable:
 
 The visit changes the relationship, usually for the better. You're no longer loving an idea; you're loving a person you've now held. Conversations get richer because you can picture exactly where they are. Inside jokes from the trip become a private language.
 
-Lean into that. Keep the momentum from the visit alive with daily connection: a shared question, a photo from the day, or a love letter that references something only the two of you now know in person. ([Far Fox](https://app.lovefarfox.com) is built for exactly this, with daily questions, a shared photo timeline, love letters, and a fox companion you grow together. Free on iOS, Android, and web.)
+Lean into that. Keep the momentum from the visit alive with daily connection: a shared question, a photo from the day, or a love letter that references something only the two of you now know in person. ([Far Fox](https://app.lovefarfox.com) is built for exactly this, with daily questions, a shared photo timeline, love letters, and a fox companion you grow together. Free on iOS, Android, and web.) For a wider view beyond one visit, see our [long-distance relationship statistics](/blog/long-distance-relationship-statistics/).
 
 ## One last thing
 
