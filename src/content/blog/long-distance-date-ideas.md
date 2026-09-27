@@ -90,6 +90,8 @@ Here are 47 long-distance date ideas organized by type — from low-effort weekn
 46. **Time-capsule date.** Each write a message to open on your next reunion.
 47. **Plan the reunion in detail** — the single most romantic date for couples with a visit coming up.
 
+If you're planning an anniversary date, see our [long-distance anniversary ideas](/blog/long-distance-relationship-anniversary-ideas/).
+
 ---
 
 ## How to make any long-distance date actually feel like a date

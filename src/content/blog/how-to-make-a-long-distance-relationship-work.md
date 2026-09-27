@@ -18,7 +18,7 @@ faqs:
 
 Long-distance relationships have a bad reputation they mostly don't deserve.
 
-Yes, they're hard. But the research is surprisingly encouraging: studies have repeatedly found that long-distance couples are no less happy or stable than couples who live in the same city — and they often communicate more meaningfully. The distance isn't what ends relationships. **Neglecting the work the distance requires** is what ends them.
+Yes, they're hard. But the research is surprisingly encouraging: studies have repeatedly found that long-distance couples are no less happy or stable than couples who live in the same city — and they often communicate more meaningfully. The distance isn't what ends relationships. **Neglecting the work the distance requires** is what ends them. We've gathered the numbers in our [long-distance relationship statistics](/blog/long-distance-relationship-statistics/).
 
 This is the complete guide to doing that work. It pulls together everything that actually matters — communication, trust, rituals, visits, and the long game of closing the distance — and links out to deeper guides on each piece along the way.
 
@@ -26,7 +26,7 @@ This is the complete guide to doing that work. It pulls together everything that
 
 ## 1. Communication: quality beats quantity
 
-The single most common mistake long-distance couples make is assuming that *more* communication equals a *healthier* relationship. It doesn't. Couples who text all day in month one usually burn out by month three.
+The single most common mistake long-distance couples make is assuming that *more* communication equals a *healthier* relationship. It doesn't. Couples who text all day in month one usually burn out by month three. If one of you is deployed and contact is irregular, our [military long-distance relationship guide](/blog/military-long-distance-relationship/) covers staying close without daily calls.
 
 What actually keeps you connected is **intentional** communication:
 

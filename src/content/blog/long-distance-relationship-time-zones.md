@@ -66,7 +66,7 @@ These two touchpoints mean the day always begins and ends with each other, regar
 
 **The out-of-sync days.** Some days you'll feel like ships passing. You're winding down as they're ramping up. It's normal to feel briefly disconnected. The rituals are what carry you through the low days; keep them even when it feels one-sided.
 
-**The lonely gap.** The hours with no realistic contact are the hardest. Fill them with your own life, not with refreshing the chat. Having a full life in your own time zone gives you more to bring to your golden hour. It's one of the [hidden ways distance keeps a spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship/).
+**The lonely gap.** The hours with no realistic contact are the hardest. Fill them with your own life, not with refreshing the chat. Having a full life in your own time zone gives you more to bring to your golden hour. It's one of the [hidden ways distance keeps a spark alive](/blog/how-to-keep-the-spark-alive-in-a-long-distance-relationship/). If you're navigating a deployment across different clocks, read our [military long-distance relationship guide](/blog/military-long-distance-relationship/).
 
 ## Turn the time difference into something romantic
 
@@ -82,6 +82,8 @@ We lean into this idea in our shop. The [**"Two Time Zones" tee** and the **Twil
 - **A [time zone overlap calculator](/long-distance-time-zone-calculator/)** lets you pick two cities and see the hours you're both awake. Never do the mental math again, and never text "you up?" at their 4 a.m.
 - **A shared calendar** for your golden hours and your next visit. A [countdown to the reunion](/blog/long-distance-relationship-timeline/) reframes the gap as temporary.
 - **Scheduled messages and a daily ritual in one place.** This is the core of what [Far Fox](https://app.lovefarfox.com) is built for: write a love letter now and schedule it to land at *their* morning, answer a shared daily question on your own time, drop voice notes and photos into a shared timeline, and grow a little fox companion together the more you both show up. It's designed so connection never depends on you being awake at the same second. Free on iOS, Android, and web.
+
+If classes shape your schedules, see our [long-distance relationship guide for college couples](/blog/long-distance-relationship-college/).
 
 ## The bottom line
 

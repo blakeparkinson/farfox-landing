@@ -163,6 +163,8 @@ The questions are just a door. What matters is the habit of walking through it â
 
 Couples who last long-distance aren't the ones with the most dramatic FaceTime dates. They're the ones who kept asking each other real questions long after the honeymoon phase ended.
 
+For affectionate names to use in everyday conversation, see our [long-distance relationship nicknames](/blog/long-distance-relationship-nicknames/).
+
 ---
 
 ## The bottom line

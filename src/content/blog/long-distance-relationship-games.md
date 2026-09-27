@@ -110,6 +110,8 @@ A list of 47 games is useless if you play one once and forget. The couples who m
 
 **Lower the stakes.** The point isn't the game — it's the 40 minutes of laughing and reacting together. A boring game played joyfully beats a perfect game you keep postponing.
 
+For a recurring activity beyond game night, try our [couple challenge ideas](/blog/couple-challenge-ideas/).
+
 If keeping the habit alive is the hard part, that's exactly the problem [Far Fox](https://app.lovefarfox.com) is built to solve. It hands you a daily question, a this-or-that, and little challenges automatically — plus a shared photo timeline and a fox companion that grows the more you both show up. It's the "default game" that never makes you think of what to play. Free on iOS, Android, and web.
 
 And if you want more ways to spend the time, our guides to [long-distance date ideas](/blog/long-distance-date-ideas/) and [25 activities for couples apart](/blog/long-distance-relationship-activities/) pick up where the games end.
