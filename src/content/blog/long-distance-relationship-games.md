@@ -104,13 +104,13 @@ The best long-distance games do double duty — they're fun *and* they close emo
 
 A list of 47 games is useless if you play one once and forget. The couples who make this work do three things:
 
-For a recurring activity beyond game night, try our [couple challenge ideas](/blog/couple-challenge-ideas/).
-
 **Pick a recurring slot.** "Tuesday is game night" beats "we should play games sometime." A standing time removes the negotiation.
 
 **Keep a default.** Have one zero-setup game (usually a texting game or the daily-puzzle ritual) you fall back to when you're tired. The goal is *consistency*, not novelty.
 
 **Lower the stakes.** The point isn't the game — it's the 40 minutes of laughing and reacting together. A boring game played joyfully beats a perfect game you keep postponing.
+
+For a recurring activity beyond game night, try our [couple challenge ideas](/blog/couple-challenge-ideas/).
 
 If keeping the habit alive is the hard part, that's exactly the problem [Far Fox](https://app.lovefarfox.com) is built to solve. It hands you a daily question, a this-or-that, and little challenges automatically — plus a shared photo timeline and a fox companion that grows the more you both show up. It's the "default game" that never makes you think of what to play. Free on iOS, Android, and web.
 

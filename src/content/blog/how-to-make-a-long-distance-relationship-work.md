@@ -18,7 +18,7 @@ faqs:
 
 Long-distance relationships have a bad reputation they mostly don't deserve.
 
-Yes, they're hard. But the research is surprisingly encouraging: studies have repeatedly found that long-distance couples are no less happy or stable than couples who live in the same city — and they often communicate more meaningfully. The distance isn't what ends relationships. **Neglecting the work the distance requires** is what ends them.
+Yes, they're hard. But the research is surprisingly encouraging: studies have repeatedly found that long-distance couples are no less happy or stable than couples who live in the same city — and they often communicate more meaningfully. The distance isn't what ends relationships. **Neglecting the work the distance requires** is what ends them. We've gathered the numbers in our [long-distance relationship statistics](/blog/long-distance-relationship-statistics/).
 
 This is the complete guide to doing that work. It pulls together everything that actually matters — communication, trust, rituals, visits, and the long game of closing the distance — and links out to deeper guides on each piece along the way.
 
@@ -26,7 +26,7 @@ This is the complete guide to doing that work. It pulls together everything that
 
 ## 1. Communication: quality beats quantity
 
-The single most common mistake long-distance couples make is assuming that *more* communication equals a *healthier* relationship. It doesn't. Couples who text all day in month one usually burn out by month three.
+The single most common mistake long-distance couples make is assuming that *more* communication equals a *healthier* relationship. It doesn't. Couples who text all day in month one usually burn out by month three. If one of you is deployed and contact is irregular, our [military long-distance relationship guide](/blog/military-long-distance-relationship/) covers staying close without daily calls.
 
 What actually keeps you connected is **intentional** communication:
 
@@ -121,10 +121,8 @@ Purpose-built couples apps reduce that friction — they hold the daily question
 
 If you take away nothing else: **long-distance relationships don't fail because of distance. They fail when one or both partners stop doing the work the distance requires.**
 
-The work isn't grand gestures. It's small, consistent, intentional — a real question instead of "wyd," a letter instead of a text, a plan instead of a vague hope. Do that, consistently, and distance becomes just a fact about your relationship rather than the thing that defines it. For more context, see our [long-distance relationship statistics](/blog/long-distance-relationship-statistics/).
+The work isn't grand gestures. It's small, consistent, intentional — a real question instead of "wyd," a letter instead of a text, a plan instead of a vague hope. Do that, consistently, and distance becomes just a fact about your relationship rather than the thing that defines it.
 
 [Far Fox](https://app.lovefarfox.com) was built for exactly this work — daily questions, love letters, shared photos, voice notes, countdowns, and a fox that grows alongside your relationship. It's free. Your fox is waiting.
-
-For deployment-specific communication context, read our [military long-distance relationship guide](/blog/military-long-distance-relationship/).
 
 And when you finally close the gap for a visit, here's [what to expect meeting for the first time](/blog/meeting-long-distance-partner-first-time/).

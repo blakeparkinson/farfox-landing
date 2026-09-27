@@ -26,7 +26,7 @@ The month ranges below are planning prompts. You may use them in a different ord
 
 ## Month 1: The Honeymoon
 
-You might want to talk for hours, or prefer short check-ins while you get to know each other. Tell your partner which pace fits your life. Avoid promising constant availability if you cannot sustain it during work or school.
+You might want to talk for hours, or prefer short check-ins while you get to know each other. Tell your partner which pace fits your life. Avoid promising constant availability if you cannot sustain it during work or school. If you're both students, our [college long-distance relationship guide](/blog/long-distance-relationship-college/) covers fitting calls around classes.
 
 **Try this:** “I like talking with you. On weekdays I can usually call after dinner. How does that work for you?” Ask about exclusivity rather than assuming you mean the same thing by “dating.”
 
@@ -56,7 +56,7 @@ Use a [love-letter prompt](/blog/love-letter-prompts-long-distance/) to explain 
 
 ## Year 1: The New Normal
 
-An anniversary gives you a reason to review the year. It does not prove that the difficult parts are over or that you should take a particular next step. If these stages overlap with school, our [college long-distance relationship guide](/blog/long-distance-relationship-college/) covers that context.
+An anniversary gives you a reason to review the year. It does not prove that the difficult parts are over or that you should take a particular next step.
 
 **Try this:** Ask, “Do we both want another year of this arrangement? What would make it more workable?” Discuss travel effort and costs as well as how often you talk. Leave space for an answer you did not expect.
 
@@ -68,6 +68,6 @@ If you want to relocate, make a [closing-the-distance plan](/blog/closing-the-di
 
 ## What's actually true at every stage
 
-You can ask for a different routine, privacy or time to think. Your partner can do the same. Avoid treating a timeline, streak or app score as proof that the relationship is healthy. For a broader look at long-distance relationships, see our [long-distance relationship statistics](/blog/long-distance-relationship-statistics/).
+You can ask for a different routine, privacy or time to think. Your partner can do the same. Avoid treating a timeline, streak or app score as proof that the relationship is healthy. For what research does and doesn't say about how long-distance couples fare, see our [long-distance relationship statistics](/blog/long-distance-relationship-statistics/).
 
 For tonight, choose one of our [100 relationship questions](/blog/long-distance-relationship-questions/). Both people can skip a question. The aim is to hear each other, not finish a checklist.

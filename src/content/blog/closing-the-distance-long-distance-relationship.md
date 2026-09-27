@@ -96,4 +96,4 @@ If you're still in the distance and working toward the finish line, [Far Fox](ht
 
 Closing the distance isn't a fairy-tale ending — it's the start of a new, closer, messier, better chapter. Do it on purpose: make sure it's really time, decide who moves like it's a shared project instead of a love test, set a real date, plan the money, and brace for an adjustment that's normal, not ominous.
 
-You spent all this time learning how to love someone across a distance. It turns out that was training for the real thing: loving them up close, every ordinary day, with all the intention the distance taught you — and none of the goodbyes. For a broader snapshot of long-distance relationships, see our [long-distance relationship statistics](/blog/long-distance-relationship-statistics/).
+You spent all this time learning how to love someone across a distance. It turns out that was training for the real thing: loving them up close, every ordinary day, with all the intention the distance taught you — and none of the goodbyes.
