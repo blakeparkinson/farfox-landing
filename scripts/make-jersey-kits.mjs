@@ -63,9 +63,11 @@ function render(markup, size = D) {
 
 /** The Far Fox crest, redrawn as vector from fox-crest(-navy).png. */
 function crest(cx, cy, w, variant) {
-  const c = variant === 'navy'
-    ? { body: '#14213A', feature: '#FFFFFF', muzzle: '#F8F0E2', nose: '#FFFFFF' }
-    : { body: '#F3ECE0', feature: '#12162E', muzzle: '#FFFFFF', nose: '#12162E' };
+  const c = {
+    navy: { body: '#14213A', feature: '#FFFFFF', muzzle: '#F8F0E2', nose: '#FFFFFF' },
+    light: { body: '#F3ECE0', feature: '#12162E', muzzle: '#FFFFFF', nose: '#12162E' },
+    gold: { body: '#F4B600', feature: '#2A0E4A', muzzle: '#FFF3C4', nose: '#2A0E4A' },
+  }[variant];
   const s = w / 300;
   return `<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">
     <polygon points="25,0 100,88 200,88 275,0 300,190 150,306 0,190" fill="${c.body}"/>
@@ -265,11 +267,164 @@ function dalmatian() {
   };
 }
 
-const KITS = { chart, dropzone, dalmatian };
+/** Points along a quadratic Bézier, spaced `gap` apart by arc length. */
+function alongQuad(a, c, b, gap) {
+  const at = (t) => ({
+    x: (1 - t) ** 2 * a.x + 2 * (1 - t) * t * c.x + t ** 2 * b.x,
+    y: (1 - t) ** 2 * a.y + 2 * (1 - t) * t * c.y + t ** 2 * b.y,
+  });
+  const pts = [at(0)];
+  let prev = pts[0], run = 0;
+  for (let k = 1; k <= 2000; k++) {
+    const p = at(k / 2000);
+    run += Math.hypot(p.x - prev.x, p.y - prev.y);
+    if (run >= gap) { pts.push(p); run = 0; }
+    prev = p;
+  }
+  return pts;
+}
+
+/** Flight Path: airmail kit. One hero route with a plane, faint routes, airmail stripes. */
+function flight() {
+  const bg = `<rect width="${D}" height="${D}" fill="#F5F1E7"/>`;
+  const RED = '#C8323C', NAVY = '#1F3A6E', INK = '#1C1A2E';
+  const r = rng(5);
+  let routes = '';
+  for (let k = 0; k < 9; k++) {
+    const a = { x: r() * D, y: 600 + r() * 4800 }, b = { x: r() * D, y: 600 + r() * 4800 };
+    const lift = 500 + r() * 900;
+    const c = { x: (a.x + b.x) / 2, y: Math.min(a.y, b.y) - lift };
+    const col = k % 2 ? RED : NAVY;
+    routes += `<path d="M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}" stroke="${col}" stroke-opacity="0.28" stroke-width="12" stroke-dasharray="46 34" stroke-linecap="round" fill="none"/>
+      <circle cx="${a.x}" cy="${a.y}" r="30" fill="${col}" fill-opacity="0.35"/><circle cx="${b.x}" cy="${b.y}" r="30" fill="${col}" fill-opacity="0.35"/>`;
+  }
+  // Airmail envelope border: alternating red and navy slanted bars between two rules.
+  const airmail = (y0, h) => {
+    let bars = `<rect x="0" y="${y0}" width="${D}" height="${h}" fill="#F5F1E7"/>`;
+    for (let x = -h; x < D + h; x += 360) {
+      for (const [dx, col] of [[0, RED], [180, NAVY]]) {
+        const x0 = x + dx;
+        bars += `<polygon points="${x0},${y0} ${x0 + 100},${y0} ${x0 + 100 - h},${y0 + h} ${x0 - h},${y0 + h}" fill="${col}"/>`;
+      }
+    }
+    return `${bars}<rect x="0" y="${y0 - 14}" width="${D}" height="14" fill="${NAVY}"/><rect x="0" y="${y0 + h}" width="${D}" height="14" fill="${NAVY}"/>`;
+  };
+  const a = { x: 2150, y: 4350 }, b = { x: 3900, y: 4050 }, c = { x: 2950, y: 2950 };
+  const t = 0.5;
+  const mid = { x: 0.25 * a.x + 0.5 * c.x + 0.25 * b.x, y: 0.25 * a.y + 0.5 * c.y + 0.25 * b.y };
+  const tan = { x: 2 * (1 - t) * (c.x - a.x) + 2 * t * (b.x - c.x), y: 2 * (1 - t) * (c.y - a.y) + 2 * t * (b.y - c.y) };
+  const angle = (Math.atan2(tan.y, tan.x) * 180) / Math.PI + 90; // plane art points up
+  const plane = `<g transform="translate(${mid.x} ${mid.y}) rotate(${angle}) scale(4.2) translate(-50 -50)">
+      <path d="M50 0 C54 0 56 6 56 14 L56 38 L96 60 L96 70 L56 58 L56 82 L68 92 L68 98 L50 93 L32 98 L32 92 L44 82 L44 58 L4 70 L4 60 L44 38 L44 14 C44 6 46 0 50 0 Z" fill="${INK}"/></g>`;
+  const end = (p) => `<circle cx="${p.x}" cy="${p.y}" r="120" fill="#F5F1E7" stroke="${INK}" stroke-width="30"/><circle cx="${p.x}" cy="${p.y}" r="58" fill="${RED}"/>`;
+  const hero = `<path d="M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}" stroke="${INK}" stroke-width="46" stroke-dasharray="130 80" stroke-linecap="round" fill="none"/>
+    <circle cx="${mid.x}" cy="${mid.y}" r="300" fill="#F5F1E7"/>${plane}${end(a)}${end(b)}`;
+  return {
+    front: svg(routes + hero + airmail(5380, 300) + crest(CREST.x, CREST.y, CREST.w, 'navy'), bg),
+    pattern: svg(routes + airmail(5380, 300), bg),
+    sleeve: svg(routes + airmail(3640, 260) + cuff(RED, NAVY), bg),
+  };
+}
+
+/** A leaning palm silhouette: tapered trunk plus drooping crescent fronds. */
+function palm(base, crown, color) {
+  const lean = { x: (base.x + crown.x) / 2 + (crown.x > base.x ? -140 : 140), y: (base.y + crown.y) / 2 };
+  let out = `<path d="M ${base.x - 55} ${base.y} Q ${lean.x - 30} ${lean.y} ${crown.x - 20} ${crown.y} L ${crown.x + 20} ${crown.y} Q ${lean.x + 30} ${lean.y} ${base.x + 55} ${base.y} Z" fill="${color}"/>`;
+  const fronds = [-172, -140, -112, -84, -58, -30, -6, 150, 30];
+  for (const deg of fronds) {
+    const th = (deg * Math.PI) / 180, L = 430;
+    const tip = { x: crown.x + Math.cos(th) * L, y: crown.y + Math.sin(th) * L * 0.7 + 190 };
+    const ctl = { x: crown.x + Math.cos(th) * L * 0.55, y: crown.y + Math.sin(th) * L * 0.55 - 40 };
+    const n = { x: -Math.sin(th) * 62, y: Math.cos(th) * 62 };
+    out += `<path d="M ${crown.x} ${crown.y} Q ${ctl.x + n.x} ${ctl.y + n.y} ${tip.x} ${tip.y} Q ${ctl.x - n.x} ${ctl.y - n.y} ${crown.x} ${crown.y} Z" fill="${color}"/>`;
+  }
+  return out + `<circle cx="${crown.x}" cy="${crown.y}" r="48" fill="${color}"/>`;
+}
+
+/** Paradise: two islands, one sunset. A retro striped sun, two palms leaning in, sea glow. */
+function paradise() {
+  const H = 3750; // horizon
+  const INK = '#2A1B3D';
+  const sky = `<defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1FB5A6"/><stop offset="0.45" stop-color="#7FD3B8"/><stop offset="${H / D}" stop-color="#FFB38A"/><stop offset="${H / D}" stop-color="#FF7A7F"/><stop offset="1" stop-color="#6E3E8C"/></linearGradient>
+      <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9A0"/><stop offset="1" stop-color="#FF6B8A"/></linearGradient>
+    </defs><rect width="${D}" height="${D}" fill="url(#sky)"/>`;
+  const sun = (cx, r) => {
+    // Retro sun: horizontal gaps that thicken toward the horizon.
+    let gaps = '';
+    for (let k = 0, y = H - r * 0.55; y < H; k++) {
+      const h = 34 + k * 26;
+      gaps += `<rect x="${cx - r}" y="${y}" width="${2 * r}" height="${h}" fill="#FFB38A"/>`;
+      y += h + 120 - k * 10;
+    }
+    return `<clipPath id="above"><rect width="${D}" height="${H}"/></clipPath>
+      <g clip-path="url(#above)"><circle cx="${cx}" cy="${H}" r="${r}" fill="url(#sun)"/>${gaps}</g>`;
+  };
+  let glow = '';
+  for (let k = 0; k < 12; k++) {
+    const y = H + 90 + k * 150, w = 1500 - k * 95;
+    glow += `<rect x="${3000 - w / 2}" y="${y}" width="${w}" height="${40 + k * 4}" rx="30" fill="#FFE9A0" fill-opacity="${0.55 - k * 0.035}"/>`;
+  }
+  const island = (x) => `<ellipse cx="${x}" cy="${H + 10}" rx="360" ry="120" fill="${INK}"/>`;
+  const scene = sun(3000, 1050) + glow + island(2250) + island(3800)
+    + palm({ x: 2250, y: H - 60 }, { x: 2600, y: 3050 }, INK)
+    + palm({ x: 3800, y: H - 60 }, { x: 3450, y: 3080 }, INK)
+    + heart(3025, 2860, 190, '#FF4F7B', 0);
+  // After sunset on the back: deeper teal into purple so white lettering reads.
+  const dusk = `<defs><linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#138078"/><stop offset="0.55" stop-color="#2E5E86"/><stop offset="1" stop-color="#5A2F7A"/></linearGradient></defs>
+    <rect width="${D}" height="${D}" fill="url(#dusk)"/>`;
+  let backGlow = '';
+  for (let k = 0; k < 5; k++) backGlow += `<rect x="${3000 - (900 - k * 120) / 2}" y="${5050 + k * 150}" width="${900 - k * 120}" height="${40 + k * 4}" rx="30" fill="#FFB38A" fill-opacity="${0.5 - k * 0.07}"/>`;
+  return {
+    front: svg(scene + crest(CREST.x, CREST.y, CREST.w, 'light'), sky),
+    // The back keeps the sky and sea only, so the name and number stay clean.
+    pattern: svg(backGlow, dusk),
+    sleeve: svg(cuff('#FF6B8A', '#1A564E'), sky),
+  };
+}
+
+/** Mardi Gras: harlequin diamonds with gold lattice and two draped bead strands. */
+function mardigras() {
+  const bg = `<rect width="${D}" height="${D}" fill="#3B1466"/>`;
+  const harlequin = (lineOpacity) => {
+    const W = 600, Hh = 900;
+    let a = '', b = '';
+    for (let j = -1; j <= (2 * D) / Hh + 1; j++) {
+      for (let i = -1; i <= (2 * D) / W + 1; i++) {
+        if ((i + j) % 2) continue;
+        const cx = (i * W) / 2, cy = (j * Hh) / 2;
+        const d = `M${cx} ${cy - Hh / 2}L${cx + W / 2} ${cy}L${cx} ${cy + Hh / 2}L${cx - W / 2} ${cy}Z`;
+        if (((i % 2) + 2) % 2) a += d; else b += d;
+      }
+    }
+    return `<path d="${a}" fill="#4B1C86"/><path d="${b}" fill="#3B1466"/>
+      <path d="${a}" fill="none" stroke="#F4B600" stroke-opacity="${lineOpacity}" stroke-width="10"/>`;
+  };
+  const strand = (a, b, sag, fill, rim) => {
+    const c = { x: (a.x + b.x) / 2, y: 2 * sag - (a.y + b.y) / 2 }; // quad through the sag point
+    return alongQuad(a, c, b, 104).map((p) => `<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="46" fill="${fill}" stroke="${rim}" stroke-width="7"/>
+      <circle cx="${(p.x - 14).toFixed(0)}" cy="${(p.y - 14).toFixed(0)}" r="13" fill="#FFFFFF" fill-opacity="0.7"/>`).join('');
+  };
+  // The crest hangs as the gold strand's pendant, centred, since any strand
+  // draped across the left chest would run through the usual crest spot.
+  const pendant = { x: 3000, y: 3400, w: 470 };
+  const beads = strand({ x: 2150, y: 1560 }, { x: 3850, y: 1560 }, 3950, '#22A45D', '#0F5A30')
+    + strand({ x: 2300, y: 1480 }, { x: 3700, y: 1480 }, 3120, '#F4B600', '#8A6400')
+    + `<circle cx="${pendant.x}" cy="${pendant.y - 250}" r="44" fill="none" stroke="#F4B600" stroke-width="22"/>`;
+  return {
+    front: svg(harlequin(0.6) + beads + crest(pendant.x, pendant.y, pendant.w, 'gold'), bg),
+    pattern: svg(harlequin(0.35), bg),
+    sleeve: svg(harlequin(0.6) + cuff('#F4B600', '#1B6B3F'), bg),
+    // Gold vector crest for the personalized back, replacing the pelican emblem.
+    backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="363" height="370" viewBox="0 0 363 370">${crest(181.5, 185, 363, 'gold')}</svg>`,
+  };
+}
+
+const KITS = { chart, dropzone, dalmatian, flight, paradise, mardigras };
 
 // --- default back, via the live personalized-back renderer ----------------
 
-async function defaultBack(kit, patternPng) {
+async function defaultBack(kit, patternPng, crestPng) {
   const { renderJerseyBack } = await import('../src/lib/jerseyBack.mjs');
   const realFetch = globalThis.fetch;
   // Serve this kit's pattern and crest from disk instead of production.
@@ -277,7 +432,9 @@ async function defaultBack(kit, patternPng) {
     const u = String(url);
     if (u.includes('/shop/designs/')) {
       const name = u.split('/shop/designs/')[1];
-      const buf = name.endsWith('-pattern.png') ? patternPng : readFileSync(new URL(`../public/shop/designs/${name}`, import.meta.url));
+      const buf = name.endsWith('-pattern.png') ? patternPng
+        : crestPng ? crestPng // kit ships its own back crest
+          : readFileSync(new URL(`../public/shop/designs/${name}`, import.meta.url));
       return new Response(buf);
     }
     return realFetch(url, init);
@@ -335,7 +492,12 @@ for (const [kit, build] of Object.entries(KITS)) {
   const parts = build();
   const files = {};
   for (const part of ['front', 'pattern', 'sleeve']) files[part] = render(parts[part]);
-  files.back = await defaultBack(kit, files.pattern);
+  let crestPng = null;
+  if (parts.backCrest) {
+    crestPng = Buffer.from(new Resvg(parts.backCrest).render().asPng());
+    await writeFile(new URL(`fox-crest-${kit}.png`, OUT), crestPng);
+  }
+  files.back = await defaultBack(kit, files.pattern, crestPng);
   for (const [part, png] of Object.entries(files)) {
     const out = await sharp(png).png({ compressionLevel: 9, palette: false }).toBuffer();
     await writeFile(new URL(`sj-${kit}-${part}.png`, OUT), out);
