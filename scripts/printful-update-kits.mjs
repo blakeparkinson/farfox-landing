@@ -5,6 +5,8 @@
  *   PRINTFUL_TOKEN=… node scripts/printful-update-kits.mjs            # dry run: show every planned change
  *   PRINTFUL_TOKEN=… node scripts/printful-update-kits.mjs --apply    # update all sync variants
  *   PRINTFUL_TOKEN=… node scripts/printful-update-kits.mjs --mockups  # write public/shop/{mockups,backs}/<id>.png
+ *   --kit flight,paradise limits a run to some kits; KITS_BASE=<url> (mockups only)
+ *   renders from a preview deployment before the files are in production.
  *
  * Front, back and both sleeves are replaced; any other placement (collar,
  * label, …) is kept by file id. The stale "preview" file is dropped because
@@ -14,8 +16,12 @@ import { writeFile } from 'node:fs/promises';
 
 const TOKEN = process.env.PRINTFUL_TOKEN;
 const STORE = process.env.PRINTFUL_STORE_ID || '18292625';
-const BASE = 'https://lovefarfox.com/shop/designs/kits-2026-09';
-const KITS = { chart: 443266945, dropzone: 443420345, dalmatian: 443578239 };
+// KITS_BASE lets --mockups read files from a preview deployment before they ship.
+const BASE = process.env.KITS_BASE || 'https://lovefarfox.com/shop/designs/kits-2026-09';
+const KITS = {
+  chart: 443266945, dropzone: 443420345, dalmatian: 443578239,
+  flight: 443213452, paradise: 443540637, mardigras: 443631285,
+};
 // Printful names this product's front placement "default".
 const REPLACE = { default: 'front', back: 'back', sleeve_left: 'sleeve', sleeve_right: 'sleeve' };
 
@@ -26,6 +32,11 @@ if (!TOKEN) {
 const args = process.argv.slice(2);
 const apply = args.includes('--apply');
 const mockups = args.includes('--mockups');
+const only = args.includes('--kit') ? args[args.indexOf('--kit') + 1].split(',') : null;
+if (apply && process.env.KITS_BASE) {
+  console.error('Refusing --apply with KITS_BASE: Printful products must point at production URLs.');
+  process.exit(1);
+}
 
 async function pf(path, init = {}, attempt = 0) {
   const r = await fetch(`https://api.printful.com${path}`, {
@@ -128,6 +139,7 @@ async function mockupsFor(kit, productId) {
 }
 
 for (const [kit, id] of Object.entries(KITS)) {
+  if (only && !only.includes(kit)) continue;
   if (mockups) await mockupsFor(kit, id);
   else await updateKit(kit, id);
 }
