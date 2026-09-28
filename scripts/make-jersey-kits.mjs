@@ -46,12 +46,15 @@ const svg = (body, bg) =>
 // Oswald 700, the same face the personalized backs use for names and numbers.
 // resvg-js 2.6 ignores `fontBuffers`, so the font goes through a temp file.
 let fontFiles = [];
-async function loadOswald() {
-  const css = await fetch('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap', { headers: { 'User-Agent': 'Mozilla/5.0' } }).then((r) => r.text());
-  const url = css.match(/url\((https:[^)]+\.ttf)\)/)[1];
-  const file = join(tmpdir(), 'farfox-oswald-700.ttf');
-  await writeFile(file, Buffer.from(await fetch(url).then((r) => r.arrayBuffer())));
-  fontFiles = [file];
+// Yellowtail is the baseball chest script.
+async function loadFonts() {
+  for (const [family, query] of [['oswald', 'Oswald:wght@700'], ['yellowtail', 'Yellowtail']]) {
+    const css = await fetch(`https://fonts.googleapis.com/css2?family=${query}&display=swap`, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then((r) => r.text());
+    const url = css.match(/url\((https:[^)]+\.ttf)\)/)[1];
+    const file = join(tmpdir(), `farfox-${family}.ttf`);
+    await writeFile(file, Buffer.from(await fetch(url).then((r) => r.arrayBuffer())));
+    fontFiles.push(file);
+  }
 }
 
 function render(markup, size = D) {
@@ -429,7 +432,54 @@ function mardigras() {
   };
 }
 
-const KITS = { chart, dropzone, dalmatian, flight, paradise, mardigras };
+// --- baseball kits (Printful catalog 792) ------------------------------------
+//
+// The button placket hides the front file between x ≈ 2740 and 3280 (measured
+// by rendering a known grid through Printful's mockup generator). Chest art is
+// drawn in garment space (gx = 0 at the buttons) and placed twice: the left
+// half ending at 2740, the right half starting at 3280, so it reads as one
+// piece once the shirt is buttoned.
+const PLACKET = { left: 2740, right: 3280 };
+
+function acrossPlacket(garment) {
+  return `<defs>
+      <clipPath id="panelL"><rect x="0" y="0" width="${PLACKET.left}" height="${D}"/></clipPath>
+      <clipPath id="panelR"><rect x="${PLACKET.right}" y="0" width="${D - PLACKET.right}" height="${D}"/></clipPath>
+    </defs>
+    <g clip-path="url(#panelL)"><g transform="translate(${PLACKET.left} 0)">${garment}</g></g>
+    <g clip-path="url(#panelR)"><g transform="translate(${PLACKET.right} 0)">${garment}</g></g>`;
+}
+
+/** Classic chest script: "Far" left of the buttons, "Fox" right, a swash tail under both. */
+function chestScript(fill, outline) {
+  const base = 2980, size = 980, gap = 150;
+  const word = (x, anchor, text) => `<text x="${x}" y="${base}" text-anchor="${anchor}" font-family="Yellowtail" font-size="${size}">${text}</text>`;
+  const words = word(-gap, 'end', 'Far') + word(gap, 'start', 'Fox');
+  // Tail leaves the x of "Fox", sweeps under both words and tapers out on the left.
+  const tail = `<path d="M 1180 ${base - 60} C 1350 ${base + 150} 1150 ${base + 260} 600 ${base + 270}
+      L -1180 ${base + 250} C -1240 ${base + 250} -1250 ${base + 205} -1180 ${base + 200}
+      L 560 ${base + 180} C 980 ${base + 170} 1180 ${base + 90} 1180 ${base - 60} Z"/>`;
+  // Drawn at 980 px type, then scaled so each word fits its chest panel
+  // (about 1400 px from the buttons to the side seam) with room to spare.
+  const k = 0.7;
+  const art = `<g transform="translate(0 ${base}) scale(${k}) translate(0 ${-base})">${words}${tail}</g>`;
+  return acrossPlacket(`<g fill="${outline}" stroke="${outline}" stroke-width="70" stroke-linejoin="round" transform="translate(22 26)" opacity="0.9">${art}</g>
+    <g fill="${outline}" stroke="${outline}" stroke-width="44" stroke-linejoin="round">${art}</g>
+    <g fill="${fill}">${art}</g>`);
+}
+
+function pinstripes(bg, stripe) {
+  let lines = '';
+  for (let x = 224.5; x < D; x += 216) lines += `<rect x="${x - 3}" y="0" width="6" height="${D}" fill="${stripe}"/>`;
+  return `<rect width="${D}" height="${D}" fill="${bg}"/>${lines}`;
+}
+
+const bbHome = () => ({ front: svg(chestScript('#1C4096', '#C0202E'), pinstripes('#FCFAF6', '#072E86')) });
+const bbRoyal = () => ({ front: svg(chestScript('#F4ECE0', '#C0202E'), pinstripes('#143A8C', '#FFFFFF')) });
+const bbRed = () => ({ front: svg(chestScript('#F4ECE0', '#1B2A6B'), `<rect width="${D}" height="${D}" fill="#BC2832"/>`) });
+
+
+const KITS = { chart, dropzone, dalmatian, flight, paradise, mardigras, 'bb-home': bbHome, 'bb-royal': bbRoyal, 'bb-red': bbRed };
 
 // --- default back, via the live personalized-back renderer ----------------
 
@@ -488,19 +538,41 @@ async function preview(kit, files) {
   return new Resvg(markup, { fitTo: { mode: 'width', value: 1024 } }).render().asPng();
 }
 
+/** Baseball preview: the two visible front panels butted together at the buttons. */
+async function placketPreview(kit, front) {
+  const panel = (left, width) => sharp(front).extract({ left, top: 1000, width, height: 4600 }).toBuffer();
+  const [l, r] = await Promise.all([panel(1340, PLACKET.left - 1340), panel(PLACKET.right, 4680 - PLACKET.right)]);
+  const full = await sharp({ create: { width: 2800, height: 4600, channels: 4, background: '#fff' } })
+    .composite([{ input: l, left: 0, top: 0 }, { input: r, left: PLACKET.left - 1340, top: 0 }])
+    .png().toBuffer();
+  const img = await sharp(full).resize({ height: 500 }).toBuffer();
+  const w = (await sharp(img).metadata()).width;
+  return sharp({ create: { width: 1024, height: 540, channels: 3, background: '#fff' } })
+    .composite([{ input: img, left: Math.round((1024 - w) / 2), top: 10 },
+      { input: Buffer.from(`<svg width="1024" height="30"><text x="512" y="20" text-anchor="middle" font-family="Arial" font-size="16" fill="#555">${kit}: visible front panels joined at the buttons (approximation)</text></svg>`), left: 0, top: 510 }])
+    .png().toBuffer();
+}
+
 // --- main ----------------------------------------------------------------------
 
 const args = process.argv.slice(2);
 const only = args.includes('--kit') ? args[args.indexOf('--kit') + 1] : null;
 const previewOut = args.includes('--preview') ? args[args.indexOf('--preview') + 1] : null;
 await mkdir(OUT, { recursive: true });
-await loadOswald();
+await loadFonts();
 const previews = [];
 for (const [kit, build] of Object.entries(KITS)) {
   if (only && kit !== only) continue;
   const parts = build();
   const files = {};
-  for (const part of ['front', 'pattern', 'sleeve']) files[part] = render(parts[part]);
+  for (const part of ['front', 'pattern', 'sleeve']) if (parts[part]) files[part] = render(parts[part]);
+  if (!parts.pattern) {
+    // Baseball kits keep their existing back and sleeves; only the front is new.
+    await writeFile(new URL(`rj-${kit}-front.png`, OUT), await sharp(files.front).png({ compressionLevel: 9 }).toBuffer());
+    console.log(`[kits] ${kit}: front written`);
+    if (previewOut) previews.push(await placketPreview(kit, files.front));
+    continue;
+  }
   let crestPng = null;
   if (parts.backCrest) {
     crestPng = Buffer.from(new Resvg(parts.backCrest).render().asPng());
