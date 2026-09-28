@@ -1,6 +1,63 @@
 {
-  "generatedAt": "2026-09-28T13:08:38.050Z",
+  "generatedAt": "2026-09-28T16:46:30.065Z",
   "products": [
+    {
+      "id": "475844805",
+      "slug": "far-fox-long-distance-fc-jersey-morse-hoops",
+      "name": "Long Distance FC Jersey (Morse Hoops)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-475844805.png",
+      "back": "/shop/backs/475844805.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
+    {
+      "id": "475844798",
+      "slug": "far-fox-long-distance-fc-jersey-other-half-b",
+      "name": "Long Distance FC Jersey (Other Half B)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-475844798.png",
+      "back": "/shop/backs/475844798.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
+    {
+      "id": "475844794",
+      "slug": "far-fox-long-distance-fc-jersey-other-half-a",
+      "name": "Long Distance FC Jersey (Other Half A)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-475844794.png",
+      "back": "/shop/backs/475844794.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
     {
       "id": "443631285",
       "slug": "far-fox-long-distance-fc-jersey-mardi-gras",

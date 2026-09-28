@@ -26,6 +26,8 @@ const KITS = {
   dropzone: 443420345, dalmatian: 443578239, twilight: 443164966,
   flight: 443213452, paradise: 443540637, mardigras: 443631285,
   'bb-home': 436911930, 'bb-royal': 437021439, 'bb-red': 437052584,
+  // New in the October 2026 drop (created 2026-09-28).
+  otherhalfa: 475844794, otherhalfb: 475844798, morse: 475844805,
 };
 // Baseball kits only get a new front; their backs and sleeves stay as they are.
 const isBaseball = (kit) => kit.startsWith('bb-');
