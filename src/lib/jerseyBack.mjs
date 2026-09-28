@@ -44,11 +44,11 @@ const KITS = {
     number: '#FAF4E4', numberStroke: '#141432', name: '#FAF4E4', nameStroke: '#141432',
   },
   chart: {
-    pattern: 'sj-chart-pattern.png', crest: 'fox-crest-navy.png',
+    pattern: 'kits-2026-09/sj-chart-pattern.png', crest: 'fox-crest-navy.png',
     number: '#182642', numberStroke: '#DFE2D7', name: '#182642', nameStroke: '#DFE2D7',
   },
   dropzone: {
-    pattern: 'sj-dropzone-pattern.png', crest: 'fox-crest.png',
+    pattern: 'kits-2026-09/sj-dropzone-pattern.png', crest: 'fox-crest.png',
     number: '#FDE047', numberStroke: '#0A102C', name: '#F5F3FF', nameStroke: '#0A102C',
   },
   paradise: {
@@ -56,7 +56,7 @@ const KITS = {
     number: '#FFFDF8', numberStroke: '#1A564E', name: '#FFFDF8', nameStroke: '#1A564E',
   },
   dalmatian: {
-    pattern: 'sj-dalmatian-pattern.png', crest: 'fox-crest-navy.png',
+    pattern: 'kits-2026-09/sj-dalmatian-pattern.png', crest: 'fox-crest-navy.png',
     number: '#14213A', numberStroke: '#F5F1E7', name: '#14213A', nameStroke: '#F5F1E7',
   },
   mardigras: {
