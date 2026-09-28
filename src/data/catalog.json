@@ -1,6 +1,25 @@
 {
-  "generatedAt": "2026-09-28T16:46:30.065Z",
+  "generatedAt": "2026-09-28T17:46:16.509Z",
   "products": [
+    {
+      "id": "475849115",
+      "slug": "far-fox-long-distance-fc-jersey-moose-lodge",
+      "name": "Long Distance FC Jersey (Moose Lodge)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-475849115.png",
+      "back": "/shop/backs/475849115.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
     {
       "id": "475844805",
       "slug": "far-fox-long-distance-fc-jersey-morse-hoops",

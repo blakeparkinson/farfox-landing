@@ -28,11 +28,12 @@ const KITS = {
   'bb-home': 436911930, 'bb-royal': 437021439, 'bb-red': 437052584,
   // New in the October 2026 drop (created 2026-09-28).
   otherhalfa: 475844794, otherhalfb: 475844798, morse: 475844805,
+  'moose-blush': 475849115, // Moose Lodge, Blush only (created 2026-09-28)
 };
 // Baseball kits only get a new front; their backs and sleeves stay as they are.
 const isBaseball = (kit) => kit.startsWith('bb-');
 const replaceFor = (kit) => (isBaseball(kit) ? { default: 'front' } : REPLACE);
-const OCTOBER = new Set(['dropzone', 'dalmatian', 'twilight', 'otherhalfa', 'otherhalfb', 'morse']);
+const OCTOBER = new Set(['dropzone', 'dalmatian', 'twilight', 'otherhalfa', 'otherhalfb', 'morse', 'moose-blush']);
 const folder = (kit) => (process.env.KITS_BASE || !OCTOBER.has(kit) ? BASE : BASE.replace('kits-2026-09', 'kits-2026-10'));
 const fileUrl = (kit, part) => `${folder(kit)}/${isBaseball(kit) ? 'rj' : 'sj'}-${kit}-${part}.png`;
 // Printful names this product's front placement "default".
