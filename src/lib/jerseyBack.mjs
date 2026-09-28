@@ -31,8 +31,10 @@ const DESIGN = 6000; // native design space; layout numbers are in this space
  */
 const KITS = {
   // --- Concept soccer kits (cat 644) ---
+  // October 2026 drop (values mirror BACKS in scripts/kit-designs-2026-10.mjs;
+  // test-jersey-offer.mjs fails if they drift).
   twilight: {
-    pattern: 'sj-twilight-pattern.png', crest: 'fox-crest.png',
+    pattern: 'kits-2026-10/sj-twilight-pattern.png', crest: 'fox-crest.png',
     number: '#FAEEC8', numberStroke: '#1C1634', name: '#FAEEC8', nameStroke: '#1C1634',
   },
   flight: {
@@ -43,12 +45,13 @@ const KITS = {
     pattern: 'sj-stars-pattern.png', crest: 'fox-crest.png',
     number: '#FAF4E4', numberStroke: '#141432', name: '#FAF4E4', nameStroke: '#141432',
   },
+  // Retired Oct 2026 (with orange below); kept so existing orders still render a back.
   chart: {
     pattern: 'kits-2026-09/sj-chart-pattern.png', crest: 'fox-crest-navy.png',
     number: '#182642', numberStroke: '#DFE2D7', name: '#182642', nameStroke: '#DFE2D7',
   },
   dropzone: {
-    pattern: 'kits-2026-09/sj-dropzone-pattern.png', crest: 'fox-crest.png',
+    pattern: 'kits-2026-10/sj-dropzone-pattern.png', crest: 'fox-crest.png',
     number: '#FDE047', numberStroke: '#0A102C', name: '#F5F3FF', nameStroke: '#0A102C',
   },
   paradise: {
@@ -56,8 +59,20 @@ const KITS = {
     number: '#FFFDF8', numberStroke: '#1A564E', name: '#FFFDF8', nameStroke: '#1A564E',
   },
   dalmatian: {
-    pattern: 'kits-2026-09/sj-dalmatian-pattern.png', crest: 'fox-crest-navy.png',
+    pattern: 'kits-2026-10/sj-dalmatian-pattern.png', crest: 'fox-crest-navy.png',
     number: '#14213A', numberStroke: '#F5F1E7', name: '#14213A', nameStroke: '#F5F1E7',
+  },
+  otherhalfa: {
+    pattern: 'kits-2026-10/sj-otherhalfa-pattern.png', crest: 'fox-crest.png',
+    number: '#FFF5F0', numberStroke: '#2D1B4E', name: '#FFF5F0', nameStroke: '#2D1B4E',
+  },
+  otherhalfb: {
+    pattern: 'kits-2026-10/sj-otherhalfb-pattern.png', crest: 'fox-crest.png',
+    number: '#FFF5F0', numberStroke: '#2D1B4E', name: '#FFF5F0', nameStroke: '#2D1B4E',
+  },
+  morse: {
+    pattern: 'kits-2026-10/sj-morse-pattern.png', crest: 'fox-crest.png',
+    number: '#FF6B8A', numberStroke: '#2D1B4E', name: '#FF6B8A', nameStroke: '#2D1B4E',
   },
   mardigras: {
     pattern: 'kits-2026-09/sj-mardigras-pattern.png', crest: 'kits-2026-09/fox-crest-mardigras.png',

@@ -14,18 +14,23 @@ export function kitSlugForName(name) {
     if (/\(royal\)/.test(n)) return 'bb-royal';
     return 'bb-home'; // the plain "Baseball Jersey" (home pinstripe)
   }
+  // Soccer kits — October 2026 drop. Both need the jersey context: the shop
+  // also sells a Morse "I Love You" Tee, which must not get a jersey back.
+  if (/jersey/.test(n) && /other\s*half/.test(n)) return /\bb\)|kit\s*b|\(b\)/.test(n) ? 'otherhalfb' : 'otherhalfa';
+  if (/jersey/.test(n) && /morse\s*hoops/.test(n)) return 'morse';
   // Soccer kits.
   if (/flight\s*path/.test(n)) return 'flight';
   if (/same\s*stars/.test(n)) return 'stars';
-  if (/coordinates/.test(n)) return 'chart';
   if (/twilight/.test(n)) return 'twilight';
   if (/drop\s*zone/.test(n)) return 'dropzone';
   if (/paradise/.test(n)) return 'paradise';
   if (/dalmatian/.test(n)) return 'dalmatian';
   if (/mardi\s*gras/.test(n)) return 'mardigras';
   if (/champions/.test(n)) return 'champions';
-  if (/\(orange\)/.test(n)) return 'orange';
   if (/\(white\)/.test(n)) return 'white';
+  // Retired Oct 2026 — kept so in-flight orders still resolve a back.
+  if (/coordinates/.test(n)) return 'chart';
+  if (/\(orange\)/.test(n)) return 'orange';
   return null;
 }
 

@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import catalog from '../data/catalog.json';
 import { kitSlugForName } from '../lib/kits.mjs';
+import JerseyOfferCard from '../components/JerseyOfferCard.astro';
 
 const SITE = 'https://lovefarfox.com';
 const SNIPCART_KEY = import.meta.env.PUBLIC_SNIPCART_KEY ?? 'ZDBhODA3ZGEtNzM5Zi00MGYxLTg4ODItOGY3NTYyMTQwNmRmNjM5MTYzNzE4NTA1NTczODE3';
@@ -15,11 +16,17 @@ type Product = {
   sizes?: string[];
 };
 
-const FEATURED_IDS = ['443266866', '443266945', '443213452', '443164966'];
+// Cards are chosen by kit, not product id, so a kit appears here as soon as
+// `npm run sync` adds its Printful product to the catalog. Retired kits
+// (Coordinates, Orange) are simply not listed.
+const FEATURED_KITS = ['morse', 'paradise', 'flight', 'stars', 'twilight', 'mardigras'];
+const PAIR_KITS = ['otherhalfa', 'otherhalfb'];
 const allProducts = catalog.products as Product[];
-const jerseys = FEATURED_IDS
-  .map((id) => allProducts.find((product) => product.id === id))
-  .filter((product): product is Product => Boolean(product));
+const byKit = (kit: string) => allProducts.find((product) => kitSlugForName(product.name) === kit);
+const present = (products: (Product | undefined)[]) => products.filter((product): product is Product => Boolean(product));
+const jerseys = present(FEATURED_KITS.map(byKit));
+const pair = present(PAIR_KITS.map(byKit));
+const offers = [...pair, ...jerseys];
 
 if (!jerseys.length) {
   throw new Error('No featured personalized jerseys found in the Printful catalog');
@@ -60,14 +67,14 @@ const faqs = [
       '@type': 'Product',
       name: 'Personalized Long Distance FC Jersey',
       description: 'A personalized jersey for long-distance couples with a custom name and number.',
-      image: jerseys.map((jersey) => `${SITE}${jersey.image}`),
+      image: offers.map((jersey) => `${SITE}${jersey.image}`),
       brand: { '@type': 'Brand', name: 'Far Fox' },
       offers: {
         '@type': 'AggregateOffer',
-        lowPrice: Math.min(...jerseys.map((jersey) => jersey.price)),
-        highPrice: Math.max(...jerseys.map((jersey) => jersey.price)),
+        lowPrice: Math.min(...offers.map((jersey) => jersey.price)),
+        highPrice: Math.max(...offers.map((jersey) => jersey.price)),
         priceCurrency: 'USD',
-        offerCount: jerseys.length,
+        offerCount: offers.length,
         availability: 'https://schema.org/InStock',
       },
     })} />
@@ -131,62 +138,20 @@ const faqs = [
           <p class="text-fox-text-light text-lg">Pick a design, type their name and number, then preview the back.</p>
         </div>
 
+        {pair.length > 0 && (
+          <div class="mb-10 rounded-[2rem] border-2 border-fox-pink/20 bg-fox-bg/40 p-4 sm:p-6">
+            <div class="text-center mb-6">
+              <p class="text-xs uppercase tracking-[0.25em] text-fox-pink font-900 mb-2">The Other Half kits</p>
+              <h3 class="text-2xl sm:text-3xl font-900 tracking-tight">Each of you wears half.</h3>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-6 lg:gap-8">
+              {pair.map((jersey, index) => <JerseyOfferCard jersey={jersey} index={index} />)}
+            </div>
+          </div>
+        )}
+
         <div class="grid sm:grid-cols-2 gap-6 lg:gap-8">
-          {jerseys.map((jersey, index) => {
-            const kit = kitSlugForName(jersey.name);
-            return (
-              <article class="jersey-card rounded-3xl border-2 border-fox-pink/10 bg-fox-bg/40 overflow-hidden hover:border-fox-pink/30 transition-colors" data-product={jersey.id} data-kit={kit}>
-                <div class="relative aspect-square bg-gradient-to-br from-fox-bg to-white">
-                  <img id={`offer-img-${jersey.id}`} src={jersey.image} alt={jersey.name} class="w-full h-full object-contain p-3 transition-opacity duration-150" loading={index > 1 ? 'lazy' : 'eager'} />
-                  <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 rounded-full bg-white/90 p-1 shadow-md">
-                    <button type="button" class="offer-view px-4 py-1.5 rounded-full text-xs font-900 bg-fox-pink text-white" data-product={jersey.id} data-src={jersey.image} data-side="front">Front</button>
-                    <button type="button" class="offer-view px-4 py-1.5 rounded-full text-xs font-900 text-fox-text-light" data-product={jersey.id} data-src={jersey.back} data-side="back">Back</button>
-                  </div>
-                </div>
-                <div class="p-5 sm:p-6">
-                  <div class="flex items-start justify-between gap-4 mb-5">
-                    <h3 class="font-900 text-xl leading-tight">{jersey.name.replace('Long Distance FC Jersey ', '')}</h3>
-                    <span class="font-900 text-fox-pink text-xl">{fmt(jersey.price)}</span>
-                  </div>
-                  <label class="block text-xs uppercase tracking-wider font-800 text-fox-text-light mb-1.5" for={`size-${jersey.id}`}>Size</label>
-                  <select id={`size-${jersey.id}`} class="w-full rounded-xl border border-fox-pink/20 bg-white px-3 py-3 text-sm font-800 mb-4">
-                    {jersey.sizes?.map((size) => <option value={size}>{size}</option>)}
-                  </select>
-                  <div class="grid grid-cols-[1fr_5rem] gap-3 mb-4">
-                    <label class="text-xs uppercase tracking-wider font-800 text-fox-text-light">
-                      Name
-                      <input id={`name-${jersey.id}`} type="text" maxlength="14" placeholder="ALEX" class="offer-personalize mt-1.5 w-full rounded-xl border border-fox-pink/20 bg-white px-3 py-3 text-sm font-800 uppercase placeholder:text-fox-text-light/40" />
-                    </label>
-                    <label class="text-xs uppercase tracking-wider font-800 text-fox-text-light">
-                      Number
-                      <input id={`number-${jersey.id}`} type="text" inputmode="numeric" maxlength="3" placeholder="22" class="offer-personalize mt-1.5 w-full rounded-xl border border-fox-pink/20 bg-white px-3 py-3 text-sm font-800 text-center placeholder:text-fox-text-light/40" />
-                    </label>
-                  </div>
-                  <button
-                    class="snipcart-add-item offer-add w-full px-6 py-3.5 rounded-full bg-fox-pink text-white font-900 hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/25 transition-all"
-                    data-item-id={jersey.id}
-                    data-item-name={jersey.name}
-                    data-item-price={jersey.price}
-                    data-item-url="/personalized-long-distance-jersey/"
-                    data-item-image={`${SITE}${jersey.image}`}
-                    data-item-description="Personalized Long Distance FC jersey"
-                    data-item-custom1-name="Size"
-                    data-item-custom1-options={jersey.sizes?.join('|')}
-                    data-item-custom1-value={jersey.sizes?.[0]}
-                    data-item-custom2-name="Name"
-                    data-item-custom2-required="false"
-                    data-item-custom2-value=""
-                    data-item-custom3-name="Number"
-                    data-item-custom3-required="false"
-                    data-item-custom3-value=""
-                  >
-                    Add personalized jersey to cart
-                  </button>
-                  <p class="text-center text-xs text-fox-text-light/70 mt-3">Want a matching set? Personalize and add the second jersey next.</p>
-                </div>
-              </article>
-            );
-          })}
+          {jerseys.map((jersey, index) => <JerseyOfferCard jersey={jersey} index={index} />)}
         </div>
       </div>
     </section>

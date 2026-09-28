@@ -20,15 +20,19 @@ const TOKEN = process.env.PRINTFUL_TOKEN;
 const STORE = process.env.PRINTFUL_STORE_ID || '18292625';
 // KITS_BASE lets --mockups read files from a preview deployment before they ship.
 const BASE = process.env.KITS_BASE || 'https://lovefarfox.com/shop/designs/kits-2026-09';
+// Coordinates (chart) is retired, so it's no longer updated. Twilight joins
+// with the October 2026 drop; its files live in kits-2026-10/.
 const KITS = {
-  chart: 443266945, dropzone: 443420345, dalmatian: 443578239,
+  dropzone: 443420345, dalmatian: 443578239, twilight: 443164966,
   flight: 443213452, paradise: 443540637, mardigras: 443631285,
   'bb-home': 436911930, 'bb-royal': 437021439, 'bb-red': 437052584,
 };
 // Baseball kits only get a new front; their backs and sleeves stay as they are.
 const isBaseball = (kit) => kit.startsWith('bb-');
 const replaceFor = (kit) => (isBaseball(kit) ? { default: 'front' } : REPLACE);
-const fileUrl = (kit, part) => `${BASE}/${isBaseball(kit) ? 'rj' : 'sj'}-${kit}-${part}.png`;
+const OCTOBER = new Set(['dropzone', 'dalmatian', 'twilight', 'otherhalfa', 'otherhalfb', 'morse']);
+const folder = (kit) => (process.env.KITS_BASE || !OCTOBER.has(kit) ? BASE : BASE.replace('kits-2026-09', 'kits-2026-10'));
+const fileUrl = (kit, part) => `${folder(kit)}/${isBaseball(kit) ? 'rj' : 'sj'}-${kit}-${part}.png`;
 // Printful names this product's front placement "default".
 const REPLACE = { default: 'front', back: 'back', sleeve_left: 'sleeve', sleeve_right: 'sleeve' };
 
