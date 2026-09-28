@@ -49,6 +49,6 @@ for (const event of [
 }
 
 assert.ok(homepage.includes('/personalized-long-distance-jersey'), 'Homepage routes visitors to the offer');
-assert.ok(giftGuide.includes('](/personalized-long-distance-jersey)'), 'Gift guide routes high-intent readers to the offer');
+assert.ok(giftGuide.includes('](/personalized-long-distance-jersey/)'), 'Gift guide routes high-intent readers to the offer');
 
 console.log(`Jersey offer contract passed for ${ids.length} products.`);
