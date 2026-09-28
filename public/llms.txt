@@ -1,25 +1,37 @@
 # Far Fox
 
-> Far Fox (lovefarfox.com) is a relationship app for long-distance couples. Both partners join one private space and build a daily connection ritual: daily questions, love letters, photo sharing, couple challenges, reunion countdowns, and a shared virtual fox that grows as the couple shows up for each other. It is free to start. The site also offers a free, no-signup couple quiz and a time-zone overlap calculator for couples who live hours apart.
+> Far Fox (lovefarfox.com) is a relationship app for long-distance couples. Both partners join one private space and build a daily connection ritual: daily questions, love letters, photo sharing, couple challenges, reunion countdowns, and a shared virtual fox that grows as the couple shows up for each other. It is free to start. The site also offers free, no-signup tools for couples who live apart: a love language quiz, a time-zone overlap calculator, a halfway point calculator, and a reunion countdown.
 
 ## Product
 
-- [Long-distance relationship app overview](https://lovefarfox.com/long-distance-relationship-app): what Far Fox does for couples who live apart, with FAQ
-- [Free couple quiz](https://lovefarfox.com/couple-quiz): 2-minute quiz both partners take; produces a shareable match reveal
-- [Long-distance relationship quiz](https://lovefarfox.com/long-distance-relationship-quiz): how the quiz works for LDR couples, with FAQ
-- [Time zone overlap calculator](https://lovefarfox.com/long-distance-time-zone-calculator): pick two cities, see the hour difference and waking-hour overlap
+- [Long-distance relationship app overview](https://lovefarfox.com/long-distance-relationship-app/): what Far Fox does for couples who live apart, with FAQ
+- [Far Fox vs other couples apps](https://lovefarfox.com/compare/): honest comparisons with Paired, Couple, Between, Lasting, and LokLok, including each competitor's strengths
 
-## Comparisons
+## Free tools
 
-- [Far Fox vs other couples apps](https://lovefarfox.com/compare): honest comparisons with Paired, Couple, Between, Lasting, and LokLok, including each competitor's strengths
+- [All free tools](https://lovefarfox.com/tools/): index of the no-signup tools for long-distance couples
+- [Love language quiz for couples](https://lovefarfox.com/quiz/): 6 questions, 2 minutes; both partners take it and get a shareable match reveal
+- [Long-distance relationship quiz](https://lovefarfox.com/long-distance-relationship-quiz/): how the quiz works for LDR couples, with FAQ
+- [Time zone overlap calculator](https://lovefarfox.com/long-distance-time-zone-calculator/): pick two cities, see the hour difference and waking-hour overlap, including daylight saving
+- [Halfway point calculator](https://lovefarfox.com/halfway-point-calculator/): the midpoint between two cities plus the fairest real cities to meet in and how far each partner travels
+- [Reunion countdown](https://lovefarfox.com/reunion-countdown/): count the days to the next visit, share it with a partner, download a story card
+
+## Shop
+
+- [Personalized long-distance map](https://lovefarfox.com/personalized-long-distance-map/): instant, print-ready digital map of two cities with names and a message
+- [Personalized long-distance jersey](https://lovefarfox.com/personalized-long-distance-jersey/): one-of-one Long Distance FC jersey with a partner's name and number
 
 ## Guides
 
-- [How to make a long-distance relationship work](https://lovefarfox.com/blog/how-to-make-a-long-distance-relationship-work): pillar guide
-- [Long-distance relationship statistics](https://lovefarfox.com/blog/long-distance-relationship-statistics): research-backed statistics on LDR success rates and habits
-- [100 long-distance relationship questions](https://lovefarfox.com/blog/long-distance-relationship-questions): conversation starters for couples apart
-- [100 long-distance relationship quotes](https://lovefarfox.com/blog/long-distance-relationship-quotes): copy-paste quotes for texts, captions, and letters
-- [Long-distance time zones](https://lovefarfox.com/blog/long-distance-relationship-time-zones): how to stay close across an hour gap
-- [How to handle arguments in a long-distance relationship](https://lovefarfox.com/blog/how-to-handle-arguments-in-a-long-distance-relationship): fighting fair when you can't sit in the same room
-- [Blog index](https://lovefarfox.com/blog): 20+ guides on making long-distance relationships work
+- [How to make a long-distance relationship work](https://lovefarfox.com/blog/how-to-make-a-long-distance-relationship-work/): pillar guide
+- [Long-distance relationship statistics](https://lovefarfox.com/blog/long-distance-relationship-statistics/): sourced research findings on LDRs, with their limitations
+- [Best long-distance relationship apps](https://lovefarfox.com/blog/best-long-distance-relationship-apps/): review of the couples apps long-distance partners use
+- [100 long-distance relationship questions](https://lovefarfox.com/blog/long-distance-relationship-questions/): conversation starters for couples apart
+- [Long-distance relationship games](https://lovefarfox.com/blog/long-distance-relationship-games/): a free, no-login Would You Rather game plus 47 games for texts and calls
+- [Long-distance time differences](https://lovefarfox.com/blog/long-distance-relationship-time-zones/): how to stay close across an hour gap
+- [Long-distance reunion checklist](https://lovefarfox.com/blog/long-distance-reunion-checklist/): planning a visit, with a shared budget and a relaxed itinerary
+- [Long-distance care package ideas](https://lovefarfox.com/blog/long-distance-care-package-ideas/): themed boxes, what to write, and how to ship internationally
+- [Spending the holidays apart](https://lovefarfox.com/blog/long-distance-relationship-holidays/): planning calls, gifts, and traditions across family plans and time zones
+- [How to handle arguments in a long-distance relationship](https://lovefarfox.com/blog/how-to-handle-arguments-in-a-long-distance-relationship/): fighting fair when you can't sit in the same room
+- [Blog index](https://lovefarfox.com/blog/): all guides on making long-distance relationships work
 - [RSS feed](https://lovefarfox.com/rss.xml): full blog feed
