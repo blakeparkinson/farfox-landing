@@ -7,7 +7,7 @@ import catalog from '../data/catalog.json';
 // Featured merch for the homepage shop teaser — a few hero products that
 // link into /shop/ (drives traffic to the store from the strongest page).
 const allProducts = (catalog.products as any[]);
-const HERO_IDS = ['443266866', '443266945', '443213452', '443164966'];
+const HERO_IDS = ['443266866', '443540637', '443213452', '443164966'];
 let featuredProducts = HERO_IDS.map((id) => allProducts.find((p) => p.id === id)).filter(Boolean);
 for (const p of allProducts) { if (featuredProducts.length >= 4) break; if (!featuredProducts.includes(p)) featuredProducts.push(p); }
 featuredProducts = featuredProducts.slice(0, 4);

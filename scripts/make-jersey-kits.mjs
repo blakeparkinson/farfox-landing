@@ -1,15 +1,17 @@
 /**
  * Vector generator for the Long Distance FC soccer kit print files.
  *
- * Writes 6000×6000 Printful all-over-print files for each rebuilt kit into
- * public/shop/designs/kits-2026-09/:
+ * Writes 6000×6000 Printful all-over-print files for each kit into
+ * public/shop/designs/kits-2026-10/ (the October 2026 drop, whose builders
+ * live in kit-designs-2026-10.mjs) or kits-2026-09/ (everything else):
  *   sj-<kit>-front.png    front panel
  *   sj-<kit>-pattern.png  back base the personalized-back route draws on
  *   sj-<kit>-sleeve.png   both sleeves (cuff band baked in)
  *   sj-<kit>-back.png     default back (143 / FAR FOX FC), for the sync product
- * and a flat-silhouette preview sheet to the path given by --preview.
+ * Baseball kits (rj-<kit>-front.png) only ship a front. A flat-silhouette
+ * preview sheet goes to the path given by --preview.
  *
- * Usage: node scripts/make-jersey-kits.mjs [--kit chart] [--preview out.jpg]
+ * Usage: node scripts/make-jersey-kits.mjs [--kit twilight,morse] [--preview out.jpg]
  *
  * Layout facts measured from Printful mockups of the previous files (file px):
  *   front visible ≈ x 1850–4230, y 1330–5900; wearer's-left crest ≈ (3550, 2400)
@@ -25,9 +27,13 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
+import { KITS as OCT_KITS } from './kit-designs-2026-10.mjs';
 
 const D = 6000;
-const OUT = new URL('../public/shop/designs/kits-2026-09/', import.meta.url);
+// October 2026 kits write to kits-2026-10/; everything else stays in kits-2026-09/.
+const OUT_SEPT = new URL('../public/shop/designs/kits-2026-09/', import.meta.url);
+const OUT_OCT = new URL('../public/shop/designs/kits-2026-10/', import.meta.url);
+const outFor = (kit) => (kit in OCT_KITS ? OUT_OCT : OUT_SEPT);
 const CREST = { x: 3550, y: 2400, w: 440 };
 
 // --- helpers -------------------------------------------------------------
@@ -88,188 +94,12 @@ function crest(cx, cy, w, variant) {
 const cuff = (accent, band) =>
   `<rect x="0" y="3980" width="${D}" height="40" fill="${accent}"/><rect x="0" y="4040" width="${D}" height="${D - 4040}" fill="${band}"/>`;
 
-/** Teardrop map pin with a white core, tip at (x, y). */
-function pin(x, y, h, color, ring = '#FFFFFF') {
-  const r = h * 0.36;
-  const cy = y - h + r;
-  return `<path d="M ${x} ${y} C ${x - r * 0.35} ${y - h * 0.35} ${x - r} ${cy + r * 0.55} ${x - r} ${cy} A ${r} ${r} 0 1 1 ${x + r} ${cy} C ${x + r} ${cy + r * 0.55} ${x + r * 0.35} ${y - h * 0.35} ${x} ${y} Z" fill="${color}" stroke="${ring}" stroke-width="${h * 0.05}"/>
-    <circle cx="${x}" cy="${cy}" r="${r * 0.42}" fill="${ring}"/>`;
-}
-
 function heart(x, y, size, color, rot = 0) {
   const s = size / 100;
   return `<path transform="translate(${x} ${y}) rotate(${rot}) scale(${s}) translate(-50 -45)" d="M50 90 C 20 68 0 50 0 28 C 0 12 12 0 27 0 C 38 0 46 6 50 15 C 54 6 62 0 73 0 C 88 0 100 12 100 28 C 100 50 80 68 50 90 Z" fill="${color}"/>`;
 }
 
-// Smooth 2-D value noise with a few octaves, for the topographic contours.
-function noiseField(seed) {
-  const r = rng(seed);
-  const N = 64;
-  const grid = Array.from({ length: N * N }, () => r());
-  const at = (i, j) => grid[((j % N) + N) % N * N + (((i % N) + N) % N)];
-  const smooth = (t) => t * t * (3 - 2 * t);
-  const value = (x, y) => {
-    const i = Math.floor(x), j = Math.floor(y);
-    const u = smooth(x - i), v = smooth(y - j);
-    const a = at(i, j) + (at(i + 1, j) - at(i, j)) * u;
-    const b = at(i, j + 1) + (at(i + 1, j + 1) - at(i, j + 1)) * u;
-    return a + (b - a) * v;
-  };
-  return (x, y) => value(x, y) * 0.62 + value(x * 2.1 + 17, y * 2.1 + 5) * 0.28 + value(x * 4.3 + 3, y * 4.3 + 11) * 0.1;
-}
-
-/** Marching-squares iso-lines of `field` over the canvas, as path data per level. */
-function contours(field, levels, step = 30, freq = 1 / 1400) {
-  const n = Math.ceil(D / step) + 1;
-  const v = new Float32Array(n * n);
-  for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) v[j * n + i] = field(i * step * freq, j * step * freq);
-  return levels.map((lv) => {
-    let d = '';
-    const lerp = (a, b) => (lv - a) / (b - a);
-    for (let j = 0; j < n - 1; j++) {
-      for (let i = 0; i < n - 1; i++) {
-        const a = v[j * n + i], b = v[j * n + i + 1], c = v[(j + 1) * n + i + 1], e = v[(j + 1) * n + i];
-        const idx = (a > lv ? 8 : 0) | (b > lv ? 4 : 0) | (c > lv ? 2 : 0) | (e > lv ? 1 : 0);
-        if (idx === 0 || idx === 15) continue;
-        const x = i * step, y = j * step;
-        const top = [x + lerp(a, b) * step, y];
-        const right = [x + step, y + lerp(b, c) * step];
-        const bottom = [x + lerp(e, c) * step, y + step];
-        const left = [x, y + lerp(a, e) * step];
-        const segs = {
-          1: [[left, bottom]], 2: [[bottom, right]], 3: [[left, right]], 4: [[top, right]],
-          5: [[left, top], [bottom, right]], 6: [[top, bottom]], 7: [[left, top]], 8: [[left, top]],
-          9: [[top, bottom]], 10: [[left, bottom], [top, right]], 11: [[top, right]], 12: [[left, right]],
-          13: [[bottom, right]], 14: [[left, bottom]],
-        }[idx];
-        for (const [p, q] of segs) d += `M${p[0].toFixed(0)} ${p[1].toFixed(0)}L${q[0].toFixed(0)} ${q[1].toFixed(0)}`;
-      }
-    }
-    return d;
-  });
-}
-
-/** Poisson-disk-ish scatter: rejection sampling with a minimum spacing. */
-function scatter(seed, count, minDist, keep = () => true) {
-  const r = rng(seed);
-  const pts = [];
-  for (let tries = 0; pts.length < count && tries < count * 60; tries++) {
-    const p = { x: r() * D, y: r() * D, r };
-    if (!keep(p.x, p.y)) continue;
-    if (pts.some((q) => (q.x - p.x) ** 2 + (q.y - p.y) ** 2 < minDist ** 2)) continue;
-    pts.push(p);
-  }
-  return pts;
-}
-
 // --- kits ------------------------------------------------------------------
-
-/** Coordinates: a clean graticule with one great-circle route and a halfway heart. */
-function chart() {
-  const bg = `<rect width="${D}" height="${D}" fill="#E8E5D8"/>`;
-  // Conic chart projection: parallels are arcs around a pole far above the
-  // collar and meridians are rays from it, so it reads as a map, not graph paper.
-  const pole = { x: D / 2, y: -9000 };
-  let grid = '';
-  for (let i = 0, r = 9120; r <= 15600; r += 480, i++) {
-    const major = i % 3 === 0;
-    grid += `<circle cx="${pole.x}" cy="${pole.y}" r="${r}" fill="none" stroke="${major ? '#BDB6A0' : '#D3CEBC'}" stroke-width="${major ? 12 : 6}"/>`;
-  }
-  for (let i = -10; i <= 10; i++) {
-    const t = Math.atan2(i * 480, 3000 - pole.y), major = i % 3 === 0;
-    const at = (r) => `${(pole.x + Math.sin(t) * r).toFixed(0)} ${(pole.y + Math.cos(t) * r).toFixed(0)}`;
-    grid += `<path d="M ${at(9000)} L ${at(16000)}" stroke="${major ? '#BDB6A0' : '#D3CEBC'}" stroke-width="${major ? 12 : 6}"/>`;
-  }
-  const a = { x: 2250, y: 4550 }, b = { x: 3650, y: 3400 }, c = { x: 2700, y: 3000 };
-  // Point on the quadratic at t = 0.5 is the route's halfway heart.
-  const mid = { x: 0.25 * a.x + 0.5 * c.x + 0.25 * b.x, y: 0.25 * a.y + 0.5 * c.y + 0.25 * b.y };
-  const halo = (p) => `<circle cx="${p.x}" cy="${p.y}" r="240" fill="#E2632E" opacity="0.16"/>`;
-  const dot = (p) => `<circle cx="${p.x}" cy="${p.y}" r="135" fill="#E8E5D8" stroke="#182642" stroke-width="32"/><circle cx="${p.x}" cy="${p.y}" r="76" fill="#E2632E"/>`;
-  const route = `${halo(a)}${halo(b)}
-    <path d="M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}" stroke="#182642" stroke-width="52" stroke-dasharray="140 85" stroke-linecap="round" fill="none"/>
-    ${dot(a)}${dot(b)}
-    <text x="${a.x + 60}" y="${a.y + 400}" font-family="Oswald" font-weight="700" font-size="230" letter-spacing="40" fill="#182642">HERE</text>
-    <text x="${b.x}" y="${b.y + 430}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="230" letter-spacing="40" fill="#182642">THERE</text>
-    <circle cx="${mid.x}" cy="${mid.y}" r="175" fill="#E8E5D8"/>${heart(mid.x, mid.y + 10, 240, '#E2632E', -18)}`;
-  return {
-    front: svg(grid + route + crest(CREST.x, CREST.y, CREST.w, 'navy'), bg),
-    pattern: svg(grid, bg),
-    sleeve: svg(grid + cuff('#E2632E', '#182642'), bg),
-  };
-}
-
-/** Drop Zone: a neon topographic game map with a shrinking-zone ring and two drop pins. */
-function dropzone() {
-  const bg = `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1B2A8F"/><stop offset="0.55" stop-color="#4A1FB2"/><stop offset="1" stop-color="#A21C8E"/>
-    </linearGradient></defs><rect width="${D}" height="${D}" fill="url(#g)"/>`;
-  const field = noiseField(7);
-  const levels = Array.from({ length: 16 }, (_, i) => 0.22 + i * 0.037);
-  const paths = contours(field, levels);
-  const topo = paths.map((d, i) => (i % 4 === 0
-    ? `<path d="${d}" stroke="#46E3FF" stroke-opacity="0.55" stroke-width="13" stroke-linecap="round" fill="none"/>`
-    : `<path d="${d}" stroke="#46E3FF" stroke-opacity="0.24" stroke-width="7" stroke-linecap="round" fill="none"/>`)).join('');
-  const ring = { x: 3000, y: 3750, r: 950 };
-  let ticks = '';
-  for (let k = 0; k < 24; k++) {
-    const t = (k / 24) * Math.PI * 2, r0 = ring.r + 50, r1 = ring.r + (k % 6 === 0 ? 190 : 110);
-    ticks += `<line x1="${ring.x + Math.cos(t) * r0}" y1="${ring.y + Math.sin(t) * r0}" x2="${ring.x + Math.cos(t) * r1}" y2="${ring.y + Math.sin(t) * r1}" stroke="#FFFFFF" stroke-opacity="0.85" stroke-width="18" stroke-linecap="round"/>`;
-  }
-  const you = { x: 2500, y: 4150 }, them = { x: 3450, y: 3500 };
-  const zone = `<circle cx="${ring.x}" cy="${ring.y}" r="${ring.r}" fill="#0A102C" fill-opacity="0.18" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="22" stroke-dasharray="120 70"/>${ticks}
-    <path d="M ${you.x} ${you.y - 60} Q 2850 3450 ${them.x} ${them.y - 60}" stroke="#FFFFFF" stroke-width="20" stroke-dasharray="10 55" stroke-linecap="round" fill="none"/>
-    ${pin(you.x, you.y, 330, '#22D3EE')}${pin(them.x, them.y, 330, '#FF4FA3')}`;
-  return {
-    front: svg(topo + zone + crest(CREST.x, CREST.y, CREST.w, 'light'), bg),
-    pattern: svg(topo, bg),
-    sleeve: svg(topo + cuff('#46E3FF', '#0A102C'), bg),
-  };
-}
-
-/** Dalmatian: real-scale spots, mostly ink with brand-navy strays and a few orange hearts. */
-function dalmatian() {
-  const bg = `<rect width="${D}" height="${D}" fill="#F7F3EA"/>`;
-  const blob = (p, rMin, rMax) => {
-    const r = p.r;
-    const base = rMin + (rMax - rMin) * r() ** 1.6; // skew small, like a real coat
-    const [p1, p2, p3] = [r() * 6.28, r() * 6.28, r() * 6.28];
-    const [a1, a2, a3] = [0.12 + r() * 0.1, 0.06 + r() * 0.08, 0.03 + r() * 0.04];
-    const stretch = 0.75 + r() * 0.5, rot = r() * Math.PI;
-    let d = '';
-    for (let k = 0; k <= 48; k++) {
-      const t = (k / 48) * Math.PI * 2;
-      const rr = base * (1 + a1 * Math.sin(2 * t + p1) + a2 * Math.sin(3 * t + p2) + a3 * Math.sin(5 * t + p3));
-      const x = Math.cos(t) * rr * stretch, y = Math.sin(t) * rr;
-      d += `${k ? 'L' : 'M'}${(p.x + x * Math.cos(rot) - y * Math.sin(rot)).toFixed(0)} ${(p.y + x * Math.sin(rot) + y * Math.cos(rot)).toFixed(0)}`;
-    }
-    return d + 'Z';
-  };
-  const spots = (seed, keep) => {
-    const pts = scatter(seed, 420, 300, keep);
-    let ink = '', navy = '', hearts = '';
-    pts.forEach((p, i) => {
-      if (i % 29 === 7) hearts += heart(p.x, p.y, 150 + p.r() * 60, '#E2632E', -25 + p.r() * 50);
-      else if (i % 9 === 4) navy += blob(p, 50, 130);
-      else ink += blob(p, 45, 150);
-    });
-    return `<path d="${ink}" fill="#1B1B22"/><path d="${navy}" fill="#1F3160"/>${hearts}`;
-  };
-  const clearOf = (cx, cy, rx, ry) => (x, y) => ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 > 1;
-  // Front: keep the crest and the collar clean.
-  const frontKeep = (x, y) => clearOf(CREST.x, CREST.y, 420, 420)(x, y) && clearOf(3000, 1350, 750, 420)(x, y);
-  // Back: keep the nameplate/number/brand block and the collar crest readable.
-  // Rows come from the soccer back layout in jerseyBack.mjs, padded by the
-  // largest spot radius so no blob edge reaches the lettering.
-  const rows = [[1400, 1400, 4600, 1900], [1700, 1900, 4300, 3900], [2000, 4250, 4000, 4800]];
-  const pad = 220;
-  const backKeep = (x, y) => clearOf(3000, 900, 450, 380)(x, y)
-    && rows.every(([x0, y0, x1, y1]) => x < x0 - pad || x > x1 + pad || y < y0 - pad || y > y1 + pad);
-  return {
-    front: svg(spots(11, frontKeep) + crest(CREST.x, CREST.y, CREST.w, 'navy'), bg),
-    pattern: svg(spots(23, backKeep), bg),
-    sleeve: svg(spots(37, () => true) + cuff('#E2632E', '#14213A'), bg),
-  };
-}
 
 /** Points along a quadratic Bézier, spaced `gap` apart by arc length. */
 function alongQuad(a, c, b, gap) {
@@ -488,7 +318,9 @@ const bbHome = () => ({ front: svg(teamPatch({ ring: '#1C4096', rim: '#C0202E', 
 const bbRoyal = () => ({ front: svg(teamPatch({ ring: '#C0202E', rim: '#F4ECE0', text: '#F4ECE0', disc: '#FCFAF6' }), pinstripes('#143A8C', '#FFFFFF')) });
 const bbRed = () => ({ front: svg(teamPatch({ ring: '#1B2A6B', rim: '#F4ECE0', text: '#F4ECE0', disc: '#FCFAF6' }), `<rect width="${D}" height="${D}" fill="#BC2832"/>`) });
 
-const KITS = { chart, dropzone, dalmatian, flight, paradise, mardigras, 'bb-home': bbHome, 'bb-royal': bbRoyal, 'bb-red': bbRed };
+// Coordinates (chart) and Orange are retired; their kits-2026-09 files stay so
+// jerseyBack.mjs can still render backs for existing orders.
+const KITS = { flight, paradise, mardigras, 'bb-home': bbHome, 'bb-royal': bbRoyal, 'bb-red': bbRed, ...OCT_KITS };
 
 // --- default back, via the live personalized-back renderer ----------------
 
@@ -565,20 +397,21 @@ async function placketPreview(kit, front) {
 // --- main ----------------------------------------------------------------------
 
 const args = process.argv.slice(2);
-const only = args.includes('--kit') ? args[args.indexOf('--kit') + 1] : null;
+const only = args.includes('--kit') ? args[args.indexOf('--kit') + 1].split(',') : null;
 const previewOut = args.includes('--preview') ? args[args.indexOf('--preview') + 1] : null;
-await mkdir(OUT, { recursive: true });
+await mkdir(OUT_SEPT, { recursive: true });
+await mkdir(OUT_OCT, { recursive: true });
 await loadFonts();
 await loadFoxFace();
 const previews = [];
 for (const [kit, build] of Object.entries(KITS)) {
-  if (only && kit !== only) continue;
+  if (only && !only.includes(kit)) continue;
   const parts = build();
   const files = {};
   for (const part of ['front', 'pattern', 'sleeve']) if (parts[part]) files[part] = render(parts[part]);
   if (!parts.pattern) {
     // Baseball kits keep their existing back and sleeves; only the front is new.
-    await writeFile(new URL(`rj-${kit}-front.png`, OUT), await sharp(files.front).png({ compressionLevel: 9 }).toBuffer());
+    await writeFile(new URL(`rj-${kit}-front.png`, outFor(kit)), await sharp(files.front).png({ compressionLevel: 9 }).toBuffer());
     console.log(`[kits] ${kit}: front written`);
     if (previewOut) previews.push(await placketPreview(kit, files.front));
     continue;
@@ -586,12 +419,12 @@ for (const [kit, build] of Object.entries(KITS)) {
   let crestPng = null;
   if (parts.backCrest) {
     crestPng = Buffer.from(new Resvg(parts.backCrest).render().asPng());
-    await writeFile(new URL(`fox-crest-${kit}.png`, OUT), crestPng);
+    await writeFile(new URL(`fox-crest-${kit}.png`, outFor(kit)), crestPng);
   }
   files.back = await defaultBack(kit, files.pattern, crestPng);
   for (const [part, png] of Object.entries(files)) {
     const out = await sharp(png).png({ compressionLevel: 9, palette: false }).toBuffer();
-    await writeFile(new URL(`sj-${kit}-${part}.png`, OUT), out);
+    await writeFile(new URL(`sj-${kit}-${part}.png`, outFor(kit)), out);
   }
   console.log(`[kits] ${kit}: front, pattern, sleeve, back written`);
   if (previewOut) previews.push(await preview(kit, files));

@@ -6,6 +6,9 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { kitSlugForName } from '../src/lib/kits.mjs';
+import { kitConfig } from '../src/lib/jerseyBack.mjs';
+import { BACKS } from './kit-designs-2026-10.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const builtPage = resolve(root, 'dist/client/personalized-long-distance-jersey/index.html');
@@ -17,7 +20,34 @@ const webhook = readFileSync(resolve(root, 'src/pages/api/snipcart-webhook.ts'),
 const homepage = readFileSync(resolve(root, 'src/pages/index.astro'), 'utf8');
 const giftGuide = readFileSync(resolve(root, 'src/content/blog/long-distance-relationship-gifts.md'), 'utf8');
 
-const ids = ['443266866', '443266945', '443213452', '443164966'];
+// The page picks cards by kit, so check whatever it rendered against the catalog.
+const ids = [...new Set([...html.matchAll(/data-item-id="(\d+)"/g)].map((m) => m[1]))];
+assert.ok(ids.length >= 4, `At least four personalized jerseys are offered (found ${ids.length})`);
+for (const retired of ['443266945', '437126197']) {
+  assert.ok(!ids.includes(retired), `Retired kit ${retired} (Coordinates/Orange) is not offered`);
+  assert.ok(!catalog.products.some((item) => item.id === retired), `Retired kit ${retired} is out of the catalog`);
+}
+const offerPage = readFileSync(resolve(root, 'src/pages/personalized-long-distance-jersey.astro'), 'utf8');
+assert.ok(offerPage.includes('Each of you wears half.'), 'Other Half A and B are presented as a pair');
+
+// October 2026 kits resolve from their Printful product names...
+for (const [name, kit] of [
+  ['Far Fox — Long Distance FC Jersey (Other Half A)', 'otherhalfa'],
+  ['Far Fox — Long Distance FC Jersey (Other Half B)', 'otherhalfb'],
+  ['Far Fox — Long Distance FC Jersey (Morse Hoops)', 'morse'],
+  ['Far Fox — Long Distance FC Jersey (Coordinates)', 'chart'],
+  ['Far Fox — Long Distance FC Jersey (Orange)', 'orange'],
+  // Non-jersey products must never be treated as personalizable kits.
+  ['Far Fox — Morse "I Love You" Tee', null],
+]) {
+  assert.equal(kitSlugForName(name), kit, `${name} maps to ${kit}`);
+}
+// ...and their personalized backs use exactly the handoff's lettering config.
+for (const [kit, expected] of Object.entries(BACKS)) {
+  assert.deepEqual({ ...kitConfig(kit) }, expected, `jerseyBack.mjs ${kit} matches BACKS in kit-designs-2026-10.mjs`);
+}
+// Retired kits keep a back so existing orders still render.
+for (const kit of ['chart', 'orange']) assert.ok(kitConfig(kit), `${kit} still renders a back`);
 
 for (const id of ids) {
   const product = catalog.products.find((item) => item.id === id);
