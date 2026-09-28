@@ -110,7 +110,14 @@ const breadcrumbSchema = {
 };
 ---
 
-<Layout title={`${post.data.title} — Far Fox`} description={post.data.description} image={ogImage}>
+<Layout
+  title={`${post.data.title} — Far Fox`}
+  description={post.data.description}
+  image={ogImage}
+  ogType="article"
+  publishedTime={post.data.date}
+  modifiedTime={post.data.updatedDate || post.data.date}
+>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   {faqSchema && (
@@ -214,6 +221,7 @@ const breadcrumbSchema = {
             Try Far Fox Free
           </a>
         </div>
+        <p class="mt-5 text-sm"><a href="/long-distance-relationship-app/" data-umami-event="blog_app_page_clicked" data-umami-event-article={post.id} class="text-[#963655] font-700 underline underline-offset-4">See how the Far Fox long-distance relationship app works</a></p>
       </div>
 
       {relatedPosts.length > 0 && (

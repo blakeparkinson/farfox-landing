@@ -5,12 +5,26 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  // Keep thin or private-flow pages out of the index while leaving their
+  // links followable and their social previews intact.
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  // Only pages that describe the app itself should declare the
+  // SoftwareApplication entity; articles and tools are not the app.
+  appSchema?: boolean;
 }
 
 const {
   title = 'Far Fox — Stay Connected, No Matter the Distance',
   description = 'The couples app for long-distance relationships. Share photos, love letters, daily questions, mood tracking, and more — all wrapped around your own little fox companion.',
   image = 'https://lovefarfox.com/brand-preview.png',
+  noindex = false,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+  appSchema = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
@@ -24,15 +38,18 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="p:domain_verify" content="066bfaf318189f87479893e0d094e5b6" />
+    {noindex && <meta name="robots" content="noindex, follow" />}
 
     <!-- Canonical -->
-    <link rel="canonical" href={canonicalURL.href} />
+    {!noindex && <link rel="canonical" href={canonicalURL.href} />}
     <link rel="alternate" type="application/rss+xml" title="Far Fox Blog" href="https://lovefarfox.com/rss.xml" />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
     <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:image" content={image} />
     <meta property="og:image:width" content="1200" />
@@ -65,21 +82,21 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
     <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id="9094af54-517f-4e51-bc4b-f2bf5f86d7f8" data-exclude-hash="true"></script>
 
 <!-- Schema.org -->
-    <script type="application/ld+json" set:html={JSON.stringify({
+    {appSchema && <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "Far Fox",
       "url": "https://lovefarfox.com",
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "iOS, Android, Web",
-      "description": description,
+      "description": "Far Fox is a couples app for long-distance relationships — daily questions, love letters, shared photos, and a fox companion that grows with your relationship.",
       "image": "https://lovefarfox.com/brand/foxy-icon-v1.png",
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
       }
-    })} />
+    })} />}
 
 <!-- Organization + WebSite entity — helps Google build the brand entity
      and is the prerequisite for a sitelinks search box / knowledge panel. -->
@@ -90,7 +107,7 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://lovefarfox.com');
       "url": "https://lovefarfox.com",
       "logo": "https://lovefarfox.com/brand/foxy-icon-v1.png",
       "description": "Far Fox is a couples app for long-distance relationships — daily questions, love letters, shared photos, and a fox companion that grows with your relationship.",
-      "sameAs": ["https://app.lovefarfox.com"]
+      "sameAs": ["https://app.lovefarfox.com", "https://www.tiktok.com/@lovefarfox", "https://www.pinterest.com/lovefarfox/"]
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

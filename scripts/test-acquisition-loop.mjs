@@ -38,7 +38,7 @@ assert.ok(match.includes('Start Far Fox together'), 'Match reveal drives the con
 assert.ok(layout.includes('app_signup_clicked'), 'Every marketing-to-app handoff is measured globally');
 assert.ok(layout.includes("destination.searchParams.set('landing_path'"), 'App receives landing attribution');
 assert.ok(landing.includes('data-app-cta="search_hero"'), 'High-intent landing has a measurable primary CTA');
-assert.ok(appGuide.includes('/long-distance-relationship-app?utm_source=organic_search'), 'High-intent SEO traffic enters the acquisition landing');
+assert.ok(appGuide.includes('/long-distance-relationship-app/?utm_source=organic_search'), 'High-intent SEO traffic enters the acquisition landing');
 
 for (const event of [
   'quiz_started',
