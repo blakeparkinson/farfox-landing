@@ -30,11 +30,12 @@ const KITS = {
   otherhalfa: 475844794, otherhalfb: 475844798, morse: 475844805,
   'moose-blush': 475849115, // Moose Lodge, Blush only (created 2026-09-28)
   flyway: 443631285, // the former Mardi Gras product, redesigned 2026-09-28
+  stars: 443266866, // Same Stars on the shared crest and back font (restyle-stars-kit.mjs)
 };
 // Baseball kits only get a new front; their backs and sleeves stay as they are.
 const isBaseball = (kit) => kit.startsWith('bb-');
 const replaceFor = (kit) => (isBaseball(kit) ? { default: 'front' } : REPLACE);
-const OCTOBER = new Set(['dropzone', 'dalmatian', 'twilight', 'otherhalfa', 'otherhalfb', 'morse', 'moose-blush', 'flyway']);
+const OCTOBER = new Set(['dropzone', 'dalmatian', 'twilight', 'otherhalfa', 'otherhalfb', 'morse', 'moose-blush', 'flyway', 'stars']);
 const folder = (kit) => (process.env.KITS_BASE || !OCTOBER.has(kit) ? BASE : BASE.replace('kits-2026-09', 'kits-2026-10'));
 // Printful keeps the copy it first downloaded from a URL; bump a kit here when
 // its files are edited in place so Printful fetches the new ones.
