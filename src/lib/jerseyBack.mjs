@@ -79,6 +79,11 @@ const KITS = {
     pattern: 'kits-2026-10/sj-moose-blush-pattern.png', crest: 'fox-crest.png',
     number: '#2D1B4E', numberStroke: '#FFF5F0', name: '#2D1B4E', nameStroke: '#FFF5F0',
   },
+  flyway: {
+    pattern: 'kits-2026-10/sj-flyway-pattern.png', crest: 'fox-crest.png',
+    number: '#F4B600', numberStroke: '#200C3A', name: '#F4B600', nameStroke: '#200C3A',
+  },
+  // Retired 2026-09 (replaced by Flyway) — kept so in-flight orders still render.
   mardigras: {
     pattern: 'kits-2026-09/sj-mardigras-pattern.png', crest: 'kits-2026-09/fox-crest-mardigras.png',
     number: '#F4B600', numberStroke: '#200C3A', name: '#F4B600', nameStroke: '#200C3A',

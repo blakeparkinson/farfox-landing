@@ -39,6 +39,9 @@ for (const [name, kit] of [
   ['Far Fox — Long Distance FC Jersey (Orange)', 'orange'],
   ['Far Fox — Long Distance FC Jersey (Moose Lodge)', 'moose-blush'],
   ['Far Fox — Long Distance FC Jersey (Moose Lodge – Blush)', 'moose-blush'],
+  ['Far Fox — Long Distance FC Jersey (Flyway)', 'flyway'],
+  // Until the Printful product is renamed it keeps resolving to the retired kit.
+  ['Far Fox — Long Distance FC Jersey (Mardi Gras)', 'mardigras'],
   // Non-jersey products must never be treated as personalizable kits.
   ['Far Fox — Morse "I Love You" Tee', null],
   ['Far Fox — I Moose You Mug', null],
