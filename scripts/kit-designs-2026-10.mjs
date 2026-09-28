@@ -38,6 +38,7 @@ export function crest(cx, cy, w, variant) {
     navy: { body: '#14213A', feature: '#FFFFFF', muzzle: '#F8F0E2', nose: '#FFFFFF' },
     light: { body: '#F3ECE0', feature: '#12162E', muzzle: '#FFFFFF', nose: '#12162E' },
     plum: { body: PLUM, feature: '#FFFFFF', muzzle: BLUSH, nose: '#FFFFFF' },
+    gold: { body: '#F4B600', feature: '#2A0E4A', muzzle: '#FFF3C4', nose: '#2A0E4A' },
   }[variant];
   const s = w / 300;
   return `<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">
@@ -405,7 +406,7 @@ function formation() {
 function flyway() {
   const bg = `<rect width="${D}" height="${D}" fill="${FLYWAY.base}"/>`;
   return {
-    front: svg(chevronField(0.14) + formation() + crest(CREST.x, CREST.y, CREST.w, 'light'), bg),
+    front: svg(chevronField(0.14) + formation() + crest(CREST.x, CREST.y, CREST.w, 'gold'), bg),
     pattern: svg(chevronField(0.14) + pelican(3000, 3270, 2900, -8, FLYWAY.tonal, 0.32) + pelican(3000, 5180, 620, 0, FLYWAY.gold), bg),
     sleeve: svg(chevronField(0.14) + cuff(FLYWAY.gold, FLYWAY.band), bg),
   };
