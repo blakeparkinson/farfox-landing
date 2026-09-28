@@ -74,6 +74,11 @@ const KITS = {
     pattern: 'kits-2026-10/sj-morse-pattern.png', crest: 'fox-crest.png',
     number: '#FF6B8A', numberStroke: '#2D1B4E', name: '#FF6B8A', nameStroke: '#2D1B4E',
   },
+  // Moose Lodge, Blush colorway only (mooseBack('blush') in the designs module).
+  'moose-blush': {
+    pattern: 'kits-2026-10/sj-moose-blush-pattern.png', crest: 'fox-crest.png',
+    number: '#2D1B4E', numberStroke: '#FFF5F0', name: '#2D1B4E', nameStroke: '#FFF5F0',
+  },
   mardigras: {
     pattern: 'kits-2026-09/sj-mardigras-pattern.png', crest: 'kits-2026-09/fox-crest-mardigras.png',
     number: '#F4B600', numberStroke: '#200C3A', name: '#F4B600', nameStroke: '#200C3A',
