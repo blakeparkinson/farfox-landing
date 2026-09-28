@@ -23,7 +23,12 @@ const BASE = process.env.KITS_BASE || 'https://lovefarfox.com/shop/designs/kits-
 const KITS = {
   chart: 443266945, dropzone: 443420345, dalmatian: 443578239,
   flight: 443213452, paradise: 443540637, mardigras: 443631285,
+  'bb-home': 436911930, 'bb-royal': 437021439, 'bb-red': 437052584,
 };
+// Baseball kits only get a new front; their backs and sleeves stay as they are.
+const isBaseball = (kit) => kit.startsWith('bb-');
+const replaceFor = (kit) => (isBaseball(kit) ? { default: 'front' } : REPLACE);
+const fileUrl = (kit, part) => `${BASE}/${isBaseball(kit) ? 'rj' : 'sj'}-${kit}-${part}.png`;
 // Printful names this product's front placement "default".
 const REPLACE = { default: 'front', back: 'back', sleeve_left: 'sleeve', sleeve_right: 'sleeve' };
 
@@ -62,18 +67,19 @@ async function pf(path, init = {}, attempt = 0) {
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function assertLive(kit) {
-  for (const part of new Set(Object.values(REPLACE))) {
-    const r = await fetch(`${BASE}/sj-${kit}-${part}.png`, { method: 'HEAD' });
+  for (const part of new Set(Object.values(replaceFor(kit)))) {
+    const r = await fetch(fileUrl(kit, part), { method: 'HEAD' });
     if (!r.ok) throw new Error(`${kit} ${part} file is not live (${r.status}); deploy first`);
   }
 }
 
 function planFiles(kit, files) {
   const types = files.map((f) => f.type);
-  for (const t of Object.keys(REPLACE)) if (!types.includes(t)) throw new Error(`${kit}: variant has no "${t}" file (has ${types.join(', ')})`);
+  const replace = replaceFor(kit);
+  for (const t of Object.keys(replace)) if (!types.includes(t)) throw new Error(`${kit}: variant has no "${t}" file (has ${types.join(', ')})`);
   return files
     .filter((f) => f.type !== 'preview')
-    .map((f) => (REPLACE[f.type] ? { type: f.type, url: `${BASE}/sj-${kit}-${REPLACE[f.type]}.png` } : { type: f.type, id: f.id }));
+    .map((f) => (replace[f.type] ? { type: f.type, url: fileUrl(kit, replace[f.type]) } : { type: f.type, id: f.id }));
 }
 
 async function updateKit(kit, productId) {
@@ -84,7 +90,8 @@ async function updateKit(kit, productId) {
   for (const v of variants) {
     const next = planFiles(kit, v.files || []);
     // Re-runs skip sizes that already point at the new files.
-    const done = (v.files || []).filter((f) => REPLACE[f.type]).every((f) => f.url === `${BASE}/sj-${kit}-${REPLACE[f.type]}.png`);
+    const replace = replaceFor(kit);
+    const done = (v.files || []).filter((f) => replace[f.type]).every((f) => f.url === fileUrl(kit, replace[f.type]));
     if (done) { console.log(`  ${v.size || v.name}: already updated`); continue; }
     console.log(`  ${v.size || v.name}: ${next.map((f) => (f.url ? `${f.type}→new` : `${f.type} kept`)).join(', ')}`);
     if (apply) {
@@ -105,15 +112,18 @@ async function mockupsFor(kit, productId) {
   const placementFile = spec.variant_printfiles.find((x) => x.variant_id === v.variant_id)?.placements || {};
   // The generator calls the front "front" where sync files call it "default".
   const GEN = { front: 'front', back: 'back', sleeve_left: 'sleeve', sleeve_right: 'sleeve' };
+  // Baseball kits: new front, plus the variant's current back and sleeve files.
+  const current = Object.fromEntries((v.files || []).map((f) => [f.type === 'default' ? 'front' : f.type, f.url]));
   const files = Object.entries(GEN).map(([placement, part]) => {
     const pfile = byId[placementFile[placement]];
     if (!pfile) throw new Error(`${kit}: generator has no "${placement}" placement`);
+    const image_url = isBaseball(kit) && placement !== 'front' ? current[placement] : fileUrl(kit, part);
     // Mirror the sync files' implicit "cover": scale the square art to cover
     // the print area and centre-crop, exactly as Printful prints it.
     const side = Math.max(pfile.width, pfile.height);
     return {
       placement,
-      image_url: `${BASE}/sj-${kit}-${part}.png`,
+      image_url,
       position: {
         area_width: pfile.width, area_height: pfile.height, width: side, height: side,
         left: Math.round((pfile.width - side) / 2), top: Math.round((pfile.height - side) / 2),
