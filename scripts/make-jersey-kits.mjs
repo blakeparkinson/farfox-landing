@@ -221,51 +221,6 @@ function paradise() {
   };
 }
 
-// Fleur-de-lis in a 100×104 box, top point at (50, 2).
-const FLEUR = `<path d="M50 2 C60 16 66 32 62 48 C60 56 56 62 54 70 L46 70 C44 62 40 56 38 48 C34 32 40 16 50 2 Z"/>
-  <path d="M45 70 C40 58 30 50 19 50 C8 50 2 58 4 67 C6 75 14 78 20 74 C15 72 13 66 17 62 C23 57 33 62 38 74 Z"/>
-  <path d="M55 70 C60 58 70 50 81 50 C92 50 98 58 96 67 C94 75 86 78 80 74 C85 72 87 66 83 62 C77 57 67 62 62 74 Z"/>
-  <rect x="30" y="72" width="40" height="9" rx="3"/><path d="M45 81 L55 81 L53 96 L50 104 L47 96 Z"/>
-  <path d="M44 81 C38 83 33 88 33 96 C29 91 29 84 34 80 Z"/><path d="M56 81 C62 83 67 88 67 96 C71 91 71 84 66 80 Z"/>`;
-const fleur = (cx, top, width, fill, opacity = 1) =>
-  `<g transform="translate(${cx - width / 2} ${top}) scale(${width / 100})" fill="${fill}" fill-opacity="${opacity}">${FLEUR}</g>`;
-
-/** The Mardi Gras medallion: a fleur-de-lis crowning a gold ring around the green fox. */
-function medallion(cx, top, ring) {
-  const fw = ring * 1.7, fh = fw * 1.04;
-  const cy = top + fh * 0.88 + ring;
-  return `${fleur(cx, top, fw, '#F4B600')}
-    <circle cx="${cx}" cy="${cy}" r="${ring}" fill="#2A0E4A" stroke="#F4B600" stroke-width="${ring * 0.13}"/>
-    <circle cx="${cx}" cy="${cy}" r="${ring * 0.8}" fill="#F4B600"/>${crest(cx, cy + ring * 0.03, ring * 1.12, 'green')}`;
-}
-
-/** Mardi Gras: the original tonal fleur-de-lis field, one gold bead strand,
- *  and the fleur-de-lis medallion as its pendant. */
-function mardigras() {
-  const bg = `<rect width="${D}" height="${D}" fill="#24103F"/>`;
-  const field = (opacity) => {
-    let out = '';
-    for (let j = 0, y = -200; y < D + 400; j++, y += 560) {
-      for (let x = j % 2 ? 250 : -150; x < D + 400; x += 800) out += fleur(x, y, 280, '#7A4BC2', opacity);
-    }
-    return out;
-  };
-  // The medallion hangs from the strand at centre chest: a strand draped
-  // across the left chest would run through the usual crest spot.
-  const hang = { x: 3000, y: 3020 };
-  const a = { x: 2300, y: 1480 }, b = { x: 3700, y: 1480 };
-  const c = { x: (a.x + b.x) / 2, y: 2 * hang.y - (a.y + b.y) / 2 }; // quad through the hang point
-  const beads = alongQuad(a, c, b, 104).map((p) => `<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="46" fill="#F4B600" stroke="#8A6400" stroke-width="7"/>
-    <circle cx="${(p.x - 14).toFixed(0)}" cy="${(p.y - 14).toFixed(0)}" r="13" fill="#FFFFFF" fill-opacity="0.7"/>`).join('');
-  return {
-    front: svg(field(0.55) + beads + medallion(hang.x, hang.y + 40, 230), bg),
-    pattern: svg(field(0.4), bg),
-    sleeve: svg(field(0.55) + cuff('#F4B600', '#1B6B3F'), bg),
-    // The medallion doubles as the personalized back's crest.
-    backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="363" height="370" viewBox="0 0 363 370">${medallion(181.5, 8, 108)}</svg>`,
-  };
-}
-
 // --- baseball kits (Printful catalog 792) ------------------------------------
 //
 // The button placket hides the front file between x ≈ 2740 and 3280 (measured
@@ -322,9 +277,9 @@ const bbHome = () => ({ front: svg(teamPatch({ ring: '#1C4096', rim: '#C0202E', 
 const bbRoyal = () => ({ front: svg(teamPatch({ ring: '#C0202E', rim: '#F4ECE0', text: '#F4ECE0', disc: '#FCFAF6' }), pinstripes('#143A8C', '#FFFFFF')) });
 const bbRed = () => ({ front: svg(teamPatch({ ring: '#1B2A6B', rim: '#F4ECE0', text: '#F4ECE0', disc: '#FCFAF6' }), `<rect width="${D}" height="${D}" fill="#BC2832"/>`) });
 
-// Coordinates (chart) and Orange are retired; their kits-2026-09 files stay so
-// jerseyBack.mjs can still render backs for existing orders.
-const KITS = { flight, paradise, mardigras, 'bb-home': bbHome, 'bb-royal': bbRoyal, 'bb-red': bbRed, ...OCT_BUILD };
+// Coordinates (chart), Orange and Mardi Gras are retired; their kits-2026-09
+// files stay so jerseyBack.mjs can still render backs for existing orders.
+const KITS = { flight, paradise, 'bb-home': bbHome, 'bb-royal': bbRoyal, 'bb-red': bbRed, ...OCT_BUILD };
 
 // --- default back, via the live personalized-back renderer ----------------
 

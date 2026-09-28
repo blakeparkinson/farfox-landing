@@ -2,6 +2,15 @@
 
 This project includes third-party material under the licences below.
 
+## PhyloPic: brown pelican in flight
+
+- **Source:** PhyloPic image 9f201851-2c4f-412c-a759-e911dfd2f8ee by Kurtis Wothe (contributed by MBARI and FathomVerse), https://www.phylopic.org/images/9f201851-2c4f-412c-a759-e911dfd2f8ee
+- **Licence:** CC0 1.0 Universal (public domain dedication), https://creativecommons.org/publicdomain/zero/1.0/
+- **Used in:** the Flyway soccer kit (`public/shop/designs/kits-2026-10/sj-flyway-*.png`), generated from `PELICAN_GLYPH` in `scripts/kit-designs-2026-10.mjs`
+- **Modified:** no. The silhouette is used as drawn, recoloured and placed.
+
+---
+
 ## Noto Emoji: "Moose" (U+1FACE)
 
 - **Source:** Noto Emoji by Google, https://github.com/googlefonts/noto-emoji
