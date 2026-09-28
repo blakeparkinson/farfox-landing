@@ -33,7 +33,7 @@ for (const field of ['Size', 'Name', 'Number']) {
 }
 
 assert.ok(
-  html.includes('data-item-url="/personalized-long-distance-jersey"'),
+  html.includes('data-item-url="/personalized-long-distance-jersey/"'),
   'Snipcart validates products against the focused offer URL',
 );
 assert.ok(webhook.includes('backUrl(kit, name, number)'), 'Personalized artwork is forwarded to Printful');
@@ -49,6 +49,6 @@ for (const event of [
 }
 
 assert.ok(homepage.includes('/personalized-long-distance-jersey'), 'Homepage routes visitors to the offer');
-assert.ok(giftGuide.includes('](/personalized-long-distance-jersey)'), 'Gift guide routes high-intent readers to the offer');
+assert.ok(giftGuide.includes('](/personalized-long-distance-jersey/)'), 'Gift guide routes high-intent readers to the offer');
 
 console.log(`Jersey offer contract passed for ${ids.length} products.`);
