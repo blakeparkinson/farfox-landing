@@ -22,6 +22,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 
@@ -46,9 +47,8 @@ const svg = (body, bg) =>
 // Oswald 700, the same face the personalized backs use for names and numbers.
 // resvg-js 2.6 ignores `fontBuffers`, so the font goes through a temp file.
 let fontFiles = [];
-// Yellowtail is the baseball chest script.
 async function loadFonts() {
-  for (const [family, query] of [['oswald', 'Oswald:wght@700'], ['yellowtail', 'Yellowtail']]) {
+  for (const [family, query] of [['oswald', 'Oswald:wght@700']]) {
     const css = await fetch(`https://fonts.googleapis.com/css2?family=${query}&display=swap`, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then((r) => r.text());
     const url = css.match(/url\((https:[^)]+\.ttf)\)/)[1];
     const file = join(tmpdir(), `farfox-${family}.ttf`);
@@ -435,49 +435,58 @@ function mardigras() {
 // --- baseball kits (Printful catalog 792) ------------------------------------
 //
 // The button placket hides the front file between x ≈ 2740 and 3280 (measured
-// by rendering a known grid through Printful's mockup generator). Chest art is
-// drawn in garment space (gx = 0 at the buttons) and placed twice: the left
-// half ending at 2740, the right half starting at 3280, so it reads as one
-// piece once the shirt is buttoned.
+// by rendering a known grid through Printful's mockup generator), and the
+// right chest panel is visible to about x 4680. The patch sits wholly on that
+// panel, so nothing is lost under the buttons.
 const PLACKET = { left: 2740, right: 3280 };
+const PATCH = { x: 3990, y: 2380, r: 640 };
 
-function acrossPlacket(garment) {
-  return `<defs>
-      <clipPath id="panelL"><rect x="0" y="0" width="${PLACKET.left}" height="${D}"/></clipPath>
-      <clipPath id="panelR"><rect x="${PLACKET.right}" y="0" width="${D - PLACKET.right}" height="${D}"/></clipPath>
-    </defs>
-    <g clip-path="url(#panelL)"><g transform="translate(${PLACKET.left} 0)">${garment}</g></g>
-    <g clip-path="url(#panelR)"><g transform="translate(${PLACKET.right} 0)">${garment}</g></g>`;
+// The heart-eyes Foxy face, cropped from the 2700 px brand artwork.
+let foxFace = '';
+async function loadFoxFace() {
+  const png = await sharp(fileURLToPath(new URL('../public/shop/designs/hearteyes-v2.png', import.meta.url)))
+    .extract({ left: 650, top: 0, width: 1400, height: 1480 }).png().toBuffer();
+  foxFace = png.toString('base64');
 }
 
-/** Classic chest script: "Far" left of the buttons, "Fox" right, a swash tail under both. */
-function chestScript(fill, outline) {
-  const base = 2980, size = 980, gap = 150;
-  const word = (x, anchor, text) => `<text x="${x}" y="${base}" text-anchor="${anchor}" font-family="Yellowtail" font-size="${size}">${text}</text>`;
-  const words = word(-gap, 'end', 'Far') + word(gap, 'start', 'Fox');
-  // Tail leaves the x of "Fox", sweeps under both words and tapers out on the left.
-  const tail = `<path d="M 1180 ${base - 60} C 1350 ${base + 150} 1150 ${base + 260} 600 ${base + 270}
-      L -1180 ${base + 250} C -1240 ${base + 250} -1250 ${base + 205} -1180 ${base + 200}
-      L 560 ${base + 180} C 980 ${base + 170} 1180 ${base + 90} 1180 ${base - 60} Z"/>`;
-  // Drawn at 980 px type, then scaled so each word fits its chest panel
-  // (about 1400 px from the buttons to the side seam) with room to spare.
-  const k = 0.7;
-  const art = `<g transform="translate(0 ${base}) scale(${k}) translate(0 ${-base})">${words}${tail}</g>`;
-  return acrossPlacket(`<g fill="${outline}" stroke="${outline}" stroke-width="70" stroke-linejoin="round" transform="translate(22 26)" opacity="0.9">${art}</g>
-    <g fill="${outline}" stroke="${outline}" stroke-width="44" stroke-linejoin="round">${art}</g>
-    <g fill="${fill}">${art}</g>`);
+function star(x, y, r, fill) {
+  const pts = Array.from({ length: 10 }, (_, k) => {
+    const a = -Math.PI / 2 + (k * Math.PI) / 5, rr = k % 2 ? r * 0.45 : r;
+    return `${(x + Math.cos(a) * rr).toFixed(1)},${(y + Math.sin(a) * rr).toFixed(1)}`;
+  });
+  return `<polygon points="${pts.join(' ')}" fill="${fill}"/>`;
+}
+
+/** Team patch: coloured ring with arched LONG DISTANCE / CLUB, stitching, Foxy in the middle. */
+function teamPatch({ ring, rim, text, disc }) {
+  const { x, y, r } = PATCH;
+  const inner = 440, top = 478, bottom = 598; // text baselines inside the ring band
+  const faceW = inner * 1.5;
+  const stitch = (rad) => `<circle cx="${x}" cy="${y}" r="${rad}" fill="none" stroke="${text}" stroke-opacity="0.75" stroke-width="7" stroke-dasharray="20 14"/>`;
+  const label = (id, value) => `<text font-family="Oswald" font-weight="700" font-size="128" letter-spacing="22" fill="${text}"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${value}</textPath></text>`;
+  return `<defs>
+      <path id="arcTop" d="M ${x - top} ${y} A ${top} ${top} 0 0 1 ${x + top} ${y}"/>
+      <path id="arcBottom" d="M ${x - bottom} ${y} A ${bottom} ${bottom} 0 0 0 ${x + bottom} ${y}"/>
+      <clipPath id="disc"><circle cx="${x}" cy="${y}" r="${inner}"/></clipPath>
+    </defs>
+    <circle cx="${x}" cy="${y}" r="${r}" fill="${rim}"/>
+    <circle cx="${x}" cy="${y}" r="${r - 34}" fill="${ring}"/>
+    ${stitch(r - 56)}${stitch(inner + 22)}
+    <circle cx="${x}" cy="${y}" r="${inner}" fill="${disc}"/>
+    <image href="data:image/png;base64,${foxFace}" x="${x - faceW / 2}" y="${y - faceW * 0.53}" width="${faceW}" height="${faceW * (1480 / 1400)}" clip-path="url(#disc)"/>
+    ${label('arcTop', 'LONG DISTANCE')}${label('arcBottom', 'CLUB')}
+    ${star(x - 540, y, 42, text)}${star(x + 540, y, 42, text)}`;
 }
 
 function pinstripes(bg, stripe) {
   let lines = '';
-  for (let x = 224.5; x < D; x += 216) lines += `<rect x="${x - 3}" y="0" width="6" height="${D}" fill="${stripe}"/>`;
+  for (let sx = 224.5; sx < D; sx += 216) lines += `<rect x="${sx - 3}" y="0" width="6" height="${D}" fill="${stripe}"/>`;
   return `<rect width="${D}" height="${D}" fill="${bg}"/>${lines}`;
 }
 
-const bbHome = () => ({ front: svg(chestScript('#1C4096', '#C0202E'), pinstripes('#FCFAF6', '#072E86')) });
-const bbRoyal = () => ({ front: svg(chestScript('#F4ECE0', '#C0202E'), pinstripes('#143A8C', '#FFFFFF')) });
-const bbRed = () => ({ front: svg(chestScript('#F4ECE0', '#1B2A6B'), `<rect width="${D}" height="${D}" fill="#BC2832"/>`) });
-
+const bbHome = () => ({ front: svg(teamPatch({ ring: '#1C4096', rim: '#C0202E', text: '#F4ECE0', disc: '#FCFAF6' }), pinstripes('#FCFAF6', '#072E86')) });
+const bbRoyal = () => ({ front: svg(teamPatch({ ring: '#C0202E', rim: '#F4ECE0', text: '#F4ECE0', disc: '#FCFAF6' }), pinstripes('#143A8C', '#FFFFFF')) });
+const bbRed = () => ({ front: svg(teamPatch({ ring: '#1B2A6B', rim: '#F4ECE0', text: '#F4ECE0', disc: '#FCFAF6' }), `<rect width="${D}" height="${D}" fill="#BC2832"/>`) });
 
 const KITS = { chart, dropzone, dalmatian, flight, paradise, mardigras, 'bb-home': bbHome, 'bb-royal': bbRoyal, 'bb-red': bbRed };
 
@@ -560,6 +569,7 @@ const only = args.includes('--kit') ? args[args.indexOf('--kit') + 1] : null;
 const previewOut = args.includes('--preview') ? args[args.indexOf('--preview') + 1] : null;
 await mkdir(OUT, { recursive: true });
 await loadFonts();
+await loadFoxFace();
 const previews = [];
 for (const [kit, build] of Object.entries(KITS)) {
   if (only && kit !== only) continue;
