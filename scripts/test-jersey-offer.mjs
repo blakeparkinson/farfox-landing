@@ -33,7 +33,7 @@ for (const field of ['Size', 'Name', 'Number']) {
 }
 
 assert.ok(
-  html.includes('data-item-url="/personalized-long-distance-jersey"'),
+  html.includes('data-item-url="/personalized-long-distance-jersey/"'),
   'Snipcart validates products against the focused offer URL',
 );
 assert.ok(webhook.includes('backUrl(kit, name, number)'), 'Personalized artwork is forwarded to Printful');
