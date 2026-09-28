@@ -5,6 +5,8 @@
  *   PRINTFUL_TOKEN=… node scripts/printful-update-kits.mjs            # dry run: show every planned change
  *   PRINTFUL_TOKEN=… node scripts/printful-update-kits.mjs --apply    # update all sync variants
  *   PRINTFUL_TOKEN=… node scripts/printful-update-kits.mjs --mockups  # write public/shop/{mockups,backs}/<id>.png
+ *   --style Ghost picks a Printful mockup style (option group); --out <dir> writes
+ *   <kit>-mockups.png / <kit>-backs.png there instead of public/shop.
  *   --kit flight,paradise limits a run to some kits; KITS_BASE=<url> (mockups only)
  *   renders from a preview deployment before the files are in production.
  *
@@ -32,6 +34,9 @@ if (!TOKEN) {
 const args = process.argv.slice(2);
 const apply = args.includes('--apply');
 const mockups = args.includes('--mockups');
+// Mockup style is a Printful option group, e.g. "Ghost", "Flat", "Women's", "Couple’s".
+const style = args.includes('--style') ? args[args.indexOf('--style') + 1] : null;
+const outDir = args.includes('--out') ? new URL(`file://${args[args.indexOf('--out') + 1].replace(/\/?$/, '/')}`) : null;
 const only = args.includes('--kit') ? args[args.indexOf('--kit') + 1].split(',') : null;
 if (apply && process.env.KITS_BASE) {
   console.error('Refusing --apply with KITS_BASE: Printful products must point at production URLs.');
@@ -117,7 +122,10 @@ async function mockupsFor(kit, productId) {
   });
   const task = await pf(`/mockup-generator/create-task/${catalogProduct}`, {
     method: 'POST',
-    body: JSON.stringify({ variant_ids: [v.variant_id], format: 'png', files }),
+    body: JSON.stringify({
+      variant_ids: [v.variant_id], format: 'png', files,
+      ...(style ? { option_groups: [style], options: ['Front', 'Back'] } : {}),
+    }),
   });
   for (let i = 0; i < 40; i++) {
     await sleep(5000);
@@ -130,8 +138,9 @@ async function mockupsFor(kit, productId) {
     for (const [view, dir] of [[front, 'mockups'], [back, 'backs']]) {
       if (!view) { console.warn(`  ${kit}: no ${dir === 'mockups' ? 'front' : 'back'} view returned`); continue; }
       const buf = Buffer.from(await (await fetch(view.url)).arrayBuffer());
-      await writeFile(new URL(`../public/shop/${dir}/${productId}.png`, import.meta.url), buf);
-      console.log(`  ${kit}: ${view.placement} → public/shop/${dir}/${productId}.png`);
+      const dest = outDir ? new URL(`${kit}-${dir}.png`, outDir) : new URL(`../public/shop/${dir}/${productId}.png`, import.meta.url);
+      await writeFile(dest, buf);
+      console.log(`  ${kit}: ${view.placement} → ${dest.pathname}`);
     }
     return;
   }

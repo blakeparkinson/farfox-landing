@@ -36,7 +36,7 @@ const KITS = {
     number: '#FAEEC8', numberStroke: '#1C1634', name: '#FAEEC8', nameStroke: '#1C1634',
   },
   flight: {
-    pattern: 'sj-flight-pattern.png', crest: 'fox-crest-navy.png',
+    pattern: 'kits-2026-09/sj-flight-pattern.png', crest: 'fox-crest-navy.png',
     number: '#1C1A2E', numberStroke: '#F5F1E7', name: '#1C1A2E', nameStroke: '#F5F1E7',
   },
   stars: {
@@ -52,7 +52,7 @@ const KITS = {
     number: '#FDE047', numberStroke: '#0A102C', name: '#F5F3FF', nameStroke: '#0A102C',
   },
   paradise: {
-    pattern: 'sj-paradise-pattern.png', crest: 'fox-crest.png',
+    pattern: 'kits-2026-09/sj-paradise-pattern.png', crest: 'fox-crest.png',
     number: '#FFFDF8', numberStroke: '#1A564E', name: '#FFFDF8', nameStroke: '#1A564E',
   },
   dalmatian: {
@@ -60,7 +60,7 @@ const KITS = {
     number: '#14213A', numberStroke: '#F5F1E7', name: '#14213A', nameStroke: '#F5F1E7',
   },
   mardigras: {
-    pattern: 'sj-mardigras-pattern.png', crest: 'sj-mardigras-emblem.png',
+    pattern: 'kits-2026-09/sj-mardigras-pattern.png', crest: 'kits-2026-09/fox-crest-mardigras.png',
     number: '#F4B600', numberStroke: '#200C3A', name: '#F4B600', nameStroke: '#200C3A',
   },
   // --- Original soccer kits (cat 644) ---
