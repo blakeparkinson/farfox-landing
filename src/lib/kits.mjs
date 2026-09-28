@@ -18,6 +18,8 @@ export function kitSlugForName(name) {
   // also sells a Morse "I Love You" Tee, which must not get a jersey back.
   if (/jersey/.test(n) && /other\s*half/.test(n)) return /\bb\)|kit\s*b|\(b\)/.test(n) ? 'otherhalfb' : 'otherhalfa';
   if (/jersey/.test(n) && /morse\s*hoops/.test(n)) return 'morse';
+  // Moose Lodge launches in Blush only.
+  if (/jersey/.test(n) && /moose/.test(n)) return 'moose-blush';
   // Soccer kits.
   if (/flight\s*path/.test(n)) return 'flight';
   if (/same\s*stars/.test(n)) return 'stars';

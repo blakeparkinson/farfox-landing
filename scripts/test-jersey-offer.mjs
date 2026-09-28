@@ -8,7 +8,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { kitSlugForName } from '../src/lib/kits.mjs';
 import { kitConfig } from '../src/lib/jerseyBack.mjs';
-import { BACKS } from './kit-designs-2026-10.mjs';
+import { BACKS, mooseBack } from './kit-designs-2026-10.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const builtPage = resolve(root, 'dist/client/personalized-long-distance-jersey/index.html');
@@ -37,15 +37,21 @@ for (const [name, kit] of [
   ['Far Fox — Long Distance FC Jersey (Morse Hoops)', 'morse'],
   ['Far Fox — Long Distance FC Jersey (Coordinates)', 'chart'],
   ['Far Fox — Long Distance FC Jersey (Orange)', 'orange'],
+  ['Far Fox — Long Distance FC Jersey (Moose Lodge)', 'moose-blush'],
+  ['Far Fox — Long Distance FC Jersey (Moose Lodge – Blush)', 'moose-blush'],
   // Non-jersey products must never be treated as personalizable kits.
   ['Far Fox — Morse "I Love You" Tee', null],
+  ['Far Fox — I Moose You Mug', null],
 ]) {
   assert.equal(kitSlugForName(name), kit, `${name} maps to ${kit}`);
 }
 // ...and their personalized backs use exactly the handoff's lettering config.
-for (const [kit, expected] of Object.entries(BACKS)) {
+// `moose` in BACKS is the unlaunched Lodge colorway; only Blush ships, as moose-blush.
+for (const [kit, expected] of Object.entries(BACKS).filter(([kit]) => kit !== 'moose')) {
   assert.deepEqual({ ...kitConfig(kit) }, expected, `jerseyBack.mjs ${kit} matches BACKS in kit-designs-2026-10.mjs`);
 }
+assert.deepEqual({ ...kitConfig('moose-blush') }, mooseBack('blush'), 'jerseyBack.mjs moose-blush matches mooseBack("blush")');
+assert.equal(kitConfig('moose'), null, 'Only the Blush Moose Lodge colorway is configured');
 // Retired kits keep a back so existing orders still render.
 for (const kit of ['chart', 'orange']) assert.ok(kitConfig(kit), `${kit} still renders a back`);
 

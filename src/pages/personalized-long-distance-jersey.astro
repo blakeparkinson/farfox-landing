@@ -19,7 +19,7 @@ type Product = {
 // Cards are chosen by kit, not product id, so a kit appears here as soon as
 // `npm run sync` adds its Printful product to the catalog. Retired kits
 // (Coordinates, Orange) are simply not listed.
-const FEATURED_KITS = ['morse', 'paradise', 'flight', 'stars', 'twilight', 'mardigras'];
+const FEATURED_KITS = ['morse', 'moose-blush', 'paradise', 'flight', 'stars', 'twilight', 'mardigras'];
 const PAIR_KITS = ['otherhalfa', 'otherhalfb'];
 const allProducts = catalog.products as Product[];
 const byKit = (kit: string) => allProducts.find((product) => kitSlugForName(product.name) === kit);
