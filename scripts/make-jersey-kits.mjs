@@ -67,6 +67,7 @@ function crest(cx, cy, w, variant) {
     navy: { body: '#14213A', feature: '#FFFFFF', muzzle: '#F8F0E2', nose: '#FFFFFF' },
     light: { body: '#F3ECE0', feature: '#12162E', muzzle: '#FFFFFF', nose: '#12162E' },
     gold: { body: '#F4B600', feature: '#2A0E4A', muzzle: '#FFF3C4', nose: '#2A0E4A' },
+    green: { body: '#1E8A4C', feature: '#FFFFFF', muzzle: '#F8F0E2', nose: '#FFFFFF' },
   }[variant];
   const s = w / 300;
   return `<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">
@@ -383,40 +384,48 @@ function paradise() {
   };
 }
 
-/** Mardi Gras: harlequin diamonds with gold lattice and two draped bead strands. */
+// Fleur-de-lis in a 100×104 box, top point at (50, 2).
+const FLEUR = `<path d="M50 2 C60 16 66 32 62 48 C60 56 56 62 54 70 L46 70 C44 62 40 56 38 48 C34 32 40 16 50 2 Z"/>
+  <path d="M45 70 C40 58 30 50 19 50 C8 50 2 58 4 67 C6 75 14 78 20 74 C15 72 13 66 17 62 C23 57 33 62 38 74 Z"/>
+  <path d="M55 70 C60 58 70 50 81 50 C92 50 98 58 96 67 C94 75 86 78 80 74 C85 72 87 66 83 62 C77 57 67 62 62 74 Z"/>
+  <rect x="30" y="72" width="40" height="9" rx="3"/><path d="M45 81 L55 81 L53 96 L50 104 L47 96 Z"/>
+  <path d="M44 81 C38 83 33 88 33 96 C29 91 29 84 34 80 Z"/><path d="M56 81 C62 83 67 88 67 96 C71 91 71 84 66 80 Z"/>`;
+const fleur = (cx, top, width, fill, opacity = 1) =>
+  `<g transform="translate(${cx - width / 2} ${top}) scale(${width / 100})" fill="${fill}" fill-opacity="${opacity}">${FLEUR}</g>`;
+
+/** The Mardi Gras medallion: a fleur-de-lis crowning a gold ring around the green fox. */
+function medallion(cx, top, ring) {
+  const fw = ring * 1.7, fh = fw * 1.04;
+  const cy = top + fh * 0.88 + ring;
+  return `${fleur(cx, top, fw, '#F4B600')}
+    <circle cx="${cx}" cy="${cy}" r="${ring}" fill="#2A0E4A" stroke="#F4B600" stroke-width="${ring * 0.13}"/>
+    <circle cx="${cx}" cy="${cy}" r="${ring * 0.8}" fill="#F4B600"/>${crest(cx, cy + ring * 0.03, ring * 1.12, 'green')}`;
+}
+
+/** Mardi Gras: the original tonal fleur-de-lis field, one gold bead strand,
+ *  and the fleur-de-lis medallion as its pendant. */
 function mardigras() {
-  const bg = `<rect width="${D}" height="${D}" fill="#3B1466"/>`;
-  const harlequin = (lineOpacity) => {
-    const W = 600, Hh = 900;
-    let a = '', b = '';
-    for (let j = -1; j <= (2 * D) / Hh + 1; j++) {
-      for (let i = -1; i <= (2 * D) / W + 1; i++) {
-        if ((i + j) % 2) continue;
-        const cx = (i * W) / 2, cy = (j * Hh) / 2;
-        const d = `M${cx} ${cy - Hh / 2}L${cx + W / 2} ${cy}L${cx} ${cy + Hh / 2}L${cx - W / 2} ${cy}Z`;
-        if (((i % 2) + 2) % 2) a += d; else b += d;
-      }
+  const bg = `<rect width="${D}" height="${D}" fill="#24103F"/>`;
+  const field = (opacity) => {
+    let out = '';
+    for (let j = 0, y = -200; y < D + 400; j++, y += 560) {
+      for (let x = j % 2 ? 250 : -150; x < D + 400; x += 800) out += fleur(x, y, 280, '#7A4BC2', opacity);
     }
-    return `<path d="${a}" fill="#4B1C86"/><path d="${b}" fill="#3B1466"/>
-      <path d="${a}" fill="none" stroke="#F4B600" stroke-opacity="${lineOpacity}" stroke-width="10"/>`;
+    return out;
   };
-  const strand = (a, b, sag, fill, rim) => {
-    const c = { x: (a.x + b.x) / 2, y: 2 * sag - (a.y + b.y) / 2 }; // quad through the sag point
-    return alongQuad(a, c, b, 104).map((p) => `<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="46" fill="${fill}" stroke="${rim}" stroke-width="7"/>
-      <circle cx="${(p.x - 14).toFixed(0)}" cy="${(p.y - 14).toFixed(0)}" r="13" fill="#FFFFFF" fill-opacity="0.7"/>`).join('');
-  };
-  // The crest hangs as the gold strand's pendant, centred, since any strand
-  // draped across the left chest would run through the usual crest spot.
-  const pendant = { x: 3000, y: 3400, w: 470 };
-  const beads = strand({ x: 2150, y: 1560 }, { x: 3850, y: 1560 }, 3950, '#22A45D', '#0F5A30')
-    + strand({ x: 2300, y: 1480 }, { x: 3700, y: 1480 }, 3120, '#F4B600', '#8A6400')
-    + `<circle cx="${pendant.x}" cy="${pendant.y - 250}" r="44" fill="none" stroke="#F4B600" stroke-width="22"/>`;
+  // The medallion hangs from the strand at centre chest: a strand draped
+  // across the left chest would run through the usual crest spot.
+  const hang = { x: 3000, y: 3020 };
+  const a = { x: 2300, y: 1480 }, b = { x: 3700, y: 1480 };
+  const c = { x: (a.x + b.x) / 2, y: 2 * hang.y - (a.y + b.y) / 2 }; // quad through the hang point
+  const beads = alongQuad(a, c, b, 104).map((p) => `<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="46" fill="#F4B600" stroke="#8A6400" stroke-width="7"/>
+    <circle cx="${(p.x - 14).toFixed(0)}" cy="${(p.y - 14).toFixed(0)}" r="13" fill="#FFFFFF" fill-opacity="0.7"/>`).join('');
   return {
-    front: svg(harlequin(0.6) + beads + crest(pendant.x, pendant.y, pendant.w, 'gold'), bg),
-    pattern: svg(harlequin(0.35), bg),
-    sleeve: svg(harlequin(0.6) + cuff('#F4B600', '#1B6B3F'), bg),
-    // Gold vector crest for the personalized back, replacing the pelican emblem.
-    backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="363" height="370" viewBox="0 0 363 370">${crest(181.5, 185, 363, 'gold')}</svg>`,
+    front: svg(field(0.55) + beads + medallion(hang.x, hang.y + 40, 230), bg),
+    pattern: svg(field(0.4), bg),
+    sleeve: svg(field(0.55) + cuff('#F4B600', '#1B6B3F'), bg),
+    // The medallion doubles as the personalized back's crest.
+    backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="363" height="370" viewBox="0 0 363 370">${medallion(181.5, 8, 108)}</svg>`,
   };
 }
 
