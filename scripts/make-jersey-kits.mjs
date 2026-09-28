@@ -214,7 +214,8 @@ function paradise() {
   let backGlow = '';
   for (let k = 0; k < 5; k++) backGlow += `<rect x="${3000 - (900 - k * 120) / 2}" y="${5050 + k * 150}" width="${900 - k * 120}" height="${40 + k * 4}" rx="30" fill="#FFB38A" fill-opacity="${0.5 - k * 0.07}"/>`;
   return {
-    front: svg(scene + crest(CREST.x, CREST.y, CREST.w, 'light'), sky),
+    // Navy crest: the cream one vanished into the mint sky.
+    front: svg(scene + crest(CREST.x, CREST.y, CREST.w, 'navy'), sky),
     // The back keeps the sky and sea only, so the name and number stay clean.
     pattern: svg(backGlow, dusk),
     sleeve: svg(cuff('#FF6B8A', '#1A564E'), sky),
