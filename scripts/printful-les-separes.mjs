@@ -5,9 +5,11 @@
  *
  *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs                         # dry run
  *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --create                # create the product
+ *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --update-files --product <id> [--apply]
+ *     points every variant of an existing product at the current files (dry run without --apply)
  *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --mockups --product <id>
- *     writes public/shop/colors/<id>-<colour>.png per colourway, plus the default
- *     colourway's public/shop/mockups/<id>.png and public/shop/backs/<id>.png
+ *     writes public/shop/colors/<id>-<colour>.png and public/shop/backs/<id>-<colour>.png per
+ *     colourway, plus the default colourway's public/shop/mockups/<id>.png and backs/<id>.png
  *
  * The print files must already be live on lovefarfox.com (make-les-separes.mjs, then deploy).
  */
@@ -47,17 +49,19 @@ async function pf(path, init = {}, attempt = 0) {
   return body.result;
 }
 
-const fileUrl = (colorway, part) => `${BASE}/${colorway}-${part}.${part === 'sleeve' ? 'png' : 'jpg'}`;
+const PNG_PARTS = new Set(['sleeve', 'label']);
+const fileUrl = (colorway, part) => `${BASE}/${colorway}-${part}.${PNG_PARTS.has(part) ? 'png' : 'jpg'}`;
 const filesFor = (colorway) => [
   { type: 'default', url: fileUrl(colorway, 'front') },
   { type: 'back', url: fileUrl(colorway, 'back') },
   { type: 'sleeve_left', url: fileUrl(colorway, 'sleeve') },
   { type: 'sleeve_right', url: fileUrl(colorway, 'sleeve') },
+  { type: 'label_inside', url: fileUrl(colorway, 'label') },
 ];
 
 async function assertLive() {
   for (const { key } of LES_SEPARES.colorways) {
-    for (const part of ['front', 'back', 'sleeve']) {
+    for (const part of ['front', 'back', 'sleeve', 'label']) {
       const r = await fetch(fileUrl(key, part), { method: 'HEAD' });
       if (!r.ok) throw new Error(`${key} ${part} is not live (${r.status}); deploy the print files first`);
     }
@@ -117,7 +121,9 @@ async function mockups(productId) {
       console.log(`  ${key}: ${view.placement} → public/shop/${path}`);
     };
     const front = views.find((x) => /front|default/i.test(x.placement)), back = views.find((x) => /back/i.test(x.placement));
-    await save(front, `colors/${productId}-${label.toLowerCase().replace(/ /g, '-')}.png`);
+    const slug = label.toLowerCase().replace(/ /g, '-');
+    await save(front, `colors/${productId}-${slug}.png`);
+    await save(back, `backs/${productId}-${slug}.png`);
     if (index === 0) {
       await save(front, `mockups/${productId}.png`);
       await save(back, `backs/${productId}.png`);
@@ -125,10 +131,32 @@ async function mockups(productId) {
   }
 }
 
-if (args.includes('--mockups')) {
-  const id = args[args.indexOf('--product') + 1];
-  if (!id || !args.includes('--product')) throw new Error('--mockups needs --product <sync product id>');
-  await mockups(id);
+/** Point each existing variant at its colourway's current files, keeping its options. */
+async function updateFiles(productId) {
+  await assertLive();
+  const detail = await pf(`/store/products/${productId}`);
+  for (const v of detail.sync_variants) {
+    const key = /^les-separes--([a-z0-9]+)--/.exec(v.external_id || '')?.[1];
+    if (!key) throw new Error(`variant ${v.id} has no colourway tag (${v.external_id})`);
+    const files = filesFor(key);
+    const done = files.every((f) => (v.files || []).some((g) => g.type === f.type && g.url === f.url));
+    console.log(`  ${v.external_id}: ${done ? 'already up to date' : files.map((f) => f.type).join(', ')}`);
+    if (done || !args.includes('--apply')) continue;
+    await pf(`/store/variants/${v.id}`, { method: 'PUT', body: JSON.stringify({ files, options: v.options || [] }) });
+    await sleep(600); // stay well under Printful's 120 requests/minute
+  }
+  if (!args.includes('--apply')) console.log('\nDry run only. Re-run with --apply to update Printful.');
+}
+
+const productArg = () => {
+  const id = args.includes('--product') ? args[args.indexOf('--product') + 1] : null;
+  if (!id) throw new Error('this mode needs --product <sync product id>');
+  return id;
+};
+if (args.includes('--update-files')) {
+  await updateFiles(productArg());
+} else if (args.includes('--mockups')) {
+  await mockups(productArg());
 } else {
   await create();
 }

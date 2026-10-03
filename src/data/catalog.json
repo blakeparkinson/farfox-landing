@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03T14:25:58.406Z",
+  "generatedAt": "2026-10-03T15:03:23.295Z",
   "products": [
     {
       "id": "477663642",
@@ -22,32 +22,38 @@
         {
           "name": "Night",
           "hex": "#21182B",
-          "image": "/shop/colors/477663642-night.png"
+          "image": "/shop/colors/477663642-night.png",
+          "back": "/shop/backs/477663642-night.png"
         },
         {
           "name": "Fox Pink",
           "hex": "#FF6B8A",
-          "image": "/shop/colors/477663642-fox-pink.png"
+          "image": "/shop/colors/477663642-fox-pink.png",
+          "back": "/shop/backs/477663642-fox-pink.png"
         },
         {
           "name": "Plum",
           "hex": "#2D1B4E",
-          "image": "/shop/colors/477663642-plum.png"
+          "image": "/shop/colors/477663642-plum.png",
+          "back": "/shop/backs/477663642-plum.png"
         },
         {
           "name": "Raspberry",
           "hex": "#963655",
-          "image": "/shop/colors/477663642-raspberry.png"
+          "image": "/shop/colors/477663642-raspberry.png",
+          "back": "/shop/backs/477663642-raspberry.png"
         },
         {
           "name": "Fox Orange",
           "hex": "#FF9A5C",
-          "image": "/shop/colors/477663642-fox-orange.png"
+          "image": "/shop/colors/477663642-fox-orange.png",
+          "back": "/shop/backs/477663642-fox-orange.png"
         },
         {
           "name": "Fox Purple",
           "hex": "#B76CFD",
-          "image": "/shop/colors/477663642-fox-purple.png"
+          "image": "/shop/colors/477663642-fox-purple.png",
+          "back": "/shop/backs/477663642-fox-purple.png"
         }
       ]
     },
@@ -342,47 +348,56 @@
         {
           "name": "White",
           "hex": "#ffffff",
-          "image": "/shop/colors/436909622-white.png"
+          "image": "/shop/colors/436909622-white.png",
+          "back": null
         },
         {
           "name": "Natural",
           "hex": "#fef1d1",
-          "image": "/shop/colors/436909622-natural.png"
+          "image": "/shop/colors/436909622-natural.png",
+          "back": null
         },
         {
           "name": "Ash",
           "hex": "#f0f1ea",
-          "image": "/shop/colors/436909622-ash.png"
+          "image": "/shop/colors/436909622-ash.png",
+          "back": null
         },
         {
           "name": "Soft Pink",
           "hex": "#ffd8e1",
-          "image": "/shop/colors/436909622-soft-pink.png"
+          "image": "/shop/colors/436909622-soft-pink.png",
+          "back": null
         },
         {
           "name": "Heather Prism Ice Blue",
           "hex": "#c3e2e3",
-          "image": "/shop/colors/436909622-heather-prism-ice-blue.png"
+          "image": "/shop/colors/436909622-heather-prism-ice-blue.png",
+          "back": null
         },
         {
           "name": "Yellow",
           "hex": "#ffd667",
-          "image": "/shop/colors/436909622-yellow.png"
+          "image": "/shop/colors/436909622-yellow.png",
+          "back": null
         },
         {
           "name": "Black",
           "hex": "#0c0c0c",
-          "image": "/shop/colors/436909622-black.png"
+          "image": "/shop/colors/436909622-black.png",
+          "back": null
         },
         {
           "name": "Navy",
           "hex": "#212642",
-          "image": "/shop/colors/436909622-navy.png"
+          "image": "/shop/colors/436909622-navy.png",
+          "back": null
         },
         {
           "name": "Maroon",
           "hex": "#721d37",
-          "image": "/shop/colors/436909622-maroon.png"
+          "image": "/shop/colors/436909622-maroon.png",
+          "back": null
         }
       ]
     },
@@ -405,47 +420,56 @@
         {
           "name": "White",
           "hex": "#ffffff",
-          "image": "/shop/colors/436909615-white.png"
+          "image": "/shop/colors/436909615-white.png",
+          "back": null
         },
         {
           "name": "Natural",
           "hex": "#fef1d1",
-          "image": "/shop/colors/436909615-natural.png"
+          "image": "/shop/colors/436909615-natural.png",
+          "back": null
         },
         {
           "name": "Ash",
           "hex": "#f0f1ea",
-          "image": "/shop/colors/436909615-ash.png"
+          "image": "/shop/colors/436909615-ash.png",
+          "back": null
         },
         {
           "name": "Soft Pink",
           "hex": "#ffd8e1",
-          "image": "/shop/colors/436909615-soft-pink.png"
+          "image": "/shop/colors/436909615-soft-pink.png",
+          "back": null
         },
         {
           "name": "Heather Prism Ice Blue",
           "hex": "#c3e2e3",
-          "image": "/shop/colors/436909615-heather-prism-ice-blue.png"
+          "image": "/shop/colors/436909615-heather-prism-ice-blue.png",
+          "back": null
         },
         {
           "name": "Yellow",
           "hex": "#ffd667",
-          "image": "/shop/colors/436909615-yellow.png"
+          "image": "/shop/colors/436909615-yellow.png",
+          "back": null
         },
         {
           "name": "Black",
           "hex": "#0c0c0c",
-          "image": "/shop/colors/436909615-black.png"
+          "image": "/shop/colors/436909615-black.png",
+          "back": null
         },
         {
           "name": "Navy",
           "hex": "#212642",
-          "image": "/shop/colors/436909615-navy.png"
+          "image": "/shop/colors/436909615-navy.png",
+          "back": null
         },
         {
           "name": "Maroon",
           "hex": "#721d37",
-          "image": "/shop/colors/436909615-maroon.png"
+          "image": "/shop/colors/436909615-maroon.png",
+          "back": null
         }
       ]
     },
@@ -468,47 +492,56 @@
         {
           "name": "White",
           "hex": "#ffffff",
-          "image": "/shop/colors/436908862-white.png"
+          "image": "/shop/colors/436908862-white.png",
+          "back": null
         },
         {
           "name": "Natural",
           "hex": "#fef1d1",
-          "image": "/shop/colors/436908862-natural.png"
+          "image": "/shop/colors/436908862-natural.png",
+          "back": null
         },
         {
           "name": "Ash",
           "hex": "#f0f1ea",
-          "image": "/shop/colors/436908862-ash.png"
+          "image": "/shop/colors/436908862-ash.png",
+          "back": null
         },
         {
           "name": "Soft Pink",
           "hex": "#ffd8e1",
-          "image": "/shop/colors/436908862-soft-pink.png"
+          "image": "/shop/colors/436908862-soft-pink.png",
+          "back": null
         },
         {
           "name": "Heather Prism Ice Blue",
           "hex": "#c3e2e3",
-          "image": "/shop/colors/436908862-heather-prism-ice-blue.png"
+          "image": "/shop/colors/436908862-heather-prism-ice-blue.png",
+          "back": null
         },
         {
           "name": "Yellow",
           "hex": "#ffd667",
-          "image": "/shop/colors/436908862-yellow.png"
+          "image": "/shop/colors/436908862-yellow.png",
+          "back": null
         },
         {
           "name": "Black",
           "hex": "#0c0c0c",
-          "image": "/shop/colors/436908862-black.png"
+          "image": "/shop/colors/436908862-black.png",
+          "back": null
         },
         {
           "name": "Navy",
           "hex": "#212642",
-          "image": "/shop/colors/436908862-navy.png"
+          "image": "/shop/colors/436908862-navy.png",
+          "back": null
         },
         {
           "name": "Maroon",
           "hex": "#721d37",
-          "image": "/shop/colors/436908862-maroon.png"
+          "image": "/shop/colors/436908862-maroon.png",
+          "back": null
         }
       ]
     },
@@ -696,32 +729,38 @@
         {
           "name": "White",
           "hex": "#ffffff",
-          "image": "/shop/colors/436883154-white.png"
+          "image": "/shop/colors/436883154-white.png",
+          "back": null
         },
         {
           "name": "Athletic Heather",
           "hex": "#cececc",
-          "image": "/shop/colors/436883154-athletic-heather.png"
+          "image": "/shop/colors/436883154-athletic-heather.png",
+          "back": null
         },
         {
           "name": "Lilac",
           "hex": "#efbbe3",
-          "image": "/shop/colors/436883154-lilac.png"
+          "image": "/shop/colors/436883154-lilac.png",
+          "back": null
         },
         {
           "name": "Black",
           "hex": "#0c0c0c",
-          "image": "/shop/colors/436883154-black.png"
+          "image": "/shop/colors/436883154-black.png",
+          "back": null
         },
         {
           "name": "Heather Navy",
           "hex": "#303643",
-          "image": "/shop/colors/436883154-heather-navy.png"
+          "image": "/shop/colors/436883154-heather-navy.png",
+          "back": null
         },
         {
           "name": "Maroon",
           "hex": "#721d37",
-          "image": "/shop/colors/436883154-maroon.png"
+          "image": "/shop/colors/436883154-maroon.png",
+          "back": null
         }
       ]
     },
@@ -744,47 +783,56 @@
         {
           "name": "White",
           "hex": "#ffffff",
-          "image": "/shop/colors/436883133-white.png"
+          "image": "/shop/colors/436883133-white.png",
+          "back": null
         },
         {
           "name": "Natural",
           "hex": "#fef1d1",
-          "image": "/shop/colors/436883133-natural.png"
+          "image": "/shop/colors/436883133-natural.png",
+          "back": null
         },
         {
           "name": "Ash",
           "hex": "#f0f1ea",
-          "image": "/shop/colors/436883133-ash.png"
+          "image": "/shop/colors/436883133-ash.png",
+          "back": null
         },
         {
           "name": "Soft Pink",
           "hex": "#ffd8e1",
-          "image": "/shop/colors/436883133-soft-pink.png"
+          "image": "/shop/colors/436883133-soft-pink.png",
+          "back": null
         },
         {
           "name": "Heather Prism Ice Blue",
           "hex": "#c3e2e3",
-          "image": "/shop/colors/436883133-heather-prism-ice-blue.png"
+          "image": "/shop/colors/436883133-heather-prism-ice-blue.png",
+          "back": null
         },
         {
           "name": "Yellow",
           "hex": "#ffd667",
-          "image": "/shop/colors/436883133-yellow.png"
+          "image": "/shop/colors/436883133-yellow.png",
+          "back": null
         },
         {
           "name": "Black",
           "hex": "#0c0c0c",
-          "image": "/shop/colors/436883133-black.png"
+          "image": "/shop/colors/436883133-black.png",
+          "back": null
         },
         {
           "name": "Navy",
           "hex": "#212642",
-          "image": "/shop/colors/436883133-navy.png"
+          "image": "/shop/colors/436883133-navy.png",
+          "back": null
         },
         {
           "name": "Maroon",
           "hex": "#721d37",
-          "image": "/shop/colors/436883133-maroon.png"
+          "image": "/shop/colors/436883133-maroon.png",
+          "back": null
         }
       ]
     },
@@ -807,47 +855,56 @@
         {
           "name": "White",
           "hex": "#ffffff",
-          "image": "/shop/colors/436883116-white.png"
+          "image": "/shop/colors/436883116-white.png",
+          "back": null
         },
         {
           "name": "Natural",
           "hex": "#fef1d1",
-          "image": "/shop/colors/436883116-natural.png"
+          "image": "/shop/colors/436883116-natural.png",
+          "back": null
         },
         {
           "name": "Ash",
           "hex": "#f0f1ea",
-          "image": "/shop/colors/436883116-ash.png"
+          "image": "/shop/colors/436883116-ash.png",
+          "back": null
         },
         {
           "name": "Soft Pink",
           "hex": "#ffd8e1",
-          "image": "/shop/colors/436883116-soft-pink.png"
+          "image": "/shop/colors/436883116-soft-pink.png",
+          "back": null
         },
         {
           "name": "Heather Prism Ice Blue",
           "hex": "#c3e2e3",
-          "image": "/shop/colors/436883116-heather-prism-ice-blue.png"
+          "image": "/shop/colors/436883116-heather-prism-ice-blue.png",
+          "back": null
         },
         {
           "name": "Yellow",
           "hex": "#ffd667",
-          "image": "/shop/colors/436883116-yellow.png"
+          "image": "/shop/colors/436883116-yellow.png",
+          "back": null
         },
         {
           "name": "Black",
           "hex": "#0c0c0c",
-          "image": "/shop/colors/436883116-black.png"
+          "image": "/shop/colors/436883116-black.png",
+          "back": null
         },
         {
           "name": "Navy",
           "hex": "#212642",
-          "image": "/shop/colors/436883116-navy.png"
+          "image": "/shop/colors/436883116-navy.png",
+          "back": null
         },
         {
           "name": "Maroon",
           "hex": "#721d37",
-          "image": "/shop/colors/436883116-maroon.png"
+          "image": "/shop/colors/436883116-maroon.png",
+          "back": null
         }
       ]
     },
@@ -870,47 +927,56 @@
         {
           "name": "White",
           "hex": "#ffffff",
-          "image": "/shop/colors/436882976-white.png"
+          "image": "/shop/colors/436882976-white.png",
+          "back": null
         },
         {
           "name": "Natural",
           "hex": "#fef1d1",
-          "image": "/shop/colors/436882976-natural.png"
+          "image": "/shop/colors/436882976-natural.png",
+          "back": null
         },
         {
           "name": "Ash",
           "hex": "#f0f1ea",
-          "image": "/shop/colors/436882976-ash.png"
+          "image": "/shop/colors/436882976-ash.png",
+          "back": null
         },
         {
           "name": "Soft Pink",
           "hex": "#ffd8e1",
-          "image": "/shop/colors/436882976-soft-pink.png"
+          "image": "/shop/colors/436882976-soft-pink.png",
+          "back": null
         },
         {
           "name": "Heather Prism Ice Blue",
           "hex": "#c3e2e3",
-          "image": "/shop/colors/436882976-heather-prism-ice-blue.png"
+          "image": "/shop/colors/436882976-heather-prism-ice-blue.png",
+          "back": null
         },
         {
           "name": "Yellow",
           "hex": "#ffd667",
-          "image": "/shop/colors/436882976-yellow.png"
+          "image": "/shop/colors/436882976-yellow.png",
+          "back": null
         },
         {
           "name": "Black",
           "hex": "#0c0c0c",
-          "image": "/shop/colors/436882976-black.png"
+          "image": "/shop/colors/436882976-black.png",
+          "back": null
         },
         {
           "name": "Navy",
           "hex": "#212642",
-          "image": "/shop/colors/436882976-navy.png"
+          "image": "/shop/colors/436882976-navy.png",
+          "back": null
         },
         {
           "name": "Maroon",
           "hex": "#721d37",
-          "image": "/shop/colors/436882976-maroon.png"
+          "image": "/shop/colors/436882976-maroon.png",
+          "back": null
         }
       ]
     }

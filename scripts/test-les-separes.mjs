@@ -13,7 +13,7 @@ const keys = LES_SEPARES.colorways.map((c) => c.key), labels = LES_SEPARES.color
 assert.equal(new Set(keys).size, keys.length, 'colourway keys are unique');
 assert.equal(new Set(labels).size, labels.length, 'colourway labels are unique');
 for (const key of keys) {
-  for (const file of [`${key}-front.jpg`, `${key}-back.jpg`, `${key}-sleeve.png`]) {
+  for (const file of [`${key}-front.jpg`, `${key}-back.jpg`, `${key}-sleeve.png`, `${key}-label.png`]) {
     assert.ok(existsSync(new URL(`../public/shop/designs/les-separes/${file}`, import.meta.url)), `${file} exists`);
   }
 }

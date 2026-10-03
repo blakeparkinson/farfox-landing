@@ -9,8 +9,9 @@
  * Writes 6000×6000 Printful all-over-print files to public/shop/designs/les-separes/:
  *   <colourway>-front.jpg, <colourway>-back.jpg (photo art, JPEG keeps them ~6 MB)
  *   <colourway>-sleeve.png
+ *   <colourway>-label.png    inside neck label (1.25 × 0.5 in): the poem's refrain, answered
  *
- * Usage: node scripts/make-les-separes.mjs [--colorway night,pink] [--preview out.jpg]
+ * Usage: node scripts/make-les-separes.mjs [--colorway night,pink] [--preview out.jpg] [--label-only]
  */
 import { mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -45,6 +46,8 @@ const GRAVITIES = ['centre', 'north', 'south', 'east', 'west', 'entropy', 'atten
 const SEED = { front: 20261003, back: 20261004 };
 const SHIELD = { x: 2450, y: 2420, w: 360 };
 const CUFF = { accentTop: 3980, accentHeight: 40, bandTop: 4040 };
+// Printful's inside label is 188 × 75 px at 150 dpi; drawn at 8× so the text stays crisp.
+const LABEL = { w: 188 * 8, h: 75 * 8 };
 
 // Marceline Desbordes-Valmore, "Les Séparés" (Poésies posthumes, 1886), public domain; text as
 // validated on French Wikisource. No-break spaces before ! ; : keep French punctuation on its word.
@@ -60,7 +63,7 @@ const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/'/g, 
 const rgbOf = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
 
 async function loadFonts() {
-  const fonts = [['uncial', 'Uncial+Antiqua'], ['garamond', 'EB+Garamond:wght@500']];
+  const fonts = [['uncial', 'Uncial+Antiqua'], ['garamond', 'EB+Garamond:wght@500'], ['garamond-italic', 'EB+Garamond:ital,wght@1,500']];
   return Promise.all(fonts.map(async ([family, query]) => {
     const css = await fetch(`https://fonts.googleapis.com/css2?family=${query}&display=swap`, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then((r) => r.text());
     const file = join(tmpdir(), `farfox-les-separes-${family}.ttf`);
@@ -204,6 +207,11 @@ const sleeve = (p) => svg(`<rect width="${D}" height="${D}" fill="${p.cream}"/>
   <rect x="0" y="${CUFF.accentTop}" width="${D}" height="${CUFF.accentHeight}" fill="url(#brand)"/>
   <rect x="0" y="${CUFF.bandTop}" width="${D}" height="${D - CUFF.bandTop}" fill="${p.dark}"/>`);
 
+/** Inside neck label: "Don't write!" from the poem, answered with "…but call me." */
+const insideLabel = (p) => `<svg xmlns="http://www.w3.org/2000/svg" width="${LABEL.w}" height="${LABEL.h}" viewBox="0 0 ${LABEL.w} ${LABEL.h}">
+  <text x="${LABEL.w / 2}" y="290" text-anchor="middle" font-family="Uncial Antiqua" font-size="200" fill="${p.dark}">N’écris pas !</text>
+  <text x="${LABEL.w / 2}" y="500" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="140" fill="${p.dark}">…mais appelle-moi.</text></svg>`;
+
 const args = process.argv.slice(2);
 const only = args.includes('--colorway') ? args[args.indexOf('--colorway') + 1].split(',') : null;
 const previewOut = args.includes('--preview') ? args[args.indexOf('--preview') + 1] : null;
@@ -214,12 +222,21 @@ const previews = [];
 for (const { key } of LES_SEPARES.colorways) {
   if (only && !only.includes(key)) continue;
   const palette = PALETTES[key];
-  const [frontPng, backPng] = [render(await front(palette)), render(await back(palette))];
+  const parts = args.includes('--label-only') ? null : [render(await front(palette)), render(await back(palette))];
+  if (parts) {
+  const [frontPng, backPng] = parts;
   await sharp(frontPng).jpeg({ quality: JPEG_QUALITY, mozjpeg: true }).toFile(new URL(`${key}-front.jpg`, OUT).pathname);
   await sharp(backPng).jpeg({ quality: JPEG_QUALITY, mozjpeg: true }).toFile(new URL(`${key}-back.jpg`, OUT).pathname);
   await sharp(render(sleeve(palette))).png({ compressionLevel: 9 }).toFile(new URL(`${key}-sleeve.png`, OUT).pathname);
-  console.log(`[les-separes] ${key}: front, back, sleeve written`);
+  const label = new Resvg(insideLabel(palette), { fitTo: { mode: 'width', value: LABEL.w }, font: { fontFiles, loadSystemFonts: false } }).render().asPng();
+  await sharp(label).png({ compressionLevel: 9 }).toFile(new URL(`${key}-label.png`, OUT).pathname);
+  console.log(`[les-separes] ${key}: front, back, sleeve, label written`);
   if (previewOut) previews.push(await sharp(frontPng).extract({ left: 1700, top: 1200, width: 2600, height: 4700 }).resize(260).toBuffer());
+  }
+  if (parts) continue;
+  const label = new Resvg(insideLabel(palette), { fitTo: { mode: 'width', value: LABEL.w }, font: { fontFiles, loadSystemFonts: false } }).render().asPng();
+  await sharp(label).png({ compressionLevel: 9 }).toFile(new URL(`${key}-label.png`, OUT).pathname);
+  console.log(`[les-separes] ${key}: label written`);
 }
 if (previewOut && previews.length) {
   await sharp({ create: { width: 260 * previews.length, height: Math.round(4700 * 260 / 2600), channels: 3, background: '#fff' } })

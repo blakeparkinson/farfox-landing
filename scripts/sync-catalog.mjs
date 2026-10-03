@@ -92,7 +92,9 @@ async function main() {
       const file = `${p.id}-${colorSlug(name)}.png`;
       const hasImg = existsSync(join(COLORS_DIR, file));
       const colorwayHex = variants.map(variantColorway).find((c) => c?.label === name)?.hex;
-      return { name, hex: COLOR_HEX[name] || colorwayHex || '#cccccc', image: hasImg ? `/shop/colors/${file}` : null };
+      // A colour may have its own back photo (colourway products); otherwise the product back is used.
+      const back = existsSync(join(BACKS_DIR, file)) ? `/shop/backs/${file}` : null;
+      return { name, hex: COLOR_HEX[name] || colorwayHex || '#cccccc', image: hasImg ? `/shop/colors/${file}` : null, back };
     });
     // If we have per-colour images, use the first colour's image as the card default.
     const firstColorImg = colors.find((c) => c.image)?.image;
