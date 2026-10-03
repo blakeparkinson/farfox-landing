@@ -2,6 +2,31 @@
 
 This project includes third-party material under the licences below.
 
+## NASA imagery: Les Séparés kit photographs
+
+- **Source:** NASA Image and Video Library, https://images.nasa.gov. Front: as08-14-2383, as11-40-5878, as11-40-5880, as11-44-6551, as16-120-19187, as16-120-19242, as16-121-19407, as17-148-22727, as17-152-23274, as17-152-23279, as17-152-23311, art002e021278, LRC-1967-B701_P-04825, 6900540, 6900556, 6901000. Back: art001e001712, art001e001822, as17-145-22254, as17-145-22287, as17-149-22857, iss036e036607, iss037e017170, iss040e092688, iss043e039312, iss062e082060, iss068e021122, iss069e091732, iss070e062746, iss071e256627, iss072e159172, iss074e0460378
+- **Licence:** NASA material is generally not subject to copyright in the United States (https://www.nasa.gov/nasa-brand-center/images-and-media/). No NASA logos or insignia are used, and nothing implies NASA endorsement.
+- **Used in:** the Les Séparés soccer kit (`public/shop/designs/les-separes/`), from `scripts/assets/les-separes/` via `scripts/make-les-separes.mjs`
+- **Modified:** yes. Cropped, converted to greyscale and printed in two tones per colourway.
+
+---
+
+## Marceline Desbordes-Valmore: "Les Séparés"
+
+- **Source:** *Poésies posthumes* (1886), as validated on French Wikisource, https://fr.wikisource.org/wiki/Les_S%C3%A9par%C3%A9s
+- **Licence:** public domain (the author died in 1859)
+- **Used in:** the cream stripes of the Les Séparés kit, set in full and unaltered in `scripts/make-les-separes.mjs`
+
+---
+
+## Fonts: Uncial Antiqua and EB Garamond
+
+- **Source:** Google Fonts, fetched at build time by `scripts/make-les-separes.mjs`
+- **Licence:** SIL Open Font License 1.1 (https://openfontlicense.org)
+- **Used in:** the "Far Fox" wordmark (Uncial Antiqua) and the poem and LDFC shield (EB Garamond), rendered into the Les Séparés print files. The fonts themselves are not redistributed.
+
+---
+
 ## PhyloPic: brown pelican in flight
 
 - **Source:** PhyloPic image 9f201851-2c4f-412c-a759-e911dfd2f8ee by Kurtis Wothe (contributed by MBARI and FathomVerse), https://www.phylopic.org/images/9f201851-2c4f-412c-a759-e911dfd2f8ee

@@ -12,6 +12,7 @@
     "test:digital-map": "node scripts/test-digital-map.mjs",
     "launch:jerseys": "node scripts/make-jersey-launch-videos.mjs",
     "test:jersey-offer": "node scripts/test-jersey-offer.mjs",
+    "test:les-separes": "node scripts/test-les-separes.mjs",
     "make:jersey-kits": "node scripts/make-jersey-kits.mjs",
     "launch:acquisition": "node scripts/make-user-acquisition-videos.mjs",
     "launch:assets": "node scripts/make-launch-assets.mjs",

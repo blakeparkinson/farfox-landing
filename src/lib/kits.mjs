@@ -42,3 +42,42 @@ export function backUrl(kit, name, number) {
   const q = new URLSearchParams({ kit, name: name || '', number: number || '' });
   return `${SITE}/api/jersey-back.png?${q.toString()}`;
 }
+
+// --- Colourway products ------------------------------------------------------
+// All-over-print jerseys report one catalog colour ("White") for every variant, so a
+// product sold in several colourways tags each sync variant's external_id as
+// `<kit>--<colourway>--<size>`; the shop's colour picker and the order webhook read it.
+
+/** Les Séparés: one product, six colourways from the Far Fox palette. First is the default. */
+export const LES_SEPARES = {
+  kit: 'les-separes',
+  colorways: [
+    { key: 'night', label: 'Night', hex: '#21182B' },
+    { key: 'pink', label: 'Fox Pink', hex: '#FF6B8A' },
+    { key: 'plum', label: 'Plum', hex: '#2D1B4E' },
+    { key: 'raspberry', label: 'Raspberry', hex: '#963655' },
+    { key: 'orange', label: 'Fox Orange', hex: '#FF9A5C' },
+    { key: 'lavender', label: 'Fox Purple', hex: '#B76CFD' },
+  ],
+};
+const COLORWAY_KITS = { [LES_SEPARES.kit]: LES_SEPARES };
+
+export const colorwayExternalId = (kit, colorway, size) => `${kit}--${colorway}--${size}`;
+
+/** The colourway a sync variant is tagged with ({ key, label, hex }), or null. */
+export function variantColorway(variant) {
+  const m = /^([a-z0-9-]+?)--([a-z0-9]+)--/.exec(String(variant?.external_id || ''));
+  return (m && COLORWAY_KITS[m[1]]?.colorways.find((c) => c.key === m[2])) || null;
+}
+
+/** The colour a shopper picks for this variant: its colourway label, else Printful's colour. */
+export const variantColor = (variant) => variantColorway(variant)?.label || variant?.color || null;
+
+/** Pick the sync variant for a chosen size + colour: both, then size, then colour, then first. */
+export function pickVariant(variants, size, color) {
+  const eq = (a, b) => !!b && String(a || '').toLowerCase() === String(b).toLowerCase();
+  return (size && color && variants.find((v) => eq(v.size, size) && eq(variantColor(v), color)))
+    || (size && variants.find((v) => eq(v.size, size)))
+    || (color && variants.find((v) => eq(variantColor(v), color)))
+    || variants[0] || null;
+}
