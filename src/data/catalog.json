@@ -1,6 +1,56 @@
 {
-  "generatedAt": "2026-09-28T22:48:32.730Z",
+  "generatedAt": "2026-10-03T14:25:58.406Z",
   "products": [
+    {
+      "id": "477663642",
+      "slug": "far-fox-long-distance-fc-jersey-les-s-par-s",
+      "name": "Long Distance FC Jersey (Les Séparés)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/colors/477663642-night.png",
+      "back": "/shop/backs/477663642.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        {
+          "name": "Night",
+          "hex": "#21182B",
+          "image": "/shop/colors/477663642-night.png"
+        },
+        {
+          "name": "Fox Pink",
+          "hex": "#FF6B8A",
+          "image": "/shop/colors/477663642-fox-pink.png"
+        },
+        {
+          "name": "Plum",
+          "hex": "#2D1B4E",
+          "image": "/shop/colors/477663642-plum.png"
+        },
+        {
+          "name": "Raspberry",
+          "hex": "#963655",
+          "image": "/shop/colors/477663642-raspberry.png"
+        },
+        {
+          "name": "Fox Orange",
+          "hex": "#FF9A5C",
+          "image": "/shop/colors/477663642-fox-orange.png"
+        },
+        {
+          "name": "Fox Purple",
+          "hex": "#B76CFD",
+          "image": "/shop/colors/477663642-fox-purple.png"
+        }
+      ]
+    },
     {
       "id": "475849115",
       "slug": "far-fox-long-distance-fc-jersey-moose-lodge",
