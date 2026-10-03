@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 // @ts-ignore - plain-JS module (no heavy deps) shared with shop + generator
-import { kitSlugForName, backUrl } from '../../lib/kits.mjs';
+import { kitSlugForName, backUrl, pickVariant } from '../../lib/kits.mjs';
 // @ts-ignore
 import { mapNotification, partitionOrderItems, snipcartAuth } from '../../lib/digitalMapOrder.mjs';
 
@@ -56,14 +56,8 @@ async function resolveSyncVariant(
   const variants = (detail.sync_variants || []).filter((v: any) => !v.is_ignored);
   if (!variants.length) return null;
   const productName = detail.sync_product?.name || '';
-  const eq = (a: string, b: string | null) => !!b && (a || '').toLowerCase() === b.toLowerCase();
-  let variant: any = null;
-  // Most specific first: colour + size, then size, then colour, then first.
-  if (size && color) variant = variants.find((v: any) => eq(v.size, size) && eq(v.color, color));
-  if (!variant && size) variant = variants.find((v: any) => eq(v.size, size));
-  if (!variant && color) variant = variants.find((v: any) => eq(v.color, color));
-  if (!variant) variant = variants[0]; // single-variant product, or nothing matched
-  return { variant, productName };
+  // Colour matches a variant's colourway tag when it has one (see kits.mjs).
+  return { variant: pickVariant(variants, size, color), productName };
 }
 
 async function validateSnipcart(token: string): Promise<boolean> {

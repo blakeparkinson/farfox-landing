@@ -19,6 +19,7 @@
  */
 import { writeFileSync, mkdirSync, existsSync, readdirSync, copyFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { variantColor, variantColorway } from '../src/lib/kits.mjs';
 
 const TOKEN = process.env.PRINTFUL_TOKEN;
 const STORE = process.env.PRINTFUL_STORE_ID || '18292625';
@@ -84,13 +85,14 @@ async function main() {
       'Heather Navy':'#303643','True Royal':'#01408d','Team Purple':'#230f46',
     };
     const DARKISH = new Set(['Black','Navy','Maroon','Forest','Heather Navy','True Royal','Team Purple','Heather Midnight Navy']);
-    const colorNames = [...new Set(variants.map((v) => v.color).filter(Boolean))];
+    const colorNames = [...new Set(variants.map((v) => variantColor(v)).filter(Boolean))];
     colorNames.sort((a, b) => (DARKISH.has(a) ? 1 : 0) - (DARKISH.has(b) ? 1 : 0));
     const colorSlug = (s) => s.toLowerCase().replace(/ /g, '-');
     const colors = colorNames.map((name) => {
       const file = `${p.id}-${colorSlug(name)}.png`;
       const hasImg = existsSync(join(COLORS_DIR, file));
-      return { name, hex: COLOR_HEX[name] || '#cccccc', image: hasImg ? `/shop/colors/${file}` : null };
+      const colorwayHex = variants.map(variantColorway).find((c) => c?.label === name)?.hex;
+      return { name, hex: COLOR_HEX[name] || colorwayHex || '#cccccc', image: hasImg ? `/shop/colors/${file}` : null };
     });
     // If we have per-colour images, use the first colour's image as the card default.
     const firstColorImg = colors.find((c) => c.image)?.image;
