@@ -38,7 +38,7 @@ type Product = {
   image: string;
   back?: string | null;
   sizes?: string[];
-  colors?: { name: string; hex: string }[];
+  colors?: { name: string; hex: string; image?: string | null; back?: string | null }[];
 };
 
 // Catalog is generated from Printful at build time (scripts/sync-catalog.mjs):
@@ -191,6 +191,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
                       data-product={p.id}
                       data-color={c.name}
                       data-image={c.image || p.image}
+                      data-back={c.back || p.back || undefined}
                       data-selected={i === 0 ? 'true' : 'false'}
                       title={c.name}
                       aria-label={c.name}
@@ -338,8 +339,18 @@ const grouped = [...CATS.map((c) => c.title), 'More']
             if (hidden) hidden.value = name;
             const label = document.getElementById(`color-label-${pid}`);
             if (label) label.textContent = name;
+            // Point both view buttons at this colour, then show whichever view is active.
+            const front = sw.getAttribute('data-image');
+            const back = sw.getAttribute('data-back');
+            let showingBack = false;
+            document.querySelectorAll(`.view-btn[data-product="${pid}"]`).forEach((b) => {
+              const isBack = (b.textContent || '').trim().toLowerCase() === 'back';
+              const view = isBack ? back : front;
+              if (view) b.setAttribute('data-view', view);
+              if (isBack && b.getAttribute('data-active') === 'true') showingBack = true;
+            });
             const img = document.getElementById(`img-${pid}`);
-            const src = sw.getAttribute('data-image');
+            const src = showingBack ? (personalizedBack(pid) || back || front) : front;
             if (img && src && img.getAttribute('src') !== src) {
               img.style.opacity = '0';
               const swap = new Image();
