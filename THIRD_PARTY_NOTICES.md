@@ -28,11 +28,11 @@ This project includes third-party material under the licences below.
 
 ---
 
-## Fonts: Uncial Antiqua and EB Garamond
+## Fonts: IM Fell French Canon and EB Garamond
 
 - **Source:** Google Fonts, fetched at build time by `scripts/make-les-separes.mjs`
 - **Licence:** SIL Open Font License 1.1 (https://openfontlicense.org)
-- **Used in:** the "Far Fox" wordmark (Uncial Antiqua) and the poem and LDFC shield (EB Garamond), rendered into the Les Séparés print files. The fonts themselves are not redistributed.
+- **Used in:** the "Far Fox" wordmark, inside label and sleeve postmark (IM Fell French Canon, by Igino Marini after the Fell types) and the poem (EB Garamond), rendered into the Les Séparés print files. The fonts themselves are not redistributed.
 
 ---
 
