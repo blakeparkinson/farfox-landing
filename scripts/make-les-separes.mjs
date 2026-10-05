@@ -1,5 +1,5 @@
 /**
- * Les Séparés: a heritage-style Long Distance FC jersey in three colourways.
+ * Les Séparés: a heritage-style Long Distance FC jersey in five colourways.
  *
  * Wide picture stripes in a two-tone print, cream stripes set with Marceline
  * Desbordes-Valmore's "Les Séparés" in French, "Far Fox" across the chest and the
@@ -32,9 +32,12 @@ const JPEG_QUALITY = 90;
 // toneCap/toneGamma set how far the pictures reach toward hi: lower and steeper keeps
 // pale paper mid-toned, so the picture stripes stay darker than the cream ones.
 const PALETTES = {
-  night: { dark: '#21182B', hi: '#FFB2C6', cream: '#302239', ink: '#FFB2C6', mark: '#FFB2C6', cut: '#21182B', word: '#FFB2C6', wordStroke: '#21182B', toneCap: 0.86, toneGamma: 0.9 },
+  // Night's crest is cream outlined in the dark: in pink it vanished into the pink pictures.
+  night: { dark: '#21182B', hi: '#FFB2C6', cream: '#302239', ink: '#FFB2C6', mark: '#FFF5F0', markStroke: '#21182B', cut: '#21182B', word: '#FFB2C6', wordStroke: '#21182B', toneCap: 0.86, toneGamma: 0.9 },
   pink: { dark: '#8E2443', hi: '#FFD3DC', cream: '#FFF5F0', ink: '#8E2443', mark: '#2D1B4E', cut: '#FFF5F0', word: '#2D1B4E', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
   plum: { dark: '#2C163E', hi: '#EBC07A', cream: '#F6EDE4', ink: '#2C163E', mark: '#D9B26A', cut: '#2C163E', word: '#2C163E', wordStroke: '#F6EDE4', toneCap: 0.7, toneGamma: 1.35 },
+  lavender: { dark: '#3F2378', hi: '#E4CCFF', cream: '#FFF5F0', ink: '#6B5B7B', mark: '#FF9A5C', cut: '#3F2378', word: '#3F2378', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
+  raspberry: { dark: '#5A1B36', hi: '#FFC2A3', cream: '#FFF5F0', ink: '#963655', mark: '#FF9A5C', cut: '#5A1B36', word: '#5A1B36', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
 };
 const BRAND = { pink: '#FF6B8A', purple: '#B76CFD' };
 
@@ -182,7 +185,7 @@ async function photoStripes(all, dir, seed, palette, heroPhoto = null) {
 function foxMark(cx, cy, w, p) {
   const s = w / 300;
   return `<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">
-    <polygon points="25,0 100,88 200,88 275,0 300,190 150,306 0,190" fill="${p.mark}"/>
+    <polygon points="25,0 100,88 200,88 275,0 300,190 150,306 0,190" fill="${p.mark}"${p.markStroke ? ` stroke="${p.markStroke}" stroke-width="10" stroke-linejoin="round"` : ''}/>
     <polygon points="35,30 30,95 85,85" fill="${p.cut}"/><polygon points="265,30 270,95 215,85" fill="${p.cut}"/>
     <polygon points="72,140 125,152 120,175 70,162" fill="${p.cut}"/><polygon points="228,140 175,152 180,175 230,162" fill="${p.cut}"/>
     <polygon points="88,196 212,196 150,306" fill="none" stroke="${p.cut}" stroke-width="6"/><polygon points="137,226 163,226 150,248" fill="${p.cut}"/></g>`;
