@@ -91,7 +91,7 @@ const insideLabel = () => `<svg xmlns="http://www.w3.org/2000/svg" width="${LABE
 // Front: the sett's mirror point sits on the zip line so both halves match.
 const halfLen = HALF_SETT.reduce((s, [, w]) => s + w, 0);
 const frontOffset = halfLen - PANEL.w / 2;
-const PATCH_AT = { left: 2850, top: 1350, w: 820 }; // wearer's left chest
+const PATCH_AT = { left: 2780, top: 2250, w: 820 }; // wearer's left chest
 const front = await (await plaid(PANEL.w, PANEL.h, frontOffset)).composite([{ input: svgPng(chestPatch(), PATCH_AT.w), left: PATCH_AT.left, top: PATCH_AT.top }]).jpeg({ quality: 90, mozjpeg: true }).toBuffer();
 await writeFile(OUT + 'flannel-front.jpg', front);
 await writeFile(OUT + 'flannel-back.jpg', await (await plaid(PANEL.w, PANEL.h, frontOffset)).jpeg({ quality: 90, mozjpeg: true }).toBuffer());
