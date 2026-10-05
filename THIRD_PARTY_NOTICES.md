@@ -2,11 +2,20 @@
 
 This project includes third-party material under the licences below.
 
-## NASA imagery: Les Séparés kit photographs
+## Art Institute of Chicago: Les Séparés front artworks
 
-- **Source:** NASA Image and Video Library, https://images.nasa.gov. Front: LRC-1967-B701_P-04825, art002e021278, as11-40-5878, as11-40-5880, as11-44-6551, as15-88-11969, as15-97-13160, as16-120-19187, as16-120-19242, as16-121-19407, as17-145-22183, as17-148-22727, as17-152-23279, as17-152-23311, 6900540, 6901000. Back: art001e001712, iss036e036607, iss037e017170, iss040e092688, iss057e023128, iss058e002206, iss063e002730, iss064e002258, iss066e024016, iss066e108216, iss068e021122, iss070e062746, iss070e091714, iss071e082698, iss072e159172, iss074e0603582
-- **Licence:** NASA material is generally not subject to copyright in the United States (https://www.nasa.gov/nasa-brand-center/images-and-media/). No NASA logos or insignia are used, and nothing implies NASA endorsement.
-- **Used in:** the Les Séparés soccer kit (`public/shop/designs/les-separes/`), from `scripts/assets/les-separes/` via `scripts/make-les-separes.mjs`
+- **Source:** Art Institute of Chicago open access, https://www.artic.edu/open-access. Artwork IDs: 16571 (Claude Monet, Arrival of the Normandy Train, Gare Saint-Lazare (1877)); 39496 (Alfred Stevens, At the Railway Station (c. 1874)); 13206 (James McNeill Whistler, Railway-Station, Voves (1888)); 28792 (Joseph Pennell, Railway Station, Pittsburgh (1909)); 104146 (Joseph Pennell, The Elinor Cross, in Front of Charing Cross Railway Station (1906)); 155215 (Richard Parkes Bonington, Boats in a Harbor (c. 1824)); 152747 (Martin Johnson Heade, York Harbor, Coast of Maine (1877)); 121377 (Arthur Wesley Dow, Boats at Rest (c. 1895)); 81540 (Claude Monet, The Departure of the Boats, Étretat (1885)); 30361 (Johan Barthold Jongkind, Entrance to the Port of Honfleur (1863–64)); 187703 (Eugène Louis Boudin, Seaside, Port of Honfleur (c. 1860)); 32353 (Utagawa Yoshitora, Picture of Steam Locomotives Traveling (1870)); 12533 (Jean Honoré Fragonard, The Departure by Coach (c. 1780–89)); 117443 (Edwin Edwards, Boats in a Harbor)
+- **Licence:** public domain artworks, images released under CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+- **Used in:** the front of the Les Séparés kit (`public/shop/designs/les-separes/*-front.jpg`), from `scripts/assets/les-separes/front/` via `scripts/make-les-separes.mjs`
+- **Modified:** yes. Cropped, converted to greyscale and printed in two tones per colourway.
+
+---
+
+## Smithsonian Open Access: Les Séparés back letters and covers
+
+- **Source:** Smithsonian Open Access (National Postal Museum and National Museum of American History), https://www.si.edu/openaccess. Media IDs: NPM-2003_2019_2_2, NPM-2003_2019_2_1a, NMAH-2003-25157, NPM-2005_2005_103a, NPM-2004_2004_28a, NPM-1998_2019_2a, NPM-1992_2053_01, NPM-1995_2049_21, NPM-2004_2004_47a, NPM-2004_2004_50a, NPM-2005_2005_111a, NPM-2004_2004_29a, NPM-1995_2049_1, NPM-2004_2004_52a, NPM-1982_0157_696z, NPM-1982_0157_717
+- **Licence:** CC0 1.0
+- **Used in:** the back of the Les Séparés kit (`public/shop/designs/les-separes/*-back.jpg`), from `scripts/assets/les-separes/back/`
 - **Modified:** yes. Cropped, converted to greyscale and printed in two tones per colourway.
 
 ---
