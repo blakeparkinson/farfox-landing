@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03T15:03:23.295Z",
+  "generatedAt": "2026-10-05T13:36:21.086Z",
   "products": [
     {
       "id": "477663642",
@@ -36,24 +36,6 @@
           "hex": "#2D1B4E",
           "image": "/shop/colors/477663642-plum.png",
           "back": "/shop/backs/477663642-plum.png"
-        },
-        {
-          "name": "Raspberry",
-          "hex": "#963655",
-          "image": "/shop/colors/477663642-raspberry.png",
-          "back": "/shop/backs/477663642-raspberry.png"
-        },
-        {
-          "name": "Fox Orange",
-          "hex": "#FF9A5C",
-          "image": "/shop/colors/477663642-fox-orange.png",
-          "back": "/shop/backs/477663642-fox-orange.png"
-        },
-        {
-          "name": "Fox Purple",
-          "hex": "#B76CFD",
-          "image": "/shop/colors/477663642-fox-purple.png",
-          "back": "/shop/backs/477663642-fox-purple.png"
         }
       ]
     },
