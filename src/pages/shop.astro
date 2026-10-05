@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import catalog from '../data/catalog.json';
+// Optional one-line story per product, keyed by Printful sync product id.
+import stories from '../data/product-stories.json';
 import { kitSlugForName } from '../lib/kits.mjs';
 
 /**
@@ -175,6 +177,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
               <h2 class="font-800 text-lg leading-tight">{p.name}</h2>
               <span class="font-900 text-fox-pink whitespace-nowrap">{fmt(p.price)}</span>
             </div>
+            {stories[p.id] && <p class="text-sm leading-snug text-fox-text-light mb-3">{stories[p.id]}</p>}
             <div class="flex-1"></div>
 
             {p.colors && p.colors.length > 0 && (
