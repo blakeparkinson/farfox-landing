@@ -34,7 +34,7 @@ const JPEG_QUALITY = 90;
 const PALETTES = {
   night: { dark: '#21182B', hi: '#FFB2C6', cream: '#302239', ink: '#FFB2C6', mark: '#FFB2C6', cut: '#21182B', word: '#FFB2C6', wordStroke: '#21182B', toneCap: 0.86, toneGamma: 0.9 },
   pink: { dark: '#8E2443', hi: '#FFD3DC', cream: '#FFF5F0', ink: '#8E2443', mark: '#2D1B4E', cut: '#FFF5F0', word: '#2D1B4E', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
-  plum: { dark: '#2C163E', hi: '#DEBA80', cream: '#F6EDE4', ink: '#2C163E', mark: '#D9B26A', cut: '#2C163E', word: '#2C163E', wordStroke: '#F6EDE4', toneCap: 0.62, toneGamma: 1.5 },
+  plum: { dark: '#2C163E', hi: '#EBC07A', cream: '#F6EDE4', ink: '#2C163E', mark: '#D9B26A', cut: '#2C163E', word: '#2C163E', wordStroke: '#F6EDE4', toneCap: 0.7, toneGamma: 1.35 },
 };
 const BRAND = { pink: '#FF6B8A', purple: '#B76CFD' };
 
@@ -43,6 +43,12 @@ const STRIPE = { photo: 620, cream: 320, centre: 3000 };
 const GRAVITIES = ['centre', 'north', 'south', 'east', 'west', 'entropy', 'attention'];
 const SEED = { front: 20261003, back: 20261004 };
 const CUFF = { accentTop: 3980, accentHeight: 40, bandTop: 4040 };
+const WORDMARK = { baseline: 3500, size: 500 };
+// The one picture people know, pinned to the sternum stripe just under the wordmark.
+const HERO = { photo: 'aic-16571.jpg', top: 3600, height: 1150 };
+// Sleeve postmark: the visible sleeve band is file y ≈ 1640-4360, so this sits on the outer arm above the cuff.
+const POSTMARK = { x: 3000, y: 3050, r: 360 };
+const MIN_TILE = 320;
 // Printful's inside label is 188 × 75 px at 150 dpi; drawn at 8× so the text stays crisp.
 const LABEL = { w: 188 * 8, h: 75 * 8 };
 
@@ -60,7 +66,7 @@ const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/'/g, 
 const rgbOf = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
 
 async function loadFonts() {
-  const fonts = [['uncial', 'Uncial+Antiqua'], ['garamond', 'EB+Garamond:wght@500'], ['garamond-italic', 'EB+Garamond:ital,wght@1,500']];
+  const fonts = [['fell', 'IM+Fell+French+Canon'], ['fell-italic', 'IM+Fell+French+Canon:ital@1'], ['garamond', 'EB+Garamond:wght@500'], ['garamond-italic', 'EB+Garamond:ital,wght@1,500']];
   return Promise.all(fonts.map(async ([family, query]) => {
     const css = await fetch(`https://fonts.googleapis.com/css2?family=${query}&display=swap`, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then((r) => r.text());
     const file = join(tmpdir(), `farfox-les-separes-${family}.ttf`);
@@ -142,18 +148,27 @@ function creamStripes(all, palette, start, prefix) {
 }
 
 /** Photo stripes: each column shuffles its own order and never repeats its left neighbour's photo at the same height. */
-async function photoStripes(all, dir, seed, palette) {
+async function photoStripes(all, dir, seed, palette, heroPhoto = null) {
   const { readdir } = await import('node:fs/promises');
   const photos = (await readdir(dir)).filter((f) => f.endsWith('.jpg')).sort();
   const rand = rng(seed);
   const placed = [];
   let out = '';
   for (const [k, s] of all.filter((c) => c.kind === 'photo').entries()) {
+    const hero = heroPhoto && s.x + s.w / 2 === STRIPE.centre ? HERO : null;
     let y = -Math.floor(rand() * 900), prev = null;
     while (y < D) {
-      const h = 640 + Math.floor(rand() * 620);
+      if (hero && y === hero.top) {
+        out += `<image href="${await twoTone(join(dir, hero.photo), s.w, hero.height, 0, palette)}" x="${s.x}" y="${y}" width="${s.w}" height="${hero.height}" preserveAspectRatio="none"/>`;
+        placed.push({ k, y, h: hero.height, photo: hero.photo });
+        prev = hero.photo; y += hero.height;
+        continue;
+      }
+      let h = 640 + Math.floor(rand() * 620);
+      // Tiles above the hero stop at its top edge (a sliver too thin to read stretches the tile before it instead).
+      if (hero && y < hero.top && y + h > hero.top - MIN_TILE) h = hero.top - y;
       const beside = placed.filter((p) => p.k === k - 1 && p.y < y + h && p.y + p.h > y).map((p) => p.photo);
-      const choices = photos.filter((p) => p !== prev && !beside.includes(p));
+      const choices = photos.filter((p) => p !== prev && p !== heroPhoto && !beside.includes(p));
       const photo = choices[Math.floor(rand() * choices.length)];
       out += `<image href="${await twoTone(join(dir, photo), s.w, h, Math.floor(rand() * GRAVITIES.length), palette)}" x="${s.x}" y="${y}" width="${s.w}" height="${h}" preserveAspectRatio="none"/>`;
       placed.push({ k, y, h, photo });
@@ -173,13 +188,15 @@ function foxMark(cx, cy, w, p) {
     <polygon points="88,196 212,196 150,306" fill="none" stroke="${p.cut}" stroke-width="6"/><polygon points="137,226 163,226 150,248" fill="${p.cut}"/></g>`;
 }
 
-const wordmark = (p) => `<text x="3000" y="3520" text-anchor="middle" font-family="Uncial Antiqua" font-size="440" fill="${p.word}" stroke="${p.wordStroke}" stroke-width="16" paint-order="stroke">Far Fox</text>`;
+// IM Fell French Canon: a revival of 17th-century French type, in keeping with the poem and the pictures.
+const WORDMARK_FONT = 'IM FELL French Canon';
+const wordmark = (p) => `<text x="3000" y="${WORDMARK.baseline}" text-anchor="middle" font-family="${WORDMARK_FONT}" font-size="${WORDMARK.size}" fill="${p.word}" stroke="${p.wordStroke}" stroke-width="28" stroke-linejoin="round" paint-order="stroke">Far Fox</text>`;
 const svg = (body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${D}" height="${D}" viewBox="0 0 ${D} ${D}">
   <defs><linearGradient id="brand" x1="0" x2="1"><stop offset="0" stop-color="${BRAND.pink}"/><stop offset="1" stop-color="${BRAND.purple}"/></linearGradient></defs>${body}</svg>`;
 
 async function front(p) {
   const all = stripes();
-  return svg((await photoStripes(all, FRONT_PHOTOS, SEED.front, p)) + creamStripes(all, p, POEM_START.front, 'f')
+  return svg((await photoStripes(all, FRONT_PHOTOS, SEED.front, p, HERO.photo)) + creamStripes(all, p, POEM_START.front, 'f')
     + wordmark(p) + foxMark(CREST.x, CREST.y, CREST.w, p));
 }
 
@@ -188,14 +205,34 @@ async function back(p) {
   return svg((await photoStripes(all, BACK_PHOTOS, SEED.back, p)) + creamStripes(all, p, POEM_START.back, 'b'));
 }
 
-/** Plain cream sleeves (stripes cannot line up across a set-in sleeve), a pink-to-purple accent, dark cuff. */
-const sleeve = (p) => svg(`<rect width="${D}" height="${D}" fill="${p.cream}"/>
+/** A circular postal cancellation: club name round the top, "poste restante" (mail held for
+ *  collection) round the bottom, the kit name across the middle, and wavy cancel lines. */
+function postmark({ x, y, r }, p) {
+  const ink = `fill="none" stroke="${p.ink}"`;
+  const arc = (id, radius, sweepTop) => `<path id="${id}" d="M ${x - radius} ${y} A ${radius} ${radius} 0 0 ${sweepTop ? 1 : 0} ${x + radius} ${y}" fill="none"/>`;
+  let waves = '';
+  for (let i = -2; i <= 2; i++) {
+    const wy = y + i * 70, x0 = x + r + 60;
+    waves += `<path d="M ${x0} ${wy} q 60 -36 120 0 t 120 0 t 120 0 t 120 0" ${ink} stroke-width="16" stroke-linecap="round"/>`;
+  }
+  return `<g opacity="0.9">
+    <defs>${arc('pm-top', r - 118, true)}${arc('pm-bottom', r - 40, false)}</defs>
+    <circle cx="${x}" cy="${y}" r="${r}" ${ink} stroke-width="20"/><circle cx="${x}" cy="${y}" r="${r - 150}" ${ink} stroke-width="10"/>
+    <text font-family="${WORDMARK_FONT}" font-size="64" letter-spacing="6" fill="${p.ink}" text-anchor="middle"><textPath href="#pm-top" startOffset="50%">LONG DISTANCE FC</textPath></text>
+    <text font-family="${WORDMARK_FONT}" font-size="60" letter-spacing="6" fill="${p.ink}" text-anchor="middle"><textPath href="#pm-bottom" startOffset="50%">POSTE RESTANTE</textPath></text>
+    <text x="${x}" y="${y + 4}" font-family="${WORDMARK_FONT}" font-style="italic" font-size="68" fill="${p.ink}" text-anchor="middle">Les Séparés</text>
+    <text x="${x}" y="${y + 74}" font-family="${WORDMARK_FONT}" font-size="48" letter-spacing="8" fill="${p.ink}" text-anchor="middle">FAR FOX</text>
+    ${waves}</g>`;
+}
+
+/** Plain cream sleeves (stripes cannot line up across a set-in sleeve) with a postmark, a pink-to-purple accent, dark cuff. */
+const sleeve = (p) => svg(`<rect width="${D}" height="${D}" fill="${p.cream}"/>${postmark(POSTMARK, p)}
   <rect x="0" y="${CUFF.accentTop}" width="${D}" height="${CUFF.accentHeight}" fill="url(#brand)"/>
   <rect x="0" y="${CUFF.bandTop}" width="${D}" height="${D - CUFF.bandTop}" fill="${p.dark}"/>`);
 
 /** Inside neck label: "Don't write!" from the poem, answered with "…but call me." */
 const insideLabel = (p) => `<svg xmlns="http://www.w3.org/2000/svg" width="${LABEL.w}" height="${LABEL.h}" viewBox="0 0 ${LABEL.w} ${LABEL.h}">
-  <text x="${LABEL.w / 2}" y="290" text-anchor="middle" font-family="Uncial Antiqua" font-size="200" fill="${p.dark}">N’écris pas !</text>
+  <text x="${LABEL.w / 2}" y="290" text-anchor="middle" font-family="${WORDMARK_FONT}" font-size="230" fill="${p.dark}">N’écris pas !</text>
   <text x="${LABEL.w / 2}" y="500" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="140" fill="${p.dark}">…mais appelle-moi.</text></svg>`;
 
 const args = process.argv.slice(2);
