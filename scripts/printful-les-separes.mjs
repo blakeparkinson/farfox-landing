@@ -53,7 +53,7 @@ async function pf(path, init = {}, attempt = 0) {
 
 const PNG_PARTS = new Set(['sleeve', 'label']);
 // Printful keeps the copy it first downloaded from a URL; bump this when the files are rebuilt in place.
-const FILE_REVISION = 2;
+const FILE_REVISION = 3;
 const fileUrl = (colorway, part) => `${BASE}/${colorway}-${part}.${PNG_PARTS.has(part) ? 'png' : 'jpg'}?v=${FILE_REVISION}`;
 const filesFor = (colorway) => [
   { type: 'default', url: fileUrl(colorway, 'front') },

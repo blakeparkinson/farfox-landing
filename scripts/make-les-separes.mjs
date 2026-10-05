@@ -1,10 +1,11 @@
 /**
  * Les Séparés: a heritage-style Long Distance FC jersey in three colourways.
  *
- * Wide photo stripes of Apollo / ISS imagery in a two-tone print, cream stripes set
- * with Marceline Desbordes-Valmore's "Les Séparés" in French, and "Far Fox" across
- * the chest and the Far Fox crest as the only mark. The back carries the collage round with its own photos; there is no
- * number, so the product is not personalizable.
+ * Wide picture stripes in a two-tone print, cream stripes set with Marceline
+ * Desbordes-Valmore's "Les Séparés" in French, "Far Fox" across the chest and the
+ * Far Fox crest as the only mark. The front is leaving (19th-century stations,
+ * harbours and departures, Art Institute of Chicago); the back is writing (letters,
+ * covers and telegrams, Smithsonian). There is no number, so it is not personalizable.
  *
  * Writes 6000×6000 Printful all-over-print files to public/shop/designs/les-separes/:
  *   <colourway>-front.jpg, <colourway>-back.jpg (photo art, JPEG keeps them ~6 MB)
@@ -26,19 +27,19 @@ const FRONT_PHOTOS = new URL('./assets/les-separes/front/', import.meta.url).pat
 const BACK_PHOTOS = new URL('./assets/les-separes/back/', import.meta.url).pathname;
 const JPEG_QUALITY = 90;
 
-// Palettes from src/styles/global.css. dark: photo shadows, trim, cut-outs; hi: photo
-// highlights; cream: light stripes; ink: poem; mark: crests; word/wordStroke: "Far Fox".
+// Palettes from src/styles/global.css. dark: picture shadows, trim, cut-outs; hi: picture
+// highlights; cream: light stripes; ink: poem; mark: crest; word/wordStroke: "Far Fox".
+// toneCap/toneGamma set how far the pictures reach toward hi: lower and steeper keeps
+// pale paper mid-toned, so the picture stripes stay darker than the cream ones.
 const PALETTES = {
-  night: { dark: '#21182B', hi: '#FFB2C6', cream: '#302239', ink: '#FFB2C6', mark: '#FFB2C6', cut: '#21182B', word: '#FFB2C6', wordStroke: '#21182B' },
-  pink: { dark: '#8E2443', hi: '#FFD3DC', cream: '#FFF5F0', ink: '#8E2443', mark: '#2D1B4E', cut: '#FFF5F0', word: '#2D1B4E', wordStroke: '#FFF5F0' },
-  plum: { dark: '#2C163E', hi: '#DEBA80', cream: '#F6EDE4', ink: '#2C163E', mark: '#D9B26A', cut: '#2C163E', word: '#E8CC92', wordStroke: '#2C163E' },
+  night: { dark: '#21182B', hi: '#FFB2C6', cream: '#302239', ink: '#FFB2C6', mark: '#FFB2C6', cut: '#21182B', word: '#FFB2C6', wordStroke: '#21182B', toneCap: 0.86, toneGamma: 0.9 },
+  pink: { dark: '#8E2443', hi: '#FFD3DC', cream: '#FFF5F0', ink: '#8E2443', mark: '#2D1B4E', cut: '#FFF5F0', word: '#2D1B4E', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
+  plum: { dark: '#2C163E', hi: '#DEBA80', cream: '#F6EDE4', ink: '#2C163E', mark: '#D9B26A', cut: '#2C163E', word: '#2C163E', wordStroke: '#F6EDE4', toneCap: 0.62, toneGamma: 1.5 },
 };
 const BRAND = { pink: '#FF6B8A', purple: '#B76CFD' };
 
 // Photo stripes wide enough that both side seams (x 1850 and 4230) land inside one.
 const STRIPE = { photo: 620, cream: 320, centre: 3000 };
-// Highlights stop short of the light end so blown-out sky never prints as a blank patch.
-const HIGHLIGHT_CAP = 0.86;
 const GRAVITIES = ['centre', 'north', 'south', 'east', 'west', 'entropy', 'attention'];
 const SEED = { front: 20261003, back: 20261004 };
 const CUFF = { accentTop: 3980, accentHeight: 40, bandTop: 4040 };
@@ -91,7 +92,7 @@ async function twoTone(path, w, h, pick, palette) {
   const [lo, hi] = [rgbOf(palette.dark), rgbOf(palette.hi)];
   const out = Buffer.alloc(info.width * info.height * 3);
   for (let i = 0; i < info.width * info.height; i++) {
-    const t = HIGHLIGHT_CAP * (data[i * info.channels] / 255) ** 0.9;
+    const t = palette.toneCap * (data[i * info.channels] / 255) ** palette.toneGamma;
     for (let c = 0; c < 3; c++) out[i * 3 + c] = Math.round(lo[c] + (hi[c] - lo[c]) * t);
   }
   const png = await sharp(out, { raw: { width: info.width, height: info.height, channels: 3 } }).png().toBuffer();
