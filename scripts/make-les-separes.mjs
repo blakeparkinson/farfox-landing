@@ -32,12 +32,14 @@ const JPEG_QUALITY = 90;
 // toneCap/toneGamma set how far the pictures reach toward hi: lower and steeper keeps
 // pale paper mid-toned, so the picture stripes stay darker than the cream ones.
 const PALETTES = {
-  // Night's crest is cream outlined in the dark: in pink it vanished into the pink pictures.
+  // Every crest is outlined in the opposite tone so it reads on light and dark tiles alike;
+  // Night's is cream because in pink it vanished into the pink pictures.
   night: { dark: '#21182B', hi: '#FFB2C6', cream: '#302239', ink: '#FFB2C6', mark: '#FFF5F0', markStroke: '#21182B', cut: '#21182B', word: '#FFB2C6', wordStroke: '#21182B', toneCap: 0.86, toneGamma: 0.9 },
-  pink: { dark: '#8E2443', hi: '#FFD3DC', cream: '#FFF5F0', ink: '#8E2443', mark: '#2D1B4E', cut: '#FFF5F0', word: '#2D1B4E', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
-  plum: { dark: '#2C163E', hi: '#EBC07A', cream: '#F6EDE4', ink: '#2C163E', mark: '#D9B26A', cut: '#2C163E', word: '#2C163E', wordStroke: '#F6EDE4', toneCap: 0.7, toneGamma: 1.35 },
-  lavender: { dark: '#3F2378', hi: '#E4CCFF', cream: '#FFF5F0', ink: '#6B5B7B', mark: '#FF9A5C', cut: '#3F2378', word: '#3F2378', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
-  raspberry: { dark: '#5A1B36', hi: '#FFC2A3', cream: '#FFF5F0', ink: '#963655', mark: '#FF9A5C', cut: '#5A1B36', word: '#5A1B36', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
+  pink: { dark: '#8E2443', hi: '#FFD3DC', cream: '#FFF5F0', ink: '#8E2443', mark: '#2D1B4E', markStroke: '#FFF5F0', cut: '#FFF5F0', word: '#2D1B4E', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
+  plum: { dark: '#2C163E', hi: '#EBC07A', cream: '#F6EDE4', ink: '#2C163E', mark: '#D9B26A', markStroke: '#2C163E', cut: '#2C163E', word: '#2C163E', wordStroke: '#F6EDE4', toneCap: 0.7, toneGamma: 1.35 },
+  lavender: { dark: '#3F2378', hi: '#E4CCFF', cream: '#FFF5F0', ink: '#6B5B7B', mark: '#FF9A5C', markStroke: '#3F2378', cut: '#3F2378', word: '#3F2378', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
+  // Plum like Fox Pink's: orange sat too close to Raspberry's peach-toned pictures.
+  raspberry: { dark: '#5A1B36', hi: '#FFC2A3', cream: '#FFF5F0', ink: '#963655', mark: '#2D1B4E', markStroke: '#FFF5F0', cut: '#FFF5F0', word: '#5A1B36', wordStroke: '#FFF5F0', toneCap: 0.62, toneGamma: 1.5 },
 };
 const BRAND = { pink: '#FF6B8A', purple: '#B76CFD' };
 
