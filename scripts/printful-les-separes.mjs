@@ -7,6 +7,8 @@
  *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --create                # create the product
  *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --update-files --product <id> [--apply]
  *     points every variant of an existing product at the current files (dry run without --apply)
+ *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --add-missing --product <id> [--apply]
+ *     adds variants for colourways in kits.mjs LES_SEPARES that the product does not have yet
  *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --prune --product <id> [--apply]
  *     deletes variants whose colourway is no longer in kits.mjs LES_SEPARES
  *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --mockups --product <id>
@@ -53,7 +55,7 @@ async function pf(path, init = {}, attempt = 0) {
 
 const PNG_PARTS = new Set(['sleeve', 'label']);
 // Printful keeps the copy it first downloaded from a URL; bump this when the files are rebuilt in place.
-const FILE_REVISION = 4;
+const FILE_REVISION = 5;
 const fileUrl = (colorway, part) => `${BASE}/${colorway}-${part}.${PNG_PARTS.has(part) ? 'png' : 'jpg'}?v=${FILE_REVISION}`;
 const filesFor = (colorway) => [
   { type: 'default', url: fileUrl(colorway, 'front') },
@@ -152,6 +154,21 @@ async function updateFiles(productId) {
   if (!args.includes('--apply')) console.log('\nDry run only. Re-run with --apply to update Printful.');
 }
 
+/** Add the colourway × size variants a product is missing (a colourway added to LES_SEPARES). */
+async function addMissing(productId) {
+  await assertLive();
+  const have = new Set((await pf(`/store/products/${productId}`)).sync_variants.map((v) => v.external_id));
+  const missing = plannedVariants().filter((v) => !have.has(v.external_id));
+  console.log(`${missing.length} variants to add`);
+  for (const v of missing) {
+    console.log(`  ${v.external_id}`);
+    if (!args.includes('--apply')) continue;
+    await pf(`/store/products/${productId}/variants`, { method: 'POST', body: JSON.stringify(v) });
+    await sleep(600);
+  }
+  if (!args.includes('--apply')) console.log('\nDry run only. Re-run with --apply to add them.');
+}
+
 /** Delete variants tagged with a colourway the product no longer offers. */
 async function prune(productId) {
   const offered = new Set(LES_SEPARES.colorways.map((c) => c.key));
@@ -172,7 +189,9 @@ const productArg = () => {
   if (!id) throw new Error('this mode needs --product <sync product id>');
   return id;
 };
-if (args.includes('--prune')) {
+if (args.includes('--add-missing')) {
+  await addMissing(productArg());
+} else if (args.includes('--prune')) {
   await prune(productArg());
 } else if (args.includes('--update-files')) {
   await updateFiles(productArg());
