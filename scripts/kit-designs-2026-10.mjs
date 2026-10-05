@@ -409,6 +409,8 @@ function flyway() {
     front: svg(chevronField(0.14) + formation() + crest(CREST.x, CREST.y, CREST.w, 'gold'), bg),
     pattern: svg(chevronField(0.14) + pelican(3000, 3270, 2900, -8, FLYWAY.tonal, 0.32) + pelican(3000, 5180, 620, 0, FLYWAY.gold), bg),
     sleeve: svg(chevronField(0.14) + cuff(FLYWAY.gold, FLYWAY.band), bg),
+    // The back crest matches the gold front crest.
+    backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="306" viewBox="0 0 300 306">${crest(150, 153, 300, 'gold')}</svg>`,
   };
 }
 
@@ -430,6 +432,6 @@ export const BACKS = {
   otherhalfa: { pattern: 'kits-2026-10/sj-otherhalfa-pattern.png', crest: 'fox-crest.png', number: BLUSH, numberStroke: PLUM, name: BLUSH, nameStroke: PLUM },
   otherhalfb: { pattern: 'kits-2026-10/sj-otherhalfb-pattern.png', crest: 'fox-crest.png', number: BLUSH, numberStroke: PLUM, name: BLUSH, nameStroke: PLUM },
   morse: { pattern: 'kits-2026-10/sj-morse-pattern.png', crest: 'fox-crest.png', number: PINK, numberStroke: PLUM, name: PINK, nameStroke: PLUM },
-  flyway: { pattern: 'kits-2026-10/sj-flyway-pattern.png', crest: 'fox-crest.png', number: FLYWAY.gold, numberStroke: FLYWAY.ink, name: FLYWAY.gold, nameStroke: FLYWAY.ink },
+  flyway: { pattern: 'kits-2026-10/sj-flyway-pattern.png', crest: 'kits-2026-10/fox-crest-flyway.png', number: FLYWAY.gold, numberStroke: FLYWAY.ink, name: FLYWAY.gold, nameStroke: FLYWAY.ink },
   moose: { pattern: 'kits-2026-10/sj-moose-pattern.png', crest: 'fox-crest.png', number: '#F4ECE0', numberStroke: '#16151A', name: '#F4ECE0', nameStroke: '#16151A' },
 };

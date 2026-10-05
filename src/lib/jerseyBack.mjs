@@ -80,7 +80,7 @@ const KITS = {
     number: '#2D1B4E', numberStroke: '#FFF5F0', name: '#2D1B4E', nameStroke: '#FFF5F0',
   },
   flyway: {
-    pattern: 'kits-2026-10/sj-flyway-pattern.png', crest: 'fox-crest.png',
+    pattern: 'kits-2026-10/sj-flyway-pattern.png', crest: 'kits-2026-10/fox-crest-flyway.png',
     number: '#F4B600', numberStroke: '#200C3A', name: '#F4B600', nameStroke: '#200C3A',
   },
   // Retired 2026-09 (replaced by Flyway) — kept so in-flight orders still render.
