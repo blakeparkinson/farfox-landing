@@ -30,7 +30,8 @@ const variants = LES_SEPARES.colorways.flatMap(({ key }) => SIZES.map((size, i) 
 for (const { key, label } of LES_SEPARES.colorways) {
   for (const size of SIZES) assert.equal(pickVariant(variants, size, label).id, `${key}-${size}`, `${label} / ${size}`);
 }
-assert.equal(pickVariant(variants, 'M', 'fox purple').id, 'lavender-M', 'colour match ignores case');
+assert.equal(pickVariant(variants, 'M', 'fox pink').id, 'pink-M', 'colour match ignores case');
+assert.equal(variantColorway({ external_id: 'les-separes--lavender--M' }), null, 'a retired colourway is no longer offered');
 
 // Ordinary products behave as before.
 const tee = [{ id: 1, size: 'M', color: 'White' }, { id: 2, size: 'M', color: 'Black' }, { id: 3, size: 'L', color: 'Black' }];

@@ -1,9 +1,9 @@
 /**
- * Les Séparés: a heritage-style Long Distance FC jersey in six colourways.
+ * Les Séparés: a heritage-style Long Distance FC jersey in three colourways.
  *
  * Wide photo stripes of Apollo / ISS imagery in a two-tone print, cream stripes set
  * with Marceline Desbordes-Valmore's "Les Séparés" in French, and "Far Fox" across
- * the chest. The back carries the collage round with its own photos; there is no
+ * the chest and the Far Fox crest as the only mark. The back carries the collage round with its own photos; there is no
  * number, so the product is not personalizable.
  *
  * Writes 6000×6000 Printful all-over-print files to public/shop/designs/les-separes/:
@@ -32,9 +32,6 @@ const PALETTES = {
   night: { dark: '#21182B', hi: '#FFB2C6', cream: '#302239', ink: '#FFB2C6', mark: '#FFB2C6', cut: '#21182B', word: '#FFB2C6', wordStroke: '#21182B' },
   pink: { dark: '#8E2443', hi: '#FFD3DC', cream: '#FFF5F0', ink: '#8E2443', mark: '#2D1B4E', cut: '#FFF5F0', word: '#2D1B4E', wordStroke: '#FFF5F0' },
   plum: { dark: '#2C163E', hi: '#DEBA80', cream: '#F6EDE4', ink: '#2C163E', mark: '#D9B26A', cut: '#2C163E', word: '#E8CC92', wordStroke: '#2C163E' },
-  raspberry: { dark: '#5A1B36', hi: '#FFC2A3', cream: '#FFF5F0', ink: '#963655', mark: '#FF9A5C', cut: '#5A1B36', word: '#FFB2C6', wordStroke: '#5A1B36' },
-  orange: { dark: '#7A2E10', hi: '#FFD6AE', cream: '#FFF5F0', ink: '#7A2E10', mark: '#2D1B4E', cut: '#FFF5F0', word: '#2D1B4E', wordStroke: '#FFF5F0' },
-  lavender: { dark: '#3F2378', hi: '#E4CCFF', cream: '#FFF5F0', ink: '#6B5B7B', mark: '#FF9A5C', cut: '#3F2378', word: '#FF9A5C', wordStroke: '#3F2378' },
 };
 const BRAND = { pink: '#FF6B8A', purple: '#B76CFD' };
 
@@ -44,7 +41,6 @@ const STRIPE = { photo: 620, cream: 320, centre: 3000 };
 const HIGHLIGHT_CAP = 0.86;
 const GRAVITIES = ['centre', 'north', 'south', 'east', 'west', 'entropy', 'attention'];
 const SEED = { front: 20261003, back: 20261004 };
-const SHIELD = { x: 2450, y: 2420, w: 360 };
 const CUFF = { accentTop: 3980, accentHeight: 40, bandTop: 4040 };
 // Printful's inside label is 188 × 75 px at 150 dpi; drawn at 8× so the text stays crisp.
 const LABEL = { w: 188 * 8, h: 75 * 8 };
@@ -176,17 +172,6 @@ function foxMark(cx, cy, w, p) {
     <polygon points="88,196 212,196 150,306" fill="none" stroke="${p.cut}" stroke-width="6"/><polygon points="137,226 163,226 150,248" fill="${p.cut}"/></g>`;
 }
 
-/** LDFC shield: crescent moon and two stars, in the crest colour. */
-function shield(cx, cy, w, p) {
-  const s = w / 300;
-  return `<g transform="translate(${cx - w / 2} ${cy - 180 * s}) scale(${s})">
-    <path d="M10 10 H290 V170 C290 270 210 330 150 360 C90 330 10 270 10 170 Z" fill="${p.mark}"/>
-    <path d="M28 28 H272 V168 C272 254 202 306 150 336 C98 306 28 254 28 168 Z" fill="none" stroke="${p.cut}" stroke-width="5"/>
-    <text x="150" y="92" text-anchor="middle" font-family="EB Garamond" font-size="58" letter-spacing="8" fill="${p.cut}">LDFC</text>
-    <path d="M178 116 A 76 76 0 1 0 178 268 A 96 96 0 0 1 178 116 Z" fill="${p.cut}"/>
-    <circle cx="200" cy="160" r="8" fill="${p.cut}"/><circle cx="220" cy="206" r="6" fill="${p.cut}"/></g>`;
-}
-
 const wordmark = (p) => `<text x="3000" y="3520" text-anchor="middle" font-family="Uncial Antiqua" font-size="440" fill="${p.word}" stroke="${p.wordStroke}" stroke-width="16" paint-order="stroke">Far Fox</text>`;
 const svg = (body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${D}" height="${D}" viewBox="0 0 ${D} ${D}">
   <defs><linearGradient id="brand" x1="0" x2="1"><stop offset="0" stop-color="${BRAND.pink}"/><stop offset="1" stop-color="${BRAND.purple}"/></linearGradient></defs>${body}</svg>`;
@@ -194,7 +179,7 @@ const svg = (body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${D}" heig
 async function front(p) {
   const all = stripes();
   return svg((await photoStripes(all, FRONT_PHOTOS, SEED.front, p)) + creamStripes(all, p, POEM_START.front, 'f')
-    + wordmark(p) + foxMark(CREST.x, CREST.y, CREST.w, p) + shield(SHIELD.x, SHIELD.y, SHIELD.w, p));
+    + wordmark(p) + foxMark(CREST.x, CREST.y, CREST.w, p));
 }
 
 async function back(p) {

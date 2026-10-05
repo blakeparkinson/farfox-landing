@@ -4,7 +4,7 @@ This project includes third-party material under the licences below.
 
 ## NASA imagery: Les Séparés kit photographs
 
-- **Source:** NASA Image and Video Library, https://images.nasa.gov. Front: as08-14-2383, as11-40-5878, as11-40-5880, as11-44-6551, as16-120-19187, as16-120-19242, as16-121-19407, as17-148-22727, as17-152-23274, as17-152-23279, as17-152-23311, art002e021278, LRC-1967-B701_P-04825, 6900540, 6900556, 6901000. Back: art001e001712, art001e001822, as17-145-22254, as17-145-22287, as17-149-22857, iss036e036607, iss037e017170, iss040e092688, iss043e039312, iss062e082060, iss068e021122, iss069e091732, iss070e062746, iss071e256627, iss072e159172, iss074e0460378
+- **Source:** NASA Image and Video Library, https://images.nasa.gov. Front: LRC-1967-B701_P-04825, art002e021278, as11-40-5878, as11-40-5880, as11-44-6551, as15-88-11969, as15-97-13160, as16-120-19187, as16-120-19242, as16-121-19407, as17-145-22183, as17-148-22727, as17-152-23279, as17-152-23311, 6900540, 6901000. Back: art001e001712, iss036e036607, iss037e017170, iss040e092688, iss057e023128, iss058e002206, iss063e002730, iss064e002258, iss066e024016, iss066e108216, iss068e021122, iss070e062746, iss070e091714, iss071e082698, iss072e159172, iss074e0603582
 - **Licence:** NASA material is generally not subject to copyright in the United States (https://www.nasa.gov/nasa-brand-center/images-and-media/). No NASA logos or insignia are used, and nothing implies NASA endorsement.
 - **Used in:** the Les Séparés soccer kit (`public/shop/designs/les-separes/`), from `scripts/assets/les-separes/` via `scripts/make-les-separes.mjs`
 - **Modified:** yes. Cropped, converted to greyscale and printed in two tones per colourway.

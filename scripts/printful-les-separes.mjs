@@ -7,6 +7,8 @@
  *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --create                # create the product
  *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --update-files --product <id> [--apply]
  *     points every variant of an existing product at the current files (dry run without --apply)
+ *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --prune --product <id> [--apply]
+ *     deletes variants whose colourway is no longer in kits.mjs LES_SEPARES
  *   PRINTFUL_TOKEN=… node scripts/printful-les-separes.mjs --mockups --product <id>
  *     writes public/shop/colors/<id>-<colour>.png and public/shop/backs/<id>-<colour>.png per
  *     colourway, plus the default colourway's public/shop/mockups/<id>.png and backs/<id>.png
@@ -50,7 +52,9 @@ async function pf(path, init = {}, attempt = 0) {
 }
 
 const PNG_PARTS = new Set(['sleeve', 'label']);
-const fileUrl = (colorway, part) => `${BASE}/${colorway}-${part}.${PNG_PARTS.has(part) ? 'png' : 'jpg'}`;
+// Printful keeps the copy it first downloaded from a URL; bump this when the files are rebuilt in place.
+const FILE_REVISION = 2;
+const fileUrl = (colorway, part) => `${BASE}/${colorway}-${part}.${PNG_PARTS.has(part) ? 'png' : 'jpg'}?v=${FILE_REVISION}`;
 const filesFor = (colorway) => [
   { type: 'default', url: fileUrl(colorway, 'front') },
   { type: 'back', url: fileUrl(colorway, 'back') },
@@ -148,12 +152,29 @@ async function updateFiles(productId) {
   if (!args.includes('--apply')) console.log('\nDry run only. Re-run with --apply to update Printful.');
 }
 
+/** Delete variants tagged with a colourway the product no longer offers. */
+async function prune(productId) {
+  const offered = new Set(LES_SEPARES.colorways.map((c) => c.key));
+  const detail = await pf(`/store/products/${productId}`);
+  const dropped = detail.sync_variants.filter((v) => !offered.has(/^les-separes--([a-z0-9]+)--/.exec(v.external_id || '')?.[1]));
+  console.log(`${dropped.length} of ${detail.sync_variants.length} variants are for colourways no longer offered`);
+  for (const v of dropped) {
+    console.log(`  ${v.external_id}`);
+    if (!args.includes('--apply')) continue;
+    await pf(`/store/variants/${v.id}`, { method: 'DELETE' });
+    await sleep(600);
+  }
+  if (!args.includes('--apply')) console.log('\nDry run only. Re-run with --apply to delete them.');
+}
+
 const productArg = () => {
   const id = args.includes('--product') ? args[args.indexOf('--product') + 1] : null;
   if (!id) throw new Error('this mode needs --product <sync product id>');
   return id;
 };
-if (args.includes('--update-files')) {
+if (args.includes('--prune')) {
+  await prune(productArg());
+} else if (args.includes('--update-files')) {
   await updateFiles(productArg());
 } else if (args.includes('--mockups')) {
   await mockups(productArg());

@@ -48,16 +48,13 @@ export function backUrl(kit, name, number) {
 // product sold in several colourways tags each sync variant's external_id as
 // `<kit>--<colourway>--<size>`; the shop's colour picker and the order webhook read it.
 
-/** Les Séparés: one product, six colourways from the Far Fox palette. First is the default. */
+/** Les Séparés: one product, three colourways from the Far Fox palette. First is the default. */
 export const LES_SEPARES = {
   kit: 'les-separes',
   colorways: [
     { key: 'night', label: 'Night', hex: '#21182B' },
     { key: 'pink', label: 'Fox Pink', hex: '#FF6B8A' },
     { key: 'plum', label: 'Plum', hex: '#2D1B4E' },
-    { key: 'raspberry', label: 'Raspberry', hex: '#963655' },
-    { key: 'orange', label: 'Fox Orange', hex: '#FF9A5C' },
-    { key: 'lavender', label: 'Fox Purple', hex: '#B76CFD' },
   ],
 };
 const COLORWAY_KITS = { [LES_SEPARES.kit]: LES_SEPARES };
