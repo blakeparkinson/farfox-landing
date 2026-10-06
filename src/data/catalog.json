@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-06T21:12:55.368Z",
+  "generatedAt": "2026-10-06T21:18:28.734Z",
   "products": [
     {
       "id": "478761994",
@@ -25,31 +25,31 @@
         },
         {
           "name": "Butter",
-          "hex": "#cccccc",
+          "hex": "#ffe09e",
           "image": "/shop/colors/478761994-butter.png",
           "back": "/shop/backs/478761994-butter.png"
         },
         {
           "name": "Violet",
-          "hex": "#cccccc",
+          "hex": "#9a8ad2",
           "image": "/shop/colors/478761994-violet.png",
           "back": "/shop/backs/478761994-violet.png"
         },
         {
           "name": "Watermelon",
-          "hex": "#cccccc",
+          "hex": "#d15c68",
           "image": "/shop/colors/478761994-watermelon.png",
           "back": "/shop/backs/478761994-watermelon.png"
         },
         {
           "name": "True Navy",
-          "hex": "#cccccc",
+          "hex": "#424150",
           "image": "/shop/colors/478761994-true-navy.png",
           "back": "/shop/backs/478761994-true-navy.png"
         },
         {
           "name": "Berry",
-          "hex": "#cccccc",
+          "hex": "#8e5a7b",
           "image": "/shop/colors/478761994-berry.png",
           "back": "/shop/backs/478761994-berry.png"
         },
@@ -80,7 +80,7 @@
       "colors": [
         {
           "name": "Oatmeal Heather",
-          "hex": "#cccccc",
+          "hex": "#f7f2eb",
           "image": "/shop/colors/478740784-oatmeal-heather.png",
           "back": null
         },
