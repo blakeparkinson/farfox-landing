@@ -170,8 +170,26 @@ for (const tone of ['light', 'dark']) {
 }
 
 // 9) Pocket tee (Comfort Colors 6030): a FAR FOX P.D. sheriff's badge on the pocket; the back is Foxy's black-and-white
-// mugshot in front of a fox-sized height chart, holding a booking placard. One ink plus the photo, so it reads on every colour.
-const FOXY_BW = `data:image/png;base64,${(await sharp(`${REPO}/public/shop/designs/hearteyes-v2.png`).extract({ left: 650, top: 0, width: 1400, height: 1480 }).grayscale().linear(1.35, -78).png().toBuffer()).toString('base64')}`;
+// mugshot (hearts in pink) in front of a fox-sized height chart, holding a booking placard. One ink plus the photo, so it reads on every colour.
+// Black-and-white Foxy where the only colour left is the hearts she stole: her cheeks, and her eye hearts turned pink.
+const HEART_PINK = [248, 144, 160], EYE_BAND = [600, 840], CHEEK_TOP = 700, EYE_REACH = 70;
+async function heartsOnlyFoxy() {
+  const { data, info } = await sharp(`${REPO}/public/shop/designs/hearteyes-v2.png`).extract({ left: 650, top: 0, width: 1400, height: 1480 }).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const { width: W, height: H } = info, at = (x, y) => (y * W + x) * 4, out = Buffer.from(data);
+  const dark = (x, y) => x >= 0 && x < W && data[at(x, y) + 3] > 200 && data[at(x, y)] < 80 && data[at(x, y) + 1] < 80;
+  const darkWithin = (x, y, dx, dy) => { for (let d = 1; d <= EYE_REACH; d++) if (dark(x + dx * d, y + dy * d)) return true; return false; };
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = at(x, y), [r, g, b] = [data[i], data[i + 1], data[i + 2]];
+    const pink = r > 230 && g > 120 && g < 190 && b > 130 && b < 200, white = r > 235 && g > 235 && b > 225;
+    const eyeHeart = white && y > EYE_BAND[0] && y < EYE_BAND[1] && darkWithin(x, y, -1, 0) && darkWithin(x, y, 1, 0) && darkWithin(x, y, 0, -1) && darkWithin(x, y, 0, 1);
+    if (eyeHeart) { out[i] = HEART_PINK[0]; out[i + 1] = HEART_PINK[1]; out[i + 2] = HEART_PINK[2]; continue; }
+    if (pink && y > CHEEK_TOP) continue;
+    const grey = Math.max(0, Math.min(255, (0.299 * r + 0.587 * g + 0.114 * b) * 1.35 - 78));
+    out[i] = out[i + 1] = out[i + 2] = grey;
+  }
+  return `data:image/png;base64,${(await sharp(out, { raw: info }).png().toBuffer()).toString('base64')}`;
+}
+const FOXY_BW = await heartsOnlyFoxy();
 const PAW_GREY = '#6E6E6E';
 const knockout = (id, w, h, ink, shape, words) => `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}"><g fill="#fff">${shape}</g><g fill="#000">${words}</g></mask>
   <rect x="0" y="0" width="${w}" height="${h}" fill="${ink}" mask="url(#${id})"/>`;
