@@ -169,26 +169,36 @@ for (const tone of ['light', 'dark']) {
   designs[`hoodie-back-${tone}`] = [TEE, envelope(k)];
 }
 
-// 9) Pocket tee (Comfort Colors 6030): Foxy peeking over a stitched pocket edge, on the pocket and big on the back.
-const FOXY_ORANGE = '#F6662A', PEEK = 0.62;
-const peekingFoxy = (id, cx, top, w, edgeY, ink, stitch) => {
-  const paw = (x) => `<ellipse cx="${x}" cy="${edgeY}" rx="${w * 0.075}" ry="${w * 0.05}" fill="${FOXY_ORANGE}"/>${[-1, 0, 1].map((d) => `<line x1="${x + d * w * 0.025}" y1="${edgeY - w * 0.02}" x2="${x + d * w * 0.025}" y2="${edgeY + w * 0.03}" stroke="${ink}" stroke-width="${w * 0.008}" stroke-linecap="round"/>`).join('')}`;
-  return `<defs><clipPath id="${id}"><rect x="0" y="0" width="${cx * 2}" height="${edgeY}"/></clipPath></defs>
-    <g clip-path="url(#${id})">${foxy(cx, top, w)}</g>
-    <line x1="${cx - w * 0.62}" y1="${edgeY}" x2="${cx + w * 0.62}" y2="${edgeY}" stroke="${ink}" stroke-width="${stitch}" stroke-linecap="round"/>
-    ${paw(cx - w * 0.2)}${paw(cx + w * 0.2)}`;
-};
+// 9) Pocket tee (Comfort Colors 6030): the pocket holds the evidence (a heart tagged EXHIBIT A); the back is Foxy's
+// mugshot in front of a fox-sized height chart, holding a booking placard. One ink plus Foxy, so it reads on every colour.
+const FOXY_ORANGE = '#F76B27';
+const knockout = (id, w, h, ink, shape, words) => `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}"><g fill="#fff">${shape}</g><g fill="#000">${words}</g></mask>
+  <rect x="0" y="0" width="${w}" height="${h}" fill="${ink}" mask="url(#${id})"/>`;
+function mugshot(tone, ink) {
+  let chart = '';
+  for (let i = 0, y = 170; y <= 1650; i++, y += 74) {
+    const major = i % 4 === 0, feet = 30 - i * 1.5;
+    chart += `<line x1="${major ? 250 : 330}" y1="${y}" x2="1740" y2="${y}" stroke="${ink}" stroke-width="${major ? 9 : 4}" stroke-opacity="${major ? 1 : 0.6}"/>`;
+    if (major) chart += `<text x="60" y="${y + 24}" font-family="Graduate" font-size="64" fill="${ink}">${Math.floor(feet / 12)}'${feet % 12 ? Math.round(feet % 12) : 0}"</text>`;
+  }
+  const paw = (x, y) => `<ellipse cx="${x}" cy="${y}" rx="62" ry="46" fill="${FOXY_ORANGE}"/>${[-1, 0, 1].map((d) => `<line x1="${x + d * 22}" y1="${y + 4}" x2="${x + d * 22}" y2="${y + 32}" stroke="#2D1B4E" stroke-width="7" stroke-linecap="round"/>`).join('')}`;
+  const board = '<rect x="400" y="1270" width="1000" height="470" rx="18"/>';
+  const words = `<text x="900" y="1380" text-anchor="middle" font-family="Graduate" font-size="76" letter-spacing="10">FAR FOX P.D.</text>
+    <text x="900" y="1540" text-anchor="middle" font-family="Graduate" font-size="140" letter-spacing="6">143-0214</text>
+    <text x="900" y="1672" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="74" letter-spacing="6">STOLE YOUR HEART</text>`;
+  // The chart stops at the placard, or its lines show through the knocked-out letters.
+  const chartMask = `<mask id="chart-${tone}" maskUnits="userSpaceOnUse" x="0" y="0" width="1800" height="2400"><rect width="1800" height="2400" fill="#fff"/><g fill="#000">${board}</g></mask>`;
+  return `${chartMask}<g mask="url(#chart-${tone})">${chart}</g>${foxy(980, 250, 1000)}${knockout(`mug-${tone}`, 1800, 2400, ink, board, words)}${paw(470, 1285)}${paw(1330, 1285)}`;
+}
+function exhibitA(tone, ink) {
+  const tag = `<g transform="rotate(-12 320 150)"><path d="M 230 105 L 400 105 L 400 205 L 230 205 L 200 155 Z"/></g>`;
+  const words = `<g transform="rotate(-12 320 150)"><circle cx="225" cy="155" r="10"/><text x="312" y="146" text-anchor="middle" font-family="Graduate" font-size="40">EXHIBIT</text><text x="312" y="192" text-anchor="middle" font-family="Graduate" font-size="40">A</text></g>`;
+  return `${heart(105, 160, 170, ink)}<path d="M 160 120 Q 190 95 222 152" fill="none" stroke="${ink}" stroke-width="5"/>${knockout(`ex-${tone}`, 450, 300, ink, tag, words)}`;
+}
 for (const tone of ['light', 'dark']) {
-  const k = INK[tone];
-  const fw = 250, ftop = 18, edge = ftop + PEEK * fw * 1480 / 1400;
-  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, `${peekingFoxy('pf', 225, ftop, fw, edge, k.main, 7)}
-    <line x1="${225 - fw * 0.55}" y1="${edge + 16}" x2="${225 + fw * 0.55}" y2="${edge + 16}" stroke="${k.main}" stroke-width="4" stroke-dasharray="10 8"/>`];
-  const bw = 900, btop = 200, bedge = btop + PEEK * bw * 1480 / 1400, L = 380, R = 1420, B = bedge + 680;
-  const pocket = (inset, extra) => `<path d="M ${L + inset} ${bedge + inset * 0.6} L ${L + inset} ${B - inset * 0.3} L 900 ${B + 150 - inset * 1.2} L ${R - inset} ${B - inset * 0.3} L ${R - inset} ${bedge + inset * 0.6}" fill="none" stroke="${k.main}" ${extra}/>`;
-  designs[`pocket-back-${tone}`] = [TEE, `${pocket(0, 'stroke-width="16" stroke-linejoin="round"')}${pocket(42, 'stroke-width="8" stroke-dasharray="26 18" stroke-linejoin="round"')}
-    ${peekingFoxy('pb', 900, btop, bw, bedge, k.main, 16)}
-    <text x="900" y="${B + 380}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${k.main}">I'd keep you in my pocket</text>
-    <text x="900" y="${B + 540}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${k.main}">if I could.</text>`];
+  const ink = INK[tone].main;
+  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, exhibitA(tone, ink)];
+  designs[`pocket-back-${tone}`] = [TEE, mugshot(tone, ink)];
 }
 
 // 5) Crewneck embroidery: collegiate LONG DISTANCE CLUB crest (centre chest 4×4in @300), cuff heart, inside label.
