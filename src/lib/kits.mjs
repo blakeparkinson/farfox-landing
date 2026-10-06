@@ -8,6 +8,8 @@ export const SITE = 'https://lovefarfox.com';
 /** Map a Printful sync-product name → kit slug, or null if not personalizable. */
 export function kitSlugForName(name) {
   const n = String(name || '').toLowerCase();
+  // The Oct 2026 Ballpark jersey is one product in three colourways; kitForColour adds the colourway.
+  if (/ballpark/.test(n)) return BASEBALL.kit;
   // Baseball kits (check before generic "jersey").
   if (/baseball/.test(n)) {
     if (/\(red\)/.test(n)) return 'bb-red';
@@ -37,6 +39,15 @@ export function kitSlugForName(name) {
   return null;
 }
 
+/** The kit whose back a shopper gets for this product in this colour: colourway kits get one back per colourway. */
+export function kitForColour(name, colour) {
+  const kit = kitSlugForName(name);
+  const colourways = COLORWAY_KITS[kit]?.colorways;
+  if (!colourways) return kit;
+  const pick = colourways.find((c) => c.label.toLowerCase() === String(colour || '').toLowerCase()) || colourways[0];
+  return `${kit}-${pick.key}`;
+}
+
 /** Public URL Printful fetches to get a personalized back for this kit/name/number. */
 export function backUrl(kit, name, number) {
   const q = new URLSearchParams({ kit, name: name || '', number: number || '' });
@@ -60,7 +71,16 @@ export const LES_SEPARES = {
     { key: 'raspberry', label: 'Raspberry', hex: '#963655' },
   ],
 };
-const COLORWAY_KITS = { [LES_SEPARES.kit]: LES_SEPARES };
+/** The Long Distance Club baseball jersey (Oct 2026): one product, three colourways, each with its own back. */
+export const BASEBALL = {
+  kit: 'ldc-baseball',
+  colorways: [
+    { key: 'cream', label: 'Cream Pinstripe', hex: '#F4ECE0' },
+    { key: 'plum', label: 'Plum', hex: '#2D1B4E' },
+    { key: 'pink', label: 'Fox Pink', hex: '#FF6B8A' },
+  ],
+};
+const COLORWAY_KITS = { [LES_SEPARES.kit]: LES_SEPARES, [BASEBALL.kit]: BASEBALL };
 
 export const colorwayExternalId = (kit, colorway, size) => `${kit}--${colorway}--${size}`;
 

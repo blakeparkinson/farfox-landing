@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import catalog from '../data/catalog.json';
 // Optional one-line story per product, keyed by Printful sync product id.
 import stories from '../data/product-stories.json';
-import { kitSlugForName } from '../lib/kits.mjs';
+import { kitSlugForName, kitForColour } from '../lib/kits.mjs';
 
 /**
  * Far Fox Shop — print-on-demand storefront.
@@ -195,6 +195,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
                       data-color={c.name}
                       data-image={c.image || p.image}
                       data-back={c.back || p.back || undefined}
+                      data-kit={kitSlugForName(p.name) ? kitForColour(p.name, c.name) : undefined}
                       data-selected={i === 0 ? 'true' : 'false'}
                       title={c.name}
                       aria-label={c.name}
@@ -217,7 +218,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
             )}
 
             {kitSlugForName(p.name) && (
-              <div class="mb-3 rounded-xl border border-fox-pink/15 bg-fox-pink/[0.04] p-3" data-personalize data-product={p.id} data-kit={kitSlugForName(p.name)}>
+              <div class="mb-3 rounded-xl border border-fox-pink/15 bg-fox-pink/[0.04] p-3" data-personalize data-product={p.id} data-kit={kitForColour(p.name, p.colors?.[0]?.name)}>
                 <div class="text-xs font-800 uppercase tracking-wide text-fox-text-light mb-2">
                   Personalize <span class="font-600 normal-case tracking-normal text-fox-text-light/70">· optional, previews on the back</span>
                 </div>
@@ -342,6 +343,10 @@ const grouped = [...CATS.map((c) => c.title), 'More']
             if (hidden) hidden.value = name;
             const label = document.getElementById(`color-label-${pid}`);
             if (label) label.textContent = name;
+            // Colourway jerseys have one personalised back per colour.
+            const kit = sw.getAttribute('data-kit');
+            const wrap = document.querySelector(`[data-personalize][data-product="${pid}"]`);
+            if (kit && wrap) wrap.setAttribute('data-kit', kit);
             // Point both view buttons at this colour, then show whichever view is active.
             const front = sw.getAttribute('data-image');
             const back = sw.getAttribute('data-back');

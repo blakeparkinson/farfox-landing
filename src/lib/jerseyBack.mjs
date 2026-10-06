@@ -22,6 +22,7 @@ import { SITE, kitSlugForName, backUrl } from './kits.mjs';
 export { kitSlugForName, backUrl };
 
 const DESIGN = 6000; // native design space; layout numbers are in this space
+const BASEBALL_ASPECT = 6900 / 5700; // Printful's baseball jersey back print area, height / width
 
 /**
  * Per-kit config. `pattern`/`crest` are paths under /shop/designs.
@@ -102,6 +103,20 @@ const KITS = {
     number: '#FAF1E2', numberStroke: '#E2632E', name: '#FAF1E2', nameStroke: '#E2632E',
   },
   // --- Baseball kits (cat 792): slab font, baseball layout, no top crest ---
+  // October 2026: one product in three colourways (BASEBALL in kits.mjs); files from make-baseball-2026-10.mjs.
+  // `aspect` renders the back at the print area's proportions (5700×6900), so Printful never crops or scales it.
+  'ldc-baseball-cream': {
+    pattern: 'baseball-2026-10/ldc-baseball-cream-pattern.png', crest: null, layout: 'baseball', font: 'slab', aspect: BASEBALL_ASPECT,
+    number: '#2D1B4E', numberStroke: '#FF6B8A', name: '#2D1B4E', nameStroke: '#FF6B8A',
+  },
+  'ldc-baseball-plum': {
+    pattern: 'baseball-2026-10/ldc-baseball-plum-pattern.png', crest: null, layout: 'baseball', font: 'slab', aspect: BASEBALL_ASPECT,
+    number: '#FF6B8A', numberStroke: '#F4ECE0', name: '#FF6B8A', nameStroke: '#F4ECE0',
+  },
+  'ldc-baseball-pink': {
+    pattern: 'baseball-2026-10/ldc-baseball-pink-pattern.png', crest: null, layout: 'baseball', font: 'slab', aspect: BASEBALL_ASPECT,
+    number: '#2D1B4E', numberStroke: '#F4ECE0', name: '#2D1B4E', nameStroke: '#F4ECE0',
+  },
   'bb-red': {
     bg: '#BC2832', crest: null, layout: 'baseball', font: 'slab',
     number: '#F4ECE0', numberStroke: '#1B2A6B', name: '#F4ECE0', nameStroke: '#1B2A6B',
@@ -229,10 +244,12 @@ export async function renderJerseyBack({ kit, name, number, size = 4500 }) {
   });
   const textPng = new Resvg(svg, { fitTo: { mode: 'width', value: size } }).render().asPng();
 
-  // Base: hosted pattern, or a solid colour fill for the plain baseball kits.
+  // Base: hosted pattern, or a solid colour fill for the plain baseball kits. A kit with an `aspect`
+  // gets a taller canvas with the square layout centred on it.
+  const height = cfg.aspect ? Math.round(size * cfg.aspect) : size, offsetY = Math.round((height - size) / 2);
   const base = cfg.pattern
-    ? sharp(await fetchBuf(`${SITE}/shop/designs/${cfg.pattern}`)).resize(size, size, { fit: 'cover' })
-    : sharp({ create: { width: size, height: size, channels: 4, background: cfg.bg } });
+    ? sharp(await fetchBuf(`${SITE}/shop/designs/${cfg.pattern}`)).resize(size, height, { fit: 'cover' })
+    : sharp({ create: { width: size, height, channels: 4, background: cfg.bg } });
 
   const layers = [];
   // Optional crest at top-centre (soccer kits only).
@@ -244,10 +261,10 @@ export async function renderJerseyBack({ kit, name, number, size = 4500 }) {
     layers.push({
       input: crest,
       left: Math.round(px(L.crestCenterX) - crestW / 2),
-      top: Math.round(px(L.crestCenterY) - (meta.height || crestW) / 2),
+      top: offsetY + Math.round(px(L.crestCenterY) - (meta.height || crestW) / 2),
     });
   }
-  layers.push({ input: Buffer.from(textPng), left: 0, top: 0 });
+  layers.push({ input: Buffer.from(textPng), left: 0, top: offsetY });
 
   return base.composite(layers).png().toBuffer();
 }
