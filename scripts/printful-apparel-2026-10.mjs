@@ -1,0 +1,153 @@
+/**
+ * October 2026 apparel in Printful: the reworked tees and hoodie, Love Is Love in Black, and the
+ * embroidered Long Distance Club crewneck. Files come from public/shop/designs/apparel-2026-10/
+ * (make-apparel-2026-10.mjs) and must be live on lovefarfox.com first.
+ *
+ *   PRINTFUL_TOKEN=… node scripts/printful-apparel-2026-10.mjs              # dry run
+ *   PRINTFUL_TOKEN=… node scripts/printful-apparel-2026-10.mjs --apply      # update products, add Black, create the crewneck
+ *   PRINTFUL_TOKEN=… node scripts/printful-apparel-2026-10.mjs --mockups    # per-colour shop photos (DTG products)
+ */
+import { writeFile } from 'node:fs/promises';
+
+const TOKEN = process.env.PRINTFUL_TOKEN;
+const STORE = process.env.PRINTFUL_STORE_ID || '18292625';
+const BASE = 'https://lovefarfox.com/shop/designs/apparel-2026-10';
+const REVISION = 1;
+const DARK = new Set(['Black', 'Navy', 'Maroon', 'Heather Navy']);
+const tone = (colour) => (DARK.has(colour) ? 'dark' : 'light');
+const url = (name, t) => `${BASE}/${name}-${t}.png?v=${REVISION}`;
+
+// Tees are Bella + Canvas 3001 (catalog 71); the hoodie is Bella + Canvas 3719 (catalog 294).
+const PRODUCTS = {
+  ldc: { id: 436909615, catalog: 71, front: 'ldc-front', back: 'ldc-back', label: 'label_inside', price: '32.00' },
+  timezones: { id: 436908862, catalog: 71, front: 'timezones', label: 'label_inside', price: '30.00' },
+  morse: { id: 436909622, catalog: 71, front: 'morse', label: 'label_inside', price: '30.00' },
+  pride: { id: 436891455, catalog: 71, front: 'pride', label: 'label_inside', price: '30.00', addColours: ['Black'] },
+  hearteyes: { id: 436883133, catalog: 71, front: 'hearteyes', label: 'label_inside', price: '30.00' },
+  hoodie: { id: 436883154, catalog: 294, front: 'hoodie-front', back: 'hoodie-back', label: 'label_inside_dtf', price: null },
+};
+const CREW = {
+  name: 'Far Fox — Long Distance Club Crewneck', catalog: 845, price: '55.00',
+  colours: { 'Oatmeal Heather': 'oatmeal', Navy: 'navy' }, sizes: ['S', 'M', 'L', 'XL', '2XL', '3XL'],
+};
+
+if (!TOKEN) { console.error('Set PRINTFUL_TOKEN.'); process.exit(1); }
+const args = process.argv.slice(2), apply = args.includes('--apply');
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+async function pf(path, init = {}, attempt = 0) {
+  let r, body;
+  try {
+    r = await fetch(`https://api.printful.com${path}`, { ...init, headers: { Authorization: `Bearer ${TOKEN}`, 'X-PF-Store-Id': STORE, 'Content-Type': 'application/json' } });
+    body = await r.json().catch(() => ({}));
+  } catch (e) { if (attempt < 5) { await sleep(5000); return pf(path, init, attempt + 1); } throw e; }
+  if (r.status === 429 && attempt < 8) {
+    await sleep(((+String(body.error?.message || body.result || '').match(/after (\d+)/)?.[1] || 30) + 3) * 1000);
+    return pf(path, init, attempt + 1);
+  }
+  if (!r.ok) throw new Error(`PF ${init.method || 'GET'} ${path} -> ${r.status} ${JSON.stringify(body.error || body.result)}`);
+  return body.result;
+}
+
+const filesFor = (p, colour) => [
+  { type: 'default', url: url(p.front, tone(colour)) },
+  ...(p.back ? [{ type: 'back', url: url(p.back, tone(colour)) }] : []),
+  { type: p.label, url: url('label', tone(colour)) },
+];
+
+async function assertLive() {
+  for (const n of ['ldc-front', 'ldc-back', 'timezones', 'morse', 'pride', 'hearteyes', 'hoodie-front', 'hoodie-back', 'label']) {
+    for (const t of ['light', 'dark']) { const r = await fetch(url(n, t), { method: 'HEAD' }); if (!r.ok) throw new Error(`${n}-${t} not live (${r.status})`); }
+  }
+  for (const c of Object.values(CREW.colours)) for (const part of ['crew-front', 'crew-wrist']) {
+    const r = await fetch(`${BASE}/${part}-${c}.png?v=${REVISION}`, { method: 'HEAD' }); if (!r.ok) throw new Error(`${part}-${c} not live (${r.status})`);
+  }
+}
+
+async function updateProducts() {
+  for (const [key, p] of Object.entries(PRODUCTS)) {
+    const detail = await pf(`/store/products/${p.id}`);
+    console.log(`\n${detail.sync_product.name} (${p.id}): ${detail.sync_variants.length} variants`);
+    for (const v of detail.sync_variants) {
+      const files = filesFor(p, v.color);
+      console.log(`  ${v.color} ${v.size}: ${tone(v.color)} files${p.price && v.retail_price !== p.price ? `, $${v.retail_price} → $${p.price}` : ''}`);
+      if (!apply) continue;
+      await pf(`/store/variants/${v.id}`, { method: 'PUT', body: JSON.stringify({ files, options: v.options || [], ...(p.price ? { retail_price: p.price } : {}) }) });
+      await sleep(600);
+    }
+    for (const colour of p.addColours || []) {
+      const have = new Set(detail.sync_variants.filter((v) => v.color === colour).map((v) => v.size));
+      const sizes = [...new Set(detail.sync_variants.map((v) => v.size))].filter((s) => !have.has(s));
+      const catalog = (await pf(`/products/${p.catalog}`)).variants;
+      for (const size of sizes) {
+        const cv = catalog.find((x) => x.color === colour && x.size === size);
+        console.log(`  + ${colour} ${size}`);
+        if (!apply || !cv) continue;
+        await pf(`/store/products/${p.id}/variants`, { method: 'POST', body: JSON.stringify({ variant_id: cv.id, retail_price: p.price, files: filesFor(p, colour) }) });
+        await sleep(600);
+      }
+    }
+  }
+}
+
+async function createCrew() {
+  const existing = (await pf('/store/products?limit=100')).find((p) => p.name === CREW.name);
+  if (existing) { console.log(`\n${CREW.name} already exists (${existing.id})`); return existing.id; }
+  const catalog = (await pf(`/products/${CREW.catalog}`)).variants;
+  const sync_variants = Object.entries(CREW.colours).flatMap(([colour, key]) => CREW.sizes.map((size) => ({
+    variant_id: catalog.find((v) => v.color === colour && v.size === size).id,
+    retail_price: CREW.price,
+    files: [
+      { type: 'embroidery_large_front', url: `${BASE}/crew-front-${key}.png?v=${REVISION}` },
+      { type: 'embroidery_wrist_left', url: `${BASE}/crew-wrist-${key}.png?v=${REVISION}` },
+      { type: 'label_inside_dtf', url: url('label', tone(colour)) },
+    ],
+  })));
+  console.log(`\n${CREW.name}: ${sync_variants.length} variants at $${CREW.price}`);
+  if (!apply) return null;
+  const created = await pf('/store/products', { method: 'POST', body: JSON.stringify({ sync_product: { name: CREW.name }, sync_variants }) });
+  console.log(`  created ${created.id}`);
+  return created.id;
+}
+
+/** Per-colour shop photos for the DTG products: one generator task per ink tone. */
+async function mockups() {
+  for (const [key, p] of Object.entries(PRODUCTS)) {
+    const detail = await pf(`/store/products/${p.id}`);
+    const colours = [...new Set(detail.sync_variants.map((v) => v.color))];
+    const catalog = (await pf(`/products/${p.catalog}`)).variants;
+    const spec = await pf(`/mockup-generator/printfiles/${p.catalog}`);
+    const byId = Object.fromEntries(spec.printfiles.map((x) => [x.printfile_id, x]));
+    const placements = spec.variant_printfiles[0].placements;
+    for (const t of ['light', 'dark']) {
+      const group = colours.filter((c) => tone(c) === t);
+      if (!group.length) continue;
+      const variantIds = group.map((c) => catalog.find((v) => v.color === c && v.size === 'M').id);
+      const area = (pl) => { const f = byId[placements[pl]]; return { area_width: f.width, area_height: f.height, width: f.width, height: f.height, top: 0, left: 0 }; };
+      const files = [{ placement: 'front', image_url: url(p.front, t), position: area('front') }, ...(p.back ? [{ placement: 'back', image_url: url(p.back, t), position: area('back') }] : [])];
+      const task = await pf(`/mockup-generator/create-task/${p.catalog}`, { method: 'POST', body: JSON.stringify({ variant_ids: variantIds, format: 'png', files, option_groups: ['Flat'], options: ['Front', 'Back'] }) });
+      let res;
+      for (let i = 0; i < 60; i++) { await sleep(5000); res = await pf(`/mockup-generator/task?task_key=${task.task_key}`); if (res.status !== 'pending') break; }
+      if (res.status !== 'completed') throw new Error(`${key} ${t}: mockups ${res.status}`);
+      for (const m of res.mockups) {
+        for (const vid of m.variant_ids) {
+          const colour = group[variantIds.indexOf(vid)];
+          if (!colour) continue;
+          const slug = colour.toLowerCase().replace(/ /g, '-');
+          const views = [{ p: m.placement, u: m.mockup_url }, ...(m.extra || []).map((e) => ({ p: e.option || e.title, u: e.url }))];
+          const save = async (view, path) => { if (view) await writeFile(new URL(`../public/shop/${path}`, import.meta.url), Buffer.from(await (await fetch(view.u)).arrayBuffer())); };
+          if (/front|default/i.test(m.placement)) await save(views[0], `colors/${p.id}-${slug}.png`);
+          if (/back/i.test(m.placement)) await save(views[0], `backs/${p.id}-${slug}.png`);
+        }
+      }
+      console.log(`  ${key} ${t}: ${group.join(', ')}`);
+    }
+  }
+}
+
+if (args.includes('--mockups')) await mockups();
+else {
+  if (apply) await assertLive();
+  await updateProducts();
+  await createCrew();
+  if (!apply) console.log('\nDry run only. Re-run with --apply.');
+}
