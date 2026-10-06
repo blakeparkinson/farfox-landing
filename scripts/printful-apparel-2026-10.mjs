@@ -16,19 +16,24 @@ const REVISION = 1;
 const DARK = new Set(['Black', 'Navy', 'Maroon', 'Heather Navy']);
 const tone = (colour) => (DARK.has(colour) ? 'dark' : 'light');
 const url = (name, t) => `${BASE}/${name}-${t}.png?v=${REVISION}`;
+// Crewneck files can be served from elsewhere (CREW_FILES_BASE) so the product can be created before the site deploys.
+const crewUrl = (name) => `${process.env.CREW_FILES_BASE || BASE}/${name}.png?v=${REVISION}`;
 
 // Tees are Bella + Canvas 3001 (catalog 71); the hoodie is Bella + Canvas 3719 (catalog 294).
 const PRODUCTS = {
-  ldc: { id: 436909615, catalog: 71, front: 'ldc-front', back: 'ldc-back', label: 'label_inside', price: '32.00' },
-  timezones: { id: 436908862, catalog: 71, front: 'timezones', label: 'label_inside', price: '30.00' },
-  morse: { id: 436909622, catalog: 71, front: 'morse', label: 'label_inside', price: '30.00' },
-  pride: { id: 436891455, catalog: 71, front: 'pride', label: 'label_inside', price: '30.00', addColours: ['Black'] },
-  hearteyes: { id: 436883133, catalog: 71, front: 'hearteyes', label: 'label_inside', price: '30.00' },
-  hoodie: { id: 436883154, catalog: 294, front: 'hoodie-front', back: 'hoodie-back', label: 'label_inside_dtf', price: null },
+  ldc: { id: 436909615, catalog: 71, front: 'ldc-front', back: 'ldc-back', label: null, price: '32.00' },
+  timezones: { id: 436908862, catalog: 71, front: 'timezones', label: null, price: '30.00' },
+  morse: { id: 436909622, catalog: 71, front: 'morse', label: null, price: '30.00' },
+  pride: { id: 436891455, catalog: 71, front: 'pride', label: null, price: '30.00', addColours: ['Black'] },
+  hearteyes: { id: 436883133, catalog: 71, front: 'hearteyes', label: null, price: '30.00' },
+  hoodie: { id: 436883154, catalog: 294, front: 'hoodie-front', back: 'hoodie-back', label: null, price: null },
 };
 const CREW = {
   name: 'Far Fox — Long Distance Club Crewneck', catalog: 845, price: '55.00',
   colours: { 'Oatmeal Heather': 'oatmeal', Navy: 'navy' }, sizes: ['S', 'M', 'L', 'XL', '2XL', '3XL'],
+  // Printful thread colours per colourway: lettering, then fox; the cuff heart is pink on both.
+  // Large embroidery is dashboard-only, so the crest is a 4×4in centre-chest embroidery.
+  threads: { oatmeal: ['#6B5294', '#CC3366'], navy: ['#FFFFFF', '#CC3366'] }, wristThread: '#CC3366',
 };
 
 if (!TOKEN) { console.error('Set PRINTFUL_TOKEN.'); process.exit(1); }
@@ -51,15 +56,17 @@ async function pf(path, init = {}, attempt = 0) {
 const filesFor = (p, colour) => [
   { type: 'default', url: url(p.front, tone(colour)) },
   ...(p.back ? [{ type: 'back', url: url(p.back, tone(colour)) }] : []),
-  { type: p.label, url: url('label', tone(colour)) },
+  // Printful's API rejects a printed inside label next to DTG placements (label_inside is unsupported,
+  // label_inside_dtf can't mix with DTG), so the Foxy label files wait until that's possible.
+  ...(p.label ? [{ type: p.label, url: url('label', tone(colour)) }] : []),
 ];
 
 async function assertLive() {
   for (const n of ['ldc-front', 'ldc-back', 'timezones', 'morse', 'pride', 'hearteyes', 'hoodie-front', 'hoodie-back', 'label']) {
     for (const t of ['light', 'dark']) { const r = await fetch(url(n, t), { method: 'HEAD' }); if (!r.ok) throw new Error(`${n}-${t} not live (${r.status})`); }
   }
-  for (const c of Object.values(CREW.colours)) for (const part of ['crew-front', 'crew-wrist']) {
-    const r = await fetch(`${BASE}/${part}-${c}.png?v=${REVISION}`, { method: 'HEAD' }); if (!r.ok) throw new Error(`${part}-${c} not live (${r.status})`);
+  for (const c of Object.values(CREW.colours)) for (const part of ['crew-chest', 'crew-wrist']) {
+    const r = await fetch(crewUrl(`${part}-${c}`), { method: 'HEAD' }); if (!r.ok) throw new Error(`${part}-${c} not live (${r.status})`);
   }
 }
 
@@ -69,6 +76,9 @@ async function updateProducts() {
     console.log(`\n${detail.sync_product.name} (${p.id}): ${detail.sync_variants.length} variants`);
     for (const v of detail.sync_variants) {
       const files = filesFor(p, v.color);
+      // Re-runs skip variants already on these files at this price.
+      const done = files.every((f) => (v.files || []).some((g) => g.type === f.type && g.url === f.url)) && (!p.price || v.retail_price === p.price);
+      if (done) continue;
       console.log(`  ${v.color} ${v.size}: ${tone(v.color)} files${p.price && v.retail_price !== p.price ? `, $${v.retail_price} → $${p.price}` : ''}`);
       if (!apply) continue;
       await pf(`/store/variants/${v.id}`, { method: 'PUT', body: JSON.stringify({ files, options: v.options || [], ...(p.price ? { retail_price: p.price } : {}) }) });
@@ -97,10 +107,10 @@ async function createCrew() {
     variant_id: catalog.find((v) => v.color === colour && v.size === size).id,
     retail_price: CREW.price,
     files: [
-      { type: 'embroidery_large_front', url: `${BASE}/crew-front-${key}.png?v=${REVISION}` },
-      { type: 'embroidery_wrist_left', url: `${BASE}/crew-wrist-${key}.png?v=${REVISION}` },
-      { type: 'label_inside_dtf', url: url('label', tone(colour)) },
+      { type: 'embroidery_chest_center', url: crewUrl(`crew-chest-${key}`) },
+      { type: 'embroidery_wrist_left', url: crewUrl(`crew-wrist-${key}`) },
     ],
+    options: [{ id: 'thread_colors_chest_center', value: CREW.threads[key] }, { id: 'thread_colors_wrist_left', value: [CREW.wristThread] }],
   })));
   console.log(`\n${CREW.name}: ${sync_variants.length} variants at $${CREW.price}`);
   if (!apply) return null;
