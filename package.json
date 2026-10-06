@@ -13,6 +13,7 @@
     "launch:jerseys": "node scripts/make-jersey-launch-videos.mjs",
     "test:jersey-offer": "node scripts/test-jersey-offer.mjs",
     "test:les-separes": "node scripts/test-les-separes.mjs",
+    "test:printify-order": "node scripts/test-printify-order.mjs",
     "make:jersey-kits": "node scripts/make-jersey-kits.mjs",
     "launch:acquisition": "node scripts/make-user-acquisition-videos.mjs",
     "launch:assets": "node scripts/make-launch-assets.mjs",

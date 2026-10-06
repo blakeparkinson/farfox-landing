@@ -43,7 +43,7 @@ type Product = {
   colors?: { name: string; hex: string; image?: string | null; back?: string | null }[];
 };
 
-// Catalog is generated from Printful at build time (scripts/sync-catalog.mjs):
+// Catalog is generated from Printful (and Printify, for the flannel) at build time (scripts/sync-catalog.mjs):
 // every sync product in the store, with its price, sizes and mockup. Add,
 // edit or remove products in the Printful dashboard — nothing here changes.
 const PRODUCTS: Product[] = (catalog.products as Product[]);
@@ -53,7 +53,7 @@ const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
 // Group products into shoppable categories (first match wins, jerseys lead).
 const CATS: { title: string; test: (n: string) => boolean }[] = [
   { title: 'Jerseys', test: (n) => /jersey/i.test(n) },
-  { title: 'Tees & Hoodies', test: (n) => /tee|hoodie/i.test(n) },
+  { title: 'Tees, Sweats & Flannels', test: (n) => /tee|hoodie|crewneck|flannel/i.test(n) },
   { title: 'Mugs', test: (n) => /mug/i.test(n) },
   { title: 'Art Prints', test: (n) => /print/i.test(n) },
   { title: 'Stickers', test: (n) => /sticker/i.test(n) },

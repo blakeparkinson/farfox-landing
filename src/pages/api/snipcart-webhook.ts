@@ -3,11 +3,16 @@ import type { APIRoute } from 'astro';
 import { kitSlugForName, backUrl, pickVariant } from '../../lib/kits.mjs';
 // @ts-ignore
 import { mapNotification, partitionOrderItems, snipcartAuth } from '../../lib/digitalMapOrder.mjs';
+// @ts-ignore
+import { isPrintifyItem, pickPrintifyVariant, buildPrintifyOrder } from '../../lib/printifyOrder.mjs';
 
 export const prerender = false;
 
 /**
- * Snipcart → Printful fulfillment glue (catalog-agnostic).
+ * Snipcart → Printful / Printify fulfillment glue (catalog-agnostic).
+ *
+ * Line items whose id is a Printify product id (24-char hex, e.g. the flannel) become one Printify order;
+ * everything else goes to Printful as below. A mixed cart ships as two parcels.
  *
  * Each Snipcart line item's id IS the Printful sync-product id (the shop
  * catalog is generated from Printful, so this is guaranteed). On
@@ -20,7 +25,9 @@ export const prerender = false;
  *
  * Required Vercel env vars:
  *   PRINTFUL_TOKEN, SNIPCART_SECRET_KEY (+ optional PRINTFUL_STORE_ID,
- *   PRINTFUL_AUTOCONFIRM="true").
+ *   PRINTFUL_AUTOCONFIRM="true"), and PRINTIFY_TOKEN (+ optional PRINTIFY_SHOP_ID)
+ *   for Printify items. PRINTFUL_AUTOCONFIRM also sends Printify orders to production;
+ *   without it both suppliers' orders wait as drafts for a manual confirm.
  * Snipcart webhook URL: https://lovefarfox.com/api/snipcart-webhook
  */
 
@@ -29,6 +36,8 @@ const PF_STORE = (import.meta.env.PRINTFUL_STORE_ID as string | undefined) ?? '1
 const SNIPCART_SECRET = import.meta.env.SNIPCART_SECRET_KEY as string | undefined;
 const AUTOCONFIRM = (import.meta.env.PRINTFUL_AUTOCONFIRM as string | undefined) === 'true';
 const SITE = 'https://lovefarfox.com';
+const PFY_TOKEN = import.meta.env.PRINTIFY_TOKEN as string | undefined;
+const PFY_SHOP = (import.meta.env.PRINTIFY_SHOP_ID as string | undefined) ?? '29228113';
 
 const pfHeaders = () => ({
   Authorization: `Bearer ${PF_TOKEN}`,
@@ -58,6 +67,47 @@ async function resolveSyncVariant(
   const productName = detail.sync_product?.name || '';
   // Colour matches a variant's colourway tag when it has one (see kits.mjs).
   return { variant: pickVariant(variants, size, color), productName };
+}
+
+async function pfy(path: string, init: RequestInit = {}) {
+  const r = await fetch(`https://api.printify.com/v1${path}`, {
+    ...init,
+    headers: { Authorization: `Bearer ${PFY_TOKEN}`, 'Content-Type': 'application/json', 'User-Agent': 'farfox-landing' },
+  });
+  const text = await r.text();
+  if (!r.ok) throw new Error(`Printify ${init.method || 'GET'} ${path} -> ${r.status} ${text.slice(0, 300)}`);
+  return text ? JSON.parse(text) : {};
+}
+
+/** One Printify order for every Printify line item; returns the line items it could not place. */
+async function fulfilWithPrintify(items: any[], order: any): Promise<{ created: boolean; skipped: string[] }> {
+  const skipped: string[] = [];
+  if (!PFY_TOKEN) {
+    console.error('snipcart-webhook: Printify items received without PRINTIFY_TOKEN', items.map((it) => it.id));
+    return { created: false, skipped: items.map((it) => it.id) };
+  }
+  const lineItems: any[] = [];
+  for (const it of items) {
+    const cf = it.customFields ?? [];
+    const fv = (n: string) => cf.find((f: any) => (f.name || '').toLowerCase() === n)?.value ?? null;
+    try {
+      const product = await pfy(`/shops/${PFY_SHOP}/products/${it.id}.json`);
+      const variant = pickPrintifyVariant(product, fv('size'), fv('color'));
+      if (!variant) { skipped.push(`${it.id} ${fv('color')} ${fv('size')}`); continue; }
+      lineItems.push({ product_id: it.id, variant_id: variant.id, quantity: it.quantity ?? 1 });
+    } catch (e) { console.error('printify resolve failed', it.id, String(e)); skipped.push(it.id); }
+  }
+  if (!lineItems.length) return { created: false, skipped };
+  const externalId = `snipcart-${order.token || order.invoiceNumber || Date.now()}`;
+  const body = buildPrintifyOrder({ externalId, ship: order.shippingAddress ?? {}, email: order.email, lineItems });
+  try {
+    const created = await pfy(`/shops/${PFY_SHOP}/orders.json`, { method: 'POST', body: JSON.stringify(body) });
+    if (AUTOCONFIRM && created.id) await pfy(`/shops/${PFY_SHOP}/orders/${created.id}/send_to_production.json`, { method: 'POST' });
+    return { created: true, skipped };
+  } catch (e) {
+    console.error('snipcart-webhook: printify order failed', String(e));
+    return { created: false, skipped: [...skipped, ...lineItems.map((l) => l.product_id)] };
+  }
 }
 
 async function validateSnipcart(token: string): Promise<boolean> {
@@ -116,6 +166,15 @@ export const POST: APIRoute = async ({ request }) => {
   if (!physicalItems.length) {
     return new Response(digitalDelivered ? 'digital order fulfilled' : 'digital email failed; download remains in checkout', { status: 200 });
   }
+  const printifyItems = physicalItems.filter(isPrintifyItem);
+  const printfulItems = physicalItems.filter((it: any) => !isPrintifyItem(it));
+  let printifyNote = '';
+  if (printifyItems.length) {
+    const { created, skipped } = await fulfilWithPrintify(printifyItems, order);
+    if (skipped.length) console.warn('snipcart-webhook: Printify items needing manual fulfilment:', skipped);
+    printifyNote = created ? 'printify order created; ' : 'printify order failed (logged); ';
+  }
+  if (!printfulItems.length) return new Response(printifyNote.trim(), { status: 200 });
   if (!PF_TOKEN) {
     console.error('snipcart-webhook: physical order received without PRINTFUL_TOKEN');
     return new Response('physical fulfillment not configured', { status: 200 });
@@ -123,7 +182,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   const pfItems: any[] = [];
   const skipped: string[] = [];
-  for (const it of physicalItems) {
+  for (const it of printfulItems) {
     const cf = it.customFields ?? [];
     const fv = (n: string) =>
       cf.find((f: any) => (f.name || '').toLowerCase() === n)?.value ?? null;
@@ -177,10 +236,10 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response('printful error logged', { status: 200 });
   }
   if (skipped.length) console.warn('snipcart-webhook: items needing manual fulfilment:', skipped);
-  return new Response('order created', { status: 200 });
+  return new Response(`${printifyNote}order created`, { status: 200 });
 };
 
 export const GET: APIRoute = async () =>
-  new Response(JSON.stringify({ ok: true, service: 'snipcart-printful-webhook' }), {
+  new Response(JSON.stringify({ ok: true, service: 'snipcart-fulfilment-webhook' }), {
     status: 200, headers: { 'Content-Type': 'application/json' },
   });
