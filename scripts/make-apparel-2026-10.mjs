@@ -169,35 +169,48 @@ for (const tone of ['light', 'dark']) {
   designs[`hoodie-back-${tone}`] = [TEE, envelope(k)];
 }
 
-// 9) Pocket tee (Comfort Colors 6030): the pocket holds the evidence (a heart tagged EXHIBIT A); the back is Foxy's
-// mugshot in front of a fox-sized height chart, holding a booking placard. One ink plus Foxy, so it reads on every colour.
-const FOXY_ORANGE = '#F76B27';
+// 9) Pocket tee (Comfort Colors 6030): a FAR FOX P.D. sheriff's badge on the pocket; the back is Foxy's black-and-white
+// mugshot in front of a fox-sized height chart, holding a booking placard. One ink plus the photo, so it reads on every colour.
+const FOXY_BW = `data:image/png;base64,${(await sharp(`${REPO}/public/shop/designs/hearteyes-v2.png`).extract({ left: 650, top: 0, width: 1400, height: 1480 }).grayscale().linear(1.35, -78).png().toBuffer()).toString('base64')}`;
+const PAW_GREY = '#6E6E6E';
 const knockout = (id, w, h, ink, shape, words) => `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}"><g fill="#fff">${shape}</g><g fill="#000">${words}</g></mask>
   <rect x="0" y="0" width="${w}" height="${h}" fill="${ink}" mask="url(#${id})"/>`;
 function mugshot(tone, ink) {
   let chart = '';
   for (let i = 0, y = 170; y <= 1650; i++, y += 74) {
-    const major = i % 4 === 0, feet = 30 - i * 1.5;
+    const major = i % 4 === 0, inches = 30 - i * 1.5;
     chart += `<line x1="${major ? 250 : 330}" y1="${y}" x2="1740" y2="${y}" stroke="${ink}" stroke-width="${major ? 9 : 4}" stroke-opacity="${major ? 1 : 0.6}"/>`;
-    if (major) chart += `<text x="60" y="${y + 24}" font-family="Graduate" font-size="64" fill="${ink}">${Math.floor(feet / 12)}'${feet % 12 ? Math.round(feet % 12) : 0}"</text>`;
+    if (major) chart += `<text x="60" y="${y + 24}" font-family="Graduate" font-size="64" fill="${ink}">${Math.floor(inches / 12)}'${Math.round(inches % 12)}"</text>`;
   }
-  const paw = (x, y) => `<ellipse cx="${x}" cy="${y}" rx="62" ry="46" fill="${FOXY_ORANGE}"/>${[-1, 0, 1].map((d) => `<line x1="${x + d * 22}" y1="${y + 4}" x2="${x + d * 22}" y2="${y + 32}" stroke="#2D1B4E" stroke-width="7" stroke-linecap="round"/>`).join('')}`;
+  const paw = (x, y) => `<ellipse cx="${x}" cy="${y}" rx="62" ry="46" fill="${PAW_GREY}"/>${[-1, 0, 1].map((d) => `<line x1="${x + d * 22}" y1="${y + 4}" x2="${x + d * 22}" y2="${y + 32}" stroke="#2B2B2B" stroke-width="7" stroke-linecap="round"/>`).join('')}`;
   const board = '<rect x="400" y="1270" width="1000" height="470" rx="18"/>';
   const words = `<text x="900" y="1380" text-anchor="middle" font-family="Graduate" font-size="76" letter-spacing="10">FAR FOX P.D.</text>
     <text x="900" y="1540" text-anchor="middle" font-family="Graduate" font-size="140" letter-spacing="6">143-0214</text>
     <text x="900" y="1672" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="74" letter-spacing="6">STOLE YOUR HEART</text>`;
   // The chart stops at the placard, or its lines show through the knocked-out letters.
   const chartMask = `<mask id="chart-${tone}" maskUnits="userSpaceOnUse" x="0" y="0" width="1800" height="2400"><rect width="1800" height="2400" fill="#fff"/><g fill="#000">${board}</g></mask>`;
-  return `${chartMask}<g mask="url(#chart-${tone})">${chart}</g>${foxy(980, 250, 1000)}${knockout(`mug-${tone}`, 1800, 2400, ink, board, words)}${paw(470, 1285)}${paw(1330, 1285)}`;
+  return `${chartMask}<g mask="url(#chart-${tone})">${chart}</g>
+    <image href="${FOXY_BW}" x="480" y="250" width="1000" height="${1000 * 1480 / 1400}"/>
+    ${knockout(`mug-${tone}`, 1800, 2400, ink, board, words)}${paw(470, 1285)}${paw(1330, 1285)}
+    <text x="900" y="1920" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="110" letter-spacing="30" fill="${ink}">FAR FOX</text>`;
 }
-function exhibitA(tone, ink) {
-  const tag = `<g transform="rotate(-12 320 150)"><path d="M 230 105 L 400 105 L 400 205 L 230 205 L 200 155 Z"/></g>`;
-  const words = `<g transform="rotate(-12 320 150)"><circle cx="225" cy="155" r="10"/><text x="312" y="146" text-anchor="middle" font-family="Graduate" font-size="40">EXHIBIT</text><text x="312" y="192" text-anchor="middle" font-family="Graduate" font-size="40">A</text></g>`;
-  return `${heart(105, 160, 170, ink)}<path d="M 160 120 Q 190 95 222 152" fill="none" stroke="${ink}" stroke-width="5"/>${knockout(`ex-${tone}`, 450, 300, ink, tag, words)}`;
+function sheriffBadge(tone, ink) {
+  const cx = 225, cy = 150, R = 128, r = 68;
+  const pts = [], tips = [];
+  for (let i = 0; i < 12; i++) {
+    const a = (Math.PI / 6) * i - Math.PI / 2, rad = i % 2 ? r : R;
+    pts.push(`${cx + rad * Math.cos(a)},${cy + rad * Math.sin(a)}`);
+    if (!(i % 2)) tips.push(`<circle cx="${cx + (R + 4) * Math.cos(a)}" cy="${cy + (R + 4) * Math.sin(a)}" r="15"/>`);
+  }
+  const ribbon = `<path d="M 45 200 L 405 200 L 385 228 L 405 256 L 45 256 L 65 228 Z"/>`;
+  const shape = `<polygon points="${pts.join(' ')}"/>${tips.join('')}${ribbon}`;
+  const holes = `<circle cx="${cx}" cy="${cy - 10}" r="54"/><text x="${cx}" y="${241}" text-anchor="middle" font-family="Graduate" font-size="38" letter-spacing="3">FAR FOX P.D.</text>`;
+  return `${knockout(`badge-${tone}`, 450, 300, ink, shape, holes)}
+    <circle cx="${cx}" cy="${cy - 10}" r="44" fill="none" stroke="${ink}" stroke-width="5"/>${heart(cx, cy - 8, 50, ink)}`;
 }
 for (const tone of ['light', 'dark']) {
   const ink = INK[tone].main;
-  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, exhibitA(tone, ink)];
+  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, sheriffBadge(tone, ink)];
   designs[`pocket-back-${tone}`] = [TEE, mugshot(tone, ink)];
 }
 
