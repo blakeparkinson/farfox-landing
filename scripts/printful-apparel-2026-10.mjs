@@ -7,17 +7,19 @@
  *   PRINTFUL_TOKEN=… node scripts/printful-apparel-2026-10.mjs --apply      # update products, add Black, create the crewneck
  *   PRINTFUL_TOKEN=… node scripts/printful-apparel-2026-10.mjs --mockups    # per-colour shop photos (DTG products)
  */
-import { writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { writeFile, rm } from 'node:fs/promises';
 
 const TOKEN = process.env.PRINTFUL_TOKEN;
 const STORE = process.env.PRINTFUL_STORE_ID || '18292625';
 const BASE = 'https://lovefarfox.com/shop/designs/apparel-2026-10';
-const REVISION = 1;
-const DARK = new Set(['Black', 'Navy', 'Maroon', 'Heather Navy']);
+const REVISION = 2;
+const CREW_REVISION = 1;
+const DARK = new Set(['Black', 'Navy', 'Maroon', 'Heather Navy', 'True Navy', 'Berry']);
 const tone = (colour) => (DARK.has(colour) ? 'dark' : 'light');
 const url = (name, t) => `${BASE}/${name}-${t}.png?v=${REVISION}`;
 // Crewneck files can be served from elsewhere (CREW_FILES_BASE) so the product can be created before the site deploys.
-const crewUrl = (name) => `${process.env.CREW_FILES_BASE || BASE}/${name}.png?v=${REVISION}`;
+const crewUrl = (name) => `${process.env.CREW_FILES_BASE || BASE}/${name}.png?v=${CREW_REVISION}`;
 
 // Tees are Bella + Canvas 3001 (catalog 71); the hoodie is Bella + Canvas 3719 (catalog 294).
 const PRODUCTS = {
@@ -27,6 +29,11 @@ const PRODUCTS = {
   pride: { id: 436891455, catalog: 71, front: 'pride', label: null, price: '30.00', addColours: ['Black'] },
   hearteyes: { id: 436883133, catalog: 71, front: 'hearteyes', label: null, price: '30.00' },
   hoodie: { id: 436883154, catalog: 294, front: 'hoodie-front', back: 'hoodie-back', label: null, price: null },
+};
+// Comfort Colors 6030 garment-dyed pocket tee (catalog 593): prints on the pocket and the back. Created by --apply.
+const POCKET = {
+  name: 'Far Fox — Pocket Tee', catalog: 593, front: 'pocket-front', frontType: 'pocket', back: 'pocket-back', label: null, price: '34.00',
+  colours: ['White', 'Butter', 'Violet', 'Watermelon', 'True Navy', 'Berry', 'Black'], sizes: ['S', 'M', 'L', 'XL', '2XL'],
 };
 const CREW = {
   name: 'Far Fox — Long Distance Club Crewneck', catalog: 845, price: '55.00',
@@ -54,7 +61,7 @@ async function pf(path, init = {}, attempt = 0) {
 }
 
 const filesFor = (p, colour) => [
-  { type: 'default', url: url(p.front, tone(colour)) },
+  { type: p.frontType || 'default', url: url(p.front, tone(colour)) },
   ...(p.back ? [{ type: 'back', url: url(p.back, tone(colour)) }] : []),
   // Printful's API rejects a printed inside label next to DTG placements (label_inside is unsupported,
   // label_inside_dtf can't mix with DTG), so the Foxy label files wait until that's possible.
@@ -62,7 +69,7 @@ const filesFor = (p, colour) => [
 ];
 
 async function assertLive() {
-  for (const n of ['ldc-front', 'ldc-back', 'timezones', 'morse', 'pride', 'hearteyes', 'hoodie-front', 'hoodie-back', 'label']) {
+  for (const n of ['ldc-front', 'ldc-back', 'timezones', 'morse', 'pride', 'hearteyes', 'hoodie-front', 'hoodie-back', 'pocket-front', 'pocket-back', 'label']) {
     for (const t of ['light', 'dark']) { const r = await fetch(url(n, t), { method: 'HEAD' }); if (!r.ok) throw new Error(`${n}-${t} not live (${r.status})`); }
   }
   for (const c of Object.values(CREW.colours)) for (const part of ['crew-chest', 'crew-wrist']) {
@@ -119,38 +126,57 @@ async function createCrew() {
   return created.id;
 }
 
-/** Per-colour shop photos for the DTG products: one generator task per ink tone. */
+async function createPocket() {
+  const existing = (await pf('/store/products?limit=100')).find((p) => p.name === POCKET.name);
+  if (existing) { console.log(`\n${POCKET.name} already exists (${existing.id})`); return existing.id; }
+  const catalog = (await pf(`/products/${POCKET.catalog}`)).variants;
+  const sync_variants = POCKET.colours.flatMap((colour) => POCKET.sizes.map((size) => ({
+    variant_id: catalog.find((v) => v.color === colour && v.size === size).id, retail_price: POCKET.price, files: filesFor(POCKET, colour),
+  })));
+  console.log(`\n${POCKET.name}: ${sync_variants.length} variants at $${POCKET.price}`);
+  if (!apply) return null;
+  const created = await pf('/store/products', { method: 'POST', body: JSON.stringify({ sync_product: { name: POCKET.name }, sync_variants }) });
+  console.log(`  created ${created.id}`);
+  return created.id;
+}
+
+const slugOf = (colour) => colour.toLowerCase().replace(/ /g, '-');
+const shopFile = (path) => new URL(`../public/shop/${path}`, import.meta.url);
+
+/** Per-colour shop photos for the DTG products: one generator task per ink tone, then a retry for any colour it skipped. */
 async function mockups() {
-  for (const [key, p] of Object.entries(PRODUCTS)) {
+  const pocket = (await pf('/store/products?limit=100')).find((p) => p.name === POCKET.name);
+  const all = { ...PRODUCTS, ...(pocket ? { pocket: { ...POCKET, id: pocket.id } } : {}) };
+  for (const [key, p] of Object.entries(all)) {
     const detail = await pf(`/store/products/${p.id}`);
     const colours = [...new Set(detail.sync_variants.map((v) => v.color))];
-    const catalog = (await pf(`/products/${p.catalog}`)).variants;
-    const spec = await pf(`/mockup-generator/printfiles/${p.catalog}`);
-    const byId = Object.fromEntries(spec.printfiles.map((x) => [x.printfile_id, x]));
-    const placements = spec.variant_printfiles[0].placements;
-    for (const t of ['light', 'dark']) {
-      const group = colours.filter((c) => tone(c) === t);
-      if (!group.length) continue;
-      const variantIds = group.map((c) => catalog.find((v) => v.color === c && v.size === 'M').id);
-      const area = (pl) => { const f = byId[placements[pl]]; return { area_width: f.width, area_height: f.height, width: f.width, height: f.height, top: 0, left: 0 }; };
-      const files = [{ placement: 'front', image_url: url(p.front, t), position: area('front') }, ...(p.back ? [{ placement: 'back', image_url: url(p.back, t), position: area('back') }] : [])];
-      const task = await pf(`/mockup-generator/create-task/${p.catalog}`, { method: 'POST', body: JSON.stringify({ variant_ids: variantIds, format: 'png', files, option_groups: ['Flat'], options: ['Front', 'Back'] }) });
-      let res;
-      for (let i = 0; i < 60; i++) { await sleep(5000); res = await pf(`/mockup-generator/task?task_key=${task.task_key}`); if (res.status !== 'pending') break; }
-      if (res.status !== 'completed') throw new Error(`${key} ${t}: mockups ${res.status}`);
-      for (const m of res.mockups) {
-        for (const vid of m.variant_ids) {
-          const colour = group[variantIds.indexOf(vid)];
-          if (!colour) continue;
-          const slug = colour.toLowerCase().replace(/ /g, '-');
-          const views = [{ p: m.placement, u: m.mockup_url }, ...(m.extra || []).map((e) => ({ p: e.option || e.title, u: e.url }))];
-          const save = async (view, path) => { if (view) await writeFile(new URL(`../public/shop/${path}`, import.meta.url), Buffer.from(await (await fetch(view.u)).arrayBuffer())); };
-          if (/front|default/i.test(m.placement)) await save(views[0], `colors/${p.id}-${slug}.png`);
-          if (/back/i.test(m.placement)) await save(views[0], `backs/${p.id}-${slug}.png`);
-        }
-      }
-      console.log(`  ${key} ${t}: ${group.join(', ')}`);
-    }
+    const missing = () => colours.filter((c) => !existsSync(shopFile(`colors/${p.id}-${slugOf(c)}.png`)) || (p.back && !existsSync(shopFile(`backs/${p.id}-${slugOf(c)}.png`))));
+    for (const c of colours) for (const dir of ['colors', 'backs']) await rm(shopFile(`${dir}/${p.id}-${slugOf(c)}.png`), { force: true });
+    for (const t of ['light', 'dark']) await renderMockups(p, colours.filter((c) => tone(c) === t), t);
+    for (const c of missing()) await renderMockups(p, [c], tone(c));
+    console.log(`  ${key}: ${colours.length} colours${missing().length ? `, STILL MISSING ${missing().join(', ')}` : ''}`);
+  }
+}
+
+async function renderMockups(p, group, t) {
+  if (!group.length) return;
+  const catalog = (await pf(`/products/${p.catalog}`)).variants;
+  const spec = await pf(`/mockup-generator/printfiles/${p.catalog}`);
+  const byId = Object.fromEntries(spec.printfiles.map((x) => [x.printfile_id, x]));
+  const placements = spec.variant_printfiles[0].placements;
+  const frontPlacement = p.frontType && p.frontType !== 'default' ? p.frontType : 'front';
+  const variantIds = group.map((c) => catalog.find((v) => v.color === c && v.size === 'M').id);
+  const area = (pl) => { const f = byId[placements[pl]]; return { area_width: f.width, area_height: f.height, width: f.width, height: f.height, top: 0, left: 0 }; };
+  const files = [{ placement: frontPlacement, image_url: url(p.front, t), position: area(frontPlacement) }, ...(p.back ? [{ placement: 'back', image_url: url(p.back, t), position: area('back') }] : [])];
+  const task = await pf(`/mockup-generator/create-task/${p.catalog}`, { method: 'POST', body: JSON.stringify({ variant_ids: variantIds, format: 'png', files, option_groups: ['Flat'], options: ['Front', 'Back'] }) });
+  let res;
+  for (let i = 0; i < 60; i++) { await sleep(5000); res = await pf(`/mockup-generator/task?task_key=${task.task_key}`); if (res.status !== 'pending') break; }
+  if (res.status !== 'completed') throw new Error(`${p.id} ${t}: mockups ${res.status}`);
+  for (const m of res.mockups) for (const vid of m.variant_ids) {
+    const colour = group[variantIds.indexOf(vid)];
+    if (!colour) continue;
+    const dir = /back/i.test(m.placement) ? 'backs' : 'colors';
+    await writeFile(shopFile(`${dir}/${p.id}-${slugOf(colour)}.png`), Buffer.from(await (await fetch(m.mockup_url)).arrayBuffer()));
   }
 }
 
@@ -159,5 +185,6 @@ else {
   if (apply) await assertLive();
   await updateProducts();
   await createCrew();
+  await createPocket();
   if (!apply) console.log('\nDry run only. Re-run with --apply.');
 }

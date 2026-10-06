@@ -122,7 +122,7 @@ const foxy = (cx, top, w) => `<image href="${FOXY}" x="${cx - w / 2}" y="${top}"
 // 6) Heart Eyes, reworked: Foxy big and centred, bold line underneath, floating hearts.
 for (const tone of ['light', 'dark']) {
   const k = INK[tone];
-  designs[`hearteyes-${tone}`] = [TEE, `${heart(190, 520, 150, k.accent)}${heart(1610, 420, 115, k.soft)}${heart(1600, 980, 90, k.accent)}${heart(210, 1080, 95, k.soft)}
+  designs[`hearteyes-${tone}`] = [TEE, `${heart(300, 430, 150, k.accent)}${heart(1500, 330, 115, k.soft)}${heart(1500, 1000, 90, k.accent)}${heart(300, 1090, 95, k.soft)}
     ${foxy(900, 230, 1150)}
     <text x="900" y="1700" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="230" fill="${k.main}">HEART EYES</text>
     <text x="900" y="1890" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="120" letter-spacing="6" fill="${k.accent}">ONLY FOR YOU</text>`];
@@ -165,8 +165,31 @@ function envelope(k) {
 }
 for (const tone of ['light', 'dark']) {
   const k = INK[tone];
-  designs[`hoodie-front-${tone}`] = [{ w: 1800, h: 1800 }, `<image href="${FOXY_LETTER}" x="1150" y="170" width="440" height="440"/>`];
+  designs[`hoodie-front-${tone}`] = [{ w: 1800, h: 1800 }, `<image href="${FOXY_LETTER}" x="1060" y="150" width="600" height="600"/>`];
   designs[`hoodie-back-${tone}`] = [TEE, envelope(k)];
+}
+
+// 9) Pocket tee (Comfort Colors 6030): Foxy peeking over a stitched pocket edge, on the pocket and big on the back.
+const FOXY_ORANGE = '#F6662A', PEEK = 0.62;
+const peekingFoxy = (id, cx, top, w, edgeY, ink, stitch) => {
+  const paw = (x) => `<ellipse cx="${x}" cy="${edgeY}" rx="${w * 0.075}" ry="${w * 0.05}" fill="${FOXY_ORANGE}"/>${[-1, 0, 1].map((d) => `<line x1="${x + d * w * 0.025}" y1="${edgeY - w * 0.02}" x2="${x + d * w * 0.025}" y2="${edgeY + w * 0.03}" stroke="${ink}" stroke-width="${w * 0.008}" stroke-linecap="round"/>`).join('')}`;
+  return `<defs><clipPath id="${id}"><rect x="0" y="0" width="${cx * 2}" height="${edgeY}"/></clipPath></defs>
+    <g clip-path="url(#${id})">${foxy(cx, top, w)}</g>
+    <line x1="${cx - w * 0.62}" y1="${edgeY}" x2="${cx + w * 0.62}" y2="${edgeY}" stroke="${ink}" stroke-width="${stitch}" stroke-linecap="round"/>
+    ${paw(cx - w * 0.2)}${paw(cx + w * 0.2)}`;
+};
+for (const tone of ['light', 'dark']) {
+  const k = INK[tone];
+  const fw = 250, ftop = 18, edge = ftop + PEEK * fw * 1480 / 1400;
+  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, `${peekingFoxy('pf', 225, ftop, fw, edge, k.main, 7)}
+    <line x1="${225 - fw * 0.55}" y1="${edge + 16}" x2="${225 + fw * 0.55}" y2="${edge + 16}" stroke="${k.main}" stroke-width="4" stroke-dasharray="10 8"/>
+    <text x="225" y="${edge + 78}" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="34" letter-spacing="8" fill="${k.main}">FAR FOX</text>`];
+  const bw = 900, btop = 200, bedge = btop + PEEK * bw * 1480 / 1400, L = 380, R = 1420, B = bedge + 680;
+  const pocket = (inset, extra) => `<path d="M ${L + inset} ${bedge + inset * 0.6} L ${L + inset} ${B - inset * 0.3} L 900 ${B + 150 - inset * 1.2} L ${R - inset} ${B - inset * 0.3} L ${R - inset} ${bedge + inset * 0.6}" fill="none" stroke="${k.main}" ${extra}/>`;
+  designs[`pocket-back-${tone}`] = [TEE, `${pocket(0, 'stroke-width="16" stroke-linejoin="round"')}${pocket(42, 'stroke-width="8" stroke-dasharray="26 18" stroke-linejoin="round"')}
+    ${peekingFoxy('pb', 900, btop, bw, bedge, k.main, 16)}
+    <text x="900" y="${B + 380}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${k.main}">I'd keep you in my pocket</text>
+    <text x="900" y="${B + 540}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${k.main}">if I could.</text>`];
 }
 
 // 5) Crewneck embroidery: collegiate LONG DISTANCE CLUB crest (centre chest 4×4in @300), cuff heart, inside label.
@@ -183,8 +206,25 @@ designs['crew-label'] = [{ w: 450, h: 450 }, `<text x="225" y="200" text-anchor=
   <text x="225" y="270" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="62" fill="#2D1B4E">mile.</text>
   <text x="225" y="350" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="40" letter-spacing="8" fill="#FF6B8A">FAR FOX</text>`];
 
+// Each print is trimmed and scaled to fill its box, so the art reaches the full 12in print width.
+const FULL_FRONT = { cx: 900, w: 1740, top: 90, h: 2160 };
+const FIT = {
+  timezones: FULL_FRONT, hearteyes: FULL_FRONT, pride: FULL_FRONT, 'ldc-back': { ...FULL_FRONT, top: 120 },
+  morse: { ...FULL_FRONT, h: 2100 }, 'pocket-back': { ...FULL_FRONT, top: 150, h: 2100 }, 'ldc-front': { cx: 1290, w: 525, top: 150, h: 630 }, 'hoodie-back': { cx: 900, w: 1740, top: 250, h: 1900 },
+};
+async function fitToBox(buf, { w, h }, box) {
+  const art = await sharp(buf).trim().toBuffer({ resolveWithObject: true });
+  const scale = Math.min(box.w / art.info.width, box.h / art.info.height);
+  const width = Math.round(art.info.width * scale), height = Math.round(art.info.height * scale);
+  const resized = await sharp(art.data).resize(width, height).png().toBuffer();
+  return sharp({ create: { width: w, height: h, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite([{ input: resized, left: Math.round(box.cx - width / 2), top: box.top }]).png().toBuffer();
+}
+
 for (const [name, [{ w, h }, body]] of Object.entries(designs)) {
   let buf = png(w, h, body);
+  const box = FIT[name.replace(/-(light|dark)$/, '')];
+  if (box) buf = await fitToBox(buf, { w, h }, box);
   // Embroidery files must hold only exact thread colours: snap anti-aliased edges to full alpha.
   if (name.startsWith('crew-chest') || name.startsWith('crew-wrist')) {
     const { data, info } = await sharp(buf).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
