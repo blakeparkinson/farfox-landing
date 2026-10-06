@@ -169,26 +169,43 @@ for (const tone of ['light', 'dark']) {
   designs[`hoodie-back-${tone}`] = [TEE, envelope(k)];
 }
 
-// 9) Pocket tee (Comfort Colors 6030): Foxy peeking over a stitched pocket edge, on the pocket and big on the back.
-const FOXY_ORANGE = '#F6662A', PEEK = 0.62;
-const peekingFoxy = (id, cx, top, w, edgeY, ink, stitch) => {
-  const paw = (x) => `<ellipse cx="${x}" cy="${edgeY}" rx="${w * 0.075}" ry="${w * 0.05}" fill="${FOXY_ORANGE}"/>${[-1, 0, 1].map((d) => `<line x1="${x + d * w * 0.025}" y1="${edgeY - w * 0.02}" x2="${x + d * w * 0.025}" y2="${edgeY + w * 0.03}" stroke="${ink}" stroke-width="${w * 0.008}" stroke-linecap="round"/>`).join('')}`;
-  return `<defs><clipPath id="${id}"><rect x="0" y="0" width="${cx * 2}" height="${edgeY}"/></clipPath></defs>
-    <g clip-path="url(#${id})">${foxy(cx, top, w)}</g>
-    <line x1="${cx - w * 0.62}" y1="${edgeY}" x2="${cx + w * 0.62}" y2="${edgeY}" stroke="${ink}" stroke-width="${stitch}" stroke-linecap="round"/>
-    ${paw(cx - w * 0.2)}${paw(cx + w * 0.2)}`;
-};
+// 9) Pocket tee (Comfort Colors 6030): "no, YOU hang up" on the pocket; the back is the whole 1am text thread.
+// Sent bubbles are solid ink with the words knocked out to the shirt colour; received ones are outlined.
+const textWidth = (text, size, weight) => new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" width="4000" height="400"><text x="0" y="300" font-family="Nunito" font-weight="${weight}" font-size="${size}">${text}</text></svg>`, { font: { fontFiles, loadSystemFonts: false } }).getBBox()?.width || 0;
+let bubbleId = 0;
+// A tail only on the last bubble of a run, as in a messaging app; `heart` adds a drawn heart (Nunito has no ♥).
+function bubble({ text, side, y, size, ink, canvasW, margin, tail = true, withHeart = false }) {
+  const padX = size * 0.62, h = size * 1.75, heartW = withHeart ? size * 1.25 : 0;
+  const w = textWidth(text, size, 800) + heartW + padX * 2, r = h / 2;
+  const x = side === 'right' ? canvasW - margin - w : margin, dir = side === 'right' ? 1 : -1, tx = side === 'right' ? x + w - r * 0.45 : x + r * 0.45;
+  const tailPath = `M ${tx - dir * r * 0.55} ${y + h * 0.55} L ${tx + dir * r * 0.15} ${y + h * 0.4} Q ${tx + dir * r * 0.2} ${y + h * 0.95} ${tx + dir * r * 0.85} ${y + h + r * 0.18} Q ${tx - dir * r * 0.25} ${y + h * 1.06} ${tx - dir * r * 0.75} ${y + h * 0.85} Z`;
+  const shape = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}"/>${tail ? `<path d="${tailPath}"/>` : ''}`;
+  const words = (fill) => `<text x="${x + padX}" y="${y + h * 0.68}" font-family="Nunito" font-weight="800" font-size="${size}" fill="${fill}">${text}</text>${withHeart ? heart(x + w - padX - heartW * 0.42, y + h * 0.5, size * 0.8, fill) : ''}`;
+  const id = `bm${bubbleId++}`, stroke = size * 0.07;
+  // Received bubbles: the outline of the merged bubble + tail. Sent bubbles: solid, words knocked out.
+  const mask = side === 'left'
+    ? `<g fill="#fff" stroke="#fff" stroke-width="${stroke * 2}" stroke-linejoin="round">${shape}</g><g fill="#000">${shape}</g>`
+    : `<g fill="#fff">${shape}</g>${words('#000')}`;
+  return `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="${canvasW}" height="99999">${mask}</mask>
+    <rect x="0" y="0" width="${canvasW}" height="99999" fill="${ink}" mask="url(#${id})"/>${side === 'left' ? words(ink) : ''}`;
+}
+const HANG_UP_THREAD = [
+  ['left', 'ok goodnight', true], ['right', 'night! you hang up'], ['left', 'no YOU hang up'], ['right', 'no you'],
+  ['left', 'ok on 3'], ['left', '1'], ['left', '2'], ['left', '3'], ['right', '...'], ['right', 'you’re still there aren’t you'], ['left', 'yes', true],
+];
 for (const tone of ['light', 'dark']) {
-  const k = INK[tone];
-  const fw = 250, ftop = 18, edge = ftop + PEEK * fw * 1480 / 1400;
-  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, `${peekingFoxy('pf', 225, ftop, fw, edge, k.main, 7)}
-    <line x1="${225 - fw * 0.55}" y1="${edge + 16}" x2="${225 + fw * 0.55}" y2="${edge + 16}" stroke="${k.main}" stroke-width="4" stroke-dasharray="10 8"/>`];
-  const bw = 900, btop = 200, bedge = btop + PEEK * bw * 1480 / 1400, L = 380, R = 1420, B = bedge + 680;
-  const pocket = (inset, extra) => `<path d="M ${L + inset} ${bedge + inset * 0.6} L ${L + inset} ${B - inset * 0.3} L 900 ${B + 150 - inset * 1.2} L ${R - inset} ${B - inset * 0.3} L ${R - inset} ${bedge + inset * 0.6}" fill="none" stroke="${k.main}" ${extra}/>`;
-  designs[`pocket-back-${tone}`] = [TEE, `${pocket(0, 'stroke-width="16" stroke-linejoin="round"')}${pocket(42, 'stroke-width="8" stroke-dasharray="26 18" stroke-linejoin="round"')}
-    ${peekingFoxy('pb', 900, btop, bw, bedge, k.main, 16)}
-    <text x="900" y="${B + 380}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${k.main}">I'd keep you in my pocket</text>
-    <text x="900" y="${B + 540}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${k.main}">if I could.</text>`];
+  const k = INK[tone], ink = k.main;
+  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, bubble({ text: 'no, YOU hang up', side: 'right', y: 90, size: 44, ink, canvasW: 450, margin: 10 })];
+  const SIZE = 88, GAP = 34, small = (y, t) => `<text x="900" y="${y}" text-anchor="middle" font-family="Nunito" font-weight="700" font-size="52" letter-spacing="2" fill="${ink}" fill-opacity="0.75">${t}</text>`;
+  let y = 160, body = small(80, 'Today 11:58 PM');
+  HANG_UP_THREAD.forEach(([side, text, withHeart], i) => {
+    y += i && HANG_UP_THREAD[i - 1][0] === side ? GAP * 0.35 : GAP;
+    const tail = HANG_UP_THREAD[i + 1]?.[0] !== side;
+    body += bubble({ text, side, y, size: SIZE, ink, canvasW: 1800, margin: 60, tail, withHeart });
+    y += SIZE * 1.75;
+  });
+  body += small(y + 150, 'Call duration 4:17:52');
+  designs[`pocket-back-${tone}`] = [TEE, body];
 }
 
 // 5) Crewneck embroidery: collegiate LONG DISTANCE CLUB crest (centre chest 4×4in @300), cuff heart, inside label.
