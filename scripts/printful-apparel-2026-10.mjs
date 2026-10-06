@@ -17,7 +17,7 @@ const REVISION = 2;
 const CREW_REVISION = 1;
 const DARK = new Set(['Black', 'Navy', 'Maroon', 'Heather Navy', 'True Navy', 'Berry']);
 const tone = (colour) => (DARK.has(colour) ? 'dark' : 'light');
-const url = (name, t) => `${BASE}/${name}-${t}.png?v=${REVISION}`;
+const url = (name, t, revision = REVISION) => `${BASE}/${name}-${t}.png?v=${revision}`;
 // Crewneck files can be served from elsewhere (CREW_FILES_BASE) so the product can be created before the site deploys.
 const crewUrl = (name) => `${process.env.CREW_FILES_BASE || BASE}/${name}.png?v=${CREW_REVISION}`;
 
@@ -32,7 +32,7 @@ const PRODUCTS = {
 };
 // Comfort Colors 6030 garment-dyed pocket tee (catalog 593): prints on the pocket and the back. Created by --apply.
 const POCKET = {
-  name: 'Far Fox — Pocket Tee', catalog: 593, front: 'pocket-front', frontType: 'pocket', back: 'pocket-back', label: null, price: '34.00',
+  name: 'Far Fox — Pocket Tee', catalog: 593, front: 'pocket-front', frontType: 'pocket', back: 'pocket-back', label: null, price: '34.00', revision: 3,
   colours: ['White', 'Butter', 'Violet', 'Watermelon', 'True Navy', 'Berry', 'Black'], sizes: ['S', 'M', 'L', 'XL', '2XL'],
 };
 const CREW = {
@@ -61,8 +61,8 @@ async function pf(path, init = {}, attempt = 0) {
 }
 
 const filesFor = (p, colour) => [
-  { type: p.frontType || 'default', url: url(p.front, tone(colour)) },
-  ...(p.back ? [{ type: 'back', url: url(p.back, tone(colour)) }] : []),
+  { type: p.frontType || 'default', url: url(p.front, tone(colour), p.revision) },
+  ...(p.back ? [{ type: 'back', url: url(p.back, tone(colour), p.revision) }] : []),
   // Printful's API rejects a printed inside label next to DTG placements (label_inside is unsupported,
   // label_inside_dtf can't mix with DTG), so the Foxy label files wait until that's possible.
   ...(p.label ? [{ type: p.label, url: url('label', tone(colour)) }] : []),
@@ -167,7 +167,7 @@ async function renderMockups(p, group, t) {
   const frontPlacement = p.frontType && p.frontType !== 'default' ? p.frontType : 'front';
   const variantIds = group.map((c) => catalog.find((v) => v.color === c && v.size === 'M').id);
   const area = (pl) => { const f = byId[placements[pl]]; return { area_width: f.width, area_height: f.height, width: f.width, height: f.height, top: 0, left: 0 }; };
-  const files = [{ placement: frontPlacement, image_url: url(p.front, t), position: area(frontPlacement) }, ...(p.back ? [{ placement: 'back', image_url: url(p.back, t), position: area('back') }] : [])];
+  const files = [{ placement: frontPlacement, image_url: url(p.front, t, p.revision), position: area(frontPlacement) }, ...(p.back ? [{ placement: 'back', image_url: url(p.back, t, p.revision), position: area('back') }] : [])];
   const task = await pf(`/mockup-generator/create-task/${p.catalog}`, { method: 'POST', body: JSON.stringify({ variant_ids: variantIds, format: 'png', files, option_groups: ['Flat'], options: ['Front', 'Back'] }) });
   let res;
   for (let i = 0; i < 60; i++) { await sleep(5000); res = await pf(`/mockup-generator/task?task_key=${task.task_key}`); if (res.status !== 'pending') break; }
@@ -175,8 +175,10 @@ async function renderMockups(p, group, t) {
   for (const m of res.mockups) for (const vid of m.variant_ids) {
     const colour = group[variantIds.indexOf(vid)];
     if (!colour) continue;
-    const dir = /back/i.test(m.placement) ? 'backs' : 'colors';
-    await writeFile(shopFile(`${dir}/${p.id}-${slugOf(colour)}.png`), Buffer.from(await (await fetch(m.mockup_url)).arrayBuffer()));
+    // The generator files the back view under extras for some tasks, so pick each view by its own label.
+    const isBack = /back/i.test(m.placement);
+    const view = (m.extra || []).find((e) => (isBack ? /back/i : /front/i).test(e.option || e.title || ''))?.url || m.mockup_url;
+    await writeFile(shopFile(`${isBack ? 'backs' : 'colors'}/${p.id}-${slugOf(colour)}.png`), Buffer.from(await (await fetch(view)).arrayBuffer()));
   }
 }
 

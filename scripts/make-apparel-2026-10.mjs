@@ -182,8 +182,7 @@ for (const tone of ['light', 'dark']) {
   const k = INK[tone];
   const fw = 250, ftop = 18, edge = ftop + PEEK * fw * 1480 / 1400;
   designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, `${peekingFoxy('pf', 225, ftop, fw, edge, k.main, 7)}
-    <line x1="${225 - fw * 0.55}" y1="${edge + 16}" x2="${225 + fw * 0.55}" y2="${edge + 16}" stroke="${k.main}" stroke-width="4" stroke-dasharray="10 8"/>
-    <text x="225" y="${edge + 78}" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="34" letter-spacing="8" fill="${k.main}">FAR FOX</text>`];
+    <line x1="${225 - fw * 0.55}" y1="${edge + 16}" x2="${225 + fw * 0.55}" y2="${edge + 16}" stroke="${k.main}" stroke-width="4" stroke-dasharray="10 8"/>`];
   const bw = 900, btop = 200, bedge = btop + PEEK * bw * 1480 / 1400, L = 380, R = 1420, B = bedge + 680;
   const pocket = (inset, extra) => `<path d="M ${L + inset} ${bedge + inset * 0.6} L ${L + inset} ${B - inset * 0.3} L 900 ${B + 150 - inset * 1.2} L ${R - inset} ${B - inset * 0.3} L ${R - inset} ${bedge + inset * 0.6}" fill="none" stroke="${k.main}" ${extra}/>`;
   designs[`pocket-back-${tone}`] = [TEE, `${pocket(0, 'stroke-width="16" stroke-linejoin="round"')}${pocket(42, 'stroke-width="8" stroke-dasharray="26 18" stroke-linejoin="round"')}
@@ -210,7 +209,7 @@ designs['crew-label'] = [{ w: 450, h: 450 }, `<text x="225" y="200" text-anchor=
 const FULL_FRONT = { cx: 900, w: 1740, top: 90, h: 2160 };
 const FIT = {
   timezones: FULL_FRONT, hearteyes: FULL_FRONT, pride: FULL_FRONT, 'ldc-back': { ...FULL_FRONT, top: 120 },
-  morse: { ...FULL_FRONT, h: 2100 }, 'pocket-back': { ...FULL_FRONT, top: 150, h: 2100 }, 'ldc-front': { cx: 1290, w: 525, top: 150, h: 630 }, 'hoodie-back': { cx: 900, w: 1740, top: 250, h: 1900 },
+  morse: { ...FULL_FRONT, h: 2100 }, 'pocket-back': { ...FULL_FRONT, top: 150, h: 2100 }, 'pocket-front': { cx: 225, w: 440, top: 6, h: 288 }, 'ldc-front': { cx: 1290, w: 525, top: 150, h: 630 }, 'hoodie-back': { cx: 900, w: 1740, top: 250, h: 1900 },
 };
 async function fitToBox(buf, { w, h }, box) {
   const art = await sharp(buf).trim().toBuffer({ resolveWithObject: true });
