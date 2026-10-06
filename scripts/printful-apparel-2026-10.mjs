@@ -5,7 +5,7 @@
  *
  *   PRINTFUL_TOKEN=… node scripts/printful-apparel-2026-10.mjs              # dry run
  *   PRINTFUL_TOKEN=… node scripts/printful-apparel-2026-10.mjs --apply      # update products, add Black, create the crewneck
- *   PRINTFUL_TOKEN=… node scripts/printful-apparel-2026-10.mjs --mockups    # per-colour shop photos (DTG products)
+ *   PRINTFUL_TOKEN=… node scripts/printful-apparel-2026-10.mjs --mockups    # per-colour shop photos (DTG products); --only=pocket,ldc limits it
  */
 import { existsSync } from 'node:fs';
 import { writeFile, rm } from 'node:fs/promises';
@@ -151,7 +151,9 @@ const shopFile = (path) => new URL(`../public/shop/${path}`, import.meta.url);
 
 /** Per-colour shop photos for the DTG products: one generator task per ink tone, then a retry for any colour it skipped. */
 async function mockups() {
+  const only = args.find((a) => a.startsWith('--only='))?.slice(7).split(',');
   for (const [key, p] of Object.entries(await withPocket())) {
+    if (only && !only.includes(key)) continue;
     const detail = await pf(`/store/products/${p.id}`);
     const colours = [...new Set(detail.sync_variants.map((v) => v.color))];
     const missing = () => colours.filter((c) => !existsSync(shopFile(`colors/${p.id}-${slugOf(c)}.png`)) || (p.back && !existsSync(shopFile(`backs/${p.id}-${slugOf(c)}.png`))));
