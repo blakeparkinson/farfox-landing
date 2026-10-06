@@ -169,26 +169,49 @@ for (const tone of ['light', 'dark']) {
   designs[`hoodie-back-${tone}`] = [TEE, envelope(k)];
 }
 
-// 9) Pocket tee (Comfort Colors 6030): Foxy peeking over a stitched pocket edge, on the pocket and big on the back.
-const FOXY_ORANGE = '#F6662A', PEEK = 0.62;
-const peekingFoxy = (id, cx, top, w, edgeY, ink, stitch) => {
-  const paw = (x) => `<ellipse cx="${x}" cy="${edgeY}" rx="${w * 0.075}" ry="${w * 0.05}" fill="${FOXY_ORANGE}"/>${[-1, 0, 1].map((d) => `<line x1="${x + d * w * 0.025}" y1="${edgeY - w * 0.02}" x2="${x + d * w * 0.025}" y2="${edgeY + w * 0.03}" stroke="${ink}" stroke-width="${w * 0.008}" stroke-linecap="round"/>`).join('')}`;
-  return `<defs><clipPath id="${id}"><rect x="0" y="0" width="${cx * 2}" height="${edgeY}"/></clipPath></defs>
-    <g clip-path="url(#${id})">${foxy(cx, top, w)}</g>
-    <line x1="${cx - w * 0.62}" y1="${edgeY}" x2="${cx + w * 0.62}" y2="${edgeY}" stroke="${ink}" stroke-width="${stitch}" stroke-linecap="round"/>
-    ${paw(cx - w * 0.2)}${paw(cx + w * 0.2)}`;
-};
+// 9) Pocket tee (Comfort Colors 6030): a FAR FOX P.D. sheriff's badge on the pocket; the back is Foxy's black-and-white
+// mugshot in front of a fox-sized height chart, holding a booking placard. One ink plus the photo, so it reads on every colour.
+const FOXY_BW = `data:image/png;base64,${(await sharp(`${REPO}/public/shop/designs/hearteyes-v2.png`).extract({ left: 650, top: 0, width: 1400, height: 1480 }).grayscale().linear(1.35, -78).png().toBuffer()).toString('base64')}`;
+const PAW_GREY = '#6E6E6E';
+const knockout = (id, w, h, ink, shape, words) => `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}"><g fill="#fff">${shape}</g><g fill="#000">${words}</g></mask>
+  <rect x="0" y="0" width="${w}" height="${h}" fill="${ink}" mask="url(#${id})"/>`;
+function mugshot(tone, ink) {
+  let chart = '';
+  for (let i = 0, y = 170; y <= 1950; i++, y += 74) {
+    const major = i % 4 === 0, inches = 36 - i * 1.5;
+    chart += `<line x1="${major ? 250 : 330}" y1="${y}" x2="1740" y2="${y}" stroke="${ink}" stroke-width="${major ? 9 : 4}" stroke-opacity="${major ? 1 : 0.6}"/>`;
+    if (major) chart += `<text x="60" y="${y + 24}" font-family="Graduate" font-size="64" fill="${ink}">${Math.floor(inches / 12)}'${Math.round(inches % 12)}"</text>`;
+  }
+  const paw = (x, y) => `<ellipse cx="${x}" cy="${y}" rx="62" ry="46" fill="${PAW_GREY}"/>${[-1, 0, 1].map((d) => `<line x1="${x + d * 22}" y1="${y + 4}" x2="${x + d * 22}" y2="${y + 32}" stroke="#2B2B2B" stroke-width="7" stroke-linecap="round"/>`).join('')}`;
+  const board = '<rect x="330" y="1470" width="1140" height="540" rx="20"/>';
+  const words = `<text x="900" y="1597" text-anchor="middle" font-family="Graduate" font-size="88" letter-spacing="12">FAR FOX P.D.</text>
+    <text x="900" y="1780" text-anchor="middle" font-family="Graduate" font-size="162" letter-spacing="7">143-0214</text>
+    <text x="900" y="1932" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="85" letter-spacing="7">STOLE YOUR HEART</text>`;
+  // The chart stops at the placard, or its lines show through the knocked-out letters.
+  const chartMask = `<mask id="chart-${tone}" maskUnits="userSpaceOnUse" x="0" y="0" width="1800" height="2400"><rect width="1800" height="2400" fill="#fff"/><g fill="#000">${board}</g></mask>`;
+  return `${chartMask}<g mask="url(#chart-${tone})">${chart}</g>
+    <image href="${FOXY_BW}" x="340" y="190" width="1300" height="${1300 * 1480 / 1400}"/>
+    ${knockout(`mug-${tone}`, 1800, 2400, ink, board, words)}${paw(410, 1488)}${paw(1390, 1488)}
+    <text x="900" y="2210" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="130" letter-spacing="34" fill="${ink}">FAR FOX</text>`;
+}
+function sheriffBadge(tone, ink) {
+  const cx = 225, cy = 150, R = 128, r = 68;
+  const pts = [], tips = [];
+  for (let i = 0; i < 12; i++) {
+    const a = (Math.PI / 6) * i - Math.PI / 2, rad = i % 2 ? r : R;
+    pts.push(`${cx + rad * Math.cos(a)},${cy + rad * Math.sin(a)}`);
+    if (!(i % 2)) tips.push(`<circle cx="${cx + (R + 4) * Math.cos(a)}" cy="${cy + (R + 4) * Math.sin(a)}" r="15"/>`);
+  }
+  const ribbon = `<path d="M 0 194 L 450 194 L 424 226 L 450 258 L 0 258 L 26 226 Z"/>`;
+  const shape = `<polygon points="${pts.join(' ')}"/>${tips.join('')}${ribbon}`;
+  const holes = `<circle cx="${cx}" cy="${cy - 10}" r="54"/><text x="${cx}" y="${243}" text-anchor="middle" font-family="Graduate" font-size="46" letter-spacing="4">FAR FOX P.D.</text>`;
+  return `${knockout(`badge-${tone}`, 450, 300, ink, shape, holes)}
+    <circle cx="${cx}" cy="${cy - 10}" r="44" fill="none" stroke="${ink}" stroke-width="5"/>${heart(cx, cy - 8, 50, ink)}`;
+}
 for (const tone of ['light', 'dark']) {
-  const k = INK[tone];
-  const fw = 250, ftop = 18, edge = ftop + PEEK * fw * 1480 / 1400;
-  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, `${peekingFoxy('pf', 225, ftop, fw, edge, k.main, 7)}
-    <line x1="${225 - fw * 0.55}" y1="${edge + 16}" x2="${225 + fw * 0.55}" y2="${edge + 16}" stroke="${k.main}" stroke-width="4" stroke-dasharray="10 8"/>`];
-  const bw = 900, btop = 200, bedge = btop + PEEK * bw * 1480 / 1400, L = 380, R = 1420, B = bedge + 680;
-  const pocket = (inset, extra) => `<path d="M ${L + inset} ${bedge + inset * 0.6} L ${L + inset} ${B - inset * 0.3} L 900 ${B + 150 - inset * 1.2} L ${R - inset} ${B - inset * 0.3} L ${R - inset} ${bedge + inset * 0.6}" fill="none" stroke="${k.main}" ${extra}/>`;
-  designs[`pocket-back-${tone}`] = [TEE, `${pocket(0, 'stroke-width="16" stroke-linejoin="round"')}${pocket(42, 'stroke-width="8" stroke-dasharray="26 18" stroke-linejoin="round"')}
-    ${peekingFoxy('pb', 900, btop, bw, bedge, k.main, 16)}
-    <text x="900" y="${B + 380}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${k.main}">I'd keep you in my pocket</text>
-    <text x="900" y="${B + 540}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${k.main}">if I could.</text>`];
+  const ink = INK[tone].main;
+  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, sheriffBadge(tone, ink)];
+  designs[`pocket-back-${tone}`] = [TEE, mugshot(tone, ink)];
 }
 
 // 5) Crewneck embroidery: collegiate LONG DISTANCE CLUB crest (centre chest 4×4in @300), cuff heart, inside label.
@@ -209,7 +232,7 @@ designs['crew-label'] = [{ w: 450, h: 450 }, `<text x="225" y="200" text-anchor=
 const FULL_FRONT = { cx: 900, w: 1740, top: 90, h: 2160 };
 const FIT = {
   timezones: FULL_FRONT, hearteyes: FULL_FRONT, pride: FULL_FRONT, 'ldc-back': { ...FULL_FRONT, top: 120 },
-  morse: { ...FULL_FRONT, h: 2100 }, 'pocket-back': { ...FULL_FRONT, top: 150, h: 2100 }, 'pocket-front': { cx: 225, w: 440, top: 6, h: 288 }, 'ldc-front': { cx: 1290, w: 525, top: 150, h: 630 }, 'hoodie-back': { cx: 900, w: 1740, top: 250, h: 1900 },
+  morse: { ...FULL_FRONT, h: 2100 }, 'pocket-back': { ...FULL_FRONT, top: 90, h: 2280 }, 'pocket-front': { cx: 225, w: 450, top: 2, h: 296 }, 'ldc-front': { cx: 1290, w: 525, top: 150, h: 630 }, 'hoodie-back': { cx: 900, w: 1740, top: 250, h: 1900 },
 };
 async function fitToBox(buf, { w, h }, box) {
   const art = await sharp(buf).trim().toBuffer({ resolveWithObject: true });
