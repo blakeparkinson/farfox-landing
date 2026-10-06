@@ -169,13 +169,14 @@ for (const tone of ['light', 'dark']) {
   designs[`hoodie-back-${tone}`] = [TEE, envelope(k)];
 }
 
-// 5) Crewneck embroidery: collegiate LONG DISTANCE CLUB (large front 3000×1800 @300), cuff heart, inside label.
+// 5) Crewneck embroidery: collegiate LONG DISTANCE CLUB crest (centre chest 4×4in @300), cuff heart, inside label.
+// Printful's API refuses large embroidery placements, so the lockup is drawn at 3000×1800 and scaled onto the chest.
 const THREAD = { purple: '#6B5294', flamingo: '#CC3366', white: '#FFFFFF', navy: '#333366' };
 const CREW = { oatmeal: ['purple', 'flamingo'], navy: ['white', 'flamingo'], grey: ['navy', 'flamingo'], purple: ['white', 'flamingo'] };
 for (const [name, [main, accent]] of Object.entries(CREW)) {
-  designs[`crew-front-${name}`] = [{ w: 3000, h: 1800 }, `${arcText('a', 'LONG DISTANCE', 1500, 1290, 930, 260, THREAD[main], 10)}
+  designs[`crew-chest-${name}`] = [{ w: 1200, h: 1200 }, `<g transform="translate(0 240) scale(0.4)">${arcText('a', 'LONG DISTANCE', 1500, 1290, 930, 260, THREAD[main], 10)}
     ${knockFox('f', 1500, 1120, 380, THREAD[accent])}
-    <text x="1500" y="1690" text-anchor="middle" font-family="Graduate" font-size="330" letter-spacing="40" fill="${THREAD[main]}">CLUB</text>`];
+    <text x="1500" y="1690" text-anchor="middle" font-family="Graduate" font-size="330" letter-spacing="40" fill="${THREAD[main]}">CLUB</text></g>`];
   designs[`crew-wrist-${name}`] = [{ w: 600, h: 900 }, heart(300, 450, 300, THREAD[accent])];
 }
 designs['crew-label'] = [{ w: 450, h: 450 }, `<text x="225" y="200" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="62" fill="#2D1B4E">Worth every</text>
@@ -185,7 +186,7 @@ designs['crew-label'] = [{ w: 450, h: 450 }, `<text x="225" y="200" text-anchor=
 for (const [name, [{ w, h }, body]] of Object.entries(designs)) {
   let buf = png(w, h, body);
   // Embroidery files must hold only exact thread colours: snap anti-aliased edges to full alpha.
-  if (name.startsWith('crew-front') || name.startsWith('crew-wrist')) {
+  if (name.startsWith('crew-chest') || name.startsWith('crew-wrist')) {
     const { data, info } = await sharp(buf).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     for (let i = 0; i < data.length; i += 4) data[i + 3] = data[i + 3] < 128 ? 0 : 255;
     buf = await sharp(data, { raw: info }).png().toBuffer();
