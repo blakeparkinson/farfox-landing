@@ -8,6 +8,8 @@ export const SITE = 'https://lovefarfox.com';
 /** Map a Printful sync-product name → kit slug, or null if not personalizable. */
 export function kitSlugForName(name) {
   const n = String(name || '').toLowerCase();
+  // The Oct 2026 Ballpark jersey is one product in three colourways; kitForColour adds the colourway.
+  if (/ballpark/.test(n)) return BASEBALL.kit;
   // Baseball kits (check before generic "jersey").
   if (/baseball/.test(n)) {
     if (/\(red\)/.test(n)) return 'bb-red';
@@ -35,6 +37,15 @@ export function kitSlugForName(name) {
   if (/coordinates/.test(n)) return 'chart';
   if (/\(orange\)/.test(n)) return 'orange';
   return null;
+}
+
+/** The kit whose back a shopper gets for this product in this colour: colourway kits get one back per colourway. */
+export function kitForColour(name, colour) {
+  const kit = kitSlugForName(name);
+  const colourways = COLORWAY_KITS[kit]?.colorways;
+  if (!colourways) return kit;
+  const pick = colourways.find((c) => c.label.toLowerCase() === String(colour || '').toLowerCase()) || colourways[0];
+  return `${kit}-${pick.key}`;
 }
 
 /** Public URL Printful fetches to get a personalized back for this kit/name/number. */

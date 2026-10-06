@@ -1,5 +1,6 @@
 /**
  * October 2026 baseball jersey (Printful AOP baseball jersey, catalog 792): one product, three colourways.
+ * Every file is at its print area's exact size, so Printful never crops or scales one.
  * Front: "Far Fox" in a ballpark script with a tail swoosh, split around the button placket. Left sleeve:
  * a Foxy patch. Back: the personalised name + number layout from jerseyBack.mjs (143 by default).
  *
@@ -21,7 +22,7 @@ import { BASEBALL } from '../src/lib/kits.mjs';
 
 const OUT = new URL('../public/shop/designs/baseball-2026-10/', import.meta.url);
 await mkdir(OUT, { recursive: true });
-const BODY = { w: 5700, h: 6900 }, SLEEVE = { w: 5700, h: 2250 }, SQUARE = 6000;
+const BODY = { w: 5700, h: 6900 }, SLEEVE = { w: 5700, h: 2250 };
 const PLACKET = { left: 2470, right: 3000 };
 const SCRIPT_BASELINE = 2900, SCRIPT_SIZE = 1180;
 const SLEEVE_PATCH = { x: 2350, y: 1050, r: 330 };
@@ -74,7 +75,7 @@ async function defaultBack(kit, patternPng) {
   const { renderJerseyBack } = await import('../src/lib/jerseyBack.mjs');
   const realFetch = globalThis.fetch;
   globalThis.fetch = async (url, init) => (String(url).endsWith(`${kit}-pattern.png`) ? new Response(patternPng) : realFetch(url, init));
-  try { return await renderJerseyBack({ kit, name: '', number: '', size: SQUARE }); } finally { globalThis.fetch = realFetch; }
+  try { return await renderJerseyBack({ kit, name: '', number: '', size: BODY.w }); } finally { globalThis.fetch = realFetch; }
 }
 
 const previewOut = process.argv.includes('--preview') ? process.argv[process.argv.indexOf('--preview') + 1] : null;
@@ -85,7 +86,7 @@ for (const { key } of BASEBALL.colorways) {
     front: render(BODY.w, BODY.h, `${fabric(BODY.w, BODY.h, look.body, look.stripe)}${chestScript(look)}`),
     'sleeve-left': render(SLEEVE.w, SLEEVE.h, `${fabric(SLEEVE.w, SLEEVE.h, look.sleeve, look.sleeveStripe)}${sleevePatch(look)}`),
     'sleeve-right': render(SLEEVE.w, SLEEVE.h, fabric(SLEEVE.w, SLEEVE.h, look.sleeve, look.sleeveStripe)),
-    pattern: render(SQUARE, SQUARE, fabric(SQUARE, SQUARE, look.body, look.stripe)),
+    pattern: render(BODY.w, BODY.h, fabric(BODY.w, BODY.h, look.body, look.stripe)),
   };
   files.back = await defaultBack(kit, files.pattern);
   for (const [part, png] of Object.entries(files)) await writeFile(new URL(`${kit}-${part}.png`, OUT), await sharp(png).png({ compressionLevel: 9 }).toBuffer());
