@@ -32,7 +32,7 @@ const PRODUCTS = {
 };
 // Comfort Colors 6030 garment-dyed pocket tee (catalog 593): prints on the pocket and the back. Created by --apply.
 const POCKET = {
-  name: 'Far Fox — Pocket Tee', catalog: 593, front: 'pocket-front', frontType: 'pocket', back: 'pocket-back', label: null, price: '34.00', revision: 3,
+  name: 'Far Fox — Pocket Tee', catalog: 593, front: 'pocket-front', frontType: 'pocket', back: 'pocket-back', label: null, price: '34.00', revision: 4,
   colours: ['White', 'Butter', 'Violet', 'Watermelon', 'True Navy', 'Berry', 'Black'], sizes: ['S', 'M', 'L', 'XL', '2XL'],
 };
 const CREW = {

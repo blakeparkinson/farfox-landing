@@ -169,26 +169,44 @@ for (const tone of ['light', 'dark']) {
   designs[`hoodie-back-${tone}`] = [TEE, envelope(k)];
 }
 
-// 9) Pocket tee (Comfort Colors 6030): Foxy peeking over a stitched pocket edge, on the pocket and big on the back.
-const FOXY_ORANGE = '#F6662A', PEEK = 0.62;
-const peekingFoxy = (id, cx, top, w, edgeY, ink, stitch) => {
-  const paw = (x) => `<ellipse cx="${x}" cy="${edgeY}" rx="${w * 0.075}" ry="${w * 0.05}" fill="${FOXY_ORANGE}"/>${[-1, 0, 1].map((d) => `<line x1="${x + d * w * 0.025}" y1="${edgeY - w * 0.02}" x2="${x + d * w * 0.025}" y2="${edgeY + w * 0.03}" stroke="${ink}" stroke-width="${w * 0.008}" stroke-linecap="round"/>`).join('')}`;
-  return `<defs><clipPath id="${id}"><rect x="0" y="0" width="${cx * 2}" height="${edgeY}"/></clipPath></defs>
-    <g clip-path="url(#${id})">${foxy(cx, top, w)}</g>
-    <line x1="${cx - w * 0.62}" y1="${edgeY}" x2="${cx + w * 0.62}" y2="${edgeY}" stroke="${ink}" stroke-width="${stitch}" stroke-linecap="round"/>
-    ${paw(cx - w * 0.2)}${paw(cx + w * 0.2)}`;
-};
+// 9) Pocket tee (Comfort Colors 6030): Foxy hanging off the real pocket's hem by her paws, and a boarding pass on
+// the back: Foxy flies carry-on, seat POCKET, flight FF143 (1-4-3, "I love you"). One ink plus Foxy, so it reads on every colour.
+const FOXY_ORANGE = '#F76B27';
+const PLANE = 'M50 0 L56 34 L96 56 L96 64 L56 52 L54 80 L66 90 L66 96 L50 91 L34 96 L34 90 L46 80 L44 52 L4 64 L4 56 L44 34 Z';
+const plane = (cx, cy, size, c) => `<path transform="translate(${cx} ${cy}) rotate(90) translate(${-size / 2} ${-size / 2}) scale(${size / 100})" d="${PLANE}" fill="${c}"/>`;
+const grippingPaw = (x, y, r, ink) => `<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r * 0.72}" fill="${FOXY_ORANGE}"/>${[-1, 0, 1].map((d) => `<line x1="${x + d * r * 0.36}" y1="${y + r * 0.05}" x2="${x + d * r * 0.36}" y2="${y + r * 0.6}" stroke="${ink}" stroke-width="${r * 0.11}" stroke-linecap="round"/>`).join('')}`;
+function boardingPass(k) {
+  const ink = k.main, X0 = 60, X1 = 1740, Y0 = 300, Y1 = 1400, STUB = 1300, LX = 140;
+  const label = (x, y, t, anchor = 'start') => `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="Nunito" font-weight="900" font-size="40" letter-spacing="8" fill="${ink}" fill-opacity="0.7">${t}</text>`;
+  const value = (x, y, t, size = 70, anchor = 'start') => `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="Graduate" font-size="${size}" letter-spacing="4" fill="${ink}">${t}</text>`;
+  let bars = '';
+  for (let x = STUB + 60, i = 0; x < X1 - 60; i++) { const w = [6, 12, 4, 16, 8][(i * 7) % 5]; bars += `<rect x="${x}" y="1220" width="${w}" height="120" fill="${ink}"/>`; x += w + [8, 5, 10, 6][(i * 3) % 4]; }
+  return `<rect x="${X0}" y="${Y0}" width="${X1 - X0}" height="${Y1 - Y0}" rx="56" fill="none" stroke="${ink}" stroke-width="14"/>
+    <line x1="${STUB}" y1="${Y0 + 30}" x2="${STUB}" y2="${Y1 - 30}" stroke="${ink}" stroke-width="8" stroke-dasharray="22 18"/>
+    ${plane(LX + 40, 410, 80, ink)}${value(LX + 110, 438, 'FAR FOX AIR', 84)}
+    <line x1="${X0 + 40}" y1="490" x2="${STUB - 40}" y2="490" stroke="${ink}" stroke-width="6"/>
+    ${label(LX, 580, 'PASSENGER')}${value(LX, 670, 'FOXY', 96)}
+    ${label(LX, 780, 'FROM')}${label(STUB - 60, 780, 'TO', 'end')}
+    ${value(LX, 960, 'HERE', 180)}${value(STUB - 60, 960, 'YOU', 180, 'end')}
+    <line x1="${LX + 545}" y1="895" x2="${STUB - 470}" y2="895" stroke="${ink}" stroke-width="8" stroke-dasharray="18 14" stroke-linecap="round"/>
+    ${plane((LX + 545 + STUB - 470) / 2, 895, 110, ink)}
+    ${label(LX, 1080, 'FLIGHT')}${value(LX, 1160, 'FF143')}
+    ${label(LX + 400, 1080, 'SEAT')}${value(LX + 400, 1160, 'POCKET')}
+    ${label(LX + 800, 1080, 'GATE')}${heart(LX + 850, 1135, 74, ink)}
+    ${label(LX, 1260, 'CLASS')}${value(LX, 1340, 'CARRY-ON')}
+    ${label(LX + 600, 1260, 'BOARDING')}${value(LX + 600, 1340, 'ANYTIME')}
+    ${label((STUB + X1) / 2, 432, 'BOARDING PASS', 'middle').replace('font-size="40"', 'font-size="34"')}
+    ${foxy((STUB + X1) / 2, 500, 300)}
+    ${label((STUB + X1) / 2, 900, 'SEAT', 'middle')}${value((STUB + X1) / 2, 985, 'POCKET', 64, 'middle')}
+    ${label((STUB + X1) / 2, 1080, 'TO', 'middle')}${value((STUB + X1) / 2, 1160, 'YOU', 64, 'middle')}
+    ${bars}`;
+}
 for (const tone of ['light', 'dark']) {
   const k = INK[tone];
-  const fw = 250, ftop = 18, edge = ftop + PEEK * fw * 1480 / 1400;
-  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, `${peekingFoxy('pf', 225, ftop, fw, edge, k.main, 7)}
-    <line x1="${225 - fw * 0.55}" y1="${edge + 16}" x2="${225 + fw * 0.55}" y2="${edge + 16}" stroke="${k.main}" stroke-width="4" stroke-dasharray="10 8"/>`];
-  const bw = 900, btop = 200, bedge = btop + PEEK * bw * 1480 / 1400, L = 380, R = 1420, B = bedge + 680;
-  const pocket = (inset, extra) => `<path d="M ${L + inset} ${bedge + inset * 0.6} L ${L + inset} ${B - inset * 0.3} L 900 ${B + 150 - inset * 1.2} L ${R - inset} ${B - inset * 0.3} L ${R - inset} ${bedge + inset * 0.6}" fill="none" stroke="${k.main}" ${extra}/>`;
-  designs[`pocket-back-${tone}`] = [TEE, `${pocket(0, 'stroke-width="16" stroke-linejoin="round"')}${pocket(42, 'stroke-width="8" stroke-dasharray="26 18" stroke-linejoin="round"')}
-    ${peekingFoxy('pb', 900, btop, bw, bedge, k.main, 16)}
-    <text x="900" y="${B + 380}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${k.main}">I'd keep you in my pocket</text>
-    <text x="900" y="${B + 540}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${k.main}">if I could.</text>`];
+  const fw = 236, ftop = 44;
+  const arm = (side) => `<line x1="${225 + side * 150}" y1="26" x2="${225 + side * 104}" y2="180" stroke="${FOXY_ORANGE}" stroke-width="40" stroke-linecap="round"/>`;
+  designs[`pocket-front-${tone}`] = [{ w: 450, h: 300 }, `${arm(-1)}${arm(1)}${foxy(225, ftop, fw)}${grippingPaw(225 - 150, 26, 32, k.main)}${grippingPaw(225 + 150, 26, 32, k.main)}`];
+  designs[`pocket-back-${tone}`] = [TEE, boardingPass(k)];
 }
 
 // 5) Crewneck embroidery: collegiate LONG DISTANCE CLUB crest (centre chest 4×4in @300), cuff heart, inside label.
@@ -209,7 +227,7 @@ designs['crew-label'] = [{ w: 450, h: 450 }, `<text x="225" y="200" text-anchor=
 const FULL_FRONT = { cx: 900, w: 1740, top: 90, h: 2160 };
 const FIT = {
   timezones: FULL_FRONT, hearteyes: FULL_FRONT, pride: FULL_FRONT, 'ldc-back': { ...FULL_FRONT, top: 120 },
-  morse: { ...FULL_FRONT, h: 2100 }, 'pocket-back': { ...FULL_FRONT, top: 150, h: 2100 }, 'pocket-front': { cx: 225, w: 440, top: 6, h: 288 }, 'ldc-front': { cx: 1290, w: 525, top: 150, h: 630 }, 'hoodie-back': { cx: 900, w: 1740, top: 250, h: 1900 },
+  morse: { ...FULL_FRONT, h: 2100 }, 'pocket-back': { ...FULL_FRONT, top: 180, h: 2100 }, 'pocket-front': { cx: 225, w: 440, top: 0, h: 296 }, 'ldc-front': { cx: 1290, w: 525, top: 150, h: 630 }, 'hoodie-back': { cx: 900, w: 1740, top: 250, h: 1900 },
 };
 async function fitToBox(buf, { w, h }, box) {
   const art = await sharp(buf).trim().toBuffer({ resolveWithObject: true });
