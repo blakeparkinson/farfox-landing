@@ -102,6 +102,19 @@ const KITS = {
     number: '#FAF1E2', numberStroke: '#E2632E', name: '#FAF1E2', nameStroke: '#E2632E',
   },
   // --- Baseball kits (cat 792): slab font, baseball layout, no top crest ---
+  // October 2026: one product in three colourways (BASEBALL in kits.mjs); files from make-baseball-2026-10.mjs.
+  'ldc-baseball-cream': {
+    pattern: 'baseball-2026-10/ldc-baseball-cream-pattern.png', crest: null, layout: 'baseball', font: 'slab',
+    number: '#2D1B4E', numberStroke: '#FF6B8A', name: '#2D1B4E', nameStroke: '#FF6B8A',
+  },
+  'ldc-baseball-plum': {
+    pattern: 'baseball-2026-10/ldc-baseball-plum-pattern.png', crest: null, layout: 'baseball', font: 'slab',
+    number: '#FF6B8A', numberStroke: '#F4ECE0', name: '#FF6B8A', nameStroke: '#F4ECE0',
+  },
+  'ldc-baseball-pink': {
+    pattern: 'baseball-2026-10/ldc-baseball-pink-pattern.png', crest: null, layout: 'baseball', font: 'slab',
+    number: '#2D1B4E', numberStroke: '#F4ECE0', name: '#2D1B4E', nameStroke: '#F4ECE0',
+  },
   'bb-red': {
     bg: '#BC2832', crest: null, layout: 'baseball', font: 'slab',
     number: '#F4ECE0', numberStroke: '#1B2A6B', name: '#F4ECE0', nameStroke: '#1B2A6B',

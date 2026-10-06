@@ -60,7 +60,16 @@ export const LES_SEPARES = {
     { key: 'raspberry', label: 'Raspberry', hex: '#963655' },
   ],
 };
-const COLORWAY_KITS = { [LES_SEPARES.kit]: LES_SEPARES };
+/** The Long Distance Club baseball jersey (Oct 2026): one product, three colourways, each with its own back. */
+export const BASEBALL = {
+  kit: 'ldc-baseball',
+  colorways: [
+    { key: 'cream', label: 'Cream Pinstripe', hex: '#F4ECE0' },
+    { key: 'plum', label: 'Plum', hex: '#2D1B4E' },
+    { key: 'pink', label: 'Fox Pink', hex: '#FF6B8A' },
+  ],
+};
+const COLORWAY_KITS = { [LES_SEPARES.kit]: LES_SEPARES, [BASEBALL.kit]: BASEBALL };
 
 export const colorwayExternalId = (kit, colorway, size) => `${kit}--${colorway}--${size}`;
 
