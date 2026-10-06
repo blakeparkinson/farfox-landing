@@ -1,6 +1,66 @@
 {
-  "generatedAt": "2026-10-06T18:03:08.010Z",
+  "generatedAt": "2026-10-06T18:47:21.545Z",
   "products": [
+    {
+      "id": "478761994",
+      "slug": "far-fox-pocket-tee",
+      "name": "Pocket Tee",
+      "price": 34,
+      "currency": "USD",
+      "image": "/shop/colors/478761994-white.png",
+      "back": "/shop/backs/478761994.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#ffffff",
+          "image": "/shop/colors/478761994-white.png",
+          "back": "/shop/backs/478761994-white.png"
+        },
+        {
+          "name": "Butter",
+          "hex": "#cccccc",
+          "image": "/shop/colors/478761994-butter.png",
+          "back": "/shop/backs/478761994-butter.png"
+        },
+        {
+          "name": "Violet",
+          "hex": "#cccccc",
+          "image": "/shop/colors/478761994-violet.png",
+          "back": "/shop/backs/478761994-violet.png"
+        },
+        {
+          "name": "Watermelon",
+          "hex": "#cccccc",
+          "image": "/shop/colors/478761994-watermelon.png",
+          "back": "/shop/backs/478761994-watermelon.png"
+        },
+        {
+          "name": "True Navy",
+          "hex": "#cccccc",
+          "image": "/shop/colors/478761994-true-navy.png",
+          "back": "/shop/backs/478761994-true-navy.png"
+        },
+        {
+          "name": "Berry",
+          "hex": "#cccccc",
+          "image": "/shop/colors/478761994-berry.png",
+          "back": "/shop/backs/478761994-berry.png"
+        },
+        {
+          "name": "Black",
+          "hex": "#0c0c0c",
+          "image": "/shop/colors/478761994-black.png",
+          "back": "/shop/backs/478761994-black.png"
+        }
+      ]
+    },
     {
       "id": "478740784",
       "slug": "far-fox-long-distance-club-crewneck",
@@ -464,7 +524,7 @@
           "name": "Soft Pink",
           "hex": "#ffd8e1",
           "image": "/shop/colors/436909615-soft-pink.png",
-          "back": null
+          "back": "/shop/backs/436909615-soft-pink.png"
         },
         {
           "name": "Heather Prism Ice Blue",
@@ -780,7 +840,7 @@
           "name": "Lilac",
           "hex": "#efbbe3",
           "image": "/shop/colors/436883154-lilac.png",
-          "back": null
+          "back": "/shop/backs/436883154-lilac.png"
         },
         {
           "name": "Black",
@@ -798,7 +858,7 @@
           "name": "Maroon",
           "hex": "#721d37",
           "image": "/shop/colors/436883154-maroon.png",
-          "back": null
+          "back": "/shop/backs/436883154-maroon.png"
         }
       ]
     },

@@ -78,7 +78,7 @@ async function assertLive() {
 }
 
 async function updateProducts() {
-  for (const [key, p] of Object.entries(PRODUCTS)) {
+  for (const [key, p] of Object.entries(await withPocket())) {
     const detail = await pf(`/store/products/${p.id}`);
     console.log(`\n${detail.sync_product.name} (${p.id}): ${detail.sync_variants.length} variants`);
     for (const v of detail.sync_variants) {
@@ -126,6 +126,12 @@ async function createCrew() {
   return created.id;
 }
 
+/** PRODUCTS plus the pocket tee once it exists in Printful. */
+async function withPocket() {
+  const pocket = (await pf('/store/products?limit=100')).find((p) => p.name === POCKET.name);
+  return { ...PRODUCTS, ...(pocket ? { pocket: { ...POCKET, id: pocket.id } } : {}) };
+}
+
 async function createPocket() {
   const existing = (await pf('/store/products?limit=100')).find((p) => p.name === POCKET.name);
   if (existing) { console.log(`\n${POCKET.name} already exists (${existing.id})`); return existing.id; }
@@ -145,9 +151,7 @@ const shopFile = (path) => new URL(`../public/shop/${path}`, import.meta.url);
 
 /** Per-colour shop photos for the DTG products: one generator task per ink tone, then a retry for any colour it skipped. */
 async function mockups() {
-  const pocket = (await pf('/store/products?limit=100')).find((p) => p.name === POCKET.name);
-  const all = { ...PRODUCTS, ...(pocket ? { pocket: { ...POCKET, id: pocket.id } } : {}) };
-  for (const [key, p] of Object.entries(all)) {
+  for (const [key, p] of Object.entries(await withPocket())) {
     const detail = await pf(`/store/products/${p.id}`);
     const colours = [...new Set(detail.sync_variants.map((v) => v.color))];
     const missing = () => colours.filter((c) => !existsSync(shopFile(`colors/${p.id}-${slugOf(c)}.png`)) || (p.back && !existsSync(shopFile(`backs/${p.id}-${slugOf(c)}.png`))));
