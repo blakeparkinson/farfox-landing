@@ -1,0 +1,31 @@
+---
+// The post's next step, moved partway into the article so readers meet it before they leave
+// (it renders after the post as a fallback when scripts don't run).
+interface Props { postId: string; step: { href: string; title: string; text: string; button: string } }
+const { postId, step } = Astro.props;
+const href = `${step.href}?utm_source=blog&utm_medium=onsite&utm_campaign=next_step&utm_content=${postId}`;
+---
+<aside data-next-step class="next-step" aria-label="Try this next">
+  <img src="/brand/foxy-face-v1.png" width="56" height="56" alt="" />
+  <div>
+    <strong>{step.title}</strong>
+    <p>{step.text}</p>
+  </div>
+  <a href={href} data-umami-event="next-step-click" data-umami-event-post={postId}>{step.button} →</a>
+</aside>
+
+<script>
+  // After the second section heading: past the intro, but well before most readers stop scrolling.
+  const card = document.querySelector<HTMLElement>('[data-next-step]');
+  const headings = document.querySelectorAll('[data-post-body] h2');
+  if (card && headings.length >= 3) headings[1].before(card);
+</script>
+
+<style>
+  .next-step{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;margin:2.5rem 0;padding:18px 20px;border-radius:20px;background:#fff1f4;border:1px solid #f3cfd8}
+  strong{display:block;color:#2d1b4e;font-weight:900;font-size:1.05rem;line-height:1.3}
+  p{margin:4px 0 0;color:#6b5b7b;font-size:.95rem;line-height:1.5}
+  a{white-space:nowrap;padding:12px 18px;border-radius:999px;background:#963655;color:white;font-weight:800;text-decoration:none}
+  a:focus-visible{outline:3px solid #963655;outline-offset:4px}
+  @media(max-width:640px){.next-step{grid-template-columns:auto 1fr}a{grid-column:1 / -1;text-align:center}}
+</style>

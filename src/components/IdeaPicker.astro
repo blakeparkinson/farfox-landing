@@ -1,0 +1,99 @@
+---
+import type { Idea } from '../lib/postIdeas';
+import { categoriesOf } from '../lib/postIdeas';
+interface Props { postId: string; ideas: Idea[]; heading: string; deal: string; noun: string }
+const { postId, ideas, heading, deal, noun } = Astro.props;
+const categories = categoriesOf(ideas);
+const first = ideas[0];
+// Chip labels drop the post's long qualifiers: "Quick daily challenges (5 minutes or less)" → "Quick daily challenges".
+const short = (category: string) => category.replace(/\s*\(.*\)\s*$/, '').replace(/\s+to ask .*$/i, '').replace(/\s+for long-distance couples$/i, '');
+const appUrl = `https://app.lovefarfox.com/signup?ref=picker_${postId}`;
+---
+<section id="idea-picker" class="idea-picker" data-post={postId} data-noun={noun} aria-labelledby="idea-picker-title">
+  <header>
+    <img src="/brand/foxy-letter-v1.png" width="80" height="80" alt="" />
+    <div><p class="kicker">Try one now, together</p><h2 id="idea-picker-title">{heading}</h2></div>
+  </header>
+  <p data-invite class="invite" hidden>Your partner picked this {noun} for you.</p>
+  <div class="chips" role="group" aria-label="Choose a category">
+    <button type="button" data-cat="" aria-pressed="true">All {ideas.length}</button>
+    {categories.map((category) => <button type="button" data-cat={category} aria-pressed="false">{short(category)}</button>)}
+  </div>
+  <div class="card" aria-live="polite">
+    <p class="kicker" data-category>{first.category}</p>
+    <h3 data-title>{first.title}</h3>
+    <p data-text hidden={!first.text}>{first.text}</p>
+  </div>
+  <div class="actions">
+    <button type="button" class="deal" data-deal data-umami-event="idea-deal" data-umami-event-post={postId}>{deal}</button>
+    <button type="button" class="send" data-send data-umami-event="idea-send" data-umami-event-post={postId}>Send it to my partner</button>
+  </div>
+  <p data-status role="status" class="status"></p>
+  <p class="app">Want a new one every day? <a href={appUrl} data-umami-event="idea-app" data-umami-event-post={postId}>Far Fox sends you both one →</a></p>
+  <script type="application/json" data-ideas set:html={JSON.stringify(ideas)} />
+</section>
+
+<script>
+  import { readIdeaInvite, ideaInviteUrl, type Idea } from '../lib/postIdeas';
+  const root = document.querySelector<HTMLElement>('#idea-picker');
+  if (root) {
+    const ideas: Idea[] = JSON.parse(root.querySelector('[data-ideas]')!.textContent || '[]');
+    const el = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-cat]')];
+    let category = '', current = 0;
+    const show = (index: number) => {
+      current = index;
+      const idea = ideas[index];
+      el('[data-category]').textContent = idea.category;
+      el('[data-title]').textContent = idea.title;
+      el('[data-text]').textContent = idea.text;
+      el('[data-text]').hidden = !idea.text;
+      el('[data-status]').textContent = '';
+    };
+    const pool = () => ideas.map((idea, i) => ({ idea, i })).filter(({ idea }) => !category || idea.category === category).map(({ i }) => i);
+    const dealAnother = () => {
+      const options = pool().filter((i) => i !== current);
+      if (options.length) show(options[Math.floor(Math.random() * options.length)]);
+    };
+    chips.forEach((chip) => chip.addEventListener('click', () => {
+      category = chip.dataset.cat || '';
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+      dealAnother();
+    }));
+    el('[data-deal]').addEventListener('click', dealAnother);
+    el('[data-send]').addEventListener('click', async () => {
+      const url = ideaInviteUrl(location.origin, root.dataset.post!, current);
+      const text = `${ideas[current].title} — want to do this one?`;
+      try {
+        if (navigator.share) await navigator.share({ title: 'Far Fox', text, url });
+        else { await navigator.clipboard.writeText(url); el('[data-status]').textContent = 'Link copied. Send it to them.'; }
+      } catch { /* the share sheet was closed */ }
+    });
+    const invited = readIdeaInvite(location.hash, ideas.length);
+    if (invited !== null) {
+      show(invited);
+      el('[data-invite]').hidden = false;
+      root.scrollIntoView({ block: 'start' });
+    }
+  }
+</script>
+
+<style>
+  .idea-picker{margin:0 0 3rem;padding:clamp(20px,4vw,32px);border:1px solid #efd2d9;border-radius:28px;background:#fffaf7;color:#2d1b4e;scroll-margin-top:90px;box-shadow:0 6px 0 #f3e1e5}
+  header{display:flex;align-items:center;gap:16px}header img{flex-shrink:0;object-fit:contain}h2{font-size:clamp(1.6rem,5vw,2.2rem);font-weight:900;line-height:1.15}
+  p{line-height:1.6;margin:12px 0;color:#6b5b7b}.kicker{font-size:.85rem;font-weight:800;margin:0 0 4px;color:#963655}
+  .invite{margin:16px 0 0;padding:10px 14px;border-radius:12px;background:#ffe5ec;color:#963655;font-weight:800}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+  .chips button{font:inherit;font-size:.85rem;font-weight:800;cursor:pointer;min-height:40px;border-radius:999px;border:1px solid #d6b3bd;padding:6px 14px;background:white;color:#2d1b4e}
+  .chips button[aria-pressed=true]{background:#963655;border-color:#963655;color:white}
+  .card{margin-top:20px;padding:22px;border-radius:20px;background:white;border:1px solid #f0dbe1;box-shadow:0 3px 0 #edd4db;min-height:9.5em}
+  h3{font-size:1.3rem;line-height:1.4;font-weight:800;margin:0}.card [data-text]{margin-bottom:0}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+  .actions button{font:inherit;font-weight:800;cursor:pointer;min-height:52px;border-radius:16px;padding:12px 16px}
+  .deal{background:#963655;color:white;border:1px solid #963655}.send{background:white;color:#963655;border:2px solid #963655}
+  button:focus-visible,a:focus-visible{outline:3px solid #963655;outline-offset:4px}
+  .status{min-height:1.6em;font-weight:700;color:#963655;margin-bottom:0}
+  .app{font-size:.9rem;margin-bottom:0}.app a{color:#963655;font-weight:800}
+  @media(max-width:480px){.actions{grid-template-columns:1fr}header img{width:64px;height:64px}}
+  @media(prefers-reduced-motion:no-preference){.actions button{transition:transform .15s}.actions button:active{transform:translateY(2px)}}
+</style>

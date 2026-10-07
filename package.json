@@ -15,6 +15,7 @@
     "test:les-separes": "node scripts/test-les-separes.mjs",
     "test:printify-order": "node scripts/test-printify-order.mjs",
     "test:baseball": "node scripts/test-baseball-2026-10.mjs",
+    "test:post-ideas": "node scripts/test-post-ideas.mjs",
     "make:jersey-kits": "node scripts/make-jersey-kits.mjs",
     "launch:acquisition": "node scripts/make-user-acquisition-videos.mjs",
     "launch:assets": "node scripts/make-launch-assets.mjs",
