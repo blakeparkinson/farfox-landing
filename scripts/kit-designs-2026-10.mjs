@@ -390,50 +390,34 @@ function check(size, { base, mid, dark }) {
 // The kit layout, in front-file px: the hoop band across the torso, and the kit-maker mark on the right chest
 // (the crest's mirror about the visible front's centre line, x 3040).
 const MOOSE_HOOP = { top: 3720, height: 720, square: 180 };
-// Kit grammar: the club badge on the wearer's left chest (CREST), the Far Fox mark as the kit-maker logo on
-// the right (its mirror about the visible front's centre line, x 3040).
-const MOOSE_MAKER = { x: 2530, y: 2440, w: 230 };
-const MOOSE_SLEEVE_PATCH = { x: 3000, y: 2900, r: 330 };
 let clipId = 0;
 const band = (y, h, square, colours) => { const id = `mb${clipId++}`;
   return `<clipPath id="${id}"><rect x="0" y="${y}" width="${D}" height="${h}"/></clipPath><g clip-path="url(#${id})">${check(square, colours)}</g>`; };
 
-/** The club badge: a shield with MOOSE LODGE over antlered Foxy, and EST. 143 on the point. */
-function mooseClubBadge(c, cx, cy) {
-  const shield = 'M -280 -330 H 280 V 60 C 280 230 120 300 0 360 C -120 300 -280 230 -280 60 Z';
-  return `<g transform="translate(${cx} ${cy})">
-    <path d="${shield}" transform="translate(0 24)" fill="#000" fill-opacity="0.28"/>
-    <path d="${shield}" fill="${c.body.base}" stroke="${c.cream}" stroke-width="24" stroke-linejoin="round"/>
-    <path d="${shield}" transform="scale(0.86)" fill="none" stroke="${c.stitch}" stroke-width="10" stroke-dasharray="30 20"/>
-    <text x="0" y="-205" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="70" letter-spacing="6" fill="${c.cream}">MOOSE LODGE</text>
-    ${antleredFoxy(0, 40, 300)}
-    <text x="0" y="262" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="74" letter-spacing="10" fill="${c.stitch}">EST. 143</text></g>`;
+/** The Far Fox crest with geometric antlers rising from its ears, drawn in the crest's own flat style and
+ *  coordinates (300×306, ear tips at x 25 and 275), so it reads as a special edition of the real badge. */
+function antleredCrest(cx, cy, w, variant, colour) {
+  const s = w / 300;
+  // Moose antlers are palmate: a short beam from the ear into a broad flat palm with short points.
+  const PALM = [[250, 30], [286, -24], [282, -96], [304, -64], [314, -134], [336, -84], [352, -140], [368, -86], [392, -128], [398, -66], [430, -84], [410, -22], [330, 4], [290, 40]];
+  const beam = (side) => `<polygon points="${PALM.map(([a, b]) => `${side > 0 ? a : 300 - a},${b}`).join(' ')}" fill="${colour}"/>`;
+  return `<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">${beam(1)}${beam(-1)}</g>${crest(cx, cy, w, variant)}`;
 }
 
-/** The league-style patch on both sleeves. */
-function mooseSleevePatch(c) {
-  const { x, y, r } = MOOSE_SLEEVE_PATCH;
-  return `<circle cx="${x}" cy="${y}" r="${r}" fill="${c.body.base}" stroke="${c.cream}" stroke-width="22"/>
-    <circle cx="${x}" cy="${y}" r="${r - 50}" fill="none" stroke="${c.stitch}" stroke-width="10" stroke-dasharray="26 18"/>
-    <text x="${x}" y="${y - 70}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="96" letter-spacing="14" fill="${c.cream}">LODGE</text>
-    <text x="${x}" y="${y + 150}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="220" fill="${c.stitch}">143</text>`;
-}
-
-/** Moose Lodge as a football kit: the club badge left chest, the Far Fox mark as the kit maker, "I MOOSE YOU"
- *  as the sponsor, the buffalo check as a chest hoop and cuffs on a tonal body, and a sign-off on the back. */
+/** Moose Lodge, a Far Fox FC kit: the antlered crest and FAR FOX FC on the left chest, "I MOOSE YOU" as
+ *  the sponsor, and the buffalo check as a chest hoop and cuffs on a tonal plum body. */
 function mooseKit(colorway, withText) {
   const c = MOOSE_COLORWAYS[colorway], { top, height, square } = MOOSE_HOOP;
   const piping = (y) => `<rect x="0" y="${y}" width="${D}" height="26" fill="${c.cream}"/>`;
-  const front = check(560, c.body) + band(top, height, square, c.hoop) + piping(top - 40) + piping(top + height + 14)
-    + mooseClubBadge(c, CREST.x, CREST.y + 40) + crest(MOOSE_MAKER.x, MOOSE_MAKER.y, MOOSE_MAKER.w, 'light');
-  const signOff = `<text x="3000" y="5260" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="150" letter-spacing="30" fill="${c.cream}" fill-opacity="0.8">MOOSE LODGE FC</text>`;
+  const badge = antleredCrest(CREST.x, CREST.y + 60, CREST.w, 'light', c.cream)
+    + `<text x="${CREST.x}" y="${CREST.y + 400}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="92" letter-spacing="14" fill="${c.cream}">FAR FOX FC</text>`;
+  const front = check(560, c.body) + band(top, height, square, c.hoop) + piping(top - 40) + piping(top + height + 14) + badge;
   return {
     front: svg(front + (withText ? mooseSponsor(colorway) : ''), ''),
-    pattern: svg(check(560, c.body) + signOff, ''),
-    sleeve: svg(check(560, c.body) + mooseSleevePatch(c) + band(4040, D - 4040, square, c.hoop) + `<rect x="0" y="3980" width="${D}" height="40" fill="${c.cream}"/>`, ''),
+    pattern: svg(check(560, c.body), ''),
+    sleeve: svg(check(560, c.body) + band(4040, D - 4040, square, c.hoop) + `<rect x="0" y="3980" width="${D}" height="40" fill="${c.cream}"/>`, ''),
   };
 }
-
 
 function moose({ withText = true, colorway = 'blush', style = 'foxy' } = {}) {
   useColorway(colorway);
