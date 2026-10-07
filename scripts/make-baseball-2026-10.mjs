@@ -15,10 +15,10 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { BASEBALL } from '../src/lib/kits.mjs';
+import { foxyImage, foxyTag } from './foxy-art.mjs';
 
 const OUT = new URL('../public/shop/designs/baseball-2026-10/', import.meta.url);
 await mkdir(OUT, { recursive: true });
@@ -43,7 +43,7 @@ for (const [n, q] of [['yellowtail', 'Yellowtail'], ['oswald', 'Oswald:wght@700'
   fontFiles.push(f);
 }
 const render = (w, h, body) => Buffer.from(new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`, { fitTo: { mode: 'width', value: w }, font: { fontFiles, loadSystemFonts: false } }).render().asPng());
-const FOX_FACE = (await sharp(fileURLToPath(new URL('../public/shop/designs/hearteyes-v2.png', import.meta.url))).extract({ left: 650, top: 0, width: 1400, height: 1480 }).png().toBuffer()).toString('base64');
+const FOXY_HEAD = await foxyImage('head');
 
 const PINSTRIPE_PITCH = 216, PINSTRIPE_W = 7;
 const fabric = (w, h, bg, stripe) => {
@@ -66,7 +66,7 @@ function sleevePatch(look) {
     <circle cx="${x}" cy="${y}" r="${r}" fill="${look.patchRim}"/><circle cx="${x}" cy="${y}" r="${r - 24}" fill="${look.patchRing}"/>
     <circle cx="${x}" cy="${y}" r="${r - 40}" fill="none" stroke="${C.cream}" stroke-opacity="0.8" stroke-width="6" stroke-dasharray="16 11"/>
     <circle cx="${x}" cy="${y}" r="${inner}" fill="${C.cream}"/>
-    <image href="data:image/png;base64,${FOX_FACE}" x="${x - inner * 0.75}" y="${y - inner * 0.8}" width="${inner * 1.5}" height="${inner * 1.5 * 1480 / 1400}" clip-path="url(#pd)"/>
+    ${foxyTag(FOXY_HEAD, x, y - inner * 0.62, inner * 1.36, 'clip-path="url(#pd)"')}
     <text font-family="Oswald" font-weight="700" font-size="74" letter-spacing="14" fill="${C.cream}" text-anchor="middle"><textPath href="#pa" startOffset="50%">FAR FOX</textPath></text>`;
 }
 

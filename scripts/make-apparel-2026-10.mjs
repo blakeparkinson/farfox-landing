@@ -12,6 +12,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
+import { foxyImage, foxyPng, foxyTag } from './foxy-art.mjs';
 const REPO = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const OUT = new URL('../public/shop/designs/apparel-2026-10/', import.meta.url).pathname;
 await mkdir(OUT, { recursive: true });
@@ -115,16 +116,16 @@ for (const tone of ['light', 'dark']) {
     ${knockFox('f', 900, 1760, 200, k.accent)}<text x="900" y="1980" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="64" letter-spacing="14" fill="${k.main}">FAR FOX</text>`];
 }
 
-// Foxy, the main Far Fox logo: the heart-eyes face cropped from the 2700 px brand artwork.
-const FOXY = `data:image/png;base64,${(await sharp(`${REPO}/public/shop/designs/hearteyes-v2.png`).extract({ left: 650, top: 0, width: 1400, height: 1480 }).png().toBuffer()).toString('base64')}`;
-const foxy = (cx, top, w) => `<image href="${FOXY}" x="${cx - w / 2}" y="${top}" width="${w}" height="${w * 1480 / 1400}"/>`;
+// Foxy, the main Far Fox logo: the approved heart-eyes head (foxy-art.mjs).
+const FOXY_HEAD = await foxyImage('head');
+const foxy = (cx, top, w) => foxyTag(FOXY_HEAD, cx, top, w);
 
 // 6) Heart Eyes, reworked: Foxy big and centred, bold line underneath, floating hearts.
 for (const tone of ['light', 'dark']) {
   const k = INK[tone];
-  designs[`hearteyes-${tone}`] = [TEE, `${heart(300, 430, 150, k.accent)}${heart(1500, 330, 115, k.soft)}${heart(1500, 1000, 90, k.accent)}${heart(300, 1090, 95, k.soft)}
-    ${foxy(900, 230, 1150)}
-    <text x="900" y="1700" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="230" fill="${k.main}">HEART EYES</text>
+  designs[`hearteyes-${tone}`] = [TEE, `${heart(160, 330, 130, k.accent)}${heart(1650, 250, 105, k.soft)}${heart(1660, 1130, 85, k.accent)}${heart(140, 1210, 90, k.soft)}
+    ${foxy(900, 230, 1250)}
+    <text x="900" y="1660" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="230" fill="${k.main}">HEART EYES</text>
     <text x="900" y="1890" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="120" letter-spacing="6" fill="${k.accent}">ONLY FOR YOU</text>`];
 }
 
@@ -172,9 +173,10 @@ for (const tone of ['light', 'dark']) {
 // 9) Pocket tee (Comfort Colors 6030): a FAR FOX P.D. sheriff's badge on the pocket; the back is Foxy's black-and-white
 // mugshot (hearts in pink) in front of a fox-sized height chart, holding a booking placard. One ink plus the photo, so it reads on every colour.
 // Black-and-white Foxy where the only colour left is the hearts she stole: her cheeks, and her eye hearts turned pink.
-const HEART_PINK = [248, 144, 160], EYE_BAND = [600, 840], CHEEK_TOP = 700, EYE_REACH = 70;
+// Bands are rows of the trimmed approved head (1100×1019): eyes 520–700, cheeks below 600, ears above 400.
+const HEART_PINK = [248, 144, 160], EYE_BAND = [520, 700], CHEEK_TOP = 600, EYE_REACH = 80;
 async function heartsOnlyFoxy() {
-  const { data, info } = await sharp(`${REPO}/public/shop/designs/hearteyes-v2.png`).extract({ left: 650, top: 0, width: 1400, height: 1480 }).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const { data, info } = await sharp(await foxyPng('head')).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const { width: W, height: H } = info, at = (x, y) => (y * W + x) * 4, out = Buffer.from(data);
   const dark = (x, y) => x >= 0 && x < W && data[at(x, y) + 3] > 200 && data[at(x, y)] < 80 && data[at(x, y) + 1] < 80;
   const darkWithin = (x, y, dx, dy) => { for (let d = 1; d <= EYE_REACH; d++) if (dark(x + dx * d, y + dy * d)) return true; return false; };
@@ -208,7 +210,7 @@ function mugshot(tone, ink) {
   // The chart stops at the placard, or its lines show through the knocked-out letters.
   const chartMask = `<mask id="chart-${tone}" maskUnits="userSpaceOnUse" x="0" y="0" width="1800" height="2400"><rect width="1800" height="2400" fill="#fff"/><g fill="#000">${board}</g></mask>`;
   return `${chartMask}<g mask="url(#chart-${tone})">${chart}</g>
-    <image href="${FOXY_BW}" x="340" y="190" width="1300" height="${1300 * 1480 / 1400}"/>
+    <image href="${FOXY_BW}" x="340" y="${1520 - 1300 * FOXY_HEAD.aspect}" width="1300" height="${1300 * FOXY_HEAD.aspect}"/>
     ${knockout(`mug-${tone}`, 1800, 2400, ink, board, words)}${paw(410, 1488)}${paw(1390, 1488)}
     <text x="900" y="2210" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="130" letter-spacing="34" fill="${ink}">FAR FOX</text>`;
 }
@@ -237,9 +239,12 @@ for (const tone of ['light', 'dark']) {
 const THREAD = { purple: '#6B5294', flamingo: '#CC3366', white: '#FFFFFF', navy: '#333366' };
 const CREW = { oatmeal: ['purple', 'flamingo'], navy: ['white', 'flamingo'], grey: ['navy', 'flamingo'], purple: ['white', 'flamingo'] };
 for (const [name, [main, accent]] of Object.entries(CREW)) {
-  designs[`crew-chest-${name}`] = [{ w: 1200, h: 1200 }, `<g transform="translate(0 240) scale(0.4)">${arcText('a', 'LONG DISTANCE', 1500, 1290, 930, 260, THREAD[main], 10)}
+  // One lockup at 3000×1800: scaled onto the 4×4in chest for the API product, full size for the dashboard's large front.
+  const lockup = `${arcText('a', 'LONG DISTANCE', 1500, 1290, 930, 260, THREAD[main], 10)}
     ${knockFox('f', 1500, 1120, 380, THREAD[accent])}
-    <text x="1500" y="1690" text-anchor="middle" font-family="Graduate" font-size="330" letter-spacing="40" fill="${THREAD[main]}">CLUB</text></g>`];
+    <text x="1500" y="1690" text-anchor="middle" font-family="Graduate" font-size="330" letter-spacing="40" fill="${THREAD[main]}">CLUB</text>`;
+  designs[`crew-chest-${name}`] = [{ w: 1200, h: 1200 }, `<g transform="translate(0 240) scale(0.4)">${lockup}</g>`];
+  designs[`crew-large-${name}`] = [{ w: 3000, h: 1800 }, lockup];
   designs[`crew-wrist-${name}`] = [{ w: 600, h: 900 }, heart(300, 450, 300, THREAD[accent])];
 }
 designs['crew-label'] = [{ w: 450, h: 450 }, `<text x="225" y="200" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="62" fill="#2D1B4E">Worth every</text>
@@ -266,7 +271,7 @@ for (const [name, [{ w, h }, body]] of Object.entries(designs)) {
   const box = FIT[name.replace(/-(light|dark)$/, '')];
   if (box) buf = await fitToBox(buf, { w, h }, box);
   // Embroidery files must hold only exact thread colours: snap anti-aliased edges to full alpha.
-  if (name.startsWith('crew-chest') || name.startsWith('crew-wrist')) {
+  if (/^crew-(chest|large|wrist)/.test(name)) {
     const { data, info } = await sharp(buf).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     for (let i = 0; i < data.length; i += 4) data[i + 3] = data[i + 3] < 128 ? 0 : 255;
     buf = await sharp(data, { raw: info }).png().toBuffer();
