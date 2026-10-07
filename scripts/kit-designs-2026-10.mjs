@@ -114,58 +114,35 @@ const backKeep = (pad) => (x, y) => clearOf(3000, 900, 450, 380)(x, y)
 
 // --- reworked kits ------------------------------------------------------------
 
-/** Drop Zone v4, battle-royale inspired: a cartoon island under a map grid, the purple storm closing in
- *  around a glowing safe zone, a dotted drop path, and two player markers (cyan and pink) landing together
- *  at FOX FALLS. WHERE WE DROPPIN'? sits on a HUD plate where the sponsor goes. Genre language only: no
- *  game's names, logos or fonts. */
-const DZ = { cx: 3040, cy: 3650, island: 1750, safe: { x: 2960, y: 3700, r: 1250 }, cyan: '#22D3EE', pink: '#FF6B8A', cream: '#FFF5F0', night: '#21182B', storm: '#7B2FF7', stormLine: '#E9D5FF', ink: '#16325C' };
-const DZ_TERRAIN = [[0.1, [43, 111, 214]], [0.22, [71, 167, 240]], [0.29, [244, 220, 147]], [0.48, [121, 200, 78]], [0.6, [75, 160, 60]], [9, [63, 128, 54]]];
-const dzNoise = noiseField(31);
-const dzElevation = (x, y) => dzNoise(x / 900, y / 900) * 0.7 + (1 - Math.hypot(x - DZ.cx, y - DZ.cy) / DZ.island) * 0.8 - 0.45;
-const DZ_RASTER = 1500;
-const dzIsland = await (async () => {
-  const buf = Buffer.alloc(DZ_RASTER * DZ_RASTER * 3), k = D / DZ_RASTER;
-  for (let j = 0; j < DZ_RASTER; j++) for (let i = 0; i < DZ_RASTER; i++) {
-    const e = dzElevation(i * k, j * k);
-    buf.set(DZ_TERRAIN.find(([top]) => e < top)[1], (j * DZ_RASTER + i) * 3);
-  }
-  const sharp = (await import('sharp')).default;
-  return (await sharp(buf, { raw: { width: DZ_RASTER, height: DZ_RASTER, channels: 3 } }).png().toBuffer()).toString('base64');
-})();
-const hud = (x, y, t, size, fill = DZ.cream, extra = '') => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Lilita One" font-size="${size}" fill="${fill}" stroke="${DZ.night}" stroke-width="${size * 0.16}" stroke-linejoin="round" paint-order="stroke" ${extra}>${t}</text>`;
-function stormField(withHole) {
-  const { x, y, r } = DZ.safe, hole = withHole ? ` M ${x - r} ${y} a ${r} ${r} 0 1 0 ${2 * r} 0 a ${r} ${r} 0 1 0 ${-2 * r} 0 Z` : '';
-  let swirl = '';
-  for (let i = 0; i < 9; i++) swirl += `<ellipse cx="${x}" cy="${y}" rx="${r + 300 + i * 380}" ry="${r + 120 + i * 300}" transform="rotate(${i * 23} ${x} ${y})" fill="none" stroke="#B76CFD" stroke-opacity="0.28" stroke-width="${40 - i * 2}"/>`;
-  return `<defs><clipPath id="stormclip"><path clip-rule="evenodd" d="M0 0 H${D} V${D} H0 Z${hole}"/></clipPath></defs>
-    <g clip-path="url(#stormclip)"><rect width="${D}" height="${D}" fill="${withHole ? DZ.storm : '#3A1677'}" fill-opacity="${withHole ? 0.5 : 1}"/>${swirl}</g>`;
+/** Drop Zone v5, battle-royale codes on a real kit: a storm-purple body with tonal storm rings closing in
+ *  from the shoulder, a loot-rarity sash (common to legendary) worn like a River Plate sash, and one dotted
+ *  drop path that crosses it and lands at a small marker. Genre codes only: no game's names, logos or fonts. */
+const DZ = { night: '#160C2C', storm: '#3B1680', ring: '#8B5CF6', edge: '#C4B5FD', cream: '#FFF5F0', pink: '#FF6B8A', eye: { x: 4700, y: 1500 } };
+const RARITY = ['#9CA3AF', '#4ADE80', '#38BDF8', '#A855F7', '#FBBF24'];
+const dzBase = () => `<defs><linearGradient id="dzg" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${DZ.storm}"/><stop offset="1" stop-color="${DZ.night}"/></linearGradient></defs><rect width="${D}" height="${D}" fill="url(#dzg)"/>`;
+function stormRings(edgeR = 2600) {
+  let s = '';
+  for (let r = 700, i = 0; r < 7000; r += 280, i++) s += `<circle cx="${DZ.eye.x}" cy="${DZ.eye.y}" r="${r}" fill="none" stroke="${DZ.ring}" stroke-opacity="${i % 2 ? 0.07 : 0.13}" stroke-width="70"/>`;
+  return s + `<circle cx="${DZ.eye.x}" cy="${DZ.eye.y}" r="${edgeR}" fill="none" stroke="${DZ.edge}" stroke-opacity="0.55" stroke-width="22"/>`;
 }
-function playerMarker(x, y, color, deg) {
-  return `<g transform="translate(${x} ${y})"><circle r="120" fill="${color}" stroke="${DZ.cream}" stroke-width="26"/>
-    <path transform="rotate(${deg})" d="M 0 -70 L 52 46 L 0 20 L -52 46 Z" fill="${DZ.cream}"/></g>`;
+/** Five stripes, common to legendary, each `w` wide, along a line through (x, y) at `deg` from horizontal. */
+function raritySash(x, y, deg, w) {
+  return `<g transform="translate(${x} ${y}) rotate(${deg})">${RARITY.map((c, i) => `<rect x="-6000" y="${(i - 2.5) * w}" width="12000" height="${w}" fill="${c}"/>`).join('')}
+    <rect x="-6000" y="${-2.5 * w - 26}" width="12000" height="26" fill="${DZ.night}"/><rect x="-6000" y="${2.5 * w}" width="12000" height="26" fill="${DZ.night}"/></g>`;
 }
 function dropzone() {
-  const { x, y, r } = DZ.safe;
-  const coast = contours(dzElevation, [0.22], 24, 1).map((d) => `<path d="${d}" stroke="${DZ.ink}" stroke-width="16" stroke-linecap="round" fill="none"/>`).join('');
-  let grid = '';
-  for (let v = 0; v <= D; v += 500) grid += `<line x1="${v}" y1="0" x2="${v}" y2="${D}" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="6"/><line x1="0" y1="${v}" x2="${D}" y2="${v}" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="6"/>`;
-  const map = `<image href="data:image/png;base64,${dzIsland}" x="0" y="0" width="${D}" height="${D}" preserveAspectRatio="none"/>${coast}${grid}`;
-  const safeRing = `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${DZ.stormLine}" stroke-opacity="0.35" stroke-width="90"/><circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${DZ.stormLine}" stroke-width="26"/>`;
-  const trees = scatter(41, 70, 110, (tx, ty) => { const e = dzElevation(tx, ty); return e > 0.33 && e < 0.58 && Math.hypot(tx - 2860, ty - 3700) > 420; })
-    .map((t) => `<circle cx="${t.x.toFixed(0)}" cy="${t.y.toFixed(0)}" r="30" fill="#2F7A2C" stroke="${DZ.ink}" stroke-opacity="0.5" stroke-width="6"/>`).join('');
-  const route = `<path d="M 1700 1500 L 4500 4700" stroke="${DZ.cream}" stroke-width="22" stroke-dasharray="10 60" stroke-linecap="round"/>
-    <path transform="translate(4500 4700) rotate(${Math.atan2(3200, 2800) * 180 / Math.PI + 90})" d="M 0 -80 L 70 40 L -70 40 Z" fill="${DZ.cream}"/>`;
-  const poi = (px, py, name, size = 118) => `<circle cx="${px}" cy="${py}" r="34" fill="${DZ.cream}" stroke="${DZ.night}" stroke-width="12"/>${hud(px, py - 70, name, size)}`;
-  const fall = { x: 2860, y: 3640 };
-  const landing = `${poi(fall.x, fall.y, 'FOX FALLS', 150)}${playerMarker(fall.x - 210, fall.y + 210, DZ.cyan, 20)}${playerMarker(fall.x + 210, fall.y + 210, DZ.pink, -20)}${heart(fall.x, fall.y + 240, 150, DZ.pink)}`;
-  const plate = `<rect x="1960" y="2700" width="2160" height="300" rx="60" fill="${DZ.night}" fill-opacity="0.88" stroke="${DZ.cream}" stroke-width="14"/>
-    ${hud(3040, 2915, 'WHERE WE DROPPIN\u2019?', 200, DZ.cream, `letter-spacing="6"`)}`;
-  const roundel = `<circle cx="${CREST.x}" cy="${CREST.y + 20}" r="300" fill="${DZ.night}" stroke="${DZ.cream}" stroke-width="20"/>`;
+  // The sash runs from the wearer's right shoulder to the left hip, clear of the crest; the drop path falls
+  // straight down beside the crest and lands on the sash.
+  const sash = raritySash(3040, 3500, 52, 120);
+  const land = { x: 3900, y: 3500 + (3900 - 3040) * Math.tan((52 * Math.PI) / 180) };
+  const path = `<path d="M ${land.x} 1450 L ${land.x} ${land.y - 140}" stroke="${DZ.cream}" stroke-width="26" stroke-dasharray="6 70" stroke-linecap="round"/>
+    <circle cx="${land.x}" cy="${land.y}" r="120" fill="${DZ.night}" stroke="${DZ.cream}" stroke-width="22"/><circle cx="${land.x}" cy="${land.y}" r="50" fill="${DZ.pink}"/>`;
+  const cuffStripes = RARITY.map((c, i) => `<rect x="0" y="${3990 + i * 46}" width="${D}" height="46" fill="${c}"/>`).join('') + `<rect x="0" y="4220" width="${D}" height="${D - 4220}" fill="${DZ.night}"/>`;
+  const neckBars = RARITY.map((c, i) => `<rect x="${3000 - 2.5 * 120 + i * 120 + 10}" y="1180" width="100" height="40" rx="10" fill="${c}"/>`).join('');
   return {
-    front: svg(map + trees + stormField(true) + safeRing + route + poi(2480, 4420, 'MISSED CALL MANOR', 90) + poi(3640, 4120, '143 HEIGHTS', 110) + poi(3240, 4980, 'LONELY LANDING', 90)
-      + landing + plate + roundel + crest(CREST.x, CREST.y, CREST.w, 'light'), ''),
-    pattern: svg(stormField(false), ''),
-    sleeve: svg(stormField(false) + cuff(DZ.pink, DZ.night), ''),
+    front: svg(dzBase() + stormRings() + sash + path + crest(CREST.x, CREST.y, CREST.w, 'light'), ''),
+    pattern: svg(dzBase() + stormRings() + neckBars, ''),
+    sleeve: svg(dzBase() + stormRings(1800) + cuffStripes, ''),
   };
 }
 
