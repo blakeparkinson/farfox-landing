@@ -69,12 +69,16 @@ const appUrl = `https://app.lovefarfox.com/signup?ref=picker_${postId}`;
         else { await navigator.clipboard.writeText(url); el('[data-status]').textContent = 'Link copied. Send it to them.'; }
       } catch { /* the share sheet was closed */ }
     });
-    const invited = readIdeaInvite(location.hash, ideas.length);
-    if (invited !== null) {
+    // A partner link opens on its idea, whether it loads the page or is followed from it.
+    const openInvite = () => {
+      const invited = readIdeaInvite(location.hash, ideas.length);
+      if (invited === null) return;
       show(invited);
       el('[data-invite]').hidden = false;
       root.scrollIntoView({ block: 'start' });
-    }
+    };
+    openInvite();
+    window.addEventListener('hashchange', openInvite);
   }
 </script>
 
@@ -94,6 +98,7 @@ const appUrl = `https://app.lovefarfox.com/signup?ref=picker_${postId}`;
   button:focus-visible,a:focus-visible{outline:3px solid #963655;outline-offset:4px}
   .status{min-height:1.6em;font-weight:700;color:#963655;margin-bottom:0}
   .app{font-size:.9rem;margin-bottom:0}.app a{color:#963655;font-weight:800}
-  @media(max-width:480px){.actions{grid-template-columns:1fr}header img{width:64px;height:64px}}
+  @media(max-width:480px){.actions{grid-template-columns:1fr}header img{width:64px;height:64px}
+    .chips{flex-wrap:nowrap;overflow-x:auto;margin-right:-20px;padding-right:20px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chips button{flex-shrink:0;white-space:nowrap}}
   @media(prefers-reduced-motion:no-preference){.actions button{transition:transform .15s}.actions button:active{transform:translateY(2px)}}
 </style>
