@@ -114,27 +114,31 @@ const backKeep = (pad) => (x, y) => clearOf(3000, 900, 450, 380)(x, y)
 
 // --- reworked kits ------------------------------------------------------------
 
-/** Drop Zone v2: no route line. Two drop pins land inside the same zone, so it
- *  stops echoing Flight Path and reads as "we ended up in the same place". */
+/** Drop Zone v3: a drop-zone marker centred on the chest where two pins (one each) lean in and land
+ *  together, with SAME DROP ZONE as the sponsor line, over Fox Purple contours on a night-to-plum field. */
+const DZ = { x: 3040, y: 3300, r: 560, cyan: '#22D3EE', pink: '#FF6B8A', line: '#B76CFD', cream: '#FFF5F0', night: '#21182B' };
 function dropzone() {
-  const bg = `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B2A8F"/><stop offset="0.55" stop-color="#4A1FB2"/><stop offset="1" stop-color="#A21C8E"/></linearGradient></defs><rect width="${D}" height="${D}" fill="url(#g)"/>`;
+  const bg = `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${DZ.night}"/><stop offset="0.55" stop-color="#2D1B4E"/><stop offset="1" stop-color="#4E2272"/></linearGradient></defs><rect width="${D}" height="${D}" fill="url(#g)"/>`;
   const paths = contours(noiseField(7), Array.from({ length: 16 }, (_, i) => 0.22 + i * 0.037));
-  const topo = paths.map((d, i) => (i % 4 === 0
-    ? `<path d="${d}" stroke="#46E3FF" stroke-opacity="0.55" stroke-width="13" stroke-linecap="round" fill="none"/>`
-    : `<path d="${d}" stroke="#46E3FF" stroke-opacity="0.24" stroke-width="7" stroke-linecap="round" fill="none"/>`)).join('');
-  const ring = { x: 3000, y: 3800, r: 900 };
+  const topo = paths.map((d, i) => `<path d="${d}" stroke="${i % 4 === 0 ? DZ.pink : DZ.line}" stroke-opacity="${i % 4 === 0 ? 0.32 : 0.22}" stroke-width="${i % 4 === 0 ? 12 : 7}" stroke-linecap="round" fill="none"/>`).join('');
+  const { x, y, r } = DZ;
   let ticks = '';
   for (let k = 0; k < 24; k++) {
-    const t = (k / 24) * Math.PI * 2, r0 = ring.r + 50, r1 = ring.r + (k % 6 === 0 ? 190 : 110);
-    ticks += `<line x1="${ring.x + Math.cos(t) * r0}" y1="${ring.y + Math.sin(t) * r0}" x2="${ring.x + Math.cos(t) * r1}" y2="${ring.y + Math.sin(t) * r1}" stroke="#FFFFFF" stroke-opacity="0.85" stroke-width="18" stroke-linecap="round"/>`;
+    const t = (k / 24) * Math.PI * 2, r0 = r + 50, r1 = r + (k % 6 === 0 ? 200 : 110);
+    ticks += `<line x1="${x + Math.cos(t) * r0}" y1="${y + Math.sin(t) * r0}" x2="${x + Math.cos(t) * r1}" y2="${y + Math.sin(t) * r1}" stroke="${DZ.cream}" stroke-opacity="0.9" stroke-width="18" stroke-linecap="round"/>`;
   }
-  const inner = `<circle cx="${ring.x}" cy="${ring.y}" r="${ring.r * 0.42}" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="12" stroke-dasharray="60 50"/>`;
-  const zone = `<circle cx="${ring.x}" cy="${ring.y}" r="${ring.r}" fill="#0A102C" fill-opacity="0.2" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="22" stroke-dasharray="120 70"/>${ticks}${inner}
-    ${pin(2800, 3920, 330, '#22D3EE')}${pin(3200, 3880, 330, '#FF4FA3')}`;
+  const cross = [[-1, 0], [1, 0], [0, -1], [0, 1]].map(([dx, dy]) => `<line x1="${x + dx * r * 0.18}" y1="${y + dy * r * 0.18}" x2="${x + dx * r * 0.82}" y2="${y + dy * r * 0.82}" stroke="${DZ.cream}" stroke-opacity="0.4" stroke-width="10"/>`).join('');
+  const tilted = (px, color, deg) => `<g transform="rotate(${deg} ${px} ${y + 40})">${pin(px, y + 40, 460, color, DZ.cream)}</g>`;
+  const zone = `<circle cx="${x}" cy="${y}" r="${r}" fill="${DZ.night}" fill-opacity="0.35" stroke="${DZ.cream}" stroke-width="22" stroke-dasharray="120 70"/>${ticks}${cross}
+    <circle cx="${x}" cy="${y}" r="${r * 0.42}" fill="none" stroke="${DZ.cream}" stroke-opacity="0.35" stroke-width="12" stroke-dasharray="60 50"/>
+    <rect x="${x - 230}" y="${y - r - 330}" width="460" height="120" rx="20" fill="${DZ.cream}"/>
+    <text x="${x}" y="${y - r - 240}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="88" letter-spacing="12" fill="${DZ.night}">DZ-143</text>
+    ${tilted(x - 130, DZ.cyan, -14)}${tilted(x + 130, DZ.pink, 14)}${heart(x, y + 70, 130, DZ.cream)}`;
+  const sponsor = `<text x="${x}" y="${y + r + 470}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="220" letter-spacing="14" fill="${DZ.cream}" stroke="${DZ.night}" stroke-width="24" paint-order="stroke">SAME DROP ZONE</text>`;
   return {
-    front: svg(topo + zone + crest(CREST.x, CREST.y, CREST.w, 'light'), bg),
+    front: svg(topo + zone + sponsor + crest(CREST.x, CREST.y, CREST.w, 'light'), bg),
     pattern: svg(topo, bg),
-    sleeve: svg(topo + cuff('#46E3FF', '#0A102C'), bg),
+    sleeve: svg(topo + cuff(DZ.pink, DZ.night), bg),
   };
 }
 
@@ -475,7 +479,7 @@ export const KITS = {
 export const mooseBack = (key = 'lodge') => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; return { pattern: `kits-2026-10/sj-moose-${key}-pattern.png`, crest: 'fox-crest.png', number: c.ink || c.cream, numberStroke: c.inkStroke || c.dark, name: c.ink || c.cream, nameStroke: c.inkStroke || c.dark }; };
 
 export const BACKS = {
-  dropzone: { pattern: 'kits-2026-10/sj-dropzone-pattern.png', crest: 'fox-crest.png', number: '#FDE047', numberStroke: '#0A102C', name: '#F5F3FF', nameStroke: '#0A102C' },
+  dropzone: { pattern: 'kits-2026-10/sj-dropzone-pattern.png', crest: 'fox-crest.png', number: '#FFF5F0', numberStroke: '#2D1B4E', name: '#FFF5F0', nameStroke: '#2D1B4E' },
   dalmatian: { pattern: 'kits-2026-10/sj-dalmatian-pattern.png', crest: 'fox-crest-navy.png', number: '#14213A', numberStroke: '#F5F1E7', name: '#14213A', nameStroke: '#F5F1E7' },
   twilight: { pattern: 'kits-2026-10/sj-twilight-pattern.png', crest: 'fox-crest.png', number: '#FAEEC8', numberStroke: '#1C1634', name: '#FAEEC8', nameStroke: '#1C1634' },
   otherhalfa: { pattern: 'kits-2026-10/sj-otherhalfa-pattern.png', crest: 'fox-crest.png', number: BLUSH, numberStroke: PLUM, name: BLUSH, nameStroke: PLUM },
