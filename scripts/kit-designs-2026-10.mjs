@@ -116,7 +116,7 @@ const backKeep = (pad) => (x, y) => clearOf(3000, 900, 450, 380)(x, y)
 
 /** Drop Zone v5, battle-royale codes on a real kit: a storm-purple body with tonal storm rings closing in
  *  from the shoulder, a loot-rarity sash (common to legendary) worn like a River Plate sash, and one dotted
- *  drop path that crosses it and lands at a small marker. Genre codes only: no game's names, logos or fonts. */
+ *  drop path that falls beside the crest and lands on it. Genre codes only: no game's names, logos or fonts. */
 const DZ = { night: '#160C2C', storm: '#3B1680', ring: '#8B5CF6', edge: '#C4B5FD', cream: '#FFF5F0', pink: '#FF6B8A', eye: { x: 4700, y: 1500 } };
 const RARITY = ['#9CA3AF', '#4ADE80', '#38BDF8', '#A855F7', '#FBBF24'];
 const dzBase = () => `<defs><linearGradient id="dzg" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${DZ.storm}"/><stop offset="1" stop-color="${DZ.night}"/></linearGradient></defs><rect width="${D}" height="${D}" fill="url(#dzg)"/>`;
@@ -138,10 +138,9 @@ function dropzone() {
   const path = `<path d="M ${land.x} 1450 L ${land.x} ${land.y - 140}" stroke="${DZ.cream}" stroke-width="26" stroke-dasharray="6 70" stroke-linecap="round"/>
     <circle cx="${land.x}" cy="${land.y}" r="120" fill="${DZ.night}" stroke="${DZ.cream}" stroke-width="22"/><circle cx="${land.x}" cy="${land.y}" r="50" fill="${DZ.pink}"/>`;
   const cuffStripes = RARITY.map((c, i) => `<rect x="0" y="${3990 + i * 46}" width="${D}" height="46" fill="${c}"/>`).join('') + `<rect x="0" y="4220" width="${D}" height="${D - 4220}" fill="${DZ.night}"/>`;
-  const neckBars = RARITY.map((c, i) => `<rect x="${3000 - 2.5 * 120 + i * 120 + 10}" y="1180" width="100" height="40" rx="10" fill="${c}"/>`).join('');
   return {
     front: svg(dzBase() + stormRings() + sash + path + crest(CREST.x, CREST.y, CREST.w, 'light'), ''),
-    pattern: svg(dzBase() + stormRings() + neckBars, ''),
+    pattern: svg(dzBase() + stormRings(), ''),
     sleeve: svg(dzBase() + stormRings(1800) + cuffStripes, ''),
   };
 }
