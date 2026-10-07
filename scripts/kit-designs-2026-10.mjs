@@ -15,6 +15,7 @@
  *   back number block y 1980–3800, brand line y 4360–4720, crest (3000, 900)
  *   sleeve cuff: accent stripe y 3980–4020, band from y 4040
  */
+import { foxyImage, foxyTag } from './foxy-art.mjs';
 export const D = 6000;
 export const CREST = { x: 3550, y: 2400, w: 440 };
 
@@ -297,13 +298,18 @@ export const MOOSE_COLORWAYS = {
   forest: { label: 'Forest green', base: '#2F5D3A', dark: '#101A14', cream: '#F4ECE0', stitch: '#2F5D3A', opacity: 0.55 },
   navy:   { label: 'Northern navy',base: '#2B4A7A', dark: '#0E1628', cream: '#F4ECE0', stitch: '#2B4A7A', opacity: 0.55 },
   plum:   { label: 'Far Fox plum', base: '#FF6B8A', dark: '#2D1B4E', cream: '#FFF5F0', stitch: '#FF6B8A', opacity: 0.6 },
-  blush:  { label: 'Blush',        base: '#F7C6D0', dark: '#2D1B4E', cream: '#FFF5F0', stitch: '#FF6B8A', opacity: 0.35, ink: '#2D1B4E', inkStroke: '#FFF5F0' },
+  // Blush ships in the kit layout (mooseKit): a tonal plum body with a solid three-tone pink buffalo-check hoop.
+  blush:  { label: 'Blush', layout: 'kit', base: '#2D1B4E', dark: '#2D1B4E', cream: '#FFF5F0', stitch: '#FF6B8A', ink: '#FFF5F0', inkStroke: '#FF6B8A',
+    body: { base: '#2D1B4E', mid: '#33205A', dark: '#29184A' }, hoop: { base: '#FF9BB2', mid: '#C2557E', dark: '#2D1B4E' }, sponsorY: 3300, sponsorSize: 330 },
 };
 let LODGE = { red: '#B8272F', black: '#16151A', cream: '#F4ECE0' };
-const useColorway = (key) => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; LODGE = { red: c.base, black: c.dark, cream: c.cream, stitch: c.stitch, opacity: c.opacity }; return c; };
+const useColorway = (key) => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; LODGE = { red: c.base, black: c.dark, cream: c.cream, stitch: c.stitch, opacity: c.opacity, mid: c.mid }; return c; };
 function buffalo(size = 560) {
   let s = `<rect width="${D}" height="${D}" fill="${LODGE.red}"/>`;
-  for (let v = 0; v < D; v += size * 2) {
+  if (LODGE.mid) {
+    for (let v = 0; v < D; v += size * 2) s += `<rect x="${v}" y="0" width="${size}" height="${D}" fill="${LODGE.mid}"/><rect x="0" y="${v}" width="${D}" height="${size}" fill="${LODGE.mid}"/>`;
+    for (let x = 0; x < D; x += size * 2) for (let y = 0; y < D; y += size * 2) s += `<rect x="${x}" y="${y}" width="${size}" height="${size}" fill="${LODGE.black}"/>`;
+  } else for (let v = 0; v < D; v += size * 2) {
     s += `<rect x="${v}" y="0" width="${size}" height="${D}" fill="${LODGE.black}" fill-opacity="${LODGE.opacity ?? 0.55}"/>`;
     s += `<rect x="0" y="${v}" width="${D}" height="${size}" fill="${LODGE.black}" fill-opacity="${LODGE.opacity ?? 0.55}"/>`;
   }
@@ -338,16 +344,27 @@ const MOOSE_FOXY = (() => {
 })();
 let MOOSE_STYLE = 'foxy';
 const mooseHead = (cx, cy, size) => `<g transform="translate(${cx - size / 2} ${cy - size / 2}) scale(${size / 128})">${MOOSE_STYLE === 'foxy' ? MOOSE_FOXY : MOOSE_GLYPH}</g>`;
+
+/** The approved Foxy in a pair of palmate moose antlers, outlined in Foxy's own dark brown. */
+const FOXY_HEAD = await foxyImage('head');
+const ANTLER = 'M0 120 C 30 110 50 95 60 80 L 58 40 L 72 70 L 84 22 L 94 64 L 112 18 L 116 62 L 138 30 L 136 72 L 162 52 L 152 88 C 176 86 196 92 200 104 C 176 124 120 134 60 132 C 36 131 14 128 0 120 Z';
+function antleredFoxy(cx, cy, headW) {
+  const headH = headW * FOXY_HEAD.aspect, top = cy - headH / 2, s = (headW * 0.62) / 200;
+  const antler = (side) => `<g transform="translate(${cx + side * headW * 0.2} ${top + headW * 0.1}) rotate(${-side * 42}) scale(${side * s} ${s}) translate(0 -120)">
+    <path d="${ANTLER}" fill="url(#antler)" stroke="#4A1F1A" stroke-width="7" stroke-linejoin="round"/></g>`;
+  return `<defs><linearGradient id="antler" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9A06E"/><stop offset="1" stop-color="#8E5434"/></linearGradient></defs>
+    ${antler(-1)}${antler(1)}${foxyTag(FOXY_HEAD, cx, top, headW)}`;
+}
 /** Lodge patch: cream disc, black rim, red running stitch, moose in the middle. */
 function lodgePatch(cx, cy, r) {
   return `<circle cx="${cx}" cy="${cy + 26}" r="${r + 40}" fill="#000" fill-opacity="0.28"/>
     <circle cx="${cx}" cy="${cy}" r="${r + 40}" fill="${LODGE.black}"/>
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="${LODGE.cream}"/>
     <circle cx="${cx}" cy="${cy}" r="${r - 46}" fill="none" stroke="${LODGE.stitch || LODGE.red}" stroke-width="18" stroke-dasharray="54 38" stroke-linecap="round"/>
-    ${mooseHead(cx, cy - r * 0.08, r * 1.95)}
-    ${heart(cx + r * 0.62, cy + r * 0.5, r * 0.3, '#FF6B8A', 16)}`;
+    ${MOOSE_STYLE === 'foxy-antlers' ? antleredFoxy(cx, cy + r * 0.22, r * 1.42) : mooseHead(cx, cy - r * 0.08, r * 1.95)}
+    ${MOOSE_STYLE === 'foxy-antlers' ? '' : heart(cx + r * 0.62, cy + r * 0.5, r * 0.3, '#FF6B8A', 16)}`;
 }
-export const mooseSponsorSpec = (key = 'lodge') => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; return { text: 'I MOOSE YOU', x: 3000, y: 4600, size: 300, track: 18, fill: c.ink || c.cream, stroke: c.inkStroke || c.dark, strokeW: 28 }; };
+export const mooseSponsorSpec = (key = 'lodge') => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; return { text: 'I MOOSE YOU', x: 3000, y: c.sponsorY ?? 4600, size: c.sponsorSize ?? 300, track: 18, fill: c.ink || c.cream, stroke: c.inkStroke || c.dark, strokeW: 28 }; };
 export const MOOSE_SPONSOR = mooseSponsorSpec('lodge');
 export const mooseSponsor = (t = MOOSE_SPONSOR) => typeof t === 'string' ? mooseSponsor(mooseSponsorSpec(t)) :
   `<text x="${t.x}" y="${t.y}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="${t.size}" letter-spacing="${t.track}" fill="${t.fill}" stroke="${t.stroke}" stroke-width="${t.strokeW}" paint-order="stroke">${t.text}</text>`;
@@ -355,9 +372,41 @@ function mooseArt() {
   const roundel = `<circle cx="${CREST.x}" cy="${CREST.y + 20}" r="320" fill="${LODGE.black}" stroke="${LODGE.cream}" stroke-width="22"/>`;
   return buffalo() + roundel + crest(CREST.x, CREST.y, CREST.w, 'light') + lodgePatch(3000, 3560, 600);
 }
+/** A solid three-tone buffalo check (light squares, mid bands, dark crossings) with a faint twill. */
+function check(size, { base, mid, dark }) {
+  let s = `<rect width="${D}" height="${D}" fill="${base}"/>`;
+  for (let v = 0; v < D; v += size * 2) s += `<rect x="${v}" y="0" width="${size}" height="${D}" fill="${mid}"/><rect x="0" y="${v}" width="${D}" height="${size}" fill="${mid}"/>`;
+  for (let x = 0; x < D; x += size * 2) for (let y = 0; y < D; y += size * 2) s += `<rect x="${x}" y="${y}" width="${size}" height="${size}" fill="${dark}"/>`;
+  for (let x = -D; x < D; x += 70) s += `<path d="M ${x} ${D} L ${x + D} 0" stroke="#000" stroke-opacity="0.05" stroke-width="14"/>`;
+  return s;
+}
+// The kit layout, in front-file px: the hoop band across the torso, and the kit-maker mark on the right chest
+// (the crest's mirror about the visible front's centre line, x 3040).
+const MOOSE_HOOP = { top: 3720, height: 720, square: 180 };
+const MOOSE_MAKER = { x: 2530, y: 2440, w: 280 };
+let clipId = 0;
+const band = (y, h, square, colours) => { const id = `mb${clipId++}`;
+  return `<clipPath id="${id}"><rect x="0" y="${y}" width="${D}" height="${h}"/></clipPath><g clip-path="url(#${id})">${check(square, colours)}</g>`; };
+
+/** Moose Lodge as a football kit: crest left chest, antlered Foxy as the kit-maker mark, "I MOOSE YOU"
+ *  where the sponsor goes, and the buffalo check as a chest hoop and cuffs on a tonal body. */
+function mooseKit(colorway, withText) {
+  const c = MOOSE_COLORWAYS[colorway], { top, height, square } = MOOSE_HOOP;
+  const piping = (y) => `<rect x="0" y="${y}" width="${D}" height="26" fill="${c.cream}"/>`;
+  const roundel = `<circle cx="${CREST.x}" cy="${CREST.y + 20}" r="320" fill="${c.body.base}" stroke="${c.cream}" stroke-width="22"/>`;
+  const front = check(560, c.body) + band(top, height, square, c.hoop) + piping(top - 40) + piping(top + height + 14)
+    + roundel + crest(CREST.x, CREST.y, CREST.w, 'light') + antleredFoxy(MOOSE_MAKER.x, MOOSE_MAKER.y, MOOSE_MAKER.w);
+  return {
+    front: svg(front + (withText ? mooseSponsor(colorway) : ''), ''),
+    pattern: svg(check(560, c.body), ''),
+    sleeve: svg(check(560, c.body) + band(4040, D - 4040, square, c.hoop) + `<rect x="0" y="3980" width="${D}" height="40" fill="${c.cream}"/>`, ''),
+  };
+}
+
 function moose({ withText = true, colorway = 'blush', style = 'foxy' } = {}) {
   useColorway(colorway);
   MOOSE_STYLE = style;
+  if (MOOSE_COLORWAYS[colorway]?.layout === 'kit') return mooseKit(colorway, withText);
   return {
     front: svg(mooseArt() + (withText ? mooseSponsor(colorway) : ''), ''),
     pattern: svg(buffalo(), ''),

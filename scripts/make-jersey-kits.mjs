@@ -36,7 +36,7 @@ const OUT_OCT = new URL('../public/shop/designs/kits-2026-10/', import.meta.url)
 // Moose Lodge launches in Blush only, as `moose-blush`; the module's other
 // colorways stay unbuilt, so its generic `moose` entry is left out.
 const { moose: mooseKit, ...OCT_REST } = OCT_KITS;
-const OCT_BUILD = { ...OCT_REST, 'moose-blush': () => mooseKit({ colorway: 'blush', style: 'foxy' }) };
+const OCT_BUILD = { ...OCT_REST, 'moose-blush': () => mooseKit({ colorway: 'blush', style: 'foxy-antlers' }) };
 const outFor = (kit) => (kit in OCT_BUILD ? OUT_OCT : OUT_SEPT);
 const CREST = { x: 3550, y: 2400, w: 440 };
 
