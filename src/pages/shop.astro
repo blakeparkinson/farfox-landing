@@ -3,7 +3,13 @@ import Layout from '../layouts/Layout.astro';
 import catalog from '../data/catalog.json';
 // Optional one-line story per product, keyed by Printful sync product id.
 import stories from '../data/product-stories.json';
-import { kitSlugForName, kitForColour } from '../lib/kits.mjs';
+import ShopNav from '../components/ShopNav.astro';
+import ShopFooter from '../components/ShopFooter.astro';
+import ShopCart from '../components/ShopCart.astro';
+import ProductImage from '../components/ProductImage.astro';
+import ProductBuy from '../components/ProductBuy.astro';
+import { cartLive } from '../lib/snipcart';
+import { SITE, SHOP_CATEGORIES, shopCategoryOf, formatPrice as fmt, productPath, productUrl, type ShopProduct } from '../lib/productPages';
 
 /**
  * Far Fox Shop — print-on-demand storefront.
@@ -19,48 +25,18 @@ import { kitSlugForName, kitForColour } from '../lib/kits.mjs';
  * (we show a small "preview" notice instead of a broken checkout).
  *
  * Snipcart validates prices by crawling each item's `data-item-url`. Every
- * product here uses /shop as its url and the matching button lives on this
- * page, so validation resolves against this same page. Prices are the
+ * product uses /shop as its url, even on its own product page, because this
+ * page holds every button, so validation always resolves here. Prices are the
  * single source of truth in the PRODUCTS array below.
  */
-
-// Snipcart PUBLIC API key — safe to ship in client HTML (that's how the
-// cart works). Env var wins if set in Vercel; otherwise this default.
-const SNIPCART_KEY = import.meta.env.PUBLIC_SNIPCART_KEY ?? 'ZDBhODA3ZGEtNzM5Zi00MGYxLTg4ODItOGY3NTYyMTQwNmRmNjM5MTYzNzE4NTA1NTczODE3';
-const cartLive = SNIPCART_KEY.length > 0;
-
-const SITE = 'https://lovefarfox.com';
-
-type Product = {
-  id: string;
-  slug: string;
-  name: string;
-  price: number;
-  currency?: string;
-  image: string;
-  back?: string | null;
-  sizes?: string[];
-  colors?: { name: string; hex: string; image?: string | null; back?: string | null }[];
-};
 
 // Catalog is generated from Printful (and Printify, for the flannel) at build time (scripts/sync-catalog.mjs):
 // every sync product in the store, with its price, sizes and mockup. Add,
 // edit or remove products in the Printful dashboard — nothing here changes.
-const PRODUCTS: Product[] = (catalog.products as Product[]);
+const PRODUCTS = catalog.products as ShopProduct[];
 
-const fmt = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
-
-// Group products into shoppable categories (first match wins, jerseys lead).
-const CATS: { title: string; test: (n: string) => boolean }[] = [
-  { title: 'Jerseys', test: (n) => /jersey/i.test(n) },
-  { title: 'Tees, Sweats & Flannels', test: (n) => /tee|hoodie|crewneck|flannel/i.test(n) },
-  { title: 'Mugs', test: (n) => /mug/i.test(n) },
-  { title: 'Art Prints', test: (n) => /print/i.test(n) },
-  { title: 'Stickers', test: (n) => /sticker/i.test(n) },
-];
-const catOf = (n: string) => CATS.find((c) => c.test(n))?.title ?? 'More';
-const grouped = [...CATS.map((c) => c.title), 'More']
-  .map((title) => ({ title, items: PRODUCTS.filter((p) => catOf(p.name) === title) }))
+const grouped = [...SHOP_CATEGORIES.map((c) => c.title), 'More']
+  .map((title) => ({ title, items: PRODUCTS.filter((p) => shopCategoryOf(p.name) === title) }))
   .filter((g) => g.items.length);
 ---
 
@@ -82,7 +58,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
           "@type": "Product",
           "name": p.name,
           "image": `${SITE}${p.image}`,
-          "url": "https://lovefarfox.com/shop/",
+          "url": productUrl(p),
           "brand": { "@type": "Brand", "name": "Far Fox" },
           "offers": {
             "@type": "Offer",
@@ -102,32 +78,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
     </Fragment>
   )}
 
-  <!-- Nav -->
-  <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2">
-        <img src="/brand/foxy-icon-v1.png" alt="Far Fox" class="w-8 h-8" />
-        <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">
-          Far Fox
-        </span>
-      </a>
-      <div class="flex items-center gap-4">
-        <a href="/blog/" class="hidden sm:inline text-sm font-700 text-fox-text-light hover:text-fox-pink transition-colors">Blog</a>
-        {cartLive && (
-          <button class="snipcart-checkout flex items-center gap-1.5 text-sm font-800 text-fox-text hover:text-fox-pink transition-colors">
-            <span aria-hidden="true">🛒</span>
-            Cart (<span class="snipcart-items-count">0</span>)
-          </button>
-        )}
-        <a
-          href="https://app.lovefarfox.com"
-          class="px-5 py-2 rounded-full bg-fox-pink text-white font-700 text-sm hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
-        >
-          Open App
-        </a>
-      </div>
-    </div>
-  </nav>
+  <ShopNav />
 
   <!-- Hero -->
   <section class="pt-32 pb-12 px-6 text-center relative overflow-hidden">
@@ -160,123 +111,16 @@ const grouped = [...CATS.map((c) => c.title), 'More']
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {group.items.map((p) => (
         <div class="group flex flex-col rounded-3xl bg-white/70 border border-fox-pink/10 overflow-hidden hover:border-fox-pink/25 hover:shadow-xl hover:shadow-fox-pink/10 transition-all duration-200 hover:-translate-y-1">
-          <div class="relative aspect-square bg-gradient-to-br from-fox-bg to-white overflow-hidden">
-            <img id={`img-${p.id}`} src={p.image} alt={p.name} class="w-full h-full object-contain p-2 transition-opacity duration-150" loading="lazy" />
-            {p.name.includes('Pride') && (
-              <span class="absolute top-3 left-3 text-xs font-800 uppercase tracking-wide text-white bg-fox-pink rounded-full px-3 py-1">Pride</span>
-            )}
-            {p.back && (
-              <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 bg-white/85 backdrop-blur rounded-full px-1.5 py-1 shadow-sm">
-                <button type="button" class="view-btn text-[11px] font-800 px-2.5 py-0.5 rounded-full transition-colors" data-product={p.id} data-view={`${SITE}${p.image}`} data-active="true">Front</button>
-                <button type="button" class="view-btn text-[11px] font-800 px-2.5 py-0.5 rounded-full transition-colors" data-product={p.id} data-view={`${SITE}${p.back}`} data-active="false">Back</button>
-              </div>
-            )}
-          </div>
+          <a href={productPath(p)} aria-label={p.name}><ProductImage product={p} /></a>
           <div class="flex flex-col flex-1 p-5">
             <div class="flex items-baseline justify-between gap-2 mb-3">
-              <h2 class="font-800 text-lg leading-tight">{p.name}</h2>
+              <h2 class="font-800 text-lg leading-tight"><a href={productPath(p)} class="hover:text-fox-pink transition-colors">{p.name}</a></h2>
               <span class="font-900 text-fox-pink whitespace-nowrap">{fmt(p.price)}</span>
             </div>
             {stories[p.id] && <p class="text-sm leading-snug text-fox-text-light mb-3">{stories[p.id]}</p>}
             <div class="flex-1"></div>
 
-            {p.colors && p.colors.length > 0 && (
-              <div class="mb-3">
-                <div class="flex items-center justify-between mb-1.5">
-                  <span class="text-xs font-700 uppercase tracking-wide text-fox-text-light">Color</span>
-                  <span id={`color-label-${p.id}`} class="text-xs font-700 text-fox-text">{p.colors[0].name}</span>
-                </div>
-                <div class="flex flex-wrap gap-1.5" role="radiogroup" aria-label={`Color for ${p.name}`}>
-                  {p.colors.map((c, i) => (
-                    <button
-                      type="button"
-                      class="color-swatch w-6 h-6 rounded-full border transition-transform hover:scale-110"
-                      data-product={p.id}
-                      data-color={c.name}
-                      data-image={c.image || p.image}
-                      data-back={c.back || p.back || undefined}
-                      data-kit={kitSlugForName(p.name) ? kitForColour(p.name, c.name) : undefined}
-                      data-selected={i === 0 ? 'true' : 'false'}
-                      title={c.name}
-                      aria-label={c.name}
-                      style={`background:${c.hex};border-color:${c.hex.toLowerCase() === '#ffffff' ? '#d8d2c8' : 'rgba(0,0,0,0.15)'};box-shadow:${i === 0 ? '0 0 0 2px #fff,0 0 0 4px var(--swatch-ring,#e0689a)' : 'none'}`}
-                    ></button>
-                  ))}
-                </div>
-                <input type="hidden" id={`color-${p.id}`} value={p.colors[0].name} />
-              </div>
-            )}
-
-            {p.sizes && p.sizes.length > 0 && (
-              <select
-                id={`size-${p.id}`}
-                class="mb-3 w-full rounded-xl border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text focus:outline-none focus:border-fox-pink"
-                aria-label={`Size for ${p.name}`}
-              >
-                {p.sizes.map((s) => <option value={s}>{`Size: ${s}`}</option>)}
-              </select>
-            )}
-
-            {kitSlugForName(p.name) && (
-              <div class="mb-3 rounded-xl border border-fox-pink/15 bg-fox-pink/[0.04] p-3" data-personalize data-product={p.id} data-kit={kitForColour(p.name, p.colors?.[0]?.name)}>
-                <div class="text-xs font-800 uppercase tracking-wide text-fox-text-light mb-2">
-                  Personalize <span class="font-600 normal-case tracking-normal text-fox-text-light/70">· optional, previews on the back</span>
-                </div>
-                <div class="flex gap-2">
-                  <input
-                    id={`pname-${p.id}`}
-                    type="text"
-                    maxlength="14"
-                    placeholder="Name"
-                    aria-label={`Name on back for ${p.name}`}
-                    class="flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text uppercase placeholder:normal-case placeholder:font-600 placeholder:text-fox-text-light/60 focus:outline-none focus:border-fox-pink"
-                  />
-                  <input
-                    id={`pnum-${p.id}`}
-                    type="text"
-                    inputmode="numeric"
-                    maxlength="3"
-                    placeholder="#"
-                    aria-label={`Number on back for ${p.name}`}
-                    class="w-16 rounded-lg border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text text-center placeholder:font-600 placeholder:text-fox-text-light/60 focus:outline-none focus:border-fox-pink"
-                  />
-                </div>
-              </div>
-            )}
-
-            {cartLive ? (
-              <button
-                class="snipcart-add-item mt-auto w-full px-5 py-3 rounded-full bg-fox-pink text-white font-800 hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200"
-                data-item-id={p.id}
-                data-item-name={p.name}
-                data-item-price={p.price}
-                data-item-url="/shop/"
-                data-item-image={`${SITE}${p.image}`}
-                data-item-description={p.name}
-                data-item-custom1-name={p.sizes?.length ? 'Size' : undefined}
-                data-item-custom1-options={p.sizes?.length ? p.sizes.join('|') : undefined}
-                data-size-select={p.sizes?.length ? `size-${p.id}` : undefined}
-                data-item-custom2-name={p.colors?.length ? 'Color' : undefined}
-                data-item-custom2-options={p.colors?.length ? p.colors.map((c) => c.name).join('|') : undefined}
-                data-item-custom2-value={p.colors?.length ? p.colors[0].name : undefined}
-                data-color-input={p.colors?.length ? `color-${p.id}` : undefined}
-                data-item-custom3-name={kitSlugForName(p.name) ? 'Name' : undefined}
-                data-item-custom3-required={kitSlugForName(p.name) ? 'false' : undefined}
-                data-name-input={kitSlugForName(p.name) ? `pname-${p.id}` : undefined}
-                data-item-custom4-name={kitSlugForName(p.name) ? 'Number' : undefined}
-                data-item-custom4-required={kitSlugForName(p.name) ? 'false' : undefined}
-                data-number-input={kitSlugForName(p.name) ? `pnum-${p.id}` : undefined}
-              >
-                Add to cart
-              </button>
-            ) : (
-              <button
-                disabled
-                class="mt-auto w-full px-5 py-3 rounded-full bg-fox-pink/30 text-white/90 font-800 cursor-not-allowed"
-              >
-                Coming soon
-              </button>
-            )}
+            <ProductBuy product={p} />
           </div>
         </div>
           ))}
@@ -292,7 +136,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
       <div>
         <div class="text-3xl mb-3">✨</div>
         <h3 class="font-800 text-lg mb-1">Genuinely good quality</h3>
-        <p class="text-fox-text-light text-sm leading-relaxed">Printed on premium blanks — soft cotton, hard enamel, weatherproof vinyl. No flimsy merch.</p>
+        <p class="text-fox-text-light text-sm leading-relaxed">Printed on premium blanks — soft cotton, glossy ceramic, weatherproof vinyl. No flimsy merch.</p>
       </div>
       <div>
         <div class="text-3xl mb-3">🌍</div>
@@ -307,169 +151,7 @@ const grouped = [...CATS.map((c) => c.title), 'More']
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="py-12 px-6 border-t border-fox-pink/10">
-    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-      <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
-      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light/50">
-        <a href="/shop/" class="hover:text-fox-pink transition-colors">Shop</a>
-        <a href="/blog/" class="hover:text-fox-pink transition-colors">Blog</a>
-        <a href="/privacy/" class="hover:text-fox-pink transition-colors">Privacy</a>
-        <a href="/terms/" class="hover:text-fox-pink transition-colors">Terms</a>
-        <a href="mailto:blake@lovefarfox.com" class="hover:text-fox-pink transition-colors">Contact</a>
-        <span>&copy; {new Date().getFullYear()} Far Fox</span>
-      </div>
-    </div>
-  </footer>
+  <ShopFooter />
 
-  {cartLive && (
-    <Fragment>
-      <div hidden id="snipcart" data-api-key={SNIPCART_KEY} data-config-modal-style="side"></div>
-      <script is:inline src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
-      <script is:inline>
-        // Colour swatch selection: update the hidden input, the label and the
-        // selected ring for the product the swatch belongs to.
-        document.querySelectorAll('.color-swatch').forEach((sw) => {
-          sw.addEventListener('click', () => {
-            const pid = sw.getAttribute('data-product');
-            const name = sw.getAttribute('data-color');
-            document.querySelectorAll(`.color-swatch[data-product="${pid}"]`).forEach((s) => {
-              s.setAttribute('data-selected', 'false');
-              s.style.boxShadow = 'none';
-            });
-            sw.setAttribute('data-selected', 'true');
-            sw.style.boxShadow = '0 0 0 2px #fff,0 0 0 4px var(--swatch-ring,#e0689a)';
-            const hidden = document.getElementById(`color-${pid}`);
-            if (hidden) hidden.value = name;
-            const label = document.getElementById(`color-label-${pid}`);
-            if (label) label.textContent = name;
-            // Colourway jerseys have one personalised back per colour.
-            const kit = sw.getAttribute('data-kit');
-            const wrap = document.querySelector(`[data-personalize][data-product="${pid}"]`);
-            if (kit && wrap) wrap.setAttribute('data-kit', kit);
-            // Point both view buttons at this colour, then show whichever view is active.
-            const front = sw.getAttribute('data-image');
-            const back = sw.getAttribute('data-back');
-            let showingBack = false;
-            document.querySelectorAll(`.view-btn[data-product="${pid}"]`).forEach((b) => {
-              const isBack = (b.textContent || '').trim().toLowerCase() === 'back';
-              const view = isBack ? back : front;
-              if (view) b.setAttribute('data-view', view);
-              if (isBack && b.getAttribute('data-active') === 'true') showingBack = true;
-            });
-            const img = document.getElementById(`img-${pid}`);
-            const src = showingBack ? (personalizedBack(pid) || back || front) : front;
-            if (img && src && img.getAttribute('src') !== src) {
-              img.style.opacity = '0';
-              const swap = new Image();
-              swap.onload = () => { img.src = src; img.style.opacity = '1'; };
-              swap.src = src;
-            }
-          });
-        });
-        // Build the personalized-back image URL from a product's current
-        // name/number inputs, or null if nothing's entered (→ use stock back).
-        const personalizedBack = (pid, w) => {
-          const wrap = document.querySelector(`[data-personalize][data-product="${pid}"]`);
-          if (!wrap) return null;
-          const nameEl = document.getElementById(`pname-${pid}`);
-          const numEl = document.getElementById(`pnum-${pid}`);
-          const name = (nameEl && nameEl.value || '').toUpperCase().trim();
-          const num = (numEl && numEl.value || '').replace(/[^0-9]/g, '');
-          if (!name && !num) return null;
-          const q = new URLSearchParams({ kit: wrap.getAttribute('data-kit'), name, number: num, w: String(w || 720) });
-          return `/api/jersey-back.png?${q.toString()}`;
-        };
-        // Front/Back view toggle (jerseys etc.)
-        const paintView = (btn) => {
-          const on = btn.getAttribute('data-active') === 'true';
-          btn.style.background = on ? '#e0689a' : 'transparent';
-          btn.style.color = on ? '#fff' : '#6e6874';
-        };
-        document.querySelectorAll('.view-btn').forEach((btn) => {
-          paintView(btn);
-          btn.addEventListener('click', () => {
-            const pid = btn.getAttribute('data-product');
-            document.querySelectorAll(`.view-btn[data-product="${pid}"]`).forEach((b) => {
-              b.setAttribute('data-active', b === btn ? 'true' : 'false'); paintView(b);
-            });
-            const img = document.getElementById(`img-${pid}`);
-            // The Back view reflects the typed name/number when present.
-            const isBack = (btn.textContent || '').trim().toLowerCase() === 'back';
-            const src = (isBack && personalizedBack(pid)) || btn.getAttribute('data-view');
-            if (img && src && img.getAttribute('src') !== src) {
-              img.style.opacity = '0';
-              const swap = new Image();
-              swap.onload = () => { img.src = src; img.style.opacity = '1'; };
-              swap.src = src;
-            }
-          });
-        });
-        // Live personalization preview: as the customer types a name/number,
-        // swap the card image to the generated back (debounced, small render).
-        const swapImage = (img, src) => {
-          if (!img || !src || img.getAttribute('src') === src) return;
-          img.style.opacity = '0';
-          const pre = new Image();
-          pre.onload = () => { img.src = src; img.style.opacity = '1'; };
-          pre.src = src;
-        };
-        const setActiveView = (pid, view) => {
-          document.querySelectorAll(`.view-btn[data-product="${pid}"]`).forEach((b) => {
-            const isFront = (b.textContent || '').trim().toLowerCase() === 'front';
-            b.setAttribute('data-active', (view === 'front') === isFront ? 'true' : 'false');
-            paintView(b);
-          });
-        };
-        document.querySelectorAll('[data-personalize]').forEach((wrap) => {
-          const pid = wrap.getAttribute('data-product');
-          const img = document.getElementById(`img-${pid}`);
-          const nameI = document.getElementById(`pname-${pid}`);
-          const numI = document.getElementById(`pnum-${pid}`);
-          const frontSrc = img && img.getAttribute('src');
-          let t;
-          const update = () => {
-            // Keep the number field digits-only as the customer types.
-            const digits = (numI.value || '').replace(/[^0-9]/g, '').slice(0, 3);
-            if (numI.value !== digits) numI.value = digits;
-            clearTimeout(t);
-            t = setTimeout(() => {
-              const src = personalizedBack(pid);
-              if (!src) { swapImage(img, frontSrc); setActiveView(pid, 'front'); return; }
-              swapImage(img, src);
-              setActiveView(pid, 'back');
-            }, 350);
-          };
-          nameI && nameI.addEventListener('input', update);
-          numI && numI.addEventListener('input', update);
-        });
-
-        // Before add-to-cart, copy the chosen size + colour into Snipcart fields.
-        document.querySelectorAll('.snipcart-add-item').forEach((btn) => {
-          btn.addEventListener('click', () => {
-            const sizeSel = btn.getAttribute('data-size-select');
-            if (sizeSel) {
-              const sel = document.getElementById(sizeSel);
-              if (sel) btn.setAttribute('data-item-custom1-value', sel.value);
-            }
-            const colorInput = btn.getAttribute('data-color-input');
-            if (colorInput) {
-              const ci = document.getElementById(colorInput);
-              if (ci) btn.setAttribute('data-item-custom2-value', ci.value);
-            }
-            const nameInput = btn.getAttribute('data-name-input');
-            if (nameInput) {
-              const ni = document.getElementById(nameInput);
-              btn.setAttribute('data-item-custom3-value', ni ? ni.value.toUpperCase().trim() : '');
-            }
-            const numberInput = btn.getAttribute('data-number-input');
-            if (numberInput) {
-              const ni = document.getElementById(numberInput);
-              btn.setAttribute('data-item-custom4-value', ni ? ni.value.replace(/[^0-9]/g, '') : '');
-            }
-          }, true);
-        });
-      </script>
-    </Fragment>
-  )}
+  <ShopCart />
 </Layout>
