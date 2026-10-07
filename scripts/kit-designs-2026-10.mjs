@@ -114,31 +114,58 @@ const backKeep = (pad) => (x, y) => clearOf(3000, 900, 450, 380)(x, y)
 
 // --- reworked kits ------------------------------------------------------------
 
-/** Drop Zone v3: a drop-zone marker centred on the chest where two pins (one each) lean in and land
- *  together, with SAME DROP ZONE as the sponsor line, over Fox Purple contours on a night-to-plum field. */
-const DZ = { x: 3040, y: 3300, r: 560, cyan: '#22D3EE', pink: '#FF6B8A', line: '#B76CFD', cream: '#FFF5F0', night: '#21182B' };
-function dropzone() {
-  const bg = `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${DZ.night}"/><stop offset="0.55" stop-color="#2D1B4E"/><stop offset="1" stop-color="#4E2272"/></linearGradient></defs><rect width="${D}" height="${D}" fill="url(#g)"/>`;
-  const paths = contours(noiseField(7), Array.from({ length: 16 }, (_, i) => 0.22 + i * 0.037));
-  const topo = paths.map((d, i) => `<path d="${d}" stroke="${i % 4 === 0 ? DZ.pink : DZ.line}" stroke-opacity="${i % 4 === 0 ? 0.32 : 0.22}" stroke-width="${i % 4 === 0 ? 12 : 7}" stroke-linecap="round" fill="none"/>`).join('');
-  const { x, y, r } = DZ;
-  let ticks = '';
-  for (let k = 0; k < 24; k++) {
-    const t = (k / 24) * Math.PI * 2, r0 = r + 50, r1 = r + (k % 6 === 0 ? 200 : 110);
-    ticks += `<line x1="${x + Math.cos(t) * r0}" y1="${y + Math.sin(t) * r0}" x2="${x + Math.cos(t) * r1}" y2="${y + Math.sin(t) * r1}" stroke="${DZ.cream}" stroke-opacity="0.9" stroke-width="18" stroke-linecap="round"/>`;
+/** Drop Zone v4, battle-royale inspired: a cartoon island under a map grid, the purple storm closing in
+ *  around a glowing safe zone, a dotted drop path, and two player markers (cyan and pink) landing together
+ *  at FOX FALLS. WHERE WE DROPPIN'? sits on a HUD plate where the sponsor goes. Genre language only: no
+ *  game's names, logos or fonts. */
+const DZ = { cx: 3040, cy: 3650, island: 1750, safe: { x: 2960, y: 3700, r: 1250 }, cyan: '#22D3EE', pink: '#FF6B8A', cream: '#FFF5F0', night: '#21182B', storm: '#7B2FF7', stormLine: '#E9D5FF', ink: '#16325C' };
+const DZ_TERRAIN = [[0.1, [43, 111, 214]], [0.22, [71, 167, 240]], [0.29, [244, 220, 147]], [0.48, [121, 200, 78]], [0.6, [75, 160, 60]], [9, [63, 128, 54]]];
+const dzNoise = noiseField(31);
+const dzElevation = (x, y) => dzNoise(x / 900, y / 900) * 0.7 + (1 - Math.hypot(x - DZ.cx, y - DZ.cy) / DZ.island) * 0.8 - 0.45;
+const DZ_RASTER = 1500;
+const dzIsland = await (async () => {
+  const buf = Buffer.alloc(DZ_RASTER * DZ_RASTER * 3), k = D / DZ_RASTER;
+  for (let j = 0; j < DZ_RASTER; j++) for (let i = 0; i < DZ_RASTER; i++) {
+    const e = dzElevation(i * k, j * k);
+    buf.set(DZ_TERRAIN.find(([top]) => e < top)[1], (j * DZ_RASTER + i) * 3);
   }
-  const cross = [[-1, 0], [1, 0], [0, -1], [0, 1]].map(([dx, dy]) => `<line x1="${x + dx * r * 0.18}" y1="${y + dy * r * 0.18}" x2="${x + dx * r * 0.82}" y2="${y + dy * r * 0.82}" stroke="${DZ.cream}" stroke-opacity="0.4" stroke-width="10"/>`).join('');
-  const tilted = (px, color, deg) => `<g transform="rotate(${deg} ${px} ${y + 40})">${pin(px, y + 40, 460, color, DZ.cream)}</g>`;
-  const zone = `<circle cx="${x}" cy="${y}" r="${r}" fill="${DZ.night}" fill-opacity="0.35" stroke="${DZ.cream}" stroke-width="22" stroke-dasharray="120 70"/>${ticks}${cross}
-    <circle cx="${x}" cy="${y}" r="${r * 0.42}" fill="none" stroke="${DZ.cream}" stroke-opacity="0.35" stroke-width="12" stroke-dasharray="60 50"/>
-    <rect x="${x - 230}" y="${y - r - 330}" width="460" height="120" rx="20" fill="${DZ.cream}"/>
-    <text x="${x}" y="${y - r - 240}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="88" letter-spacing="12" fill="${DZ.night}">DZ-143</text>
-    ${tilted(x - 130, DZ.cyan, -14)}${tilted(x + 130, DZ.pink, 14)}${heart(x, y + 70, 130, DZ.cream)}`;
-  const sponsor = `<text x="${x}" y="${y + r + 470}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="220" letter-spacing="14" fill="${DZ.cream}" stroke="${DZ.night}" stroke-width="24" paint-order="stroke">SAME DROP ZONE</text>`;
+  const sharp = (await import('sharp')).default;
+  return (await sharp(buf, { raw: { width: DZ_RASTER, height: DZ_RASTER, channels: 3 } }).png().toBuffer()).toString('base64');
+})();
+const hud = (x, y, t, size, fill = DZ.cream, extra = '') => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Lilita One" font-size="${size}" fill="${fill}" stroke="${DZ.night}" stroke-width="${size * 0.16}" stroke-linejoin="round" paint-order="stroke" ${extra}>${t}</text>`;
+function stormField(withHole) {
+  const { x, y, r } = DZ.safe, hole = withHole ? ` M ${x - r} ${y} a ${r} ${r} 0 1 0 ${2 * r} 0 a ${r} ${r} 0 1 0 ${-2 * r} 0 Z` : '';
+  let swirl = '';
+  for (let i = 0; i < 9; i++) swirl += `<ellipse cx="${x}" cy="${y}" rx="${r + 300 + i * 380}" ry="${r + 120 + i * 300}" transform="rotate(${i * 23} ${x} ${y})" fill="none" stroke="#B76CFD" stroke-opacity="0.28" stroke-width="${40 - i * 2}"/>`;
+  return `<defs><clipPath id="stormclip"><path clip-rule="evenodd" d="M0 0 H${D} V${D} H0 Z${hole}"/></clipPath></defs>
+    <g clip-path="url(#stormclip)"><rect width="${D}" height="${D}" fill="${withHole ? DZ.storm : '#3A1677'}" fill-opacity="${withHole ? 0.5 : 1}"/>${swirl}</g>`;
+}
+function playerMarker(x, y, color, deg) {
+  return `<g transform="translate(${x} ${y})"><circle r="120" fill="${color}" stroke="${DZ.cream}" stroke-width="26"/>
+    <path transform="rotate(${deg})" d="M 0 -70 L 52 46 L 0 20 L -52 46 Z" fill="${DZ.cream}"/></g>`;
+}
+function dropzone() {
+  const { x, y, r } = DZ.safe;
+  const coast = contours(dzElevation, [0.22], 24, 1).map((d) => `<path d="${d}" stroke="${DZ.ink}" stroke-width="16" stroke-linecap="round" fill="none"/>`).join('');
+  let grid = '';
+  for (let v = 0; v <= D; v += 500) grid += `<line x1="${v}" y1="0" x2="${v}" y2="${D}" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="6"/><line x1="0" y1="${v}" x2="${D}" y2="${v}" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="6"/>`;
+  const map = `<image href="data:image/png;base64,${dzIsland}" x="0" y="0" width="${D}" height="${D}" preserveAspectRatio="none"/>${coast}${grid}`;
+  const safeRing = `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${DZ.stormLine}" stroke-opacity="0.35" stroke-width="90"/><circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${DZ.stormLine}" stroke-width="26"/>`;
+  const trees = scatter(41, 70, 110, (tx, ty) => { const e = dzElevation(tx, ty); return e > 0.33 && e < 0.58 && Math.hypot(tx - 2860, ty - 3700) > 420; })
+    .map((t) => `<circle cx="${t.x.toFixed(0)}" cy="${t.y.toFixed(0)}" r="30" fill="#2F7A2C" stroke="${DZ.ink}" stroke-opacity="0.5" stroke-width="6"/>`).join('');
+  const route = `<path d="M 1700 1500 L 4500 4700" stroke="${DZ.cream}" stroke-width="22" stroke-dasharray="10 60" stroke-linecap="round"/>
+    <path transform="translate(4500 4700) rotate(${Math.atan2(3200, 2800) * 180 / Math.PI + 90})" d="M 0 -80 L 70 40 L -70 40 Z" fill="${DZ.cream}"/>`;
+  const poi = (px, py, name, size = 118) => `<circle cx="${px}" cy="${py}" r="34" fill="${DZ.cream}" stroke="${DZ.night}" stroke-width="12"/>${hud(px, py - 70, name, size)}`;
+  const fall = { x: 2860, y: 3640 };
+  const landing = `${poi(fall.x, fall.y, 'FOX FALLS', 150)}${playerMarker(fall.x - 210, fall.y + 210, DZ.cyan, 20)}${playerMarker(fall.x + 210, fall.y + 210, DZ.pink, -20)}${heart(fall.x, fall.y + 240, 150, DZ.pink)}`;
+  const plate = `<rect x="1960" y="2700" width="2160" height="300" rx="60" fill="${DZ.night}" fill-opacity="0.88" stroke="${DZ.cream}" stroke-width="14"/>
+    ${hud(3040, 2915, 'WHERE WE DROPPIN\u2019?', 200, DZ.cream, `letter-spacing="6"`)}`;
+  const roundel = `<circle cx="${CREST.x}" cy="${CREST.y + 20}" r="300" fill="${DZ.night}" stroke="${DZ.cream}" stroke-width="20"/>`;
   return {
-    front: svg(topo + zone + sponsor + crest(CREST.x, CREST.y, CREST.w, 'light'), bg),
-    pattern: svg(topo, bg),
-    sleeve: svg(topo + cuff(DZ.pink, DZ.night), bg),
+    front: svg(map + trees + stormField(true) + safeRing + route + poi(2480, 4420, 'MISSED CALL MANOR', 90) + poi(3640, 4120, '143 HEIGHTS', 110) + poi(3240, 4980, 'LONELY LANDING', 90)
+      + landing + plate + roundel + crest(CREST.x, CREST.y, CREST.w, 'light'), ''),
+    pattern: svg(stormField(false), ''),
+    sleeve: svg(stormField(false) + cuff(DZ.pink, DZ.night), ''),
   };
 }
 
@@ -387,25 +414,50 @@ function check(size, { base, mid, dark }) {
 // The kit layout, in front-file px: the hoop band across the torso, and the kit-maker mark on the right chest
 // (the crest's mirror about the visible front's centre line, x 3040).
 const MOOSE_HOOP = { top: 3720, height: 720, square: 180 };
-const MOOSE_MAKER = { x: 2530, y: 2440, w: 280 };
+// Kit grammar: the club badge on the wearer's left chest (CREST), the Far Fox mark as the kit-maker logo on
+// the right (its mirror about the visible front's centre line, x 3040).
+const MOOSE_MAKER = { x: 2530, y: 2440, w: 230 };
+const MOOSE_SLEEVE_PATCH = { x: 3000, y: 2900, r: 330 };
 let clipId = 0;
 const band = (y, h, square, colours) => { const id = `mb${clipId++}`;
   return `<clipPath id="${id}"><rect x="0" y="${y}" width="${D}" height="${h}"/></clipPath><g clip-path="url(#${id})">${check(square, colours)}</g>`; };
 
-/** Moose Lodge as a football kit: crest left chest, antlered Foxy as the kit-maker mark, "I MOOSE YOU"
- *  where the sponsor goes, and the buffalo check as a chest hoop and cuffs on a tonal body. */
+/** The club badge: a shield with MOOSE LODGE over antlered Foxy, and EST. 143 on the point. */
+function mooseClubBadge(c, cx, cy) {
+  const shield = 'M -280 -330 H 280 V 60 C 280 230 120 300 0 360 C -120 300 -280 230 -280 60 Z';
+  return `<g transform="translate(${cx} ${cy})">
+    <path d="${shield}" transform="translate(0 24)" fill="#000" fill-opacity="0.28"/>
+    <path d="${shield}" fill="${c.body.base}" stroke="${c.cream}" stroke-width="24" stroke-linejoin="round"/>
+    <path d="${shield}" transform="scale(0.86)" fill="none" stroke="${c.stitch}" stroke-width="10" stroke-dasharray="30 20"/>
+    <text x="0" y="-205" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="70" letter-spacing="6" fill="${c.cream}">MOOSE LODGE</text>
+    ${antleredFoxy(0, 40, 300)}
+    <text x="0" y="262" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="74" letter-spacing="10" fill="${c.stitch}">EST. 143</text></g>`;
+}
+
+/** The league-style patch on both sleeves. */
+function mooseSleevePatch(c) {
+  const { x, y, r } = MOOSE_SLEEVE_PATCH;
+  return `<circle cx="${x}" cy="${y}" r="${r}" fill="${c.body.base}" stroke="${c.cream}" stroke-width="22"/>
+    <circle cx="${x}" cy="${y}" r="${r - 50}" fill="none" stroke="${c.stitch}" stroke-width="10" stroke-dasharray="26 18"/>
+    <text x="${x}" y="${y - 70}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="96" letter-spacing="14" fill="${c.cream}">LODGE</text>
+    <text x="${x}" y="${y + 150}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="220" fill="${c.stitch}">143</text>`;
+}
+
+/** Moose Lodge as a football kit: the club badge left chest, the Far Fox mark as the kit maker, "I MOOSE YOU"
+ *  as the sponsor, the buffalo check as a chest hoop and cuffs on a tonal body, and a sign-off on the back. */
 function mooseKit(colorway, withText) {
   const c = MOOSE_COLORWAYS[colorway], { top, height, square } = MOOSE_HOOP;
   const piping = (y) => `<rect x="0" y="${y}" width="${D}" height="26" fill="${c.cream}"/>`;
-  const roundel = `<circle cx="${CREST.x}" cy="${CREST.y + 20}" r="320" fill="${c.body.base}" stroke="${c.cream}" stroke-width="22"/>`;
   const front = check(560, c.body) + band(top, height, square, c.hoop) + piping(top - 40) + piping(top + height + 14)
-    + roundel + crest(CREST.x, CREST.y, CREST.w, 'light') + antleredFoxy(MOOSE_MAKER.x, MOOSE_MAKER.y, MOOSE_MAKER.w);
+    + mooseClubBadge(c, CREST.x, CREST.y + 40) + crest(MOOSE_MAKER.x, MOOSE_MAKER.y, MOOSE_MAKER.w, 'light');
+  const signOff = `<text x="3000" y="5260" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="150" letter-spacing="30" fill="${c.cream}" fill-opacity="0.8">MOOSE LODGE FC</text>`;
   return {
     front: svg(front + (withText ? mooseSponsor(colorway) : ''), ''),
-    pattern: svg(check(560, c.body), ''),
-    sleeve: svg(check(560, c.body) + band(4040, D - 4040, square, c.hoop) + `<rect x="0" y="3980" width="${D}" height="40" fill="${c.cream}"/>`, ''),
+    pattern: svg(check(560, c.body) + signOff, ''),
+    sleeve: svg(check(560, c.body) + mooseSleevePatch(c) + band(4040, D - 4040, square, c.hoop) + `<rect x="0" y="3980" width="${D}" height="40" fill="${c.cream}"/>`, ''),
   };
 }
+
 
 function moose({ withText = true, colorway = 'blush', style = 'foxy' } = {}) {
   useColorway(colorway);

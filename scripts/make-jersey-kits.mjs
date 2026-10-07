@@ -54,11 +54,11 @@ function rng(seed) {
 const svg = (body, bg) =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="${D}" height="${D}" viewBox="0 0 ${D} ${D}">${bg}${body}</svg>`;
 
-// Oswald 700, the same face the personalized backs use for names and numbers.
-// resvg-js 2.6 ignores `fontBuffers`, so the font goes through a temp file.
+// Oswald 700, the same face the personalized backs use for names and numbers, plus Lilita One for
+// Drop Zone's game-map lettering. resvg-js 2.6 ignores `fontBuffers`, so fonts go through temp files.
 let fontFiles = [];
 async function loadFonts() {
-  for (const [family, query] of [['oswald', 'Oswald:wght@700']]) {
+  for (const [family, query] of [['oswald', 'Oswald:wght@700'], ['lilita', 'Lilita+One']]) {
     const css = await fetch(`https://fonts.googleapis.com/css2?family=${query}&display=swap`, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then((r) => r.text());
     const url = css.match(/url\((https:[^)]+\.ttf)\)/)[1];
     const file = join(tmpdir(), `farfox-${family}.ttf`);
