@@ -27,12 +27,12 @@ const PRODUCTS = {
   timezones: { id: 436908862, catalog: 71, front: 'timezones', label: null, price: '30.00' },
   morse: { id: 436909622, catalog: 71, front: 'morse', label: null, price: '30.00' },
   pride: { id: 436891455, catalog: 71, front: 'pride', label: null, price: '30.00', addColours: ['Black'] },
-  hearteyes: { id: 436883133, catalog: 71, front: 'hearteyes', label: null, price: '30.00' },
+  hearteyes: { id: 436883133, catalog: 71, front: 'hearteyes', label: null, price: '30.00', revision: 3 },
   hoodie: { id: 436883154, catalog: 294, front: 'hoodie-front', back: 'hoodie-back', label: null, price: null },
 };
 // Comfort Colors 6030 garment-dyed pocket tee (catalog 593): prints on the pocket and the back. Created by --apply.
 const POCKET = {
-  name: 'Far Fox — Pocket Tee', catalog: 593, front: 'pocket-front', frontType: 'pocket', back: 'pocket-back', label: null, price: '34.00', revision: 5,
+  name: 'Far Fox — Pocket Tee', catalog: 593, front: 'pocket-front', frontType: 'pocket', back: 'pocket-back', label: null, price: '34.00', revision: 6,
   colours: ['White', 'Butter', 'Violet', 'Watermelon', 'True Navy', 'Berry', 'Black'], sizes: ['S', 'M', 'L', 'XL', '2XL'],
 };
 const CREW = {
