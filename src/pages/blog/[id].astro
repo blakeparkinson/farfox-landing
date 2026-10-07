@@ -1,6 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import CouplesGame from '../../components/CouplesGame.astro';
+import IdeaPicker from '../../components/IdeaPicker.astro';
+import NextStep from '../../components/NextStep.astro';
+import { IDEA_PICKERS, extractIdeas, nextStepFor } from '../../lib/postIdeas';
 import { DIGITAL_MAP_PRICE } from '../../lib/coupleMap.mjs';
 import { getCollection, render } from 'astro:content';
 
@@ -14,6 +17,10 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+// Posts that list ideas get a picker dealt from their own items; every other post points to a next step.
+const picker = IDEA_PICKERS[post.id];
+const ideas = picker ? extractIdeas(post.body ?? '') : [];
+const nextStep = nextStepFor(post.id, post.data.tags ?? []);
 const hasGiftIntent = /gift|anniversary|valentine|birthday|christmas|care.package/i.test(`${post.id} ${post.data.title}`);
 
 const publishDate = new Date(`${post.data.date}T12:00:00`).toLocaleDateString('en-US', {
@@ -158,8 +165,9 @@ const breadcrumbSchema = {
       <p class="text-fox-text-light mb-10">{publishDate}{post.data.updatedDate && <> · Updated {new Date(`${post.data.updatedDate}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</>}</p>
 
       {post.id === 'long-distance-relationship-games' && <CouplesGame />}
+      {picker && ideas.length > 0 && <IdeaPicker postId={post.id} ideas={ideas} {...picker} />}
 
-      <div class="prose prose-lg max-w-none
+      <div data-post-body class="prose prose-lg max-w-none
         prose-headings:font-800 prose-headings:tracking-tight prose-headings:text-fox-text
         prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
         prose-p:text-fox-text-light prose-p:leading-relaxed
@@ -170,6 +178,7 @@ const breadcrumbSchema = {
       ">
         <Content />
       </div>
+      {nextStep && <NextStep postId={post.id} step={nextStep} />}
 
       {hasGiftIntent && (
         <aside aria-label="A personalized gift from Far Fox" class="mt-10 p-6 sm:p-8 rounded-2xl bg-fox-pink/5 border border-fox-pink/20">
