@@ -1,6 +1,36 @@
 {
-  "generatedAt": "2026-10-06T22:49:20.714Z",
+  "generatedAt": "2026-10-07T01:13:20.500Z",
   "products": [
+    {
+      "id": "478884090",
+      "slug": "far-fox-miss-you-too-mug",
+      "name": "\"Miss You Too\" Mug",
+      "price": 18,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-478884090.png",
+      "back": "/shop/backs/478884090.png",
+      "sizes": [
+        "11 oz",
+        "15 oz",
+        "20 oz"
+      ],
+      "colors": []
+    },
+    {
+      "id": "478884086",
+      "slug": "far-fox-miss-you-mug",
+      "name": "\"Miss You\" Mug",
+      "price": 18,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-478884086.png",
+      "back": "/shop/backs/478884086.png",
+      "sizes": [
+        "11 oz",
+        "15 oz",
+        "20 oz"
+      ],
+      "colors": []
+    },
     {
       "id": "478854341",
       "slug": "far-fox-ballpark-baseball-jersey",
@@ -614,7 +644,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436908860.png",
-      "back": null,
+      "back": "/shop/backs/436908860.png",
       "sizes": [
         "11 oz",
         "15 oz",
@@ -651,7 +681,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436891457.png",
-      "back": null,
+      "back": "/shop/backs/436891457.png",
       "sizes": [
         "11 oz",
         "15 oz",
@@ -718,7 +748,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436888902.png",
-      "back": null,
+      "back": "/shop/backs/436888902.png",
       "sizes": [
         "11 oz",
         "15 oz",
@@ -733,7 +763,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436888901.png",
-      "back": null,
+      "back": "/shop/backs/436888901.png",
       "sizes": [
         "11 oz",
         "15 oz",
@@ -745,7 +775,7 @@
       "id": "436883196",
       "slug": "far-fox-same-moon-same-us-art-print",
       "name": "\"Same Moon, Same Us\" Art Print",
-      "price": 20,
+      "price": 24,
       "currency": "USD",
       "image": "/shop/auto/mockup-436883196.png",
       "back": null,
