@@ -223,24 +223,28 @@ function twilight() {
 
 // --- new kits -------------------------------------------------------------------
 
-/** Other Half: a classic halved kit, pink/plum split at x 3000 with cream piping down the seam, sold as a
- *  pair. Each shirt is complete on its own; the only couple detail is a small half-heart at the foot of the seam
- *  (Kit A the left half, Kit B the right), with a faint dashed outline of the half your partner wears. */
-const OTHER_HALF_HEART = { x: 3000, y: 5320, w: 340 };
+/** Other Half, stitched together: a halved kit, pink/plum split at x 3000, sold as a pair. The seam is a
+ *  line of small cream heart stitches (two halves sewn together), and each shirt carries tonal pinstripes
+ *  in one direction, Kit A "/" and Kit B "\\", so the pair side by side makes a chevron. */
+const OTHER_HALF = { stitch: 96, stitchGap: 190, stripe: 40, stripeGap: 170, from: 1150 };
+function heartStitches(keep = () => true) {
+  let out = '';
+  for (let y = OTHER_HALF.from; y < D; y += OTHER_HALF.stitchGap) if (keep(3000, y)) out += heart(3000, y, OTHER_HALF.stitch, BLUSH);
+  return out;
+}
+function tonalStripes(side) {
+  const dir = side === 'A' ? -1 : 1, { stripe, stripeGap } = OTHER_HALF;
+  let out = '';
+  for (let x = -D; x < 2 * D; x += stripeGap) out += `<line x1="${x}" y1="0" x2="${x + dir * D}" y2="${D}" stroke="#FFFFFF" stroke-opacity="0.07" stroke-width="${stripe}"/>`;
+  return out;
+}
 function otherhalf(side) {
   const L = side === 'A' ? PINK : PLUM, R = side === 'A' ? PLUM : PINK;
   const halves = `<rect x="0" y="0" width="3000" height="${D}" fill="${L}"/><rect x="3000" y="0" width="3000" height="${D}" fill="${R}"/>`;
-  const seam = `<rect x="2988" y="0" width="24" height="${D}" fill="${BLUSH}"/>`;
-  const { x, y, w } = OTHER_HALF_HEART;
-  const tf = `transform="translate(${x - w / 2} ${y - (w * 0.9) / 2}) scale(${w / 100})"`;
-  const mine = side === 'A' ? `<rect x="0" y="0" width="${x}" height="${D}"/>` : `<rect x="${x}" y="0" width="${D - x}" height="${D}"/>`;
-  const theirs = side === 'A' ? `<rect x="${x}" y="0" width="${D - x}" height="${D}"/>` : `<rect x="0" y="0" width="${x}" height="${D}"/>`;
-  const heartArt = `<defs><clipPath id="mine">${mine}</clipPath><clipPath id="theirs">${theirs}</clipPath></defs>
-    <g clip-path="url(#mine)"><path ${tf} d="${HEART_D}" fill="${BLUSH}"/></g>
-    <g clip-path="url(#theirs)"><path ${tf} d="${HEART_D}" fill="none" stroke="${BLUSH}" stroke-opacity="0.5" stroke-width="2" stroke-dasharray="4 4"/></g>`;
+  const behindLettering = (x, y) => backKeep(80)(x, y);
   return {
-    front: svg(seam + heartArt + crest(CREST.x, CREST.y, CREST.w, side === 'A' ? 'light' : 'plum'), halves),
-    pattern: svg(seam, halves),
+    front: svg(tonalStripes(side) + heartStitches() + crest(CREST.x, CREST.y, CREST.w, side === 'A' ? 'light' : 'plum'), halves),
+    pattern: svg(tonalStripes(side) + heartStitches(behindLettering), halves),
     sleeve: svg(cuff(PURPLE, PINK), `<rect width="${D}" height="${D}" fill="${PLUM}"/>`),
   };
 }
@@ -407,31 +411,17 @@ function jockTag(c) {
     <text x="${x + 465}" y="${y + 232}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="92" letter-spacing="10" fill="${c.stitch}">143</text>`;
 }
 
-// The sponsor lockup: a mark, then a plain LODGE wordmark, centred on the visible front (x 3040) as one unit.
-// The pun lives on the jock tag, so the chest stays wearable. Oswald 700 at 280 px with 60 px tracking sets
-// LODGE about 1020 px wide (measured from a render).
-const MOOSE_LOCKUP = { y: 3330, size: 280, track: 60, textWidth: 1020, mark: 280, gap: 80, word: 'LODGE' };
-const MOOSE_PALM = [[252, 40], [286, -8], [294, -104], [330, -48], [354, -124], [378, -54], [418, -96], [408, -16], [334, 12], [292, 48]];
-function mooseSponsorLockup(c) {
-  const { y, size, track, textWidth, mark, gap, word } = MOOSE_LOCKUP;
-  const left = 3040 - (mark + gap + textWidth) / 2, mx = left + mark / 2, my = y - size * 0.36;
-  // A heart wearing moose palms: the palms are the crest's, scaled to the heart.
-  const s = mark / 380, palms = [1, -1].map((side) => `<polygon transform="translate(${mx - 150 * s} ${my - mark * 0.48}) scale(${s})" points="${MOOSE_PALM.map(([a, b]) => `${side > 0 ? a : 300 - a},${b}`).join(' ')}" fill="${c.cream}"/>`).join('');
-  return `${palms}${heart(mx, my, mark, c.stitch)}
-    <text x="${left + mark + gap}" y="${y}" font-family="Oswald" font-weight="700" font-size="${size}" letter-spacing="${track}" fill="${c.cream}">${word}</text>`;
-}
-
-/** Moose Lodge, a Far Fox FC kit: pink buffalo-check contrast sleeves on a fine tonal plum body, the
- *  antlered crest and FAR FOX FC on the left chest, a LODGE sponsor lockup, and I MOOSE YOU on the jock tag. */
-function mooseKit(colorway, withText) {
+/** Moose Lodge, minimal flannel: pink buffalo-check sleeves with cream cuffs on a fine tonal plum body, the
+ *  antlered crest and FAR FOX FC on the left chest, and no sponsor. I MOOSE YOU lives on the jock tag. */
+function mooseKit(colorway) {
   const c = MOOSE_COLORWAYS[colorway];
   const badge = antleredCrest(CREST.x, CREST.y + 60, CREST.w, 'light', c.cream)
     + `<text x="${CREST.x}" y="${CREST.y + 400}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="92" letter-spacing="14" fill="${c.cream}">FAR FOX FC</text>`;
   const body = check(MOOSE_BODY_CHECK, c.body);
   return {
-    front: svg(body + badge + (withText ? mooseSponsorLockup(c) : '') + jockTag(c), ''),
+    front: svg(body + badge + jockTag(c), ''),
     pattern: svg(body, ''),
-    sleeve: svg(check(MOOSE_SLEEVE_CHECK, c.hoop) + cuff(c.cream, c.body.base), ''),
+    sleeve: svg(check(MOOSE_SLEEVE_CHECK, c.hoop) + cuff(c.body.base, c.cream), ''),
   };
 }
 // Check sizes in file px: fine on the body so it reads as woven texture; bolder on the contrast sleeves.
@@ -440,7 +430,7 @@ const MOOSE_BODY_CHECK = 150, MOOSE_SLEEVE_CHECK = 300;
 function moose({ withText = true, colorway = 'blush', style = 'foxy' } = {}) {
   useColorway(colorway);
   MOOSE_STYLE = style;
-  if (MOOSE_COLORWAYS[colorway]?.layout === 'kit') return mooseKit(colorway, withText);
+  if (MOOSE_COLORWAYS[colorway]?.layout === 'kit') return mooseKit(colorway);
   return {
     front: svg(mooseArt() + (withText ? mooseSponsor(colorway) : ''), ''),
     pattern: svg(buffalo(), ''),
