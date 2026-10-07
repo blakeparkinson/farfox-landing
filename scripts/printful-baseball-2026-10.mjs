@@ -5,6 +5,7 @@
  *   PRINTFUL_TOKEN=… node scripts/printful-baseball-2026-10.mjs                          # dry run
  *   PRINTFUL_TOKEN=… node scripts/printful-baseball-2026-10.mjs --create                 # create the product
  *   PRINTFUL_TOKEN=… node scripts/printful-baseball-2026-10.mjs --mockups --product <id> # per-colour shop photos
+ *   PRINTFUL_TOKEN=… node scripts/printful-baseball-2026-10.mjs --update-files --product <id>  # after a FILE_REVISION bump
  *
  * The print files must already be live on lovefarfox.com (make-baseball-2026-10.mjs, then deploy).
  */
@@ -20,7 +21,7 @@ const SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL'];
 const STITCH_COLOR = 'white';
 const BASE = 'https://lovefarfox.com/shop/designs/baseball-2026-10';
 // Printful keeps the copy it first downloaded from a URL; bump this when the files are rebuilt in place.
-const FILE_REVISION = 1;
+const FILE_REVISION = 2;
 const AREA = { front: [5700, 6900], back: [5700, 6900], sleeve_left: [5700, 2250], sleeve_right: [5700, 2250] };
 const PART = { front: 'front', back: 'back', sleeve_left: 'sleeve-left', sleeve_right: 'sleeve-right' };
 
@@ -94,7 +95,25 @@ async function mockups(productId) {
   }
 }
 
-if (args.includes('--mockups')) {
+/** Point every variant of the product at its colourway's current files (after a FILE_REVISION bump). */
+async function updateFiles(productId) {
+  await assertLive();
+  for (const v of (await pf(`/store/products/${productId}`)).sync_variants) {
+    const key = new RegExp(`^${BASEBALL.kit}--([a-z]+)--`).exec(v.external_id || '')?.[1];
+    if (!key) throw new Error(`variant ${v.id} has no colourway tag (${v.external_id})`);
+    const files = filesFor(key);
+    if (files.every((f) => (v.files || []).some((g) => g.type === f.type && g.url === f.url))) continue;
+    await pf(`/store/variants/${v.id}`, { method: 'PUT', body: JSON.stringify({ files, options: v.options || [] }) });
+    console.log(`  ${v.external_id}: updated`);
+    await sleep(600);
+  }
+}
+
+if (args.includes('--update-files')) {
+  const id = args[args.indexOf('--product') + 1];
+  if (!id || id.startsWith('--')) throw new Error('--update-files needs --product <sync product id>');
+  await updateFiles(id);
+} else if (args.includes('--mockups')) {
   const id = args[args.indexOf('--product') + 1];
   if (!id || id.startsWith('--')) throw new Error('--mockups needs --product <sync product id>');
   await mockups(id);
