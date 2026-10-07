@@ -1,0 +1,161 @@
+---
+import { SNIPCART_KEY, cartLive } from '../lib/snipcart';
+---
+{cartLive && (
+  <Fragment>
+    <div hidden id="snipcart" data-api-key={SNIPCART_KEY} data-config-modal-style="side"></div>
+    <script is:inline src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
+    <script is:inline>
+      // Colour swatch selection: update the hidden input, the label and the
+      // selected ring for the product the swatch belongs to.
+      document.querySelectorAll('.color-swatch').forEach((sw) => {
+        sw.addEventListener('click', () => {
+          const pid = sw.getAttribute('data-product');
+          const name = sw.getAttribute('data-color');
+          document.querySelectorAll(`.color-swatch[data-product="${pid}"]`).forEach((s) => {
+            s.setAttribute('data-selected', 'false');
+            s.style.boxShadow = 'none';
+          });
+          sw.setAttribute('data-selected', 'true');
+          sw.style.boxShadow = '0 0 0 2px #fff,0 0 0 4px var(--swatch-ring,#e0689a)';
+          const hidden = document.getElementById(`color-${pid}`);
+          if (hidden) hidden.value = name;
+          const label = document.getElementById(`color-label-${pid}`);
+          if (label) label.textContent = name;
+          // Colourway jerseys have one personalised back per colour.
+          const kit = sw.getAttribute('data-kit');
+          const wrap = document.querySelector(`[data-personalize][data-product="${pid}"]`);
+          if (kit && wrap) wrap.setAttribute('data-kit', kit);
+          // Point both view buttons at this colour, then show whichever view is active.
+          const front = sw.getAttribute('data-image');
+          const back = sw.getAttribute('data-back');
+          let showingBack = false;
+          document.querySelectorAll(`.view-btn[data-product="${pid}"]`).forEach((b) => {
+            const isBack = (b.textContent || '').trim().toLowerCase() === 'back';
+            const view = isBack ? back : front;
+            if (view) b.setAttribute('data-view', view);
+            if (isBack && b.getAttribute('data-active') === 'true') showingBack = true;
+          });
+          const img = document.getElementById(`img-${pid}`);
+          const src = showingBack ? (personalizedBack(pid) || back || front) : front;
+          if (img && src && img.getAttribute('src') !== src) {
+            img.style.opacity = '0';
+            const swap = new Image();
+            swap.onload = () => { img.src = src; img.style.opacity = '1'; };
+            swap.src = src;
+          }
+        });
+      });
+      // Build the personalized-back image URL from a product's current
+      // name/number inputs, or null if nothing's entered (→ use stock back).
+      const personalizedBack = (pid, w) => {
+        const wrap = document.querySelector(`[data-personalize][data-product="${pid}"]`);
+        if (!wrap) return null;
+        const nameEl = document.getElementById(`pname-${pid}`);
+        const numEl = document.getElementById(`pnum-${pid}`);
+        const name = (nameEl && nameEl.value || '').toUpperCase().trim();
+        const num = (numEl && numEl.value || '').replace(/[^0-9]/g, '');
+        if (!name && !num) return null;
+        const q = new URLSearchParams({ kit: wrap.getAttribute('data-kit'), name, number: num, w: String(w || 720) });
+        return `/api/jersey-back.png?${q.toString()}`;
+      };
+      // Front/Back view toggle (jerseys etc.)
+      const paintView = (btn) => {
+        const on = btn.getAttribute('data-active') === 'true';
+        btn.style.background = on ? '#e0689a' : 'transparent';
+        btn.style.color = on ? '#fff' : '#6e6874';
+      };
+      document.querySelectorAll('.view-btn').forEach((btn) => {
+        paintView(btn);
+        btn.addEventListener('click', () => {
+          const pid = btn.getAttribute('data-product');
+          document.querySelectorAll(`.view-btn[data-product="${pid}"]`).forEach((b) => {
+            b.setAttribute('data-active', b === btn ? 'true' : 'false'); paintView(b);
+          });
+          const img = document.getElementById(`img-${pid}`);
+          // The Back view reflects the typed name/number when present.
+          const isBack = (btn.textContent || '').trim().toLowerCase() === 'back';
+          const src = (isBack && personalizedBack(pid)) || btn.getAttribute('data-view');
+          if (img && src && img.getAttribute('src') !== src) {
+            img.style.opacity = '0';
+            const swap = new Image();
+            swap.onload = () => { img.src = src; img.style.opacity = '1'; };
+            swap.src = src;
+          }
+        });
+      });
+      // Live personalization preview: as the customer types a name/number,
+      // swap the card image to the generated back (debounced, small render).
+      const swapImage = (img, src) => {
+        if (!img || !src || img.getAttribute('src') === src) return;
+        img.style.opacity = '0';
+        const pre = new Image();
+        pre.onload = () => { img.src = src; img.style.opacity = '1'; };
+        pre.src = src;
+      };
+      const setActiveView = (pid, view) => {
+        document.querySelectorAll(`.view-btn[data-product="${pid}"]`).forEach((b) => {
+          const isFront = (b.textContent || '').trim().toLowerCase() === 'front';
+          b.setAttribute('data-active', (view === 'front') === isFront ? 'true' : 'false');
+          paintView(b);
+        });
+      };
+      document.querySelectorAll('[data-personalize]').forEach((wrap) => {
+        const pid = wrap.getAttribute('data-product');
+        const img = document.getElementById(`img-${pid}`);
+        const nameI = document.getElementById(`pname-${pid}`);
+        const numI = document.getElementById(`pnum-${pid}`);
+        const frontSrc = img && img.getAttribute('src');
+        let t;
+        const update = () => {
+          // Keep the number field digits-only as the customer types.
+          const digits = (numI.value || '').replace(/[^0-9]/g, '').slice(0, 3);
+          if (numI.value !== digits) numI.value = digits;
+          clearTimeout(t);
+          t = setTimeout(() => {
+            const src = personalizedBack(pid);
+            if (!src) { swapImage(img, frontSrc); setActiveView(pid, 'front'); return; }
+            swapImage(img, src);
+            setActiveView(pid, 'back');
+          }, 350);
+        };
+        nameI && nameI.addEventListener('input', update);
+        numI && numI.addEventListener('input', update);
+      });
+
+      // Before add-to-cart, copy the chosen size + colour into Snipcart fields.
+      document.querySelectorAll('.snipcart-add-item').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const sizeSel = btn.getAttribute('data-size-select');
+          if (sizeSel) {
+            const sel = document.getElementById(sizeSel);
+            if (sel) btn.setAttribute('data-item-custom1-value', sel.value);
+          }
+          const colorInput = btn.getAttribute('data-color-input');
+          if (colorInput) {
+            const ci = document.getElementById(colorInput);
+            if (ci) btn.setAttribute('data-item-custom2-value', ci.value);
+          }
+          const nameInput = btn.getAttribute('data-name-input');
+          if (nameInput) {
+            const ni = document.getElementById(nameInput);
+            btn.setAttribute('data-item-custom3-value', ni ? ni.value.toUpperCase().trim() : '');
+          }
+          const numberInput = btn.getAttribute('data-number-input');
+          if (numberInput) {
+            const ni = document.getElementById(numberInput);
+            btn.setAttribute('data-item-custom4-value', ni ? ni.value.replace(/[^0-9]/g, '') : '');
+          }
+        }, true);
+      });
+      // A product page link from Google Shopping names its variant (?color=…&size=…): open on it.
+      const wanted = new URLSearchParams(location.search);
+      if (document.querySelector('[data-product-page]')) {
+        const colour = wanted.get('color');
+        const size = wanted.get('size');
+        if (colour) document.querySelectorAll('.color-swatch').forEach((sw) => { if (sw.getAttribute('data-color') === colour) sw.click(); });
+        if (size) document.querySelectorAll('select[id^="size-"]').forEach((sel) => { if ([...sel.options].some((o) => o.value === size)) sel.value = size; });
+      }
+    </script>
+  </Fragment>
+)}

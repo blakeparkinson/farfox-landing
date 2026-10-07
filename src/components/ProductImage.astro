@@ -1,0 +1,18 @@
+---
+import { SITE, type ShopProduct } from '../lib/productPages';
+
+interface Props { product: ShopProduct; class?: string; eager?: boolean }
+const { product: p, class: className = '', eager = false } = Astro.props;
+---
+<div class={`relative aspect-square bg-gradient-to-br from-fox-bg to-white overflow-hidden ${className}`}>
+    <img id={`img-${p.id}`} src={p.image} alt={p.name} class="w-full h-full object-contain p-2 transition-opacity duration-150" loading={eager ? undefined : 'lazy'} />
+    {p.name.includes('Pride') && (
+      <span class="absolute top-3 left-3 text-xs font-800 uppercase tracking-wide text-white bg-fox-pink rounded-full px-3 py-1">Pride</span>
+    )}
+    {p.back && (
+      <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 bg-white/85 backdrop-blur rounded-full px-1.5 py-1 shadow-sm">
+        <button type="button" class="view-btn text-[11px] font-800 px-2.5 py-0.5 rounded-full transition-colors" data-product={p.id} data-view={`${SITE}${p.image}`} data-active="true">Front</button>
+        <button type="button" class="view-btn text-[11px] font-800 px-2.5 py-0.5 rounded-full transition-colors" data-product={p.id} data-view={`${SITE}${p.back}`} data-active="false">Back</button>
+      </div>
+    )}
+</div>

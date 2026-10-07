@@ -1,0 +1,29 @@
+---
+import { cartLive } from '../lib/snipcart';
+---
+<!-- Nav -->
+<nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
+  <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <img src="/brand/foxy-icon-v1.png" alt="Far Fox" class="w-8 h-8" />
+      <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">
+        Far Fox
+      </span>
+    </a>
+    <div class="flex items-center gap-4">
+      <a href="/blog/" class="hidden sm:inline text-sm font-700 text-fox-text-light hover:text-fox-pink transition-colors">Blog</a>
+      {cartLive && (
+        <button class="snipcart-checkout flex items-center gap-1.5 text-sm font-800 text-fox-text hover:text-fox-pink transition-colors">
+          <span aria-hidden="true">🛒</span>
+          Cart (<span class="snipcart-items-count">0</span>)
+        </button>
+      )}
+      <a
+        href="https://app.lovefarfox.com"
+        class="px-5 py-2 rounded-full bg-fox-pink text-white font-700 text-sm hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200 hover:-translate-y-0.5"
+      >
+        Open App
+      </a>
+    </div>
+  </div>
+</nav>
