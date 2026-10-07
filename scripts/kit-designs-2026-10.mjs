@@ -15,6 +15,7 @@
  *   back number block y 1980–3800, brand line y 4360–4720, crest (3000, 900)
  *   sleeve cuff: accent stripe y 3980–4020, band from y 4040
  */
+import { foxyImage, foxyTag } from './foxy-art.mjs';
 export const D = 6000;
 export const CREST = { x: 3550, y: 2400, w: 440 };
 
@@ -113,27 +114,34 @@ const backKeep = (pad) => (x, y) => clearOf(3000, 900, 450, 380)(x, y)
 
 // --- reworked kits ------------------------------------------------------------
 
-/** Drop Zone v2: no route line. Two drop pins land inside the same zone, so it
- *  stops echoing Flight Path and reads as "we ended up in the same place". */
+/** Drop Zone v5, battle-royale codes on a real kit: a storm-purple body with tonal storm rings closing in
+ *  from the shoulder, a loot-rarity sash (common to legendary) worn like a River Plate sash, and one dotted
+ *  drop path that falls beside the crest and lands on it. Genre codes only: no game's names, logos or fonts. */
+const DZ = { night: '#160C2C', storm: '#3B1680', ring: '#8B5CF6', edge: '#C4B5FD', cream: '#FFF5F0', pink: '#FF6B8A', eye: { x: 4700, y: 1500 } };
+const RARITY = ['#9CA3AF', '#4ADE80', '#38BDF8', '#A855F7', '#FBBF24'];
+const dzBase = () => `<defs><linearGradient id="dzg" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${DZ.storm}"/><stop offset="1" stop-color="${DZ.night}"/></linearGradient></defs><rect width="${D}" height="${D}" fill="url(#dzg)"/>`;
+function stormRings(edgeR = 2600) {
+  let s = '';
+  for (let r = 700, i = 0; r < 7000; r += 280, i++) s += `<circle cx="${DZ.eye.x}" cy="${DZ.eye.y}" r="${r}" fill="none" stroke="${DZ.ring}" stroke-opacity="${i % 2 ? 0.07 : 0.13}" stroke-width="70"/>`;
+  return s + `<circle cx="${DZ.eye.x}" cy="${DZ.eye.y}" r="${edgeR}" fill="none" stroke="${DZ.edge}" stroke-opacity="0.55" stroke-width="22"/>`;
+}
+/** Five stripes, common to legendary, each `w` wide, along a line through (x, y) at `deg` from horizontal. */
+function raritySash(x, y, deg, w) {
+  return `<g transform="translate(${x} ${y}) rotate(${deg})">${RARITY.map((c, i) => `<rect x="-6000" y="${(i - 2.5) * w}" width="12000" height="${w}" fill="${c}"/>`).join('')}
+    <rect x="-6000" y="${-2.5 * w - 26}" width="12000" height="26" fill="${DZ.night}"/><rect x="-6000" y="${2.5 * w}" width="12000" height="26" fill="${DZ.night}"/></g>`;
+}
 function dropzone() {
-  const bg = `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B2A8F"/><stop offset="0.55" stop-color="#4A1FB2"/><stop offset="1" stop-color="#A21C8E"/></linearGradient></defs><rect width="${D}" height="${D}" fill="url(#g)"/>`;
-  const paths = contours(noiseField(7), Array.from({ length: 16 }, (_, i) => 0.22 + i * 0.037));
-  const topo = paths.map((d, i) => (i % 4 === 0
-    ? `<path d="${d}" stroke="#46E3FF" stroke-opacity="0.55" stroke-width="13" stroke-linecap="round" fill="none"/>`
-    : `<path d="${d}" stroke="#46E3FF" stroke-opacity="0.24" stroke-width="7" stroke-linecap="round" fill="none"/>`)).join('');
-  const ring = { x: 3000, y: 3800, r: 900 };
-  let ticks = '';
-  for (let k = 0; k < 24; k++) {
-    const t = (k / 24) * Math.PI * 2, r0 = ring.r + 50, r1 = ring.r + (k % 6 === 0 ? 190 : 110);
-    ticks += `<line x1="${ring.x + Math.cos(t) * r0}" y1="${ring.y + Math.sin(t) * r0}" x2="${ring.x + Math.cos(t) * r1}" y2="${ring.y + Math.sin(t) * r1}" stroke="#FFFFFF" stroke-opacity="0.85" stroke-width="18" stroke-linecap="round"/>`;
-  }
-  const inner = `<circle cx="${ring.x}" cy="${ring.y}" r="${ring.r * 0.42}" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="12" stroke-dasharray="60 50"/>`;
-  const zone = `<circle cx="${ring.x}" cy="${ring.y}" r="${ring.r}" fill="#0A102C" fill-opacity="0.2" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="22" stroke-dasharray="120 70"/>${ticks}${inner}
-    ${pin(2800, 3920, 330, '#22D3EE')}${pin(3200, 3880, 330, '#FF4FA3')}`;
+  // The sash runs from the wearer's right shoulder to the left hip, clear of the crest; the drop path falls
+  // straight down beside the crest and lands on the sash.
+  const sash = raritySash(3040, 3500, 52, 120);
+  const land = { x: 3900, y: 3500 + (3900 - 3040) * Math.tan((52 * Math.PI) / 180) };
+  const path = `<path d="M ${land.x} 1450 L ${land.x} ${land.y - 140}" stroke="${DZ.cream}" stroke-width="26" stroke-dasharray="6 70" stroke-linecap="round"/>
+    <circle cx="${land.x}" cy="${land.y}" r="120" fill="${DZ.night}" stroke="${DZ.cream}" stroke-width="22"/><circle cx="${land.x}" cy="${land.y}" r="50" fill="${DZ.pink}"/>`;
+  const cuffStripes = RARITY.map((c, i) => `<rect x="0" y="${3990 + i * 46}" width="${D}" height="46" fill="${c}"/>`).join('') + `<rect x="0" y="4220" width="${D}" height="${D - 4220}" fill="${DZ.night}"/>`;
   return {
-    front: svg(topo + zone + crest(CREST.x, CREST.y, CREST.w, 'light'), bg),
-    pattern: svg(topo, bg),
-    sleeve: svg(topo + cuff('#46E3FF', '#0A102C'), bg),
+    front: svg(dzBase() + stormRings() + sash + path + crest(CREST.x, CREST.y, CREST.w, 'light'), ''),
+    pattern: svg(dzBase() + stormRings(), ''),
+    sleeve: svg(dzBase() + stormRings(1800) + cuffStripes, ''),
   };
 }
 
@@ -297,13 +305,18 @@ export const MOOSE_COLORWAYS = {
   forest: { label: 'Forest green', base: '#2F5D3A', dark: '#101A14', cream: '#F4ECE0', stitch: '#2F5D3A', opacity: 0.55 },
   navy:   { label: 'Northern navy',base: '#2B4A7A', dark: '#0E1628', cream: '#F4ECE0', stitch: '#2B4A7A', opacity: 0.55 },
   plum:   { label: 'Far Fox plum', base: '#FF6B8A', dark: '#2D1B4E', cream: '#FFF5F0', stitch: '#FF6B8A', opacity: 0.6 },
-  blush:  { label: 'Blush',        base: '#F7C6D0', dark: '#2D1B4E', cream: '#FFF5F0', stitch: '#FF6B8A', opacity: 0.35, ink: '#2D1B4E', inkStroke: '#FFF5F0' },
+  // Blush ships in the kit layout (mooseKit): a tonal plum body with a solid three-tone pink buffalo-check hoop.
+  blush:  { label: 'Blush', layout: 'kit', base: '#2D1B4E', dark: '#2D1B4E', cream: '#FFF5F0', stitch: '#FF6B8A', ink: '#FFF5F0', inkStroke: '#FF6B8A',
+    body: { base: '#2D1B4E', mid: '#301D52', dark: '#2B1A4B' }, hoop: { base: '#FF9BB2', mid: '#C2557E', dark: '#2D1B4E' }, sponsorY: 3300, sponsorSize: 330, sponsorStroke: '#2D1B4E', sponsorStrokeW: 20 },
 };
 let LODGE = { red: '#B8272F', black: '#16151A', cream: '#F4ECE0' };
-const useColorway = (key) => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; LODGE = { red: c.base, black: c.dark, cream: c.cream, stitch: c.stitch, opacity: c.opacity }; return c; };
+const useColorway = (key) => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; LODGE = { red: c.base, black: c.dark, cream: c.cream, stitch: c.stitch, opacity: c.opacity, mid: c.mid }; return c; };
 function buffalo(size = 560) {
   let s = `<rect width="${D}" height="${D}" fill="${LODGE.red}"/>`;
-  for (let v = 0; v < D; v += size * 2) {
+  if (LODGE.mid) {
+    for (let v = 0; v < D; v += size * 2) s += `<rect x="${v}" y="0" width="${size}" height="${D}" fill="${LODGE.mid}"/><rect x="0" y="${v}" width="${D}" height="${size}" fill="${LODGE.mid}"/>`;
+    for (let x = 0; x < D; x += size * 2) for (let y = 0; y < D; y += size * 2) s += `<rect x="${x}" y="${y}" width="${size}" height="${size}" fill="${LODGE.black}"/>`;
+  } else for (let v = 0; v < D; v += size * 2) {
     s += `<rect x="${v}" y="0" width="${size}" height="${D}" fill="${LODGE.black}" fill-opacity="${LODGE.opacity ?? 0.55}"/>`;
     s += `<rect x="0" y="${v}" width="${D}" height="${size}" fill="${LODGE.black}" fill-opacity="${LODGE.opacity ?? 0.55}"/>`;
   }
@@ -338,16 +351,27 @@ const MOOSE_FOXY = (() => {
 })();
 let MOOSE_STYLE = 'foxy';
 const mooseHead = (cx, cy, size) => `<g transform="translate(${cx - size / 2} ${cy - size / 2}) scale(${size / 128})">${MOOSE_STYLE === 'foxy' ? MOOSE_FOXY : MOOSE_GLYPH}</g>`;
+
+/** The approved Foxy in a pair of palmate moose antlers, outlined in Foxy's own dark brown. */
+const FOXY_HEAD = await foxyImage('head');
+const ANTLER = 'M0 120 C 30 110 50 95 60 80 L 58 40 L 72 70 L 84 22 L 94 64 L 112 18 L 116 62 L 138 30 L 136 72 L 162 52 L 152 88 C 176 86 196 92 200 104 C 176 124 120 134 60 132 C 36 131 14 128 0 120 Z';
+function antleredFoxy(cx, cy, headW) {
+  const headH = headW * FOXY_HEAD.aspect, top = cy - headH / 2, s = (headW * 0.62) / 200;
+  const antler = (side) => `<g transform="translate(${cx + side * headW * 0.2} ${top + headW * 0.1}) rotate(${-side * 42}) scale(${side * s} ${s}) translate(0 -120)">
+    <path d="${ANTLER}" fill="url(#antler)" stroke="#4A1F1A" stroke-width="7" stroke-linejoin="round"/></g>`;
+  return `<defs><linearGradient id="antler" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9A06E"/><stop offset="1" stop-color="#8E5434"/></linearGradient></defs>
+    ${antler(-1)}${antler(1)}${foxyTag(FOXY_HEAD, cx, top, headW)}`;
+}
 /** Lodge patch: cream disc, black rim, red running stitch, moose in the middle. */
 function lodgePatch(cx, cy, r) {
   return `<circle cx="${cx}" cy="${cy + 26}" r="${r + 40}" fill="#000" fill-opacity="0.28"/>
     <circle cx="${cx}" cy="${cy}" r="${r + 40}" fill="${LODGE.black}"/>
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="${LODGE.cream}"/>
     <circle cx="${cx}" cy="${cy}" r="${r - 46}" fill="none" stroke="${LODGE.stitch || LODGE.red}" stroke-width="18" stroke-dasharray="54 38" stroke-linecap="round"/>
-    ${mooseHead(cx, cy - r * 0.08, r * 1.95)}
-    ${heart(cx + r * 0.62, cy + r * 0.5, r * 0.3, '#FF6B8A', 16)}`;
+    ${MOOSE_STYLE === 'foxy-antlers' ? antleredFoxy(cx, cy + r * 0.22, r * 1.42) : mooseHead(cx, cy - r * 0.08, r * 1.95)}
+    ${MOOSE_STYLE === 'foxy-antlers' ? '' : heart(cx + r * 0.62, cy + r * 0.5, r * 0.3, '#FF6B8A', 16)}`;
 }
-export const mooseSponsorSpec = (key = 'lodge') => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; return { text: 'I MOOSE YOU', x: 3000, y: 4600, size: 300, track: 18, fill: c.ink || c.cream, stroke: c.inkStroke || c.dark, strokeW: 28 }; };
+export const mooseSponsorSpec = (key = 'lodge') => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; return { text: 'I MOOSE YOU', x: 3000, y: c.sponsorY ?? 4600, size: c.sponsorSize ?? 300, track: 18, fill: c.ink || c.cream, stroke: c.sponsorStroke || c.inkStroke || c.dark, strokeW: c.sponsorStrokeW || 28 }; };
 export const MOOSE_SPONSOR = mooseSponsorSpec('lodge');
 export const mooseSponsor = (t = MOOSE_SPONSOR) => typeof t === 'string' ? mooseSponsor(mooseSponsorSpec(t)) :
   `<text x="${t.x}" y="${t.y}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="${t.size}" letter-spacing="${t.track}" fill="${t.fill}" stroke="${t.stroke}" stroke-width="${t.strokeW}" paint-order="stroke">${t.text}</text>`;
@@ -355,9 +379,69 @@ function mooseArt() {
   const roundel = `<circle cx="${CREST.x}" cy="${CREST.y + 20}" r="320" fill="${LODGE.black}" stroke="${LODGE.cream}" stroke-width="22"/>`;
   return buffalo() + roundel + crest(CREST.x, CREST.y, CREST.w, 'light') + lodgePatch(3000, 3560, 600);
 }
+/** A solid three-tone buffalo check (light squares, mid bands, dark crossings) with a faint twill. */
+function check(size, { base, mid, dark }) {
+  let s = `<rect width="${D}" height="${D}" fill="${base}"/>`;
+  for (let v = 0; v < D; v += size * 2) s += `<rect x="${v}" y="0" width="${size}" height="${D}" fill="${mid}"/><rect x="0" y="${v}" width="${D}" height="${size}" fill="${mid}"/>`;
+  for (let x = 0; x < D; x += size * 2) for (let y = 0; y < D; y += size * 2) s += `<rect x="${x}" y="${y}" width="${size}" height="${size}" fill="${dark}"/>`;
+  for (let x = -D; x < D; x += 70) s += `<path d="M ${x} ${D} L ${x + D} 0" stroke="#000" stroke-opacity="0.05" stroke-width="14"/>`;
+  return s;
+}
+/** The Far Fox crest with geometric antlers rising from its ears, drawn in the crest's own flat style and
+ *  coordinates (300×306, ear tips at x 25 and 275), so it reads as a special edition of the real badge. */
+function antleredCrest(cx, cy, w, variant, colour) {
+  const s = w / 300;
+  // Moose antlers are palmate: a short beam from the ear into a broad flat palm with three chunky points,
+  // cut at angles close to the crest's ears so they read as part of the badge.
+  const PALM = [[252, 40], [286, -8], [294, -104], [330, -48], [354, -124], [378, -54], [418, -96], [408, -16], [334, 12], [292, 48]];
+  const beam = (side) => `<polygon points="${PALM.map(([a, b]) => `${side > 0 ? a : 300 - a},${b}`).join(' ')}" fill="${colour}"/>`;
+  return `<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">${beam(1)}${beam(-1)}</g>${crest(cx, cy, w, variant)}`;
+}
+
+// The jock tag sits on the wearer's left hip, where pro kits put their authenticity tag.
+const MOOSE_JOCK_TAG = { x: 3340, y: 5240, w: 720, h: 300 };
+function jockTag(c) {
+  const { x, y, w, h } = MOOSE_JOCK_TAG;
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="26" fill="${c.cream}"/>
+    <rect x="${x + 16}" y="${y + 16}" width="${w - 32}" height="${h - 32}" rx="16" fill="none" stroke="${c.body.base}" stroke-width="8" stroke-dasharray="20 12"/>
+    ${antleredFoxy(x + 140, y + h / 2 + 36, 150)}
+    <text x="${x + 465}" y="${y + 130}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="50" letter-spacing="4" fill="${c.body.base}">MOOSE LODGE</text>
+    <text x="${x + 465}" y="${y + 232}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="92" letter-spacing="10" fill="${c.stitch}">143</text>`;
+}
+
+// The sponsor lockup: a mark, then the wordmark, centred on the visible front (x 3040) as one unit.
+// Oswald 700 at 280 px with 15 px tracking sets "I MOOSE YOU" about 1600 px wide (measured from a render).
+const MOOSE_LOCKUP = { y: 3330, size: 280, track: 15, textWidth: 1600, mark: 280, gap: 70 };
+const MOOSE_PALM = [[252, 40], [286, -8], [294, -104], [330, -48], [354, -124], [378, -54], [418, -96], [408, -16], [334, 12], [292, 48]];
+function mooseSponsorLockup(c) {
+  const { y, size, track, textWidth, mark, gap } = MOOSE_LOCKUP;
+  const left = 3040 - (mark + gap + textWidth) / 2, mx = left + mark / 2, my = y - size * 0.36;
+  // A heart wearing moose palms: the palms are the crest's, scaled to the heart.
+  const s = mark / 380, palms = [1, -1].map((side) => `<polygon transform="translate(${mx - 150 * s} ${my - mark * 0.48}) scale(${s})" points="${MOOSE_PALM.map(([a, b]) => `${side > 0 ? a : 300 - a},${b}`).join(' ')}" fill="${c.cream}"/>`).join('');
+  return `${palms}${heart(mx, my, mark, c.stitch)}
+    <text x="${left + mark + gap}" y="${y}" font-family="Oswald" font-weight="700" font-size="${size}" letter-spacing="${track}" fill="${c.cream}">I MOOSE YOU</text>`;
+}
+
+/** Moose Lodge, a Far Fox FC kit: pink buffalo-check contrast sleeves on a fine tonal plum body, the
+ *  antlered crest and FAR FOX FC on the left chest, the I MOOSE YOU sponsor lockup, and a jock tag. */
+function mooseKit(colorway, withText) {
+  const c = MOOSE_COLORWAYS[colorway];
+  const badge = antleredCrest(CREST.x, CREST.y + 60, CREST.w, 'light', c.cream)
+    + `<text x="${CREST.x}" y="${CREST.y + 400}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="92" letter-spacing="14" fill="${c.cream}">FAR FOX FC</text>`;
+  const body = check(MOOSE_BODY_CHECK, c.body);
+  return {
+    front: svg(body + badge + (withText ? mooseSponsorLockup(c) : '') + jockTag(c), ''),
+    pattern: svg(body, ''),
+    sleeve: svg(check(MOOSE_SLEEVE_CHECK, c.hoop) + cuff(c.cream, c.body.base), ''),
+  };
+}
+// Check sizes in file px: fine on the body so it reads as woven texture; bolder on the contrast sleeves.
+const MOOSE_BODY_CHECK = 150, MOOSE_SLEEVE_CHECK = 300;
+
 function moose({ withText = true, colorway = 'blush', style = 'foxy' } = {}) {
   useColorway(colorway);
   MOOSE_STYLE = style;
+  if (MOOSE_COLORWAYS[colorway]?.layout === 'kit') return mooseKit(colorway, withText);
   return {
     front: svg(mooseArt() + (withText ? mooseSponsor(colorway) : ''), ''),
     pattern: svg(buffalo(), ''),
@@ -426,7 +510,7 @@ export const KITS = {
 export const mooseBack = (key = 'lodge') => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; return { pattern: `kits-2026-10/sj-moose-${key}-pattern.png`, crest: 'fox-crest.png', number: c.ink || c.cream, numberStroke: c.inkStroke || c.dark, name: c.ink || c.cream, nameStroke: c.inkStroke || c.dark }; };
 
 export const BACKS = {
-  dropzone: { pattern: 'kits-2026-10/sj-dropzone-pattern.png', crest: 'fox-crest.png', number: '#FDE047', numberStroke: '#0A102C', name: '#F5F3FF', nameStroke: '#0A102C' },
+  dropzone: { pattern: 'kits-2026-10/sj-dropzone-pattern.png', crest: 'fox-crest.png', number: '#FFF5F0', numberStroke: '#2D1B4E', name: '#FFF5F0', nameStroke: '#2D1B4E' },
   dalmatian: { pattern: 'kits-2026-10/sj-dalmatian-pattern.png', crest: 'fox-crest-navy.png', number: '#14213A', numberStroke: '#F5F1E7', name: '#14213A', nameStroke: '#F5F1E7' },
   twilight: { pattern: 'kits-2026-10/sj-twilight-pattern.png', crest: 'fox-crest.png', number: '#FAEEC8', numberStroke: '#1C1634', name: '#FAEEC8', nameStroke: '#1C1634' },
   otherhalfa: { pattern: 'kits-2026-10/sj-otherhalfa-pattern.png', crest: 'fox-crest.png', number: BLUSH, numberStroke: PLUM, name: BLUSH, nameStroke: PLUM },

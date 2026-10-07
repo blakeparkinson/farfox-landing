@@ -53,7 +53,7 @@ const KITS = {
   },
   dropzone: {
     pattern: 'kits-2026-10/sj-dropzone-pattern.png', crest: 'fox-crest.png',
-    number: '#FDE047', numberStroke: '#0A102C', name: '#F5F3FF', nameStroke: '#0A102C',
+    number: '#FFF5F0', numberStroke: '#2D1B4E', name: '#FFF5F0', nameStroke: '#2D1B4E',
   },
   paradise: {
     pattern: 'kits-2026-09/sj-paradise-pattern.png', crest: 'fox-crest.png',
@@ -78,7 +78,7 @@ const KITS = {
   // Moose Lodge, Blush colorway only (mooseBack('blush') in the designs module).
   'moose-blush': {
     pattern: 'kits-2026-10/sj-moose-blush-pattern.png', crest: 'fox-crest.png',
-    number: '#2D1B4E', numberStroke: '#FFF5F0', name: '#2D1B4E', nameStroke: '#FFF5F0',
+    number: '#FFF5F0', numberStroke: '#FF6B8A', name: '#FFF5F0', nameStroke: '#FF6B8A',
   },
   flyway: {
     pattern: 'kits-2026-10/sj-flyway-pattern.png', crest: 'kits-2026-10/fox-crest-flyway.png',
