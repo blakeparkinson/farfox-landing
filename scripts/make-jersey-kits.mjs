@@ -36,7 +36,7 @@ const OUT_OCT = new URL('../public/shop/designs/kits-2026-10/', import.meta.url)
 // Moose Lodge launches in Blush only, as `moose-blush`; the module's other
 // colorways stay unbuilt, so its generic `moose` entry is left out.
 const { moose: mooseKit, ...OCT_REST } = OCT_KITS;
-const OCT_BUILD = { ...OCT_REST, 'moose-blush': () => mooseKit({ colorway: 'blush', style: 'foxy' }) };
+const OCT_BUILD = { ...OCT_REST, 'moose-blush': () => mooseKit({ colorway: 'blush', style: 'foxy-antlers' }) };
 const outFor = (kit) => (kit in OCT_BUILD ? OUT_OCT : OUT_SEPT);
 const CREST = { x: 3550, y: 2400, w: 440 };
 
@@ -54,11 +54,11 @@ function rng(seed) {
 const svg = (body, bg) =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="${D}" height="${D}" viewBox="0 0 ${D} ${D}">${bg}${body}</svg>`;
 
-// Oswald 700, the same face the personalized backs use for names and numbers.
-// resvg-js 2.6 ignores `fontBuffers`, so the font goes through a temp file.
+// Oswald 700, the same face the personalized backs use for names and numbers, plus Lilita One for
+// Drop Zone's game-map lettering. resvg-js 2.6 ignores `fontBuffers`, so fonts go through temp files.
 let fontFiles = [];
 async function loadFonts() {
-  for (const [family, query] of [['oswald', 'Oswald:wght@700']]) {
+  for (const [family, query] of [['oswald', 'Oswald:wght@700'], ['lilita', 'Lilita+One']]) {
     const css = await fetch(`https://fonts.googleapis.com/css2?family=${query}&display=swap`, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then((r) => r.text());
     const url = css.match(/url\((https:[^)]+\.ttf)\)/)[1];
     const file = join(tmpdir(), `farfox-${family}.ttf`);

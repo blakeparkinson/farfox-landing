@@ -1,41 +1,73 @@
 {
-  "generatedAt": "2026-10-06T22:09:17.983Z",
+  "generatedAt": "2026-10-07T03:49:33.227Z",
   "products": [
     {
-      "id": "6ac56a091644af57a506ee5b",
-      "provider": "printify",
-      "slug": "far-fox-national-park-flannel",
-      "name": "National Park Flannel",
-      "price": 89,
+      "id": "478884090",
+      "slug": "far-fox-miss-you-too-mug",
+      "name": "\"Miss You Too\" Mug",
+      "price": 18,
       "currency": "USD",
-      "image": "/shop/colors/6ac56a091644af57a506ee5b-charcoal-heather-black.png",
-      "back": "/shop/backs/6ac56a091644af57a506ee5b.png",
+      "image": "/shop/auto/mockup-478884090.png",
+      "back": "/shop/backs/478884090.png",
+      "sizes": [
+        "11 oz",
+        "15 oz",
+        "20 oz"
+      ],
+      "colors": []
+    },
+    {
+      "id": "478884086",
+      "slug": "far-fox-miss-you-mug",
+      "name": "\"Miss You\" Mug",
+      "price": 18,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-478884086.png",
+      "back": "/shop/backs/478884086.png",
+      "sizes": [
+        "11 oz",
+        "15 oz",
+        "20 oz"
+      ],
+      "colors": []
+    },
+    {
+      "id": "478854341",
+      "slug": "far-fox-ballpark-baseball-jersey",
+      "name": "Ballpark Baseball Jersey",
+      "price": 55,
+      "currency": "USD",
+      "image": "/shop/colors/478854341-cream-pinstripe.png",
+      "back": "/shop/backs/478854341.png",
       "sizes": [
         "XS",
         "S",
         "M",
         "L",
         "XL",
-        "2XL"
+        "2XL",
+        "3XL",
+        "4XL",
+        "5XL"
       ],
       "colors": [
         {
-          "name": "Charcoal Heather / Black",
-          "hex": "#55585c",
-          "image": "/shop/colors/6ac56a091644af57a506ee5b-charcoal-heather-black.png",
-          "back": "/shop/backs/6ac56a091644af57a506ee5b-charcoal-heather-black.png"
+          "name": "Cream Pinstripe",
+          "hex": "#F4ECE0",
+          "image": "/shop/colors/478854341-cream-pinstripe.png",
+          "back": "/shop/backs/478854341-cream-pinstripe.png"
         },
         {
-          "name": "Grey Heather / Black",
-          "hex": "#b0b0b0",
-          "image": "/shop/colors/6ac56a091644af57a506ee5b-grey-heather-black.png",
-          "back": "/shop/backs/6ac56a091644af57a506ee5b-grey-heather-black.png"
+          "name": "Plum",
+          "hex": "#2D1B4E",
+          "image": "/shop/colors/478854341-plum.png",
+          "back": "/shop/backs/478854341-plum.png"
         },
         {
-          "name": "Red / Black",
-          "hex": "#b22a2e",
-          "image": "/shop/colors/6ac56a091644af57a506ee5b-red-black.png",
-          "back": "/shop/backs/6ac56a091644af57a506ee5b-red-black.png"
+          "name": "Fox Pink",
+          "hex": "#FF6B8A",
+          "image": "/shop/colors/478854341-fox-pink.png",
+          "back": "/shop/backs/478854341-fox-pink.png"
         }
       ]
     },
@@ -390,69 +422,6 @@
       "colors": []
     },
     {
-      "id": "437052584",
-      "slug": "far-fox-long-distance-club-baseball-jersey-red",
-      "name": "Long Distance Club Baseball Jersey (Red)",
-      "price": 55,
-      "currency": "USD",
-      "image": "/shop/auto/mockup-437052584.png",
-      "back": "/shop/backs/437052584.png",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL",
-        "2XL",
-        "3XL",
-        "4XL",
-        "5XL"
-      ],
-      "colors": []
-    },
-    {
-      "id": "437021439",
-      "slug": "far-fox-long-distance-club-baseball-jersey-royal",
-      "name": "Long Distance Club Baseball Jersey (Royal)",
-      "price": 55,
-      "currency": "USD",
-      "image": "/shop/auto/mockup-437021439.png",
-      "back": "/shop/backs/437021439.png",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL",
-        "2XL",
-        "3XL",
-        "4XL",
-        "5XL"
-      ],
-      "colors": []
-    },
-    {
-      "id": "436911930",
-      "slug": "far-fox-long-distance-club-baseball-jersey",
-      "name": "Long Distance Club Baseball Jersey",
-      "price": 55,
-      "currency": "USD",
-      "image": "/shop/auto/mockup-436911930.png",
-      "back": "/shop/backs/436911930.png",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL",
-        "2XL",
-        "3XL",
-        "4XL",
-        "5XL"
-      ],
-      "colors": []
-    },
-    {
       "id": "436909622",
       "slug": "far-fox-morse-i-love-you-tee",
       "name": "Morse \"I Love You\" Tee",
@@ -675,7 +644,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436908860.png",
-      "back": null,
+      "back": "/shop/backs/436908860.png",
       "sizes": [
         "11 oz",
         "15 oz",
@@ -712,7 +681,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436891457.png",
-      "back": null,
+      "back": "/shop/backs/436891457.png",
       "sizes": [
         "11 oz",
         "15 oz",
@@ -779,7 +748,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436888902.png",
-      "back": null,
+      "back": "/shop/backs/436888902.png",
       "sizes": [
         "11 oz",
         "15 oz",
@@ -794,7 +763,7 @@
       "price": 18,
       "currency": "USD",
       "image": "/shop/auto/mockup-436888901.png",
-      "back": null,
+      "back": "/shop/backs/436888901.png",
       "sizes": [
         "11 oz",
         "15 oz",
@@ -806,7 +775,7 @@
       "id": "436883196",
       "slug": "far-fox-same-moon-same-us-art-print",
       "name": "\"Same Moon, Same Us\" Art Print",
-      "price": 20,
+      "price": 24,
       "currency": "USD",
       "image": "/shop/auto/mockup-436883196.png",
       "back": null,

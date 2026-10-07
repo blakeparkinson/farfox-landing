@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 // @ts-ignore - plain-JS module (no heavy deps) shared with shop + generator
-import { kitSlugForName, backUrl, pickVariant } from '../../lib/kits.mjs';
+import { kitForColour, backUrl, pickVariant, variantColor } from '../../lib/kits.mjs';
 // @ts-ignore
 import { mapNotification, partitionOrderItems, snipcartAuth } from '../../lib/digitalMapOrder.mjs';
 // @ts-ignore
@@ -202,7 +202,7 @@ export const POST: APIRoute = async ({ request }) => {
     // Personalization: if this is a known jersey kit and the customer entered a
     // name and/or number, override the BACK print file with a generated one.
     // Front + sleeves are carried over from the sync variant unchanged.
-    const kit = kitSlugForName(productName);
+    const kit = kitForColour(productName, variantColor(variant));
     if (kit && (name || number)) {
       const customBack = backUrl(kit, name, number);
       const files = (variant.files || [])

@@ -39,7 +39,7 @@ const OCTOBER = new Set(['dropzone', 'dalmatian', 'twilight', 'otherhalfa', 'oth
 const folder = (kit) => (process.env.KITS_BASE || !OCTOBER.has(kit) ? BASE : BASE.replace('kits-2026-09', 'kits-2026-10'));
 // Printful keeps the copy it first downloaded from a URL; bump a kit here when
 // its files are edited in place so Printful fetches the new ones.
-const FILE_REVISION = { paradise: 2, flyway: 3 };
+const FILE_REVISION = { paradise: 2, flyway: 3, dropzone: 2, 'moose-blush': 2 };
 const revision = (kit) => (FILE_REVISION[kit] ? `?v=${FILE_REVISION[kit]}` : '');
 const fileUrl = (kit, part) => `${folder(kit)}/${isBaseball(kit) ? 'rj' : 'sj'}-${kit}-${part}.png${revision(kit)}`;
 // Printful names this product's front placement "default".

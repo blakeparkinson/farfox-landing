@@ -103,8 +103,9 @@ async function main() {
   // Retired kits: hidden from the storefront but kept in Printful so they can
   // be revived. White (437126174) + Champions (437120257) — weakest soccer kits;
   // Coordinates (443266945) + Orange (437126197) — retired in the Oct 2026 drop;
-  // the mascot LDC tee (436883116) + Worth Every Mile (436882976) — replaced by the Oct 2026 tee line.
-  const RETIRED = new Set([437126174, 437120257, 443266945, 437126197, 436883116, 436882976]);
+  // the mascot LDC tee (436883116) + Worth Every Mile (436882976) — replaced by the Oct 2026 tee line;
+  // the three baseball jerseys (436911930, 437021439, 437052584) — replaced by the Ballpark jersey.
+  const RETIRED = new Set([437126174, 437120257, 443266945, 437126197, 436883116, 436882976, 436911930, 437021439, 437052584]);
   const products = [];
   for (const p of list) {
     if (RETIRED.has(Number(p.id))) continue;
