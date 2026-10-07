@@ -75,20 +75,21 @@ async function sheet(stickers, cols, rows) {
 const art = (w, h, body) => png(w, h, body);
 
 // --- mugs -------------------------------------------------------------------------------------------
+// The shop's main mug photo (handle on the right) shows face R, so R carries the first half of a two-part phrase.
 const [L, R] = MUG.faces;
 function scatterHearts(cx, seed) { const r = rng(seed); let s = '';
   for (const [dx, dy, sz] of [[-430, 220, 120], [400, 160, 95], [-380, 640, 80], [420, 600, 110], [-250, 90, 60], [300, 820, 60]]) s += heart(cx + dx, dy, sz, r() > 0.5 ? C.pink : C.purple);
   return s; }
 const mugs = {
-  'mug-hearteyes': art(MUG.w, MUG.h, `${scatterHearts(L, 3)}${scatterHearts(R, 7)}
-    ${foxyTag(F.head, L, 110, 640)}${text(L, 935, 'HEART EYES', { size: 150 })}
-    ${foxyTag(F.head, R, 110, 640)}${text(R, 935, 'ONLY FOR YOU', { size: 120, fill: C.pink, spacing: 4 })}`),
+  'mug-hearteyes': art(MUG.w, MUG.h, `${scatterHearts(R, 3)}${scatterHearts(L, 7)}
+    ${foxyTag(F.head, R, 110, 640)}${text(R, 935, 'HEART EYES', { size: 150 })}
+    ${foxyTag(F.head, L, 110, 640)}${text(L, 935, 'ONLY FOR YOU', { size: 120, fill: C.pink, spacing: 4 })}`),
   'mug-samemoon': art(MUG.w, MUG.h, `${night(MUG.w, MUG.h, 'mn')}${stars(MUG.w, MUG.h, 140, 11, C.cream, 6)}
-    ${crescent(L - 330, 190, 110, C.blush)}${foxyTag(F.headClosed, L, 210, 600)}${fell(L, 930, 'same moon,', 150, C.cream)}
-    ${crescent(R + 330, 190, 110, C.blush)}${foxyTag(F.head, R, 210, 600)}${fell(R, 930, 'same us.', 150, C.cream)}`),
+    ${crescent(R - 330, 190, 110, C.blush)}${foxyTag(F.headClosed, R, 210, 600)}${fell(R, 930, 'same moon,', 150, C.cream)}
+    ${crescent(L + 330, 190, 110, C.blush)}${foxyTag(F.head, L, 210, 600)}${fell(L, 930, 'same us.', 150, C.cream)}`),
   'mug-pride': art(MUG.w, MUG.h, `${rainbowBand(0, 0, MUG.w, 22)}${rainbowBand(0, MUG.h - 132, MUG.w, 22)}
-    ${foxyTag(F.head, L, 190, 560)}${text(L, 900, 'LOVE IS LOVE', { size: 130, spacing: 6 })}
-    ${foxyTag(F.idle, R - 110, 175, 420)}${heart(R + 260, 520, 330, 'url(#rb)')}${text(R, 900, 'PROUD OF US', { size: 130, fill: C.pink, spacing: 6 })}
+    ${foxyTag(F.head, R, 190, 560)}${text(R, 900, 'LOVE IS LOVE', { size: 130, spacing: 6 })}
+    ${foxyTag(F.idle, L - 110, 175, 420)}${heart(L + 260, 520, 330, 'url(#rb)')}${text(L, 900, 'PROUD OF US', { size: 130, fill: C.pink, spacing: 6 })}
     <defs><linearGradient id="rb" x1="0" y1="0" x2="0" y2="1">${RAINBOW.map((c, i) => `<stop offset="${i / 6}" stop-color="${c}"/><stop offset="${(i + 1) / 6}" stop-color="${c}"/>`).join('')}</linearGradient></defs>`),
   'mug-airways': art(MUG.w, MUG.h, (() => {
     let bars = '';
