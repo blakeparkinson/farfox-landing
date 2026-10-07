@@ -1,3 +1,4 @@
+import { canonicalRedirectRules, isCanonicalRedirect, MAX_ROUTE_SRC } from './canonical-redirect-rules.mjs';
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
@@ -35,22 +36,21 @@ async function collectHtml(directory) {
 const pages = await collectPages(clientDir);
 const pageSet = new Set(pages);
 const config = JSON.parse(await readFile(join(root, '.vercel/output/config.json'), 'utf8'));
-const expectedSrc = `^/(${pages.sort().map(path => path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})$`;
-const redirects = config.routes
-  .map((route, index) => ({ route, index }))
-  .filter(({ route }) => route.src === expectedSrc);
+const expected = canonicalRedirectRules(pages);
+const redirects = config.routes.map((route, index) => ({ route, index })).filter(({ route }) => isCanonicalRedirect(route));
+assert.deepEqual(redirects.map(({ route }) => route), expected, 'The canonical page redirects are exactly the rules built from the page list');
+assert.deepEqual(redirects.map(({ index }) => index), expected.map((_, i) => i), 'Canonical redirects come first in the routes array');
+for (const { route } of redirects) assert.ok(route.src.length <= MAX_ROUTE_SRC, `Each redirect src fits Vercel's route limit (${route.src.length})`);
 
-assert.equal(redirects.length, 1, 'Exactly one canonical page redirect exists');
-assert.equal(redirects[0].index, 0, 'Canonical redirect is first in the routes array');
-assert.equal(redirects[0].route.status, 308);
-assert.equal(redirects[0].route.headers?.Location, '/$1/');
-
-const matches = new RegExp(redirects[0].route.src);
+const rules = redirects.map(({ route }) => new RegExp(route.src));
+const matches = { test: (path) => rules.some((rule) => rule.test(path)) };
+for (const page of pages) assert.equal(rules.filter((rule) => rule.test(`/${page}`)).length, 1, `Exactly one rule redirects /${page}`);
 for (const path of [
   '/blog/long-distance-relationship-timeline',
   '/tools',
   '/blog',
   '/compare/paired',
+  '/long-distance/new-york-to-london',
 ]) assert.ok(matches.test(path), `Redirect matches ${path}`);
 for (const path of [
   '/blog/long-distance-relationship-timeline/',

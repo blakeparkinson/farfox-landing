@@ -1,6 +1,7 @@
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { canonicalRedirectRules, isCanonicalRedirect } from './canonical-redirect-rules.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const clientDir = join(root, 'dist/client');
@@ -21,24 +22,15 @@ async function collectPages(directory) {
   return pages.sort();
 }
 
-function escapeRegex(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 const pages = await collectPages(clientDir);
 if (pages.length === 0) throw new Error('No prerendered pages found in dist/client');
 
-const src = `^/(${pages.map(escapeRegex).join('|')})$`;
 const config = JSON.parse(await readFile(configPath, 'utf8'));
 if (!Array.isArray(config.routes)) throw new Error('Vercel Build Output config has no routes array');
 
-const existingIndex = config.routes.findIndex(route => route.src === src);
-if (existingIndex === -1) {
-  config.routes.unshift({ src, headers: { Location: '/$1/' }, status: 308 });
-} else if (existingIndex > 0) {
-  const [route] = config.routes.splice(existingIndex, 1);
-  config.routes.unshift(route);
-}
+// Replace any earlier canonical rules (a re-run, or a page list that changed) with fresh ones, first in the list.
+const rules = canonicalRedirectRules(pages);
+config.routes = [...rules, ...config.routes.filter((route) => !isCanonicalRedirect(route))];
 
 await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`);
-console.log(`[canonical-redirects] Added or retained one 308 redirect for ${pages.length} prerendered page paths.`);
+console.log(`[canonical-redirects] ${rules.length} 308 redirect rule${rules.length === 1 ? '' : 's'} for ${pages.length} prerendered page paths.`);
