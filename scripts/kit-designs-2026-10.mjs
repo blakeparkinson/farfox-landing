@@ -223,26 +223,24 @@ function twilight() {
 
 // --- new kits -------------------------------------------------------------------
 
-/** Other Half: pink/plum halves split at x 3000, sold as a pair. Kit A carries
- *  the left half of a heart, Kit B the right, cut on a friendship-necklace
- *  zigzag; a faint dashed outline marks the half your partner is wearing. */
+/** Other Half: a classic halved kit, pink/plum split at x 3000 with cream piping down the seam, sold as a
+ *  pair. Each shirt is complete on its own; the only couple detail is a small half-heart at the foot of the seam
+ *  (Kit A the left half, Kit B the right), with a faint dashed outline of the half your partner wears. */
+const OTHER_HALF_HEART = { x: 3000, y: 5320, w: 340 };
 function otherhalf(side) {
   const L = side === 'A' ? PINK : PLUM, R = side === 'A' ? PLUM : PINK;
   const halves = `<rect x="0" y="0" width="3000" height="${D}" fill="${L}"/><rect x="3000" y="0" width="3000" height="${D}" fill="${R}"/>`;
-  const hx = 3000, hy = 3700, hw = 1400; // heart centre + width (heart box 100×90)
-  const tf = `transform="translate(${hx - hw / 2} ${hy - (hw * 0.9) / 2}) scale(${hw / 100})"`;
-  const top = hy - hw * 0.45 - 60, bot = hy + hw * 0.45 + 60;
-  const zig = [];
-  for (let y = top, k = 0; y <= bot; y += 150, k++) zig.push(`${k % 2 ? 3090 : 2910},${y.toFixed(0)}`);
-  const left = `0,0 3000,0 3000,${top.toFixed(0)} ${zig.join(' ')} 3000,${bot.toFixed(0)} 3000,${D} 0,${D}`;
-  const right = `${D},0 3000,0 3000,${top.toFixed(0)} ${zig.join(' ')} 3000,${bot.toFixed(0)} 3000,${D} ${D},${D}`;
-  const mine = side === 'A' ? left : right, theirs = side === 'A' ? right : left;
-  const heartArt = `<defs><clipPath id="mine"><polygon points="${mine}"/></clipPath><clipPath id="theirs"><polygon points="${theirs}"/></clipPath></defs>
+  const seam = `<rect x="2988" y="0" width="24" height="${D}" fill="${BLUSH}"/>`;
+  const { x, y, w } = OTHER_HALF_HEART;
+  const tf = `transform="translate(${x - w / 2} ${y - (w * 0.9) / 2}) scale(${w / 100})"`;
+  const mine = side === 'A' ? `<rect x="0" y="0" width="${x}" height="${D}"/>` : `<rect x="${x}" y="0" width="${D - x}" height="${D}"/>`;
+  const theirs = side === 'A' ? `<rect x="${x}" y="0" width="${D - x}" height="${D}"/>` : `<rect x="0" y="0" width="${x}" height="${D}"/>`;
+  const heartArt = `<defs><clipPath id="mine">${mine}</clipPath><clipPath id="theirs">${theirs}</clipPath></defs>
     <g clip-path="url(#mine)"><path ${tf} d="${HEART_D}" fill="${BLUSH}"/></g>
-    <g clip-path="url(#theirs)"><path ${tf} d="${HEART_D}" fill="none" stroke="${BLUSH}" stroke-opacity="0.4" stroke-width="1.3" stroke-dasharray="3 3"/></g>`;
+    <g clip-path="url(#theirs)"><path ${tf} d="${HEART_D}" fill="none" stroke="${BLUSH}" stroke-opacity="0.5" stroke-width="2" stroke-dasharray="4 4"/></g>`;
   return {
-    front: svg(heartArt + crest(CREST.x, CREST.y, CREST.w, side === 'A' ? 'light' : 'plum'), halves),
-    pattern: svg('', halves),
+    front: svg(seam + heartArt + crest(CREST.x, CREST.y, CREST.w, side === 'A' ? 'light' : 'plum'), halves),
+    pattern: svg(seam, halves),
     sleeve: svg(cuff(PURPLE, PINK), `<rect width="${D}" height="${D}" fill="${PLUM}"/>`),
   };
 }
@@ -405,25 +403,26 @@ function jockTag(c) {
   return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="26" fill="${c.cream}"/>
     <rect x="${x + 16}" y="${y + 16}" width="${w - 32}" height="${h - 32}" rx="16" fill="none" stroke="${c.body.base}" stroke-width="8" stroke-dasharray="20 12"/>
     ${antleredFoxy(x + 140, y + h / 2 + 36, 150)}
-    <text x="${x + 465}" y="${y + 130}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="50" letter-spacing="4" fill="${c.body.base}">MOOSE LODGE</text>
+    <text x="${x + 465}" y="${y + 130}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="50" letter-spacing="4" fill="${c.body.base}">I MOOSE YOU</text>
     <text x="${x + 465}" y="${y + 232}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="92" letter-spacing="10" fill="${c.stitch}">143</text>`;
 }
 
-// The sponsor lockup: a mark, then the wordmark, centred on the visible front (x 3040) as one unit.
-// Oswald 700 at 280 px with 15 px tracking sets "I MOOSE YOU" about 1600 px wide (measured from a render).
-const MOOSE_LOCKUP = { y: 3330, size: 280, track: 15, textWidth: 1600, mark: 280, gap: 70 };
+// The sponsor lockup: a mark, then a plain LODGE wordmark, centred on the visible front (x 3040) as one unit.
+// The pun lives on the jock tag, so the chest stays wearable. Oswald 700 at 280 px with 60 px tracking sets
+// LODGE about 1020 px wide (measured from a render).
+const MOOSE_LOCKUP = { y: 3330, size: 280, track: 60, textWidth: 1020, mark: 280, gap: 80, word: 'LODGE' };
 const MOOSE_PALM = [[252, 40], [286, -8], [294, -104], [330, -48], [354, -124], [378, -54], [418, -96], [408, -16], [334, 12], [292, 48]];
 function mooseSponsorLockup(c) {
-  const { y, size, track, textWidth, mark, gap } = MOOSE_LOCKUP;
+  const { y, size, track, textWidth, mark, gap, word } = MOOSE_LOCKUP;
   const left = 3040 - (mark + gap + textWidth) / 2, mx = left + mark / 2, my = y - size * 0.36;
   // A heart wearing moose palms: the palms are the crest's, scaled to the heart.
   const s = mark / 380, palms = [1, -1].map((side) => `<polygon transform="translate(${mx - 150 * s} ${my - mark * 0.48}) scale(${s})" points="${MOOSE_PALM.map(([a, b]) => `${side > 0 ? a : 300 - a},${b}`).join(' ')}" fill="${c.cream}"/>`).join('');
   return `${palms}${heart(mx, my, mark, c.stitch)}
-    <text x="${left + mark + gap}" y="${y}" font-family="Oswald" font-weight="700" font-size="${size}" letter-spacing="${track}" fill="${c.cream}">I MOOSE YOU</text>`;
+    <text x="${left + mark + gap}" y="${y}" font-family="Oswald" font-weight="700" font-size="${size}" letter-spacing="${track}" fill="${c.cream}">${word}</text>`;
 }
 
 /** Moose Lodge, a Far Fox FC kit: pink buffalo-check contrast sleeves on a fine tonal plum body, the
- *  antlered crest and FAR FOX FC on the left chest, the I MOOSE YOU sponsor lockup, and a jock tag. */
+ *  antlered crest and FAR FOX FC on the left chest, a LODGE sponsor lockup, and I MOOSE YOU on the jock tag. */
 function mooseKit(colorway, withText) {
   const c = MOOSE_COLORWAYS[colorway];
   const badge = antleredCrest(CREST.x, CREST.y + 60, CREST.w, 'light', c.cream)

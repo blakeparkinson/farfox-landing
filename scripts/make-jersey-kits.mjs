@@ -165,60 +165,68 @@ function flight() {
 }
 
 /** A leaning palm silhouette: tapered trunk plus drooping crescent fronds. */
-function palm(base, crown, color) {
-  const lean = { x: (base.x + crown.x) / 2 + (crown.x > base.x ? -140 : 140), y: (base.y + crown.y) / 2 };
-  let out = `<path d="M ${base.x - 55} ${base.y} Q ${lean.x - 30} ${lean.y} ${crown.x - 20} ${crown.y} L ${crown.x + 20} ${crown.y} Q ${lean.x + 30} ${lean.y} ${base.x + 55} ${base.y} Z" fill="${color}"/>`;
-  const fronds = [-172, -140, -112, -84, -58, -30, -6, 150, 30];
-  for (const deg of fronds) {
-    const th = (deg * Math.PI) / 180, L = 430;
-    const tip = { x: crown.x + Math.cos(th) * L, y: crown.y + Math.sin(th) * L * 0.7 + 190 };
-    const ctl = { x: crown.x + Math.cos(th) * L * 0.55, y: crown.y + Math.sin(th) * L * 0.55 - 40 };
-    const n = { x: -Math.sin(th) * 62, y: Math.cos(th) * 62 };
-    out += `<path d="M ${crown.x} ${crown.y} Q ${ctl.x + n.x} ${ctl.y + n.y} ${tip.x} ${tip.y} Q ${ctl.x - n.x} ${ctl.y - n.y} ${crown.x} ${crown.y} Z" fill="${color}"/>`;
-  }
-  return out + `<circle cx="${crown.x}" cy="${crown.y}" r="48" fill="${color}"/>`;
-}
 
 /** Paradise: two islands, one sunset. A retro striped sun, two palms leaning in, sea glow. */
-function paradise() {
-  const H = 3750; // horizon
-  const INK = '#2A1B3D';
-  const sky = `<defs>
-      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1FB5A6"/><stop offset="0.45" stop-color="#7FD3B8"/><stop offset="${H / D}" stop-color="#FFB38A"/><stop offset="${H / D}" stop-color="#FF7A7F"/><stop offset="1" stop-color="#6E3E8C"/></linearGradient>
-      <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9A0"/><stop offset="1" stop-color="#FF6B8A"/></linearGradient>
-    </defs><rect width="${D}" height="${D}" fill="url(#sky)"/>`;
-  const sun = (cx, r) => {
-    // Retro sun: horizontal gaps that thicken toward the horizon.
-    let gaps = '';
-    for (let k = 0, y = H - r * 0.55; y < H; k++) {
-      const h = 34 + k * 26;
-      gaps += `<rect x="${cx - r}" y="${y}" width="${2 * r}" height="${h}" fill="#FFB38A"/>`;
-      y += h + 120 - k * 10;
-    }
-    return `<clipPath id="above"><rect width="${D}" height="${H}"/></clipPath>
-      <g clip-path="url(#above)"><circle cx="${cx}" cy="${H}" r="${r}" fill="url(#sun)"/>${gaps}</g>`;
-  };
-  let glow = '';
-  for (let k = 0; k < 12; k++) {
-    const y = H + 90 + k * 150, w = 1500 - k * 95;
-    glow += `<rect x="${3000 - w / 2}" y="${y}" width="${w}" height="${40 + k * 4}" rx="30" fill="#FFE9A0" fill-opacity="${0.55 - k * 0.035}"/>`;
+/** Paradise as a Hawaiian-shirt kit: the sunset gradient (teal into peach, coral and purple) under a tonal
+ *  print of monstera leaves, palm fronds and hibiscus. No illustration; the print is the identity. */
+// Motifs are drawn in a 200×220 box, tip up. A monstera: a heart-shaped leaf whose slits run up from the
+// margin towards the midrib, with a few holes beside it.
+const MONSTERA = 'M100 215 C 60 205 15 172 10 122 C 5 70 40 22 100 8 C 160 22 195 70 190 122 C 185 172 140 205 100 215 Z';
+const MONSTERA_CUTS = (() => {
+  let cuts = '';
+  for (const [y, xm] of [[58, 34], [92, 14], [128, 11], [164, 30]]) for (const side of [-1, 1]) {
+    const x = (v) => 100 + side * (100 - v);
+    cuts += `<polygon points="${x(xm - 6)},${y} ${x(xm - 6)},${y + 22} ${x(90)},${y - 6} ${x(92)},${y - 22}"/>`;
   }
-  const island = (x) => `<ellipse cx="${x}" cy="${H + 10}" rx="360" ry="120" fill="${INK}"/>`;
-  const scene = sun(3000, 1050) + glow + island(2250) + island(3800)
-    + palm({ x: 2250, y: H - 60 }, { x: 2600, y: 3050 }, INK)
-    + palm({ x: 3800, y: H - 60 }, { x: 3450, y: 3080 }, INK)
-    + heart(3025, 2860, 190, '#FF4F7B', 0);
-  // After sunset on the back: deeper teal into purple so white lettering reads.
-  const dusk = `<defs><linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#138078"/><stop offset="0.55" stop-color="#2E5E86"/><stop offset="1" stop-color="#5A2F7A"/></linearGradient></defs>
-    <rect width="${D}" height="${D}" fill="url(#dusk)"/>`;
-  let backGlow = '';
-  for (let k = 0; k < 5; k++) backGlow += `<rect x="${3000 - (900 - k * 120) / 2}" y="${5050 + k * 150}" width="${900 - k * 120}" height="${40 + k * 4}" rx="30" fill="#FFB38A" fill-opacity="${0.5 - k * 0.07}"/>`;
+  for (const [x, y] of [[84, 112], [116, 112], [86, 150], [114, 150], [88, 76], [112, 76]]) cuts += `<ellipse cx="${x}" cy="${y}" rx="6" ry="10"/>`;
+  return cuts + '<rect x="97" y="30" width="6" height="185"/>';
+})();
+/** A palm frond: pointed leaflets along a curved spine, shortening towards the tip. */
+function frond(fill) {
+  const spine = (t) => ({ x: 20 + 160 * t + 18 * Math.sin(t * Math.PI), y: 210 - 190 * t });
+  let leaves = '';
+  for (let k = 1; k <= 11; k++) {
+    const t = k / 12, p = spine(t), q = spine(t + 0.01), len = 92 * (1 - t * 0.55);
+    const ang = Math.atan2(q.y - p.y, q.x - p.x);
+    for (const side of [-1, 1]) {
+      const a = ang + side * 0.9, tip = { x: p.x + Math.cos(a) * len, y: p.y + Math.sin(a) * len };
+      const n = { x: -Math.sin(a) * len * 0.14, y: Math.cos(a) * len * 0.14 }, mid = { x: (p.x + tip.x) / 2, y: (p.y + tip.y) / 2 };
+      leaves += `<path d="M ${p.x.toFixed(1)} ${p.y.toFixed(1)} Q ${(mid.x + n.x).toFixed(1)} ${(mid.y + n.y).toFixed(1)} ${tip.x.toFixed(1)} ${tip.y.toFixed(1)} Q ${(mid.x - n.x).toFixed(1)} ${(mid.y - n.y).toFixed(1)} ${p.x.toFixed(1)} ${p.y.toFixed(1)} Z" fill="${fill}"/>`;
+    }
+  }
+  const path = Array.from({ length: 21 }, (_, i) => spine(i / 20)).map((p, i) => `${i ? 'L' : 'M'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+  return `<path d="${path}" fill="none" stroke="${fill}" stroke-width="6" stroke-linecap="round"/>${leaves}`;
+}
+/** A hibiscus: five notched petals round an open centre, and a long stamen. Thin gaps between the petals
+ *  are cut by a mask (like the monstera's slits), or the petals merge into one blob. */
+const PETAL = 'M0 0 C -42 -18 -58 -70 -32 -96 C -16 -108 -5 -98 0 -90 C 5 -98 16 -108 32 -96 C 58 -70 42 -18 0 0 Z';
+const HIBISCUS_MASK = `<g transform="translate(100 115)">${[0, 72, 144, 216, 288].map((a) => `<path d="${PETAL}" transform="rotate(${a})" fill="#fff" stroke="#000" stroke-width="7"/>`).join('')}
+  <circle r="16" fill="#000"/><path d="M 0 0 L 52 -96" stroke="#fff" stroke-width="6" stroke-linecap="round"/>${[[52, -96], [62, -88], [44, -104]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="#fff"/>`).join('')}</g>`;
+const hibiscus = (fill) => `<rect width="200" height="220" fill="${fill}" mask="url(#hibiscus)"/>`;
+// A crisp print, not a texture: a few large motifs, spaced so silhouettes never stack.
+const PRINT = { count: 46, minDist: 760, sizeMin: 720, sizeMax: 1150 };
+function hawaiianPrint(seed, keep) {
+  const r = rng(seed), placed = [];
+  for (let tries = 0; placed.length < PRINT.count && tries < 4000; tries++) {
+    const x = r() * D, y = r() * D;
+    if (!keep(x, y) || placed.some((p) => Math.hypot(p.x - x, p.y - y) < PRINT.minDist)) continue;
+    placed.push({ x, y, kind: r(), size: PRINT.sizeMin + r() * (PRINT.sizeMax - PRINT.sizeMin), rot: r() * 360, light: r() > 0.25 });
+  }
+  const out = placed.map(({ x, y, kind, size, rot, light }) => {
+    const fill = light ? '#FFFFFF' : '#0E5E57', opacity = light ? 0.2 : 0.16;
+    const body = kind < 0.45 ? `<rect width="200" height="220" fill="${fill}" mask="url(#monstera)"/>` : kind < 0.78 ? frond(fill) : hibiscus(fill);
+    return `<g transform="translate(${(x - size / 2).toFixed(0)} ${(y - size / 2).toFixed(0)}) rotate(${rot.toFixed(0)} ${(size / 2).toFixed(0)} ${(size / 2).toFixed(0)}) scale(${(size / 200).toFixed(3)})" opacity="${opacity}">${body}</g>`;
+  }).join('');
+  return `<defs><mask id="monstera" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="220"><path d="${MONSTERA}" fill="#fff"/><g fill="#000">${MONSTERA_CUTS}</g></mask><mask id="hibiscus" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="220">${HIBISCUS_MASK}</mask></defs>${out}`;
+}
+const SUNSET = '<defs><linearGradient id="sunset" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1FB5A6"/><stop offset="0.3" stop-color="#7FD3B8"/><stop offset="0.58" stop-color="#FFB38A"/><stop offset="0.8" stop-color="#FF7A7F"/><stop offset="1" stop-color="#6E3E8C"/></linearGradient></defs><rect width="6000" height="6000" fill="url(#sunset)"/>';
+function paradise() {
+  const clearOfCrest = (x, y) => Math.hypot(x - CREST.x, y - CREST.y) > 520;
   return {
     // Navy crest: the cream one vanished into the mint sky.
-    front: svg(scene + crest(CREST.x, CREST.y, CREST.w, 'navy'), sky),
-    // The back keeps the sky and sea only, so the name and number stay clean.
-    pattern: svg(backGlow, dusk),
-    sleeve: svg(cuff('#FF6B8A', '#1A564E'), sky),
+    front: svg(hawaiianPrint(11, clearOfCrest) + crest(CREST.x, CREST.y, CREST.w, 'navy'), SUNSET),
+    pattern: svg(hawaiianPrint(23, () => true), SUNSET),
+    sleeve: svg(hawaiianPrint(37, () => true) + cuff('#FF6B8A', '#1A564E'), SUNSET),
   };
 }
 
