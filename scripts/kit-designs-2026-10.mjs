@@ -307,7 +307,7 @@ export const MOOSE_COLORWAYS = {
   plum:   { label: 'Far Fox plum', base: '#FF6B8A', dark: '#2D1B4E', cream: '#FFF5F0', stitch: '#FF6B8A', opacity: 0.6 },
   // Blush ships in the kit layout (mooseKit): a tonal plum body with a solid three-tone pink buffalo-check hoop.
   blush:  { label: 'Blush', layout: 'kit', base: '#2D1B4E', dark: '#2D1B4E', cream: '#FFF5F0', stitch: '#FF6B8A', ink: '#FFF5F0', inkStroke: '#FF6B8A',
-    body: { base: '#2D1B4E', mid: '#33205A', dark: '#29184A' }, hoop: { base: '#FF9BB2', mid: '#C2557E', dark: '#2D1B4E' }, sponsorY: 3300, sponsorSize: 330, sponsorStroke: '#2D1B4E', sponsorStrokeW: 20 },
+    body: { base: '#2D1B4E', mid: '#301D52', dark: '#2B1A4B' }, hoop: { base: '#FF9BB2', mid: '#C2557E', dark: '#2D1B4E' }, sponsorY: 3300, sponsorSize: 330, sponsorStroke: '#2D1B4E', sponsorStrokeW: 20 },
 };
 let LODGE = { red: '#B8272F', black: '#16151A', cream: '#F4ECE0' };
 const useColorway = (key) => { const c = MOOSE_COLORWAYS[key] || MOOSE_COLORWAYS.lodge; LODGE = { red: c.base, black: c.dark, cream: c.cream, stitch: c.stitch, opacity: c.opacity, mid: c.mid }; return c; };
@@ -387,13 +387,6 @@ function check(size, { base, mid, dark }) {
   for (let x = -D; x < D; x += 70) s += `<path d="M ${x} ${D} L ${x + D} 0" stroke="#000" stroke-opacity="0.05" stroke-width="14"/>`;
   return s;
 }
-// The kit layout, in front-file px: the hoop band across the torso, and the kit-maker mark on the right chest
-// (the crest's mirror about the visible front's centre line, x 3040).
-const MOOSE_HOOP = { top: 3720, height: 720, square: 180 };
-let clipId = 0;
-const band = (y, h, square, colours) => { const id = `mb${clipId++}`;
-  return `<clipPath id="${id}"><rect x="0" y="${y}" width="${D}" height="${h}"/></clipPath><g clip-path="url(#${id})">${check(square, colours)}</g>`; };
-
 /** The Far Fox crest with geometric antlers rising from its ears, drawn in the crest's own flat style and
  *  coordinates (300×306, ear tips at x 25 and 275), so it reads as a special edition of the real badge. */
 function antleredCrest(cx, cy, w, variant, colour) {
@@ -405,9 +398,7 @@ function antleredCrest(cx, cy, w, variant, colour) {
   return `<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">${beam(1)}${beam(-1)}</g>${crest(cx, cy, w, variant)}`;
 }
 
-// The hem pinstripe repeats the hoop's piping; the jock tag sits under it on the wearer's left hip, where
-// pro kits put their authenticity tag.
-const MOOSE_HEM_STRIPE = 5120;
+// The jock tag sits on the wearer's left hip, where pro kits put their authenticity tag.
 const MOOSE_JOCK_TAG = { x: 3340, y: 5240, w: 720, h: 300 };
 function jockTag(c) {
   const { x, y, w, h } = MOOSE_JOCK_TAG;
@@ -418,20 +409,34 @@ function jockTag(c) {
     <text x="${x + 465}" y="${y + 232}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="92" letter-spacing="10" fill="${c.stitch}">143</text>`;
 }
 
-/** Moose Lodge, a Far Fox FC kit: the antlered crest and FAR FOX FC on the left chest, "I MOOSE YOU" as
- *  the sponsor, and the buffalo check as a chest hoop and cuffs on a tonal plum body. */
+// The sponsor lockup: a mark, then the wordmark, centred on the visible front (x 3040) as one unit.
+// Oswald 700 at 280 px with 15 px tracking sets "I MOOSE YOU" about 1600 px wide (measured from a render).
+const MOOSE_LOCKUP = { y: 3330, size: 280, track: 15, textWidth: 1600, mark: 280, gap: 70 };
+const MOOSE_PALM = [[252, 40], [286, -8], [294, -104], [330, -48], [354, -124], [378, -54], [418, -96], [408, -16], [334, 12], [292, 48]];
+function mooseSponsorLockup(c) {
+  const { y, size, track, textWidth, mark, gap } = MOOSE_LOCKUP;
+  const left = 3040 - (mark + gap + textWidth) / 2, mx = left + mark / 2, my = y - size * 0.36;
+  // A heart wearing moose palms: the palms are the crest's, scaled to the heart.
+  const s = mark / 380, palms = [1, -1].map((side) => `<polygon transform="translate(${mx - 150 * s} ${my - mark * 0.48}) scale(${s})" points="${MOOSE_PALM.map(([a, b]) => `${side > 0 ? a : 300 - a},${b}`).join(' ')}" fill="${c.cream}"/>`).join('');
+  return `${palms}${heart(mx, my, mark, c.stitch)}
+    <text x="${left + mark + gap}" y="${y}" font-family="Oswald" font-weight="700" font-size="${size}" letter-spacing="${track}" fill="${c.cream}">I MOOSE YOU</text>`;
+}
+
+/** Moose Lodge, a Far Fox FC kit: pink buffalo-check contrast sleeves on a fine tonal plum body, the
+ *  antlered crest and FAR FOX FC on the left chest, the I MOOSE YOU sponsor lockup, and a jock tag. */
 function mooseKit(colorway, withText) {
-  const c = MOOSE_COLORWAYS[colorway], { top, height, square } = MOOSE_HOOP;
-  const piping = (y) => `<rect x="0" y="${y}" width="${D}" height="26" fill="${c.cream}"/>`;
+  const c = MOOSE_COLORWAYS[colorway];
   const badge = antleredCrest(CREST.x, CREST.y + 60, CREST.w, 'light', c.cream)
     + `<text x="${CREST.x}" y="${CREST.y + 400}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="92" letter-spacing="14" fill="${c.cream}">FAR FOX FC</text>`;
-  const front = check(560, c.body) + band(top, height, square, c.hoop) + piping(top - 40) + piping(top + height + 14) + piping(MOOSE_HEM_STRIPE) + badge + jockTag(c);
+  const body = check(MOOSE_BODY_CHECK, c.body);
   return {
-    front: svg(front + (withText ? mooseSponsor(colorway) : ''), ''),
-    pattern: svg(check(560, c.body), ''),
-    sleeve: svg(check(560, c.body) + band(4040, D - 4040, square, c.hoop) + `<rect x="0" y="3980" width="${D}" height="40" fill="${c.cream}"/>`, ''),
+    front: svg(body + badge + (withText ? mooseSponsorLockup(c) : '') + jockTag(c), ''),
+    pattern: svg(body, ''),
+    sleeve: svg(check(MOOSE_SLEEVE_CHECK, c.hoop) + cuff(c.cream, c.body.base), ''),
   };
 }
+// Check sizes in file px: fine on the body so it reads as woven texture; bolder on the contrast sleeves.
+const MOOSE_BODY_CHECK = 150, MOOSE_SLEEVE_CHECK = 300;
 
 function moose({ withText = true, colorway = 'blush', style = 'foxy' } = {}) {
   useColorway(colorway);
