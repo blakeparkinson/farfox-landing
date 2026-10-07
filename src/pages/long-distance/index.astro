@@ -1,0 +1,28 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import { ROUTES } from '../../lib/ldrRoutes';
+
+// Grouped by the home city's country, then by city, so each list is short enough to scan.
+const groups = new Map<string, Map<string, typeof ROUTES>>();
+for (const route of ROUTES) {
+  const country = groups.get(route.a.country) ?? new Map();
+  country.set(route.a.city, [...(country.get(route.a.city) ?? []), route]);
+  groups.set(route.a.country, country);
+}
+---
+<ToolLayout title="Long-Distance Relationship City Guides: Time Difference & Halfway Points | Far Fox" description={`Time differences, the hours you're both awake, distances, and where to meet halfway for ${ROUTES.length} long-distance routes, from New York–London to Manila–Toronto.`}>
+  <h1>Long-distance city guides</h1>
+  <p>Pick your two cities. Each guide shows the time difference (with daylight saving), the hours you're both awake, how far apart you are, and the fairest places to meet in the middle.</p>
+  {[...groups.entries()].map(([country, cities]) => (
+    <section class="country"><h2>From {country}</h2>
+      {[...cities.entries()].map(([city, routes]) => (
+        <div class="city"><h3>{city}</h3><ul>{routes.map((r) => <li><a href={`/long-distance/${r.slug}/`}>{r.b.city}</a></li>)}</ul></div>
+      ))}
+    </section>
+  ))}
+</ToolLayout>
+<style>
+  .country{margin:40px 0}.city{margin:16px 0}.city h3{font-size:1rem;font-weight:900;margin:0 0 8px}
+  .city ul{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0}
+  .city a{display:inline-block;padding:6px 12px;border:1px solid var(--line);border-radius:999px;text-decoration:none;font-weight:700;font-size:.9rem}
+</style>
