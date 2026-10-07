@@ -1,6 +1,44 @@
 {
-  "generatedAt": "2026-10-07T03:49:33.227Z",
+  "generatedAt": "2026-10-07T04:04:28.113Z",
   "products": [
+    {
+      "id": "6ac56a091644af57a506ee5b",
+      "provider": "printify",
+      "slug": "far-fox-national-park-flannel",
+      "name": "National Park Flannel",
+      "price": 89,
+      "currency": "USD",
+      "image": "/shop/colors/6ac56a091644af57a506ee5b-charcoal-heather-black.png",
+      "back": "/shop/backs/6ac56a091644af57a506ee5b.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "colors": [
+        {
+          "name": "Charcoal Heather / Black",
+          "hex": "#55585c",
+          "image": "/shop/colors/6ac56a091644af57a506ee5b-charcoal-heather-black.png",
+          "back": "/shop/backs/6ac56a091644af57a506ee5b-charcoal-heather-black.png"
+        },
+        {
+          "name": "Grey Heather / Black",
+          "hex": "#b0b0b0",
+          "image": "/shop/colors/6ac56a091644af57a506ee5b-grey-heather-black.png",
+          "back": "/shop/backs/6ac56a091644af57a506ee5b-grey-heather-black.png"
+        },
+        {
+          "name": "Red / Black",
+          "hex": "#b22a2e",
+          "image": "/shop/colors/6ac56a091644af57a506ee5b-red-black.png",
+          "back": "/shop/backs/6ac56a091644af57a506ee5b-red-black.png"
+        }
+      ]
+    },
     {
       "id": "478884090",
       "slug": "far-fox-miss-you-too-mug",

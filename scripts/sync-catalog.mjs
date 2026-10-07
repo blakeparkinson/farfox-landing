@@ -19,7 +19,9 @@
  */
 import { writeFileSync, mkdirSync, existsSync, readdirSync, copyFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
 import { variantColor, variantColorway } from '../src/lib/kits.mjs';
+import { printifyVariantOptions } from '../src/lib/printifyOrder.mjs';
 
 const TOKEN = process.env.PRINTFUL_TOKEN;
 const STORE = process.env.PRINTFUL_STORE_ID || '18292625';
@@ -31,6 +33,11 @@ const BACKS_DIR = join(ROOT, 'public/shop/backs');
 const OUT = join(ROOT, 'src/data/catalog.json');
 
 const H = { Authorization: `Bearer ${TOKEN}`, 'X-PF-Store-Id': STORE };
+const PRINTIFY_TOKEN = process.env.PRINTIFY_TOKEN;
+const PRINTIFY_SHOP = process.env.PRINTIFY_SHOP_ID || '29228113';
+const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL'];
+// Printify plaids have no single colour; the swatch shows the lighter of the two.
+const PRINTIFY_HEX = { 'Charcoal Heather / Black': '#55585c', 'Grey Heather / Black': '#b0b0b0', 'Red / Black': '#b22a2e' };
 
 async function pf(path) {
   const r = await fetch(`https://api.printful.com${path}`, { headers: H });
@@ -53,6 +60,37 @@ function overrideFor(id) {
 
 function slug(s) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+/** Printify products (the flannel). Without a token, or if Printify errors, the snapshot's entries are kept. */
+async function printifyProducts() {
+  const previous = existsSync(OUT) ? (JSON.parse(readFileSync(OUT, 'utf8')).products || []).filter((p) => p.provider === 'printify') : [];
+  if (!PRINTIFY_TOKEN) {
+    if (previous.length) console.warn('[sync-catalog] No PRINTIFY_TOKEN — keeping Printify products from the snapshot.');
+    return previous;
+  }
+  try {
+    const r = await fetch(`https://api.printify.com/v1/shops/${PRINTIFY_SHOP}/products.json?limit=50`, { headers: { Authorization: `Bearer ${PRINTIFY_TOKEN}`, 'User-Agent': 'farfox-landing' } });
+    if (!r.ok) throw new Error(`Printify products -> ${r.status}`);
+    return (await r.json()).data.map(printifyEntry).filter((p) => p.price > 0);
+  } catch (e) {
+    console.warn(`[sync-catalog] Printify failed (${e.message}) — keeping its snapshot products.`);
+    return previous;
+  }
+}
+
+function printifyEntry(p) {
+  const variants = printifyVariantOptions(p);
+  const colours = [...new Set(variants.map((v) => v.colour).filter(Boolean))];
+  const sizes = SIZE_ORDER.filter((s) => variants.some((v) => v.size === s));
+  const photo = (dir, file) => (existsSync(join(ROOT, 'public/shop', dir, file)) ? `/shop/${dir}/${file}` : null);
+  const colors = colours.map((name) => ({ name, hex: PRINTIFY_HEX[name] || '#cccccc', image: photo('colors', `${p.id}-${slug(name)}.png`), back: photo('backs', `${p.id}-${slug(name)}.png`) }));
+  return {
+    id: p.id, provider: 'printify', slug: slug(p.title), name: p.title.replace(/^Far Fox\s*[—-]\s*/i, ''),
+    price: variants.length ? Math.min(...variants.map((v) => v.price)) / 100 : 0, currency: 'USD',
+    image: colors[0]?.image || p.images?.[0]?.src || '', back: photo('backs', `${p.id}.png`),
+    sizes: sizes.length > 1 ? sizes : [], colors: colors.length > 1 ? colors : [],
+  };
 }
 
 async function main() {
@@ -133,8 +171,9 @@ async function main() {
       colors: colors.length > 1 ? colors : [], // colour picker only when there's a choice
     });
   }
-  // stable order: newest first by id desc
+  // stable order: newest first by id desc; Printify products (newest supplier) lead
   products.sort((a, b) => Number(b.id) - Number(a.id));
+  products.unshift(...(await printifyProducts()));
   mkdirSync(join(ROOT, 'src/data'), { recursive: true });
   writeFileSync(OUT, JSON.stringify({ generatedAt: new Date().toISOString(), products }, null, 2));
   console.log(`[sync-catalog] wrote ${products.length} products to src/data/catalog.json`);
