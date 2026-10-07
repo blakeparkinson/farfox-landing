@@ -10,6 +10,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
+import { foxyImage, foxyTag } from './foxy-art.mjs';
 const REPO = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const OUT = new URL('../public/shop/designs/flannel/', import.meta.url).pathname;
 await mkdir(OUT, { recursive: true });
@@ -24,8 +25,9 @@ for (const [n, q] of [['graduate', 'Graduate'], ['nunito9', 'Nunito:wght@900'], 
 const png = (w, h, body) => Buffer.from(new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`, { fitTo: { mode: 'width', value: w }, font: { fontFiles, loadSystemFonts: false } }).render().asPng());
 
 const C = { cream: '#F4ECE0', plum: '#2D1B4E', mid: '#4A3470', far: '#6B5294', pink: '#FF6B8A', blush: '#FFB2C6' };
-const FOXY = `data:image/png;base64,${(await sharp(`${REPO}/public/shop/designs/hearteyes-v2.png`).extract({ left: 650, top: 0, width: 1400, height: 1480 }).png().toBuffer()).toString('base64')}`;
-const foxy = (cx, top, w) => `<image href="${FOXY}" x="${cx - w / 2}" y="${top}" width="${w}" height="${w * 1480 / 1400}"/>`;
+// The approved Foxy head (foxy-art.mjs).
+const FOXY_HEAD = await foxyImage('head');
+const foxy = (cx, top, w) => foxyTag(FOXY_HEAD, cx, top, w);
 const pine = (x, base, h, c) => { const w = h * 0.42; let tiers = '';
   for (let i = 0; i < 4; i++) { const y = base - h * (0.18 + i * 0.22), tw = w * (1 - i * 0.2); tiers += `<polygon points="${x - tw / 2},${y + h * 0.2} ${x + tw / 2},${y + h * 0.2} ${x},${y - h * 0.12}" fill="${c}"/>`; }
   return `<rect x="${x - h * 0.03}" y="${base - h * 0.14}" width="${h * 0.06}" height="${h * 0.14}" fill="${c}"/>${tiers}`; };
@@ -53,7 +55,7 @@ function parkBadge() {
       ${[[520, 2160, 520], [700, 2200, 380], [2320, 2140, 540], [2520, 2200, 400], [880, 2230, 300], [2140, 2230, 320]].map(([x, b, h]) => pine(x, b, h, C.plum)).join('')}
       <rect x="0" y="2220" width="${S}" height="800" fill="${C.plum}"/>
       <g transform="translate(2265 2230) scale(1.3) translate(-2265 -2230)">${trailSign(2265, 1600)}</g>
-      ${foxy(1420, 1200, 1000)}
+      ${foxy(1420, 1300, 1000)}
     </g>`;
   const ribbon = `<path d="M 260 2140 L 2740 2140 L 2650 2290 L 2740 2440 L 260 2440 L 350 2290 Z" fill="${C.pink}" stroke="${C.plum}" stroke-width="26" stroke-linejoin="round"/>
     <text x="${cx}" y="2335" text-anchor="middle" font-family="Graduate" font-size="128" letter-spacing="6" fill="${C.cream}">LEAVE NO TRACE</text>
@@ -74,7 +76,7 @@ function pocketPatch() {
     <circle cx="${cx}" cy="${cy}" r="${R}" fill="${C.cream}" stroke="${C.plum}" stroke-width="22"/>
     <g clip-path="url(#p)"><rect width="${W}" height="${H}" fill="${C.plum}"/>
       <polygon points="100,640 380,300 560,520 760,260 1000,600 1000,900 100,900" fill="${C.far}"/>
-      ${foxy(cx, 250, 470)}</g>
+      ${foxy(cx, 280, 470)}</g>
     <circle cx="${cx}" cy="${cy}" r="${R - 40}" fill="none" stroke="${C.plum}" stroke-width="14"/>
     <path d="M 165 630 L 885 630 L 845 695 L 885 760 L 165 760 L 205 695 Z" fill="${C.pink}" stroke="${C.plum}" stroke-width="14" stroke-linejoin="round"/>
     <text x="${cx}" y="727" text-anchor="middle" font-family="Graduate" font-size="86" letter-spacing="10" fill="${C.cream}">FAR FOX</text>`);
