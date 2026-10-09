@@ -104,7 +104,8 @@ const CANDY_CREST = { body: CANDY.ink, feature: CANDY.tip, muzzle: CANDY.base, n
 function candycorn() {
   return {
     front: svg(candyBands(FRONT_MID) + crestIn(CREST.x, CREST.y, CREST.w, CANDY_CREST), '', CANDY_DEFS),
-    pattern: svg(candyBands(3000, -200), '', CANDY_DEFS),
+    // Shifted so the lower piping falls in the gap between the number (to y 3800) and the FAR FOX FC line (from y 4360).
+    pattern: svg(candyBands(3000, -450), '', CANDY_DEFS),
     sleeve: svg(candyBands(3000, -600) + cuff(CANDY.ink, CANDY.base), '', CANDY_DEFS),
     backCrest: backCrestSvg(CANDY_CREST),
   };
