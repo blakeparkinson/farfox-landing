@@ -134,9 +134,9 @@ const KITS = {
     pattern: 'kits-2026-holiday/sj-cobweb-pattern.png', crest: 'kits-2026-holiday/fox-crest-cobweb.png',
     number: '#FF7A1A', numberStroke: '#0E0B12', name: '#FF7A1A', nameStroke: '#0E0B12',
   },
-  pumpkin: {
-    pattern: 'kits-2026-holiday/sj-pumpkin-pattern.png', crest: 'kits-2026-holiday/fox-crest-pumpkin.png',
-    number: '#1A0F0A', numberStroke: '#FFE2B8', name: '#1A0F0A', nameStroke: '#FFE2B8',
+  candycorn: {
+    pattern: 'kits-2026-holiday/sj-candycorn-pattern.png', crest: 'kits-2026-holiday/fox-crest-candycorn.png',
+    number: '#1A1210', numberStroke: '#FFF4DC', name: '#1A1210', nameStroke: '#FFF4DC',
   },
   fairisle: {
     pattern: 'kits-2026-holiday/sj-fairisle-pattern.png', crest: 'kits-2026-holiday/fox-crest-fairisle.png',

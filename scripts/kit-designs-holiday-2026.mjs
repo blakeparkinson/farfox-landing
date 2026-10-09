@@ -4,7 +4,7 @@
  * Pure SVG builders in the same 6000×6000 Printful all-over-print space as
  * kit-designs-2026-10.mjs, wired into make-jersey-kits.mjs the same way.
  *   cobweb    black kit, one bone-white web spun out from the crest, a spider dropping in from the collar
- *   pumpkin   the shirt is the pumpkin: orange ribs, a jack-o'-lantern crest, stem-green cuffs
+ *   candycorn soft chevron bands of cream, orange and yellow, like a piece of candy corn
  *   fairisle  a Christmas jumper knitted into a kit: pine green, a cream yoke of foxes and snowflakes
  *   mistletoe burgundy kit, tonal sprigs all over, a gold-ribboned sprig hanging from the collar (shelved)
  *   rednose   midnight sky and snow, an antlered crest with a glowing red nose leading a sleigh trail home
@@ -84,74 +84,28 @@ function cobweb() {
   };
 }
 
-// --- Pumpkin (Halloween) ------------------------------------------------------
+// --- Candy Corn (Halloween) ---------------------------------------------------
 
-export const PUMPKIN = { skin: '#F26B1D', shade: '#B8460C', groove: '#8E3507', glow: '#FF9A4D', ink: '#1A0F0A', candle: '#FFC93C', stem: '#3F6B2A', ribs: 9, ribGap: 520 };
+export const CANDY = { tip: '#FFF4DC', middle: '#F7891F', base: '#FFC72C', ink: '#1A1210', soften: 45, tipEdge: 2700, baseEdge: 4300, dip: 420 };
 
-/** Pumpkin ribs: bowed vertical grooves either side of the centre, shaded and highlit. */
-function ribs(cx) {
-  const lines = [];
-  for (let i = -PUMPKIN.ribs; i <= PUMPKIN.ribs; i++) {
-    const x = cx + i * PUMPKIN.ribGap, bow = i * 150;
-    const d = `M${x} -200 C ${x + bow} 1600 ${x + bow} 4400 ${x} 6200`;
-    const h = `M${x + PUMPKIN.ribGap / 2} -200 C ${x + PUMPKIN.ribGap / 2 + bow * 1.1} 1600 ${x + PUMPKIN.ribGap / 2 + bow * 1.1} 4400 ${x + PUMPKIN.ribGap / 2} 6200`;
-    lines.push(`<path d="${h}" stroke="${PUMPKIN.glow}" stroke-width="130" opacity="0.32"/>`,
-      `<path d="${d}" stroke="${PUMPKIN.shade}" stroke-width="190" opacity="0.38"/>`,
-      `<path d="${d}" stroke="${PUMPKIN.groove}" stroke-width="26" opacity="0.7"/>`);
-  }
-  return `<g fill="none" stroke-linecap="round">${lines.join('')}</g>`;
+/** Soft chevron bands, cream over orange over yellow, dipping in the middle like the V-neck. */
+function candyBands(cx, shift = 0) {
+  const v = (edge) => `M-400 ${edge + shift} L${cx} ${edge + shift + CANDY.dip} L${D + 400} ${edge + shift}`;
+  const below = (edge) => `${v(edge)} V ${D + 400} H -400 Z`;
+  return `<rect width="${D}" height="${D}" fill="${CANDY.tip}"/>
+    <g filter="url(#candySoft)"><path d="${below(CANDY.tipEdge)}" fill="${CANDY.middle}"/><path d="${below(CANDY.baseEdge)}" fill="${CANDY.base}"/></g>
+    <rect width="${D}" height="${D}" fill="url(#sheen)"/>`;
 }
+const CANDY_DEFS = `<filter id="candySoft" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="${CANDY.soften}"/></filter>
+  <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="0.38" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="0.44" stop-color="#FFFFFF" stop-opacity="0.16"/><stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>`;
 
-/** Ribs gathered at the collar and bowed out across the body, so the whole shirt reads as one pumpkin. */
-function crownRibs(cx, top) {
-  const rib = (k) => `M${cx + k * 90} ${top} C ${cx + k * 330} ${top + 700} ${cx + k * 470} ${top + 1500} ${cx + k * 470} ${top + 2300} C ${cx + k * 470} ${top + 3300} ${cx + k * 360} ${top + 4300} ${cx + k * 320} ${D + 200}`;
-  const lines = [];
-  for (let k = -PUMPKIN.ribs; k <= PUMPKIN.ribs; k++) {
-    lines.push(`<path d="${rib(k + 0.5)}" stroke="${PUMPKIN.glow}" stroke-width="150" opacity="0.3"/>`,
-      `<path d="${rib(k)}" stroke="${PUMPKIN.shade}" stroke-width="200" opacity="0.36"/>`,
-      `<path d="${rib(k)}" stroke="${PUMPKIN.groove}" stroke-width="26" opacity="0.7"/>`);
-  }
-  return `<g fill="none" stroke-linecap="round">${lines.join('')}</g>`;
-}
-
-const VINE = { stem: '#2F5A24', leaf: '#3F7A2E', vein: '#24461B' };
-/** A curling tendril: a tightening spiral off the vine. */
-function tendril(x, y, r0, turns, dir) {
-  let d = `M${x} ${y}`;
-  for (let t = 0; t <= turns * Math.PI * 2; t += 0.25) {
-    const rad = r0 * (1 - t / (turns * Math.PI * 2 + 1));
-    d += ` L${(x + dir * (Math.cos(t) * rad - rad)).toFixed(0)} ${(y - Math.sin(t) * rad).toFixed(0)}`;
-  }
-  return `<path d="${d}" fill="none" stroke="${VINE.stem}" stroke-width="22" stroke-linecap="round"/>`;
-}
-/** A five-lobed pumpkin leaf with veins. */
-function pumpkinLeaf(x, y, size, rot) {
-  const lobes = [-70, -35, 0, 35, 70].map((a, i) => `<ellipse cx="0" cy="${-size * (i === 2 ? 0.46 : 0.38)}" rx="${size * 0.22}" ry="${size * (i === 2 ? 0.42 : 0.34)}" transform="rotate(${a})"/>`).join('');
-  const veins = [-70, -35, 0, 35, 70].map((a) => `<line x1="0" y1="0" x2="0" y2="${-size * 0.7}" transform="rotate(${a})"/>`).join('');
-  return `<g transform="translate(${x} ${y}) rotate(${rot})"><g fill="${VINE.leaf}">${lobes}<circle r="${size * 0.22}"/></g><g stroke="${VINE.vein}" stroke-width="${size * 0.035}" stroke-linecap="round">${veins}</g></g>`;
-}
-/** A vine climbing from the hem, with leaves and tendrils along it. */
-function vine(points, leaves, tendrils) {
-  const d = `M${points[0]} ` + points.slice(1).map((p) => `S ${p}`).join(' ');
-  return `<path d="${d}" fill="none" stroke="${VINE.stem}" stroke-width="44" stroke-linecap="round"/>`
-    + tendrils.map(([x, y, r, dir]) => tendril(x, y, r, 2.2, dir)).join('') + leaves.map(([x, y, sz, rot]) => pumpkinLeaf(x, y, sz, rot)).join('');
-}
-const FRONT_VINES = () => vine(['1750 6100', '2300 5200 2050 4700', '2500 4000 2250 3500', '2700 3000 2500 2600'],
-    [[2050, 4700, 420, -40], [2360, 3800, 330, 35], [2420, 2780, 260, -20], [3200, 5700, 380, 20]],
-    [[2180, 5300, 110, 1], [2600, 4300, 90, -1], [2300, 3300, 80, 1]])
-  + vine(['4400 6100', '3900 5600 3500 5650'], [[3650, 5500, 300, 60]], [[3750, 5800, 90, -1]]);
-const BACK_VINES = () => vine(['1500 6100', '2300 5400 2900 5500', '3700 5600 4300 5300', '4800 5000 4700 4700'],
-    [[2900, 5500, 380, 15], [4300, 5300, 330, -30], [1900, 5700, 300, -50]],
-    [[2500, 5450, 100, 1], [3900, 5500, 90, -1], [4650, 4800, 80, 1]]);
-
-const PUMPKIN_CREST = { body: PUMPKIN.ink, feature: PUMPKIN.candle, muzzle: PUMPKIN.candle, nose: PUMPKIN.ink };
-function pumpkin() {
-  const bg = fill(PUMPKIN.skin);
+const CANDY_CREST = { body: CANDY.ink, feature: CANDY.tip, muzzle: CANDY.base, nose: CANDY.ink };
+function candycorn() {
   return {
-    front: svg(crownRibs(FRONT_MID, 1050) + FRONT_VINES() + crestIn(CREST.x, CREST.y, CREST.w, PUMPKIN_CREST), bg),
-    pattern: svg(crownRibs(2950, 700) + BACK_VINES(), bg),
-    sleeve: svg(ribs(3000) + cuff(PUMPKIN.ink, PUMPKIN.stem), bg),
-    backCrest: backCrestSvg(PUMPKIN_CREST),
+    front: svg(candyBands(FRONT_MID) + crestIn(CREST.x, CREST.y, CREST.w, CANDY_CREST), '', CANDY_DEFS),
+    pattern: svg(candyBands(3000, -200), '', CANDY_DEFS),
+    sleeve: svg(candyBands(3000, -600) + cuff(CANDY.ink, CANDY.base), '', CANDY_DEFS),
+    backCrest: backCrestSvg(CANDY_CREST),
   };
 }
 
@@ -333,12 +287,12 @@ function rednose() {
   };
 }
 
-export const KITS = { cobweb, pumpkin, fairisle, mistletoe, rednose };
+export const KITS = { cobweb, candycorn, fairisle, mistletoe, rednose };
 
 /** Back lettering for jerseyBack.mjs KITS (test-jersey-offer.mjs checks they match). */
 export const BACKS = {
   cobweb: { pattern: 'kits-2026-holiday/sj-cobweb-pattern.png', crest: 'kits-2026-holiday/fox-crest-cobweb.png', number: COBWEB.orange, numberStroke: COBWEB.ink, name: COBWEB.orange, nameStroke: COBWEB.ink },
-  pumpkin: { pattern: 'kits-2026-holiday/sj-pumpkin-pattern.png', crest: 'kits-2026-holiday/fox-crest-pumpkin.png', number: PUMPKIN.ink, numberStroke: '#FFE2B8', name: PUMPKIN.ink, nameStroke: '#FFE2B8' },
+  candycorn: { pattern: 'kits-2026-holiday/sj-candycorn-pattern.png', crest: 'kits-2026-holiday/fox-crest-candycorn.png', number: CANDY.ink, numberStroke: CANDY.tip, name: CANDY.ink, nameStroke: CANDY.tip },
   fairisle: { pattern: 'kits-2026-holiday/sj-fairisle-pattern.png', crest: 'kits-2026-holiday/fox-crest-fairisle.png', number: FAIRISLE.cream, numberStroke: FAIRISLE.red, name: FAIRISLE.cream, nameStroke: FAIRISLE.red },
   rednose: { pattern: 'kits-2026-holiday/sj-rednose-pattern.png', crest: 'kits-2026-holiday/fox-crest-rednose.png', number: REDNOSE.snow, numberStroke: REDNOSE.cuff, name: REDNOSE.snow, nameStroke: REDNOSE.cuff },
   mistletoe: { pattern: 'kits-2026-holiday/sj-mistletoe-pattern.png', crest: 'kits-2026-holiday/fox-crest-mistletoe.png', number: '#FFF3D6', numberStroke: MISTLETOE.wine, name: '#FFF3D6', nameStroke: MISTLETOE.wine },
