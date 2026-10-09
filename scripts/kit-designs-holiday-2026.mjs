@@ -6,7 +6,8 @@
  *   cobweb    black kit, one bone-white web spun out from the crest, a spider dropping in from the collar
  *   pumpkin   the shirt is the pumpkin: orange ribs, a jack-o'-lantern crest, stem-green cuffs
  *   fairisle  a Christmas jumper knitted into a kit: pine green, a cream yoke of foxes and snowflakes
- *   mistletoe burgundy kit, tonal sprigs all over, a gold-ribboned sprig hanging from the collar
+ *   mistletoe burgundy kit, tonal sprigs all over, a gold-ribboned sprig hanging from the collar (shelved)
+ *   rednose   midnight sky and snow, an antlered crest with a glowing red nose leading a sleigh trail home
  *
  * Layout facts (make-jersey-kits.mjs): front visible ≈ x 1850–4230, y 1330–5900;
  * crest (3550, 2400) w 440; back number block y 1980–3800, brand line y 4360–4720.
@@ -235,12 +236,59 @@ function mistletoe() {
   };
 }
 
-export const KITS = { cobweb, pumpkin, fairisle, mistletoe };
+
+// --- Red Nose (Christmas) -----------------------------------------------------
+
+export const REDNOSE = { night: '#0F1A33', nightLow: '#1B2C52', snow: '#F4F1EA', antler: '#C9A27A', nose: '#E8202F', glow: '#FF4D4D', trail: '#F4F1EA', cuff: '#C8283A' };
+
+/** Branching antlers drawn in crest units (300 wide), mirrored for the right side. */
+const ANTLER_D = 'M95 40 C 80 0 70 -60 40 -110 M62 -40 C 30 -50 10 -70 0 -100 M52 -78 C 70 -100 78 -125 76 -150 M44 -100 C 20 -120 14 -140 16 -165';
+function redNoseCrest(cx, cy, w) {
+  const s = w / 300;
+  const c = { body: '#8A5A3B', feature: '#2A1A12', muzzle: '#E9D6BE', nose: REDNOSE.nose };
+  const antlers = `<g fill="none" stroke="${REDNOSE.antler}" stroke-width="22" stroke-linecap="round"><path d="${ANTLER_D}"/><path d="${ANTLER_D}" transform="translate(300 0) scale(-1 1)"/></g>`;
+  const glow = `<circle cx="150" cy="238" r="210" fill="url(#noseGlow)"/><circle cx="150" cy="238" r="26" fill="${REDNOSE.nose}"/><circle cx="141" cy="229" r="8" fill="#FFFFFF" opacity="0.8"/>`;
+  return `<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">${antlers}</g>${crestIn(cx, cy, w, c)}<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">${glow}</g>`;
+}
+const NOSE_GLOW = `<radialGradient id="noseGlow"><stop offset="0" stop-color="${REDNOSE.glow}" stop-opacity="0.9"/><stop offset="0.3" stop-color="${REDNOSE.glow}" stop-opacity="0.38"/><stop offset="1" stop-color="${REDNOSE.glow}" stop-opacity="0"/></radialGradient>`;
+const NIGHT = `<linearGradient id="night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${REDNOSE.night}"/><stop offset="1" stop-color="${REDNOSE.nightLow}"/></linearGradient>`;
+
+function snowfall(seed, count) {
+  const r = rng(seed);
+  return Array.from({ length: count }, () => `<circle cx="${(r() * D).toFixed(0)}" cy="${(r() * D).toFixed(0)}" r="${(8 + r() * 22).toFixed(0)}" fill="${REDNOSE.snow}" opacity="${(0.25 + r() * 0.55).toFixed(2)}"/>`).join('');
+}
+
+/** A dotted sleigh trail looping up from the hem to the crest, ending in a small heart. */
+function sleighTrail() {
+  const d = `M1900 5900 C 2300 5000 4100 5100 3900 4100 C 3750 3400 2500 3700 2700 3050 C 2820 2700 3050 2860 ${CREST.x - 250} ${CREST.y + 470}`;
+  return `<path d="${d}" fill="none" stroke="${REDNOSE.trail}" stroke-width="22" stroke-linecap="round" stroke-dasharray="10 90" opacity="0.85"/>`;
+}
+
+function backAntlers() {
+  const one = `<path d="${ANTLER_D}" fill="none" stroke="#2A3F6B" stroke-width="9" stroke-linecap="round"/>`;
+  return `<g transform="translate(1500 3300) scale(10)">${one}<g transform="translate(300 0) scale(-1 1)">${one}</g></g>`;
+}
+
+function rednose() {
+  const bg = `<rect width="${D}" height="${D}" fill="url(#night)"/>`;
+  const defs = NOSE_GLOW + NIGHT;
+  const crestCx = CREST.x, crestCy = CREST.y + 60, crestW = 600;
+  return {
+    front: svg(snowfall(3, 260) + sleighTrail() + redNoseCrest(crestCx, crestCy, crestW), bg, defs),
+    // Faint antlers across the back shoulders: the shirt itself wears them.
+    pattern: svg(backAntlers() + snowfall(17, 300), bg, defs),
+    sleeve: svg(snowfall(23, 220) + cuff(REDNOSE.snow, REDNOSE.cuff), bg, defs),
+    backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="306" viewBox="0 0 300 306"><defs>${NOSE_GLOW}</defs>${redNoseCrest(150, 160, 230)}</svg>`,
+  };
+}
+
+export const KITS = { cobweb, pumpkin, fairisle, mistletoe, rednose };
 
 /** Back lettering for jerseyBack.mjs KITS (test-jersey-offer.mjs checks they match). */
 export const BACKS = {
   cobweb: { pattern: 'kits-2026-holiday/sj-cobweb-pattern.png', crest: 'kits-2026-holiday/fox-crest-cobweb.png', number: COBWEB.orange, numberStroke: COBWEB.ink, name: COBWEB.orange, nameStroke: COBWEB.ink },
   pumpkin: { pattern: 'kits-2026-holiday/sj-pumpkin-pattern.png', crest: 'kits-2026-holiday/fox-crest-pumpkin.png', number: PUMPKIN.ink, numberStroke: '#FFE2B8', name: PUMPKIN.ink, nameStroke: '#FFE2B8' },
   fairisle: { pattern: 'kits-2026-holiday/sj-fairisle-pattern.png', crest: 'kits-2026-holiday/fox-crest-fairisle.png', number: FAIRISLE.cream, numberStroke: FAIRISLE.red, name: FAIRISLE.cream, nameStroke: FAIRISLE.red },
+  rednose: { pattern: 'kits-2026-holiday/sj-rednose-pattern.png', crest: 'kits-2026-holiday/fox-crest-rednose.png', number: REDNOSE.snow, numberStroke: REDNOSE.cuff, name: REDNOSE.snow, nameStroke: REDNOSE.cuff },
   mistletoe: { pattern: 'kits-2026-holiday/sj-mistletoe-pattern.png', crest: 'kits-2026-holiday/fox-crest-mistletoe.png', number: '#FFF3D6', numberStroke: MISTLETOE.wine, name: '#FFF3D6', nameStroke: MISTLETOE.wine },
 };
