@@ -4,6 +4,7 @@
  *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs             # dry run: what would be created
  *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs --create    # create the products that don't exist yet
  *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs --mockups   # Ghost-style shop photos for each product
+ *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs --update-files [--apply]   # re-point variants at the current file revisions
  *
  * The print files must already be live on lovefarfox.com (make-jersey-kits.mjs and make-ornament.mjs, then deploy).
  */
@@ -12,8 +13,9 @@ import { writeFile } from 'node:fs/promises';
 const TOKEN = process.env.PRINTFUL_TOKEN;
 const STORE = process.env.PRINTFUL_STORE_ID || '18292625';
 const SITE = 'https://lovefarfox.com/shop/designs';
-// Printful keeps the copy it first downloaded from a URL; bump this when a file is rebuilt in place.
-const FILE_REVISION = 1;
+// Printful keeps the copy it first downloaded from a URL; bump a kit's revision when its files are rebuilt in place.
+const FILE_REVISION = { rednose: 2 };
+const revision = (path) => FILE_REVISION[Object.keys(FILE_REVISION).find((k) => path.includes(`sj-${k}-`))] || 1;
 const KIT_CATALOG = 644;
 const KIT_VARIANTS = { XS: 16259, S: 16260, M: 16261, L: 16262, XL: 16263, '2XL': 16264, '3XL': 16265 };
 const ORNAMENT_CATALOG = 900, ORNAMENT_HEART = 23144;
@@ -44,7 +46,7 @@ async function pf(path, init = {}, attempt = 0) {
   return body.result;
 }
 
-const url = (path) => `${SITE}/${path}?v=${FILE_REVISION}`;
+const url = (path) => `${SITE}/${path}?v=${revision(path)}`;
 const kitFile = (kit, part) => url(`kits-2026-holiday/sj-${kit}-${part}.png`);
 const fullName = (name) => `Far Fox — ${name}`;
 
@@ -126,5 +128,24 @@ async function mockups() {
   }
 }
 
+/** Point every variant at its plan's current file URLs (a new ?v= makes Printful download the rebuilt file). */
+async function updateFiles() {
+  const existing = await existingByName();
+  for (const plan of plans()) {
+    const id = existing[plan.name];
+    if (!id) continue;
+    const detail = await pf(`/store/products/${id}`);
+    for (const v of detail.sync_variants) {
+      const target = plan.sync_variants.find((p) => p.external_id === v.external_id);
+      const current = (v.files || []).filter((f) => f.type !== 'preview');
+      if (!target || target.files.every((f) => current.some((c) => c.type === f.type && c.url === f.url))) continue;
+      console.log(`${plan.key} ${v.external_id}: ${target.files.map((f) => `${f.type}→${f.url.split('/').pop()}`).join(', ')}`);
+      if (args.includes('--apply')) { await pf(`/store/variants/${v.id}`, { method: 'PUT', body: JSON.stringify({ files: target.files, options: v.options || [] }) }); await sleep(600); }
+    }
+  }
+  if (!args.includes('--apply')) console.log('\nDry run only. Re-run with --apply to update Printful.');
+}
+
 if (args.includes('--mockups')) await mockups();
+else if (args.includes('--update-files')) await updateFiles();
 else await create();

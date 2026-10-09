@@ -320,6 +320,30 @@ function cabin(x, base, w) {
     <path d="M${left + w * 0.63} ${roofTop + w * 0.08} h${w * 0.16} q${-w * 0.02} ${-w * 0.05} ${-w * 0.08} ${-w * 0.05} q${-w * 0.06} 0 ${-w * 0.08} ${w * 0.05} Z" fill="${REDNOSE.snow}"/>`;
 }
 
+/**
+ * Foxy waiting at home: a small flat silhouette sitting in the snow with her back to us, head tipped up towards
+ * the sleigh trail, tail curled round. Drawn in the scene's flat style (no outline), lit warm by the cabin window.
+ */
+function foxyWaiting(x, base, h) {
+  const s = h / 260;
+  const fur = '#C8582A', shade = '#A2421E', tip = '#F4EDE2', dark = '#3A1C10';
+  return `<ellipse cx="${x - h * 0.08}" cy="${base}" rx="${h * 0.55}" ry="${h * 0.06}" fill="#9FB0CC" opacity="0.55"/>
+    <g transform="translate(${x} ${base}) scale(${s})">
+      <ellipse cx="0" cy="-74" rx="62" ry="80" fill="${fur}"/>
+      <path d="M-62 -74 C -62 -20 -30 0 0 0 C -40 -16 -50 -50 -48 -100 Z" fill="${shade}" opacity="0.6"/>
+      <path d="M48 -40 C 122 -30 118 22 30 18 C -30 16 -92 18 -128 2 C -96 -22 -36 -12 8 -16 C 30 -18 46 -24 48 -40 Z" fill="${fur}"/>
+      <path d="M-128 2 C -112 -14 -88 -16 -70 -12 C -78 4 -92 12 -128 2 Z" fill="${tip}"/>
+      <g transform="rotate(-14 -6 -176)">
+        <g id="foxyEar"><path d="M-42 -192 L-52 -272 L-10 -214 Z" fill="${fur}"/><path d="M-52 -272 L-48.5 -244 L-37.3 -251.7 Z" fill="${dark}"/></g>
+        <use href="#foxyEar" transform="translate(-12 0) scale(-1 1)"/>
+        <ellipse cx="-6" cy="-176" rx="46" ry="42" fill="${fur}"/>
+        <path d="M-40 -190 C -62 -200 -84 -212 -100 -224 C -90 -200 -70 -172 -44 -160 Z" fill="${fur}"/>
+        <path d="M-100 -224 C -86 -204 -68 -180 -44 -166 C -66 -170 -86 -190 -100 -224 Z" fill="${tip}"/>
+        <circle cx="-101" cy="-225" r="6" fill="${dark}"/>
+      </g>
+    </g>`;
+}
+
 /** Moonlit hills along the hem: far pines on the back hill, near pines and (optionally) the cabin on the front. */
 function winterHem(top, { withCabin = false } = {}) {
   const backHill = `M-100 ${top + 260} C 900 ${top - 60} 1900 ${top + 120} 2800 ${top + 40} C 3800 ${top - 50} 4900 ${top + 200} ${D + 100} ${top + 60} V ${D + 100} H -100 Z`;
@@ -327,7 +351,8 @@ function winterHem(top, { withCabin = false } = {}) {
   const far = [[1500, 200, 380], [1900, 140, 300], [3500, 120, 330], [3850, 160, 400], [4250, 190, 320], [4700, 220, 360]].map(([x, dy, h], i) => pine(x, top + dy, h, { far: true, seed: i })).join('');
   // The two trees either side of the cabin are decorated; the outer ones are left wild.
   const near = [[1750, 590, 760, false], [2280, 575, 640, true], [3600, 585, 720, true], [4250, 560, 820, false]].map(([x, dy, h, lit], i) => pine(x, top + dy, h, { lit: withCabin && lit, seed: 40 + i })).join('');
-  return `<path d="${backHill}" fill="url(#hillBack)"/>${far}<path d="${frontHill}" fill="url(#hillFront)"/>${withCabin ? cabin(2900, top + 600, 640) : ''}${near}`;
+  // Foxy is drawn after the trees: she sits in front of them, nearer the viewer.
+  return `<path d="${backHill}" fill="url(#hillBack)"/>${far}<path d="${frontHill}" fill="url(#hillFront)"/>${withCabin ? cabin(2900, top + 600, 640) : ''}${near}${withCabin ? foxyWaiting(3330, top + 760, 345) : ''}`;
 }
 
 /** The sleigh trail, rising from the cabin chimney to the red nose. */

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-07T04:42:06.964Z",
+  "generatedAt": "2026-10-09T22:21:10.457Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -38,6 +38,93 @@
           "back": "/shop/backs/6ac56a091644af57a506ee5b-red-black.png"
         }
       ]
+    },
+    {
+      "id": "479940120",
+      "slug": "far-fox-miles-apart-heart-ornament",
+      "name": "\"Miles Apart\" Heart Ornament",
+      "price": 20,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-479940120.png",
+      "back": null,
+      "sizes": [],
+      "colors": []
+    },
+    {
+      "id": "479940112",
+      "slug": "far-fox-long-distance-fc-jersey-red-nose",
+      "name": "Long Distance FC Jersey (Red Nose)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-479940112.png",
+      "back": "/shop/backs/479940112.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
+    {
+      "id": "479940104",
+      "slug": "far-fox-long-distance-fc-jersey-fair-isle",
+      "name": "Long Distance FC Jersey (Fair Isle)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-479940104.png",
+      "back": "/shop/backs/479940104.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
+    {
+      "id": "479940099",
+      "slug": "far-fox-long-distance-fc-jersey-candy-corn",
+      "name": "Long Distance FC Jersey (Candy Corn)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-479940099.png",
+      "back": "/shop/backs/479940099.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
+    {
+      "id": "479940069",
+      "slug": "far-fox-long-distance-fc-jersey-cobweb",
+      "name": "Long Distance FC Jersey (Cobweb)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-479940069.png",
+      "back": "/shop/backs/479940069.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
     },
     {
       "id": "478884090",
