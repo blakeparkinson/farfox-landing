@@ -114,12 +114,42 @@ function crownRibs(cx, top) {
   return `<g fill="none" stroke-linecap="round">${lines.join('')}</g>`;
 }
 
+const VINE = { stem: '#2F5A24', leaf: '#3F7A2E', vein: '#24461B' };
+/** A curling tendril: a tightening spiral off the vine. */
+function tendril(x, y, r0, turns, dir) {
+  let d = `M${x} ${y}`;
+  for (let t = 0; t <= turns * Math.PI * 2; t += 0.25) {
+    const rad = r0 * (1 - t / (turns * Math.PI * 2 + 1));
+    d += ` L${(x + dir * (Math.cos(t) * rad - rad)).toFixed(0)} ${(y - Math.sin(t) * rad).toFixed(0)}`;
+  }
+  return `<path d="${d}" fill="none" stroke="${VINE.stem}" stroke-width="22" stroke-linecap="round"/>`;
+}
+/** A five-lobed pumpkin leaf with veins. */
+function pumpkinLeaf(x, y, size, rot) {
+  const lobes = [-70, -35, 0, 35, 70].map((a, i) => `<ellipse cx="0" cy="${-size * (i === 2 ? 0.46 : 0.38)}" rx="${size * 0.22}" ry="${size * (i === 2 ? 0.42 : 0.34)}" transform="rotate(${a})"/>`).join('');
+  const veins = [-70, -35, 0, 35, 70].map((a) => `<line x1="0" y1="0" x2="0" y2="${-size * 0.7}" transform="rotate(${a})"/>`).join('');
+  return `<g transform="translate(${x} ${y}) rotate(${rot})"><g fill="${VINE.leaf}">${lobes}<circle r="${size * 0.22}"/></g><g stroke="${VINE.vein}" stroke-width="${size * 0.035}" stroke-linecap="round">${veins}</g></g>`;
+}
+/** A vine climbing from the hem, with leaves and tendrils along it. */
+function vine(points, leaves, tendrils) {
+  const d = `M${points[0]} ` + points.slice(1).map((p) => `S ${p}`).join(' ');
+  return `<path d="${d}" fill="none" stroke="${VINE.stem}" stroke-width="44" stroke-linecap="round"/>`
+    + tendrils.map(([x, y, r, dir]) => tendril(x, y, r, 2.2, dir)).join('') + leaves.map(([x, y, sz, rot]) => pumpkinLeaf(x, y, sz, rot)).join('');
+}
+const FRONT_VINES = () => vine(['1750 6100', '2300 5200 2050 4700', '2500 4000 2250 3500', '2700 3000 2500 2600'],
+    [[2050, 4700, 420, -40], [2360, 3800, 330, 35], [2420, 2780, 260, -20], [3200, 5700, 380, 20]],
+    [[2180, 5300, 110, 1], [2600, 4300, 90, -1], [2300, 3300, 80, 1]])
+  + vine(['4400 6100', '3900 5600 3500 5650'], [[3650, 5500, 300, 60]], [[3750, 5800, 90, -1]]);
+const BACK_VINES = () => vine(['1500 6100', '2300 5400 2900 5500', '3700 5600 4300 5300', '4800 5000 4700 4700'],
+    [[2900, 5500, 380, 15], [4300, 5300, 330, -30], [1900, 5700, 300, -50]],
+    [[2500, 5450, 100, 1], [3900, 5500, 90, -1], [4650, 4800, 80, 1]]);
+
 const PUMPKIN_CREST = { body: PUMPKIN.ink, feature: PUMPKIN.candle, muzzle: PUMPKIN.candle, nose: PUMPKIN.ink };
 function pumpkin() {
   const bg = fill(PUMPKIN.skin);
   return {
-    front: svg(crownRibs(FRONT_MID, 1050) + crestIn(CREST.x, CREST.y, CREST.w, PUMPKIN_CREST), bg),
-    pattern: svg(crownRibs(2950, 700), bg),
+    front: svg(crownRibs(FRONT_MID, 1050) + FRONT_VINES() + crestIn(CREST.x, CREST.y, CREST.w, PUMPKIN_CREST), bg),
+    pattern: svg(crownRibs(2950, 700) + BACK_VINES(), bg),
     sleeve: svg(ribs(3000) + cuff(PUMPKIN.ink, PUMPKIN.stem), bg),
     backCrest: backCrestSvg(PUMPKIN_CREST),
   };
@@ -258,26 +288,47 @@ function snowfall(seed, count) {
   return Array.from({ length: count }, () => `<circle cx="${(r() * D).toFixed(0)}" cy="${(r() * D).toFixed(0)}" r="${(8 + r() * 22).toFixed(0)}" fill="${REDNOSE.snow}" opacity="${(0.25 + r() * 0.55).toFixed(2)}"/>`).join('');
 }
 
+/** Six-armed snow crystals with side branches, at mixed sizes and strengths. */
+function crystals(seed, count, keep = () => true) {
+  const r = rng(seed);
+  const arm = '<path d="M0 0 V-100 M0 -45 L-22 -68 M0 -45 L22 -68 M0 -72 L-14 -88 M0 -72 L14 -88"/>';
+  const one = `<g fill="none" stroke-linecap="round">${[0, 60, 120, 180, 240, 300].map((a) => `<g transform="rotate(${a})">${arm}</g>`).join('')}</g>`;
+  let out = '';
+  for (let i = 0; i < count; i++) {
+    const x = r() * D, y = r() * D, size = 50 + r() ** 2 * 220;
+    if (!keep(x, y)) continue;
+    out += `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) rotate(${(r() * 60).toFixed(0)}) scale(${(size / 100).toFixed(2)})" stroke="${REDNOSE.snow}" stroke-width="${(9 / (size / 100)).toFixed(1)}" opacity="${(0.35 + r() * 0.5).toFixed(2)}">${one}</g>`;
+  }
+  return out;
+}
+/** Big soft flakes, as if falling close to the camera. */
+function bokeh(seed, count) {
+  const r = rng(seed);
+  return `<g filter="url(#soft)">${Array.from({ length: count }, () => `<circle cx="${(r() * D).toFixed(0)}" cy="${(r() * D).toFixed(0)}" r="${(40 + r() * 50).toFixed(0)}" fill="${REDNOSE.snow}" opacity="${(0.18 + r() * 0.22).toFixed(2)}"/>`).join('')}</g>`;
+}
+/** Two drifts of snow along the hem. */
+function snowdrift(top) {
+  const back = `M0 ${top + 120} C 900 ${top - 120} 1800 ${top + 160} 2700 ${top + 30} C 3600 ${top - 100} 4600 ${top + 170} ${D} ${top} V ${D} H 0 Z`;
+  const front = `M0 ${top + 330} C 1100 ${top + 140} 2200 ${top + 420} 3300 ${top + 260} C 4300 ${top + 120} 5200 ${top + 380} ${D} ${top + 250} V ${D} H 0 Z`;
+  return `<path d="${back}" fill="#DCE5F2"/><path d="${front}" fill="${REDNOSE.snow}"/>`;
+}
+const SOFT = '<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>';
+
 /** A dotted sleigh trail looping up from the hem to the crest, ending in a small heart. */
 function sleighTrail() {
-  const d = `M1900 5900 C 2300 5000 4100 5100 3900 4100 C 3750 3400 2500 3700 2700 3050 C 2820 2700 3050 2860 ${CREST.x - 250} ${CREST.y + 470}`;
+  const d = `M1900 5500 C 2300 5000 4100 5100 3900 4100 C 3750 3400 2500 3700 2700 3050 C 2820 2700 3050 2860 ${CREST.x - 250} ${CREST.y + 470}`;
   return `<path d="${d}" fill="none" stroke="${REDNOSE.trail}" stroke-width="22" stroke-linecap="round" stroke-dasharray="10 90" opacity="0.85"/>`;
-}
-
-function backAntlers() {
-  const one = `<path d="${ANTLER_D}" fill="none" stroke="#2A3F6B" stroke-width="9" stroke-linecap="round"/>`;
-  return `<g transform="translate(1500 3300) scale(10)">${one}<g transform="translate(300 0) scale(-1 1)">${one}</g></g>`;
 }
 
 function rednose() {
   const bg = `<rect width="${D}" height="${D}" fill="url(#night)"/>`;
-  const defs = NOSE_GLOW + NIGHT;
+  const defs = NOSE_GLOW + NIGHT + SOFT;
+  const clearOfCrest = (x, y) => Math.hypot(x - CREST.x, y - CREST.y - 60) > 520;
   const crestCx = CREST.x, crestCy = CREST.y + 60, crestW = 600;
   return {
-    front: svg(snowfall(3, 260) + sleighTrail() + redNoseCrest(crestCx, crestCy, crestW), bg, defs),
-    // Faint antlers across the back shoulders: the shirt itself wears them.
-    pattern: svg(backAntlers() + snowfall(17, 300), bg, defs),
-    sleeve: svg(snowfall(23, 220) + cuff(REDNOSE.snow, REDNOSE.cuff), bg, defs),
+    front: svg(snowfall(3, 520) + crystals(41, 70, clearOfCrest) + snowdrift(5250) + sleighTrail() + bokeh(9, 26) + redNoseCrest(crestCx, crestCy, crestW), bg, defs),
+    pattern: svg(snowfall(17, 560) + crystals(53, 60) + snowdrift(5250) + bokeh(21, 20), bg, defs),
+    sleeve: svg(snowfall(23, 420) + crystals(67, 40) + cuff(REDNOSE.snow, REDNOSE.cuff), bg, defs),
     backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="306" viewBox="0 0 300 306"><defs>${NOSE_GLOW}</defs>${redNoseCrest(150, 160, 230)}</svg>`,
   };
 }
