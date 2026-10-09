@@ -129,6 +129,27 @@ const KITS = {
     pattern: 'bb-home-pattern.png', crest: null, layout: 'baseball', font: 'slab',
     number: '#1C4096', numberStroke: '#C0202E', name: '#1C4096', nameStroke: '#C0202E',
   },
+  // Holiday 2026 (values mirror BACKS in scripts/kit-designs-holiday-2026.mjs).
+  cobweb: {
+    pattern: 'kits-2026-holiday/sj-cobweb-pattern.png', crest: 'kits-2026-holiday/fox-crest-cobweb.png',
+    number: '#FF7A1A', numberStroke: '#0E0B12', name: '#FF7A1A', nameStroke: '#0E0B12',
+  },
+  candycorn: {
+    pattern: 'kits-2026-holiday/sj-candycorn-pattern.png', crest: 'kits-2026-holiday/fox-crest-candycorn.png',
+    number: '#1A1210', numberStroke: '#FFF4DC', name: '#1A1210', nameStroke: '#FFF4DC',
+  },
+  fairisle: {
+    pattern: 'kits-2026-holiday/sj-fairisle-pattern.png', crest: 'kits-2026-holiday/fox-crest-fairisle.png',
+    number: '#F3EAD8', numberStroke: '#B3202E', name: '#F3EAD8', nameStroke: '#B3202E',
+  },
+  rednose: {
+    pattern: 'kits-2026-holiday/sj-rednose-pattern.png', crest: 'kits-2026-holiday/fox-crest-rednose.png',
+    number: '#F4F1EA', numberStroke: '#C8283A', name: '#F4F1EA', nameStroke: '#C8283A',
+  },
+  mistletoe: {
+    pattern: 'kits-2026-holiday/sj-mistletoe-pattern.png', crest: 'kits-2026-holiday/fox-crest-mistletoe.png',
+    number: '#FFF3D6', numberStroke: '#5E0F1E', name: '#FFF3D6', nameStroke: '#5E0F1E',
+  },
 };
 
 // Back layouts, in 6000-space. The brand line ("FAR FOX FC" / "FAR FOX") is

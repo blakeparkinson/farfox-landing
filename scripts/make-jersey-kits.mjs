@@ -28,16 +28,18 @@ import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { KITS as OCT_KITS } from './kit-designs-2026-10.mjs';
+import { KITS as HOLIDAY_KITS } from './kit-designs-holiday-2026.mjs';
 
 const D = 6000;
 // October 2026 kits write to kits-2026-10/; everything else stays in kits-2026-09/.
 const OUT_SEPT = new URL('../public/shop/designs/kits-2026-09/', import.meta.url);
 const OUT_OCT = new URL('../public/shop/designs/kits-2026-10/', import.meta.url);
+const OUT_HOLIDAY = new URL('../public/shop/designs/kits-2026-holiday/', import.meta.url);
 // Moose Lodge launches in Blush only, as `moose-blush`; the module's other
 // colorways stay unbuilt, so its generic `moose` entry is left out.
 const { moose: mooseKit, ...OCT_REST } = OCT_KITS;
 const OCT_BUILD = { ...OCT_REST, 'moose-blush': () => mooseKit({ colorway: 'blush', style: 'foxy-antlers' }) };
-const outFor = (kit) => (kit in OCT_BUILD ? OUT_OCT : OUT_SEPT);
+const outFor = (kit) => (kit in HOLIDAY_KITS ? OUT_HOLIDAY : kit in OCT_BUILD ? OUT_OCT : OUT_SEPT);
 const CREST = { x: 3550, y: 2400, w: 440 };
 
 // --- helpers -------------------------------------------------------------
@@ -288,7 +290,7 @@ const bbRed = () => ({ front: svg(teamPatch({ ring: '#1B2A6B', rim: '#F4ECE0', t
 
 // Coordinates (chart), Orange and Mardi Gras are retired; their kits-2026-09
 // files stay so jerseyBack.mjs can still render backs for existing orders.
-const KITS = { flight, paradise, 'bb-home': bbHome, 'bb-royal': bbRoyal, 'bb-red': bbRed, ...OCT_BUILD };
+const KITS = { flight, paradise, 'bb-home': bbHome, 'bb-royal': bbRoyal, 'bb-red': bbRed, ...OCT_BUILD, ...HOLIDAY_KITS };
 
 // --- default back, via the live personalized-back renderer ----------------
 
@@ -369,6 +371,7 @@ const only = args.includes('--kit') ? args[args.indexOf('--kit') + 1].split(',')
 const previewOut = args.includes('--preview') ? args[args.indexOf('--preview') + 1] : null;
 await mkdir(OUT_SEPT, { recursive: true });
 await mkdir(OUT_OCT, { recursive: true });
+await mkdir(OUT_HOLIDAY, { recursive: true });
 await loadFonts();
 await loadFoxFace();
 const previews = [];

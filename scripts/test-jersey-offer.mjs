@@ -6,9 +6,11 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { kitSlugForName } from '../src/lib/kits.mjs';
+import { kitSlugForName, isOrnamentName, ornamentUrl } from '../src/lib/kits.mjs';
+import { sanitizeCity } from '../src/lib/ornamentArt.mjs';
 import { kitConfig } from '../src/lib/jerseyBack.mjs';
 import { BACKS, mooseBack } from './kit-designs-2026-10.mjs';
+import { BACKS as HOLIDAY_BACKS } from './kit-designs-holiday-2026.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const builtPage = resolve(root, 'dist/client/personalized-long-distance-jersey/index.html');
@@ -53,6 +55,19 @@ for (const [name, kit] of [
 for (const [kit, expected] of Object.entries(BACKS).filter(([kit]) => kit !== 'moose')) {
   assert.deepEqual({ ...kitConfig(kit) }, expected, `jerseyBack.mjs ${kit} matches BACKS in kit-designs-2026-10.mjs`);
 }
+// Holiday 2026 kits: the renderer's lettering matches the designs, and the product names map to them.
+for (const [kit, expected] of Object.entries(HOLIDAY_BACKS).filter(([kit]) => kit !== 'mistletoe')) {
+  assert.deepEqual({ ...kitConfig(kit) }, expected, `jerseyBack.mjs ${kit} matches BACKS in kit-designs-holiday-2026.mjs`);
+}
+for (const [name, kit] of [['Long Distance FC Jersey (Cobweb)', 'cobweb'], ['Long Distance FC Jersey (Candy Corn)', 'candycorn'], ['Long Distance FC Jersey (Fair Isle)', 'fairisle'], ['Long Distance FC Jersey (Red Nose)', 'rednose']]) {
+  assert.equal(kitSlugForName(name), kit, `${name} gets the ${kit} back`);
+}
+// The ornament: only it takes cities, the inputs print safely, and the webhook swaps in the personalised file.
+assert.ok(isOrnamentName('"Miles Apart" Heart Ornament') && !isOrnamentName('Heart Eyes Mug'));
+assert.equal(sanitizeCity('  são   paulo <script>'), 'SÃO PAULO SCRIPT');
+assert.equal(sanitizeCity('Llanfairpwllgwyngyll'), 'LLANFAIRPWLLGWYN', 'cities are capped at 16 characters');
+assert.equal(ornamentUrl('NEW YORK', 'LONDON'), 'https://lovefarfox.com/api/ornament.png?top=NEW+YORK&bottom=LONDON');
+assert.match(webhook, /isOrnamentName\(productName\) && \(cityA \|\| cityB\)/, 'the webhook prints personalised ornaments');
 assert.deepEqual({ ...kitConfig('moose-blush') }, mooseBack('blush'), 'jerseyBack.mjs moose-blush matches mooseBack("blush")');
 assert.equal(kitConfig('moose'), null, 'Only the Blush Moose Lodge colorway is configured');
 // Retired kits keep a back so existing orders still render.

@@ -22,6 +22,7 @@ export const SHOP_CATEGORIES: { title: string; test: (name: string) => boolean }
   { title: 'Jerseys', test: (n) => /jersey/i.test(n) },
   { title: 'Tees, Sweats & Flannels', test: (n) => /tee|hoodie|crewneck|flannel/i.test(n) },
   { title: 'Mugs', test: (n) => /mug/i.test(n) },
+  { title: 'Ornaments', test: (n) => /ornament/i.test(n) },
   { title: 'Art Prints', test: (n) => /print/i.test(n) },
   { title: 'Stickers', test: (n) => /sticker/i.test(n) },
 ];
@@ -82,6 +83,10 @@ const KINDS: Record<string, Kind> = {
     label: 'Sticker sheet', productType: 'Stationery > Stickers > Sticker Sheets', apparel: false,
     facts: ['A5 sheet, 5.8 × 8.3 in', 'Glossy kiss-cut stickers with a white border', 'For laptops, notebooks and phone cases'],
   },
+  ornament: {
+    label: 'Christmas ornament', productType: 'Home > Decor > Christmas Ornaments', apparel: false,
+    facts: ['Glossy ceramic heart, about 2.9 × 2.7 in', 'The same design printed on both sides', 'Gold-coloured string for hanging', 'Add your two cities, or keep the stock Miles Apart, Close at Heart'],
+  },
   sticker: {
     label: 'Sticker', productType: 'Stationery > Stickers > Die-Cut Stickers', apparel: false,
     facts: ['2 × 2 in die-cut vinyl', 'Water and weather resistant', 'For water bottles, laptops and luggage'],
@@ -90,6 +95,7 @@ const KINDS: Record<string, Kind> = {
 
 export function kindOf(p: Pick<ShopProduct, 'name'>): Kind {
   const n = p.name;
+  if (/ornament/i.test(n)) return KINDS.ornament;
   if (/baseball/i.test(n)) return KINDS.baseball;
   if (/jersey/i.test(n)) return KINDS.fcJersey;
   if (/pocket tee/i.test(n)) return KINDS.pocketTee;
@@ -145,6 +151,14 @@ export const PRODUCT_COPY: Record<string, string> = {
   '436883154': 'A small Foxy on the chest, and an airmail envelope across the back over WORTH EVERY MILE. The hoodie to steal on a visit, and to send home smelling like you.',
   '436883133': 'Foxy with heart eyes, over HEART EYES, only for you. Our original design, and still the one people buy for each other most.',
 };
+
+/** The small label on a product photo: Pride, or the holiday a seasonal piece is for. */
+export function badgeFor(name: string): { label: string; className: string } | null {
+  if (/pride/i.test(name)) return { label: 'Pride', className: 'bg-fox-pink' };
+  if (/cobweb|candy\s*corn/i.test(name)) return { label: 'Halloween', className: 'bg-[#E8641E]' };
+  if (/fair\s*isle|red\s*nose|ornament/i.test(name)) return { label: 'Christmas', className: 'bg-[#1F5A40]' };
+  return null;
+}
 
 /** Products made to be bought as a pair: one for you, one for them. */
 export const PAIRS: Record<string, string> = {
