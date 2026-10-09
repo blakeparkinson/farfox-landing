@@ -4,7 +4,7 @@
  * Pure SVG builders in the same 6000×6000 Printful all-over-print space as
  * kit-designs-2026-10.mjs, wired into make-jersey-kits.mjs the same way.
  *   cobweb    black kit, one bone-white web spun out from the crest, a spider dropping in from the collar
- *   candycorn soft chevron bands of cream, orange and yellow, like a piece of candy corn
+ *   candycorn crisp chevron bands of cream, orange and yellow piped in black, like a piece of candy corn
  *   fairisle  a Christmas jumper knitted into a kit: pine green, a cream yoke of foxes and snowflakes
  *   mistletoe burgundy kit, tonal sprigs all over, a gold-ribboned sprig hanging from the collar (shelved)
  *   rednose   a snowy night over a lit cabin; an antlered crest with a glowing red nose leads the sleigh trail home
@@ -61,22 +61,24 @@ function web(cx, cy, reach, { spokes = COBWEB.spokes, seed = 7, opacity = 0.9 } 
   return `<g stroke="${COBWEB.silk}" stroke-width="13" stroke-linecap="round" opacity="${opacity}">${out}</g>`;
 }
 
-/** A small spider dropping on its own thread, with a heart on its back. */
+/** A sleek spider dropping on its own thread: orange like the trim, long fine legs, a small heart marked on its back. */
+const SPIDER_LEGS = [[[22, -30], [30, -60]], [[34, -16], [54, -30]], [[34, 6], [54, 22]], [[24, 22], [34, 54]]];
 function spider(x, threadTop, y, size) {
   const s = size / 100;
-  const legs = [-1, 1].flatMap((side) => [[-40, 30], [-14, 44], [14, 44], [40, 30]].map(([a, len], i) =>
-    `<polyline points="0,0 ${side * len * 0.9},${a * 0.55 - 18} ${side * (len + 26)},${a * 0.9 + 22 + i * 4}" fill="none"/>`)).join('');
-  return `<line x1="${x}" y1="${threadTop}" x2="${x}" y2="${y - size * 0.5}" stroke="${COBWEB.silk}" stroke-width="9"/>
-    <g transform="translate(${x} ${y}) scale(${s})" stroke="${COBWEB.silk}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">${legs}</g>
-    <g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="-22" rx="24" ry="22" fill="${COBWEB.silk}"/><ellipse cx="0" cy="22" rx="38" ry="44" fill="${COBWEB.silk}"/></g>
-    ${heart(x, y + 24 * s, 46 * s, COBWEB.pink)}`;
+  const legs = [-1, 1].flatMap((side) => SPIDER_LEGS.map(([[kx, ky], [fx, fy]]) => `<polyline points="0,-6 ${side * kx},${ky} ${side * fx},${fy}"/>`)).join('');
+  return `<line x1="${x}" y1="${threadTop}" x2="${x}" y2="${y - 19 * s}" stroke="${COBWEB.silk}" stroke-width="8"/>
+    <g transform="translate(${x} ${y}) scale(${s})">
+      <g fill="none" stroke="${COBWEB.orange}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${legs}</g>
+      <ellipse cx="0" cy="-10" rx="10" ry="9" fill="${COBWEB.orange}"/><ellipse cx="0" cy="18" rx="16" ry="22" fill="${COBWEB.orange}"/>
+      <path transform="translate(-7 12) scale(0.14)" d="${HEART_D}" fill="${COBWEB.ink}"/>
+    </g>`;
 }
 
 const COBWEB_CREST = { body: COBWEB.orange, feature: COBWEB.ink, muzzle: '#FFD9B8', nose: COBWEB.ink };
 function cobweb() {
   const bg = fill(COBWEB.ink);
   return {
-    front: svg(web(CREST.x, CREST.y, 4600) + spider(2380, 1150, 3420, 300) + crestIn(CREST.x, CREST.y, CREST.w, COBWEB_CREST), bg),
+    front: svg(web(CREST.x, CREST.y, 4600) + spider(2380, 1150, 3420, 260) + crestIn(CREST.x, CREST.y, CREST.w, COBWEB_CREST), bg),
     // The back web is spun from the wearer's right shoulder so the number sits on open threads, not the hub.
     pattern: svg(web(1900, 1150, 5200, { seed: 19, opacity: 0.55 }), bg),
     sleeve: svg(web(4200, 600, 4200, { seed: 31, opacity: 0.6 }) + cuff(COBWEB.ink, COBWEB.orange), bg),
@@ -86,24 +88,24 @@ function cobweb() {
 
 // --- Candy Corn (Halloween) ---------------------------------------------------
 
-export const CANDY = { tip: '#FFF4DC', middle: '#F7891F', base: '#FFC72C', ink: '#1A1210', soften: 45, tipEdge: 2700, baseEdge: 4300, dip: 420 };
+export const CANDY = { tip: '#FFF4DC', middle: '#F7891F', base: '#FFC72C', ink: '#1A1210', piping: 46, tipEdge: 2700, baseEdge: 4300, dip: 420 };
 
-/** Soft chevron bands, cream over orange over yellow, dipping in the middle like the V-neck. */
+/** Crisp chevron bands, cream over orange over yellow, dipping in the middle like the V-neck, piped in black. */
 function candyBands(cx, shift = 0) {
   const v = (edge) => `M-400 ${edge + shift} L${cx} ${edge + shift + CANDY.dip} L${D + 400} ${edge + shift}`;
   const below = (edge) => `${v(edge)} V ${D + 400} H -400 Z`;
   return `<rect width="${D}" height="${D}" fill="${CANDY.tip}"/>
-    <g filter="url(#candySoft)"><path d="${below(CANDY.tipEdge)}" fill="${CANDY.middle}"/><path d="${below(CANDY.baseEdge)}" fill="${CANDY.base}"/></g>
-    <rect width="${D}" height="${D}" fill="url(#sheen)"/>`;
+    <path d="${below(CANDY.tipEdge)}" fill="${CANDY.middle}"/><path d="${below(CANDY.baseEdge)}" fill="${CANDY.base}"/>
+    <g fill="none" stroke="${CANDY.ink}" stroke-width="${CANDY.piping}" stroke-linejoin="miter"><path d="${v(CANDY.tipEdge)}"/><path d="${v(CANDY.baseEdge)}"/></g>`;
 }
-const CANDY_DEFS = `<filter id="candySoft" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="${CANDY.soften}"/></filter>
-  <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="0.38" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="0.44" stop-color="#FFFFFF" stop-opacity="0.16"/><stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>`;
+const CANDY_DEFS = '';
 
 const CANDY_CREST = { body: CANDY.ink, feature: CANDY.tip, muzzle: CANDY.base, nose: CANDY.ink };
 function candycorn() {
   return {
     front: svg(candyBands(FRONT_MID) + crestIn(CREST.x, CREST.y, CREST.w, CANDY_CREST), '', CANDY_DEFS),
-    pattern: svg(candyBands(3000, -200), '', CANDY_DEFS),
+    // Shifted so the lower piping falls in the gap between the number (to y 3800) and the FAR FOX FC line (from y 4360).
+    pattern: svg(candyBands(3000, -450), '', CANDY_DEFS),
     sleeve: svg(candyBands(3000, -600) + cuff(CANDY.ink, CANDY.base), '', CANDY_DEFS),
     backCrest: backCrestSvg(CANDY_CREST),
   };
