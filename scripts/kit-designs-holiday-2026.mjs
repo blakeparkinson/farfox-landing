@@ -7,7 +7,7 @@
  *   candycorn soft chevron bands of cream, orange and yellow, like a piece of candy corn
  *   fairisle  a Christmas jumper knitted into a kit: pine green, a cream yoke of foxes and snowflakes
  *   mistletoe burgundy kit, tonal sprigs all over, a gold-ribboned sprig hanging from the collar (shelved)
- *   rednose   midnight sky and snow, an antlered crest with a glowing red nose leading a sleigh trail home
+ *   rednose   a snowy night over a lit cabin; an antlered crest with a glowing red nose leads the sleigh trail home
  *
  * Layout facts (make-jersey-kits.mjs): front visible ≈ x 1850–4230, y 1330–5900;
  * crest (3550, 2400) w 440; back number block y 1980–3800, brand line y 4360–4720.
@@ -237,52 +237,76 @@ function redNoseCrest(cx, cy, w) {
 const NOSE_GLOW = `<radialGradient id="noseGlow"><stop offset="0" stop-color="${REDNOSE.glow}" stop-opacity="0.9"/><stop offset="0.3" stop-color="${REDNOSE.glow}" stop-opacity="0.38"/><stop offset="1" stop-color="${REDNOSE.glow}" stop-opacity="0"/></radialGradient>`;
 const NIGHT = `<linearGradient id="night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${REDNOSE.night}"/><stop offset="1" stop-color="${REDNOSE.nightLow}"/></linearGradient>`;
 
-function snowfall(seed, count) {
-  const r = rng(seed);
-  return Array.from({ length: count }, () => `<circle cx="${(r() * D).toFixed(0)}" cy="${(r() * D).toFixed(0)}" r="${(8 + r() * 22).toFixed(0)}" fill="${REDNOSE.snow}" opacity="${(0.25 + r() * 0.55).toFixed(2)}"/>`).join('');
-}
 
-/** Six-armed snow crystals with side branches, at mixed sizes and strengths. */
-function crystals(seed, count, keep = () => true) {
-  const r = rng(seed);
-  const arm = '<path d="M0 0 V-100 M0 -45 L-22 -68 M0 -45 L22 -68 M0 -72 L-14 -88 M0 -72 L14 -88"/>';
-  const one = `<g fill="none" stroke-linecap="round">${[0, 60, 120, 180, 240, 300].map((a) => `<g transform="rotate(${a})">${arm}</g>`).join('')}</g>`;
-  let out = '';
-  for (let i = 0; i < count; i++) {
-    const x = r() * D, y = r() * D, size = 50 + r() ** 2 * 220;
-    if (!keep(x, y)) continue;
-    out += `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) rotate(${(r() * 60).toFixed(0)}) scale(${(size / 100).toFixed(2)})" stroke="${REDNOSE.snow}" stroke-width="${(9 / (size / 100)).toFixed(1)}" opacity="${(0.35 + r() * 0.5).toFixed(2)}">${one}</g>`;
-  }
-  return out;
-}
-/** Big soft flakes, as if falling close to the camera. */
-function bokeh(seed, count) {
-  const r = rng(seed);
-  return `<g filter="url(#soft)">${Array.from({ length: count }, () => `<circle cx="${(r() * D).toFixed(0)}" cy="${(r() * D).toFixed(0)}" r="${(40 + r() * 50).toFixed(0)}" fill="${REDNOSE.snow}" opacity="${(0.18 + r() * 0.22).toFixed(2)}"/>`).join('')}</g>`;
-}
-/** Two drifts of snow along the hem. */
-function snowdrift(top) {
-  const back = `M0 ${top + 120} C 900 ${top - 120} 1800 ${top + 160} 2700 ${top + 30} C 3600 ${top - 100} 4600 ${top + 170} ${D} ${top} V ${D} H 0 Z`;
-  const front = `M0 ${top + 330} C 1100 ${top + 140} 2200 ${top + 420} 3300 ${top + 260} C 4300 ${top + 120} 5200 ${top + 380} ${D} ${top + 250} V ${D} H 0 Z`;
-  return `<path d="${back}" fill="#DCE5F2"/><path d="${front}" fill="${REDNOSE.snow}"/>`;
-}
 const SOFT = '<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>';
 
-/** A dotted sleigh trail looping up from the hem to the crest, ending in a small heart. */
-function sleighTrail() {
-  const d = `M1900 5500 C 2300 5000 4100 5100 3900 4100 C 3750 3400 2500 3700 2700 3050 C 2820 2700 3050 2860 ${CREST.x - 250} ${CREST.y + 470}`;
+
+/** Snow in three depths: many small sharp distant flakes, fewer mid flakes, a few large soft near ones. */
+function realSnow(seed, density = 1) {
+  const r = rng(seed);
+  const layer = (n, rMin, rMax, oMin, oMax, filter) => `<g${filter ? ` filter="url(#${filter})"` : ''}>${Array.from({ length: Math.round(n * density) }, () =>
+    `<circle cx="${(r() * D).toFixed(0)}" cy="${(r() * D).toFixed(0)}" r="${(rMin + r() * (rMax - rMin)).toFixed(1)}" fill="${REDNOSE.snow}" opacity="${(oMin + r() * (oMax - oMin)).toFixed(2)}"/>`).join('')}</g>`;
+  return layer(900, 4, 9, 0.35, 0.75) + layer(260, 10, 18, 0.45, 0.85, 'flakeMid') + layer(34, 34, 62, 0.16, 0.32, 'soft');
+}
+const SNOW_DEFS = `<filter id="flakeMid" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  <linearGradient id="hillBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9D5E8"/><stop offset="1" stop-color="#A9B9D3"/></linearGradient>
+  <linearGradient id="hillFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F6FA"/><stop offset="1" stop-color="#D6DFEC"/></linearGradient>
+  <radialGradient id="windowGlow"><stop offset="0" stop-color="#FFC266" stop-opacity="0.85"/><stop offset="0.4" stop-color="#FF9F43" stop-opacity="0.3"/><stop offset="1" stop-color="#FF9F43" stop-opacity="0"/></radialGradient>
+  <filter id="smoke" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="22"/></filter>`;
+
+/** A pine in three tiers, each tier capped with snow; far pines are paler, like they sit in the haze. */
+function pine(x, base, h, far = false) {
+  const w = h * 0.52, tiers = [[0, 0.42, 1], [0.28, 0.72, 0.78], [0.55, 1, 0.55]];
+  const green = far ? '#3A4D72' : '#14233F';
+  const body = tiers.map(([t0, t1, sw]) => {
+    const top = base - h * t1, bot = base - h * t0 - h * 0.05, half = (w / 2) * sw;
+    const snowLine = `M${x - half * 0.9} ${bot - h * 0.03} Q${x - half * 0.4} ${bot - h * 0.09} ${x} ${top + h * 0.06} Q${x + half * 0.4} ${bot - h * 0.11} ${x + half * 0.85} ${bot - h * 0.02}`;
+    return `<path d="M${x} ${top} L${x + half} ${bot} L${x - half} ${bot} Z" fill="${green}"/><path d="${snowLine}" fill="none" stroke="${REDNOSE.snow}" stroke-width="${h * 0.035}" stroke-linecap="round" opacity="${far ? 0.7 : 0.95}"/>`;
+  }).join('');
+  return `<rect x="${x - h * 0.025}" y="${base - h * 0.08}" width="${h * 0.05}" height="${h * 0.1}" fill="#2A1A12"/>${body}`;
+}
+
+/** A log cabin with snow on the roof, a lit window and chimney smoke. (x, base) is the middle of its floor. */
+function cabin(x, base, w) {
+  const h = w * 0.55, left = x - w / 2, roofTop = base - h - w * 0.42;
+  const logs = Array.from({ length: 6 }, (_, i) => `<line x1="${left}" y1="${base - (h / 6) * (i + 0.5)}" x2="${left + w}" y2="${base - (h / 6) * (i + 0.5)}" stroke="#3E2618" stroke-width="${w * 0.012}"/>`).join('');
+  const win = { x: left + w * 0.6, y: base - h * 0.72, s: w * 0.2 };
+  return `<ellipse cx="${win.x + win.s / 2}" cy="${base + w * 0.08}" rx="${w * 0.55}" ry="${w * 0.12}" fill="#FFB35C" opacity="0.28"/>
+    <circle cx="${win.x + win.s / 2}" cy="${win.y + win.s / 2}" r="${w * 0.45}" fill="url(#windowGlow)"/>
+    <rect x="${left + w * 0.66}" y="${roofTop + w * 0.08}" width="${w * 0.1}" height="${w * 0.3}" fill="#4A3426"/>
+    <path d="M${left + w * 0.71} ${roofTop + w * 0.02} C ${left + w * 0.6} ${roofTop - w * 0.25} ${left + w * 0.9} ${roofTop - w * 0.4} ${left + w * 0.75} ${roofTop - w * 0.75}" fill="none" stroke="#C9D2E2" stroke-width="${w * 0.07}" stroke-linecap="round" opacity="0.45" filter="url(#smoke)"/>
+    <rect x="${left}" y="${base - h}" width="${w}" height="${h}" fill="#5A3826"/>${logs}
+    <rect x="${win.x}" y="${win.y}" width="${win.s}" height="${win.s}" fill="#FFC266"/>
+    <path d="M${win.x + win.s / 2} ${win.y} V${win.y + win.s} M${win.x} ${win.y + win.s / 2} H${win.x + win.s}" stroke="#5A3826" stroke-width="${w * 0.018}"/>
+    <rect x="${left + w * 0.16}" y="${base - h * 0.62}" width="${w * 0.2}" height="${h * 0.62}" fill="#3A2416"/>
+    <path d="M${left - w * 0.1} ${base - h + w * 0.02} L${x} ${roofTop} L${left + w * 1.1} ${base - h + w * 0.02} Z" fill="#2B1A12"/>
+    <path d="M${left - w * 0.13} ${base - h + w * 0.02} L${x} ${roofTop - w * 0.05} L${left + w * 1.13} ${base - h + w * 0.02} L${left + w * 1.02} ${base - h + w * 0.07} Q${left + w * 0.9} ${base - h + w * 0.13} ${left + w * 0.8} ${base - h + w * 0.06} Q${left + w * 0.55} ${base - h + w * 0.12} ${left + w * 0.35} ${base - h + w * 0.06} Q${left + w * 0.15} ${base - h + w * 0.13} ${left - w * 0.02} ${base - h + w * 0.07} Z" fill="${REDNOSE.snow}"/>
+    <path d="M${left + w * 0.63} ${roofTop + w * 0.08} h${w * 0.16} q${-w * 0.02} ${-w * 0.05} ${-w * 0.08} ${-w * 0.05} q${-w * 0.06} 0 ${-w * 0.08} ${w * 0.05} Z" fill="${REDNOSE.snow}"/>`;
+}
+
+/** Moonlit hills along the hem: far pines on the back hill, near pines and (optionally) the cabin on the front. */
+function winterHem(top, { withCabin = false } = {}) {
+  const backHill = `M-100 ${top + 260} C 900 ${top - 60} 1900 ${top + 120} 2800 ${top + 40} C 3800 ${top - 50} 4900 ${top + 200} ${D + 100} ${top + 60} V ${D + 100} H -100 Z`;
+  const frontHill = `M-100 ${top + 620} C 1200 ${top + 380} 2300 ${top + 520} 3300 ${top + 560} C 4300 ${top + 600} 5200 ${top + 420} ${D + 100} ${top + 520} V ${D + 100} H -100 Z`;
+  const far = [[1500, 200, 380], [1900, 140, 300], [3500, 120, 330], [3850, 160, 400], [4250, 190, 320], [4700, 220, 360]].map(([x, dy, h]) => pine(x, top + dy, h, true)).join('');
+  const near = [[1750, 590, 760], [2050, 570, 560], [3950, 580, 820], [4300, 560, 600]].map(([x, dy, h]) => pine(x, top + dy, h)).join('');
+  return `<path d="${backHill}" fill="url(#hillBack)"/>${far}<path d="${frontHill}" fill="url(#hillFront)"/>${withCabin ? cabin(2900, top + 600, 640) : ''}${near}`;
+}
+
+/** The sleigh trail, rising from the cabin chimney to the red nose. */
+function trailHome() {
+  const d = `M3020 4470 C 2700 4000 2350 3900 2550 3500 C 2700 3200 3150 3350 ${CREST.x - 250} ${CREST.y + 470}`;
   return `<path d="${d}" fill="none" stroke="${REDNOSE.trail}" stroke-width="22" stroke-linecap="round" stroke-dasharray="10 90" opacity="0.85"/>`;
 }
 
 function rednose() {
   const bg = `<rect width="${D}" height="${D}" fill="url(#night)"/>`;
-  const defs = NOSE_GLOW + NIGHT + SOFT;
-  const clearOfCrest = (x, y) => Math.hypot(x - CREST.x, y - CREST.y - 60) > 520;
+  const defs = NOSE_GLOW + NIGHT + SOFT + SNOW_DEFS;
   const crestCx = CREST.x, crestCy = CREST.y + 60, crestW = 600;
   return {
-    front: svg(snowfall(3, 520) + crystals(41, 70, clearOfCrest) + snowdrift(5250) + sleighTrail() + bokeh(9, 26) + redNoseCrest(crestCx, crestCy, crestW), bg, defs),
-    pattern: svg(snowfall(17, 560) + crystals(53, 60) + snowdrift(5250) + bokeh(21, 20), bg, defs),
-    sleeve: svg(snowfall(23, 420) + crystals(67, 40) + cuff(REDNOSE.snow, REDNOSE.cuff), bg, defs),
+    front: svg(realSnow(3) + winterHem(4700, { withCabin: true }) + trailHome() + redNoseCrest(crestCx, crestCy, crestW) + realSnow(5, 0.12), bg, defs),
+    pattern: svg(realSnow(17) + winterHem(4900) + realSnow(19, 0.12), bg, defs),
+    sleeve: svg(realSnow(23, 0.8) + cuff(REDNOSE.snow, REDNOSE.cuff), bg, defs),
     backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="306" viewBox="0 0 300 306"><defs>${NOSE_GLOW}</defs>${redNoseCrest(150, 160, 230)}</svg>`,
   };
 }
