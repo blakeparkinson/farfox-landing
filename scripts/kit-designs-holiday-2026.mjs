@@ -225,12 +225,25 @@ function mistletoe() {
 
 export const REDNOSE = { night: '#0F1A33', nightLow: '#1B2C52', snow: '#F4F1EA', antler: '#C9A27A', nose: '#E8202F', glow: '#FF4D4D', trail: '#F4F1EA', cuff: '#C8283A' };
 
-/** Branching antlers drawn in crest units (300 wide), mirrored for the right side. */
-const ANTLER_D = 'M95 40 C 80 0 70 -60 40 -110 M62 -40 C 30 -50 10 -70 0 -100 M52 -78 C 70 -100 78 -125 76 -150 M44 -100 C 20 -120 14 -140 16 -165';
+/**
+ * One antler in crest units (the crest is 300 wide, its forehead runs along y 88): a main beam rising
+ * from the head and curving outwards, with three tines set on the beam itself so no joint is lumpy.
+ * The right antler is this one mirrored about the crest's centre line, so the pair is exactly even.
+ */
+const ANTLER = { root: [122, 90], c1: [112, 30], c2: [70, -20], tip: [52, -112], tines: [[0.38, 48], [0.62, 44], [0.84, 34]], beam: 20, tine: 15 };
+function antlerPath() {
+  const { root: p0, c1, c2, tip: p3 } = ANTLER;
+  const at = (t) => [0, 1].map((k) => (1 - t) ** 3 * p0[k] + 3 * (1 - t) ** 2 * t * c1[k] + 3 * (1 - t) * t ** 2 * c2[k] + t ** 3 * p3[k]);
+  const beam = `<path d="M${p0} C ${c1} ${c2} ${p3}" stroke-width="${ANTLER.beam}"/>`;
+  // Tines lean inwards and up, a little more upright the higher they sit.
+  const tines = ANTLER.tines.map(([t, len], i) => { const [x, y] = at(t), a = (-62 + i * 14) * Math.PI / 180; return `<path d="M${x.toFixed(1)} ${y.toFixed(1)} Q ${(x + Math.cos(a) * len * 0.35).toFixed(1)} ${(y + Math.sin(a) * len * 0.75).toFixed(1)} ${(x + Math.cos(a) * len).toFixed(1)} ${(y + Math.sin(a) * len).toFixed(1)}" stroke-width="${ANTLER.tine}"/>`; }).join('');
+  return beam + tines;
+}
 function redNoseCrest(cx, cy, w) {
   const s = w / 300;
   const c = { body: '#8A5A3B', feature: '#2A1A12', muzzle: '#E9D6BE', nose: REDNOSE.nose };
-  const antlers = `<g fill="none" stroke="${REDNOSE.antler}" stroke-width="22" stroke-linecap="round"><path d="${ANTLER_D}"/><path d="${ANTLER_D}" transform="translate(300 0) scale(-1 1)"/></g>`;
+  const one = antlerPath();
+  const antlers = `<g fill="none" stroke="${REDNOSE.antler}" stroke-linecap="round">${one}<g transform="translate(300 0) scale(-1 1)">${one}</g></g>`;
   const glow = `<circle cx="150" cy="238" r="210" fill="url(#noseGlow)"/><circle cx="150" cy="238" r="26" fill="${REDNOSE.nose}"/><circle cx="141" cy="229" r="8" fill="#FFFFFF" opacity="0.8"/>`;
   return `<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">${antlers}</g>${crestIn(cx, cy, w, c)}<g transform="translate(${cx - w / 2} ${cy - (306 * s) / 2}) scale(${s})">${glow}</g>`;
 }
@@ -254,16 +267,39 @@ const SNOW_DEFS = `<filter id="flakeMid" x="-50%" y="-50%" width="200%" height="
   <radialGradient id="windowGlow"><stop offset="0" stop-color="#FFC266" stop-opacity="0.85"/><stop offset="0.4" stop-color="#FF9F43" stop-opacity="0.3"/><stop offset="1" stop-color="#FF9F43" stop-opacity="0"/></radialGradient>
   <filter id="smoke" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="22"/></filter>`;
 
-/** A pine in three tiers, each tier capped with snow; far pines are paler, like they sit in the haze. */
-function pine(x, base, h, far = false) {
-  const w = h * 0.52, tiers = [[0, 0.42, 1], [0.28, 0.72, 0.78], [0.55, 1, 0.55]];
-  const green = far ? '#3A4D72' : '#14233F';
-  const body = tiers.map(([t0, t1, sw]) => {
-    const top = base - h * t1, bot = base - h * t0 - h * 0.05, half = (w / 2) * sw;
-    const snowLine = `M${x - half * 0.9} ${bot - h * 0.03} Q${x - half * 0.4} ${bot - h * 0.09} ${x} ${top + h * 0.06} Q${x + half * 0.4} ${bot - h * 0.11} ${x + half * 0.85} ${bot - h * 0.02}`;
-    return `<path d="M${x} ${top} L${x + half} ${bot} L${x - half} ${bot} Z" fill="${green}"/><path d="${snowLine}" fill="none" stroke="${REDNOSE.snow}" stroke-width="${h * 0.035}" stroke-linecap="round" opacity="${far ? 0.7 : 0.95}"/>`;
-  }).join('');
-  return `<rect x="${x - h * 0.025}" y="${base - h * 0.08}" width="${h * 0.05}" height="${h * 0.1}" fill="#2A1A12"/>${body}`;
+/**
+ * A Christmas tree: five overlapping tiers with drooping, scalloped hems and snow along each one.
+ * Decorated trees add swagged strings of coloured lights and a gold star; far trees are paler, as if in haze.
+ */
+const BULBS = ['#FFD36B', '#FF5A5A', '#6BC8FF', '#9BE36B', '#FF9ED2'];
+function pine(x, base, h, { far = false, lit = false, seed = 1 } = {}) {
+  const r = rng(seed);
+  const green = far ? '#3A4D72' : '#173A2E', shade = far ? '#30425F' : '#0F2A20';
+  const tiers = 5, trunkH = h * 0.08, crown = base - h;
+  let body = '', snow = '', lights = '';
+  for (let i = 0; i < tiers; i++) {
+    const t = (i + 1) / tiers;
+    const top = crown + (i === 0 ? 0 : h * 0.16 * i), bot = crown + h * (0.26 + 0.15 * i), half = h * (0.12 + 0.26 * t);
+    const scallops = 3 + i, step = (half * 2) / scallops;
+    let hem = `M${x + half} ${bot}`;
+    for (let k = 0; k < scallops; k++) { const x1 = x + half - step * (k + 1); hem += ` Q${(x1 + step / 2).toFixed(0)} ${(bot + h * 0.035).toFixed(0)} ${x1.toFixed(0)} ${bot.toFixed(0)}`; }
+    body += `<path d="M${x} ${top} C ${x + half * 0.35} ${top + (bot - top) * 0.4} ${x + half * 0.8} ${bot - h * 0.04} ${x + half} ${bot} ${hem.slice(hem.indexOf('Q') - 1)} C ${x - half * 0.8} ${bot - h * 0.04} ${x - half * 0.35} ${top + (bot - top) * 0.4} ${x} ${top} Z" fill="${green}"/>`
+      + `<path d="M${x} ${top + h * 0.02} C ${x + half * 0.3} ${top + (bot - top) * 0.45} ${x + half * 0.7} ${bot - h * 0.03} ${x + half * 0.95} ${bot - h * 0.005}" fill="none" stroke="${shade}" stroke-width="${h * 0.04}" opacity="0.6"/>`;
+    snow += `<path d="M${x - half * 0.85} ${bot - h * 0.012} Q${x - half * 0.3} ${bot - h * 0.07} ${x + half * 0.1} ${bot - h * 0.03} Q${x + half * 0.5} ${bot - h * 0.06} ${x + half * 0.8} ${bot - h * 0.01}" fill="none" stroke="${REDNOSE.snow}" stroke-width="${h * 0.028}" stroke-linecap="round" opacity="${far ? 0.65 : 0.92}"/>`;
+    if (lit && i > 0) {
+      // A light string swagged across the tier, bulbs spaced along it.
+      const y0 = top + (bot - top) * 0.55, sag = h * 0.05, x0 = x - half * 0.72, x2 = x + half * 0.72;
+      lights += `<path d="M${x0} ${y0} Q${x} ${y0 + sag * 2} ${x2} ${y0}" fill="none" stroke="#0B1A14" stroke-width="${h * 0.006}"/>`;
+      const n = 3 + i;
+      for (let k = 0; k <= n; k++) {
+        const u = k / n, bx = x0 + (x2 - x0) * u, by = y0 + sag * 4 * u * (1 - u);
+        const c = BULBS[Math.floor(r() * BULBS.length)];
+        lights += `<circle cx="${bx.toFixed(0)}" cy="${by.toFixed(0)}" r="${(h * 0.035).toFixed(0)}" fill="${c}" opacity="0.35" filter="url(#flakeMid)"/><circle cx="${bx.toFixed(0)}" cy="${by.toFixed(0)}" r="${(h * 0.014).toFixed(0)}" fill="${c}"/>`;
+      }
+    }
+  }
+  const star = lit ? `<path transform="translate(${x} ${crown - h * 0.02}) scale(${h / 900})" d="M0 -60 L14 -19 L57 -19 L22 6 L35 48 L0 22 L-35 48 L-22 6 L-57 -19 L-14 -19 Z" fill="${MISTLETOE.gold}"/><circle cx="${x}" cy="${crown - h * 0.02}" r="${h * 0.09}" fill="#FFD36B" opacity="0.25" filter="url(#flakeMid)"/>` : '';
+  return `<rect x="${x - h * 0.03}" y="${base - trunkH * 1.2}" width="${h * 0.06}" height="${trunkH * 1.3}" fill="#2A1A12"/>${body}${snow}${lights}${star}`;
 }
 
 /** A log cabin with snow on the roof, a lit window and chimney smoke. (x, base) is the middle of its floor. */
@@ -271,7 +307,7 @@ function cabin(x, base, w) {
   const h = w * 0.55, left = x - w / 2, roofTop = base - h - w * 0.42;
   const logs = Array.from({ length: 6 }, (_, i) => `<line x1="${left}" y1="${base - (h / 6) * (i + 0.5)}" x2="${left + w}" y2="${base - (h / 6) * (i + 0.5)}" stroke="#3E2618" stroke-width="${w * 0.012}"/>`).join('');
   const win = { x: left + w * 0.6, y: base - h * 0.72, s: w * 0.2 };
-  return `<ellipse cx="${win.x + win.s / 2}" cy="${base + w * 0.08}" rx="${w * 0.55}" ry="${w * 0.12}" fill="#FFB35C" opacity="0.28"/>
+  return `<ellipse cx="${win.x + win.s / 2}" cy="${base + w * 0.08}" rx="${w * 0.55}" ry="${w * 0.12}" fill="#FFB35C" opacity="0.12" filter="url(#smoke)"/>
     <circle cx="${win.x + win.s / 2}" cy="${win.y + win.s / 2}" r="${w * 0.45}" fill="url(#windowGlow)"/>
     <rect x="${left + w * 0.66}" y="${roofTop + w * 0.08}" width="${w * 0.1}" height="${w * 0.3}" fill="#4A3426"/>
     <path d="M${left + w * 0.71} ${roofTop + w * 0.02} C ${left + w * 0.6} ${roofTop - w * 0.25} ${left + w * 0.9} ${roofTop - w * 0.4} ${left + w * 0.75} ${roofTop - w * 0.75}" fill="none" stroke="#C9D2E2" stroke-width="${w * 0.07}" stroke-linecap="round" opacity="0.45" filter="url(#smoke)"/>
@@ -288,8 +324,9 @@ function cabin(x, base, w) {
 function winterHem(top, { withCabin = false } = {}) {
   const backHill = `M-100 ${top + 260} C 900 ${top - 60} 1900 ${top + 120} 2800 ${top + 40} C 3800 ${top - 50} 4900 ${top + 200} ${D + 100} ${top + 60} V ${D + 100} H -100 Z`;
   const frontHill = `M-100 ${top + 620} C 1200 ${top + 380} 2300 ${top + 520} 3300 ${top + 560} C 4300 ${top + 600} 5200 ${top + 420} ${D + 100} ${top + 520} V ${D + 100} H -100 Z`;
-  const far = [[1500, 200, 380], [1900, 140, 300], [3500, 120, 330], [3850, 160, 400], [4250, 190, 320], [4700, 220, 360]].map(([x, dy, h]) => pine(x, top + dy, h, true)).join('');
-  const near = [[1750, 590, 760], [2050, 570, 560], [3950, 580, 820], [4300, 560, 600]].map(([x, dy, h]) => pine(x, top + dy, h)).join('');
+  const far = [[1500, 200, 380], [1900, 140, 300], [3500, 120, 330], [3850, 160, 400], [4250, 190, 320], [4700, 220, 360]].map(([x, dy, h], i) => pine(x, top + dy, h, { far: true, seed: i })).join('');
+  // The two trees either side of the cabin are decorated; the outer ones are left wild.
+  const near = [[1750, 590, 760, false], [2280, 575, 640, true], [3600, 585, 720, true], [4250, 560, 820, false]].map(([x, dy, h, lit], i) => pine(x, top + dy, h, { lit: withCabin && lit, seed: 40 + i })).join('');
   return `<path d="${backHill}" fill="url(#hillBack)"/>${far}<path d="${frontHill}" fill="url(#hillFront)"/>${withCabin ? cabin(2900, top + 600, 640) : ''}${near}`;
 }
 
