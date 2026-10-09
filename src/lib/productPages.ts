@@ -149,6 +149,11 @@ export const PRODUCT_COPY: Record<string, string> = {
   '436883186': 'Foxy with "miss you too" underneath. Half of a pair with the Miss You sticker: send one, keep one.',
   '436883173': 'Foxy with "miss you" underneath. Half of a pair with the Miss You Too sticker: send one, keep one.',
   '436883154': 'A small Foxy on the chest, and an airmail envelope across the back over WORTH EVERY MILE. The hoodie to steal on a visit, and to send home smelling like you.',
+  '479940069': 'A black kit with one bone-white web spun out from an orange fox crest, and a little spider dropping in from the collar with a pink heart on its back. Orange cuffs, and an orange 143 on the back. For the Halloween you spend apart, or the one you finally spend together.',
+  '479940099': 'Cream at the chest, orange through the middle and sunny yellow at the hem, in soft chevrons that follow the V-neck, like a piece of candy corn. A black fox crest on the front and a black 143 on the back.',
+  '479940104': 'A Christmas jumper knitted into a football kit. Pine green with a knit texture, and a cream yoke across the chest where two foxes face a heart: the two of you, miles apart. Snowflakes and hearts run round the sleeves and the hem.',
+  '479940112': 'A snowy night over a little log cabin, and a reindeer fox crest whose red nose lights the sleigh trail all the way home. Look closely by the cabin: Foxy is sitting in the snow, watching the sky for you.',
+  '479940120': 'A glossy ceramic heart with Foxy in a Santa hat, holding a love letter. Add your two cities and it reads, say, NEW YORK ♥ LONDON, Christmas 2026. Leave them blank and it says Miles Apart, Close at Heart. The same design prints on both sides.',
   '436883133': 'Foxy with heart eyes, over HEART EYES, only for you. Our original design, and still the one people buy for each other most.',
 };
 
@@ -172,6 +177,7 @@ export const KIT_COLOURS: Record<string, string> = {
   '475849115': 'Purple/Pink', '475844805': 'Navy/White', '475844798': 'Purple/Pink', '475844794': 'Pink/Purple',
   '443631285': 'Purple/Gold', '443578239': 'White/Black', '443540637': 'Teal/Orange', '443420345': 'Purple',
   '443266866': 'Navy', '443213452': 'Cream', '443164966': 'Purple',
+  '479940069': 'Black/Orange', '479940099': 'Orange/Yellow', '479940104': 'Green/Cream', '479940112': 'Navy/White',
 };
 
 /** The product's own copy, followed by the Les Séparés-style story when the shop has one for it. */
