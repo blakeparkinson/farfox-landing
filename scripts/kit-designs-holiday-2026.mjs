@@ -351,7 +351,8 @@ function winterHem(top, { withCabin = false } = {}) {
   const far = [[1500, 200, 380], [1900, 140, 300], [3500, 120, 330], [3850, 160, 400], [4250, 190, 320], [4700, 220, 360]].map(([x, dy, h], i) => pine(x, top + dy, h, { far: true, seed: i })).join('');
   // The two trees either side of the cabin are decorated; the outer ones are left wild.
   const near = [[1750, 590, 760, false], [2280, 575, 640, true], [3600, 585, 720, true], [4250, 560, 820, false]].map(([x, dy, h, lit], i) => pine(x, top + dy, h, { lit: withCabin && lit, seed: 40 + i })).join('');
-  return `<path d="${backHill}" fill="url(#hillBack)"/>${far}<path d="${frontHill}" fill="url(#hillFront)"/>${withCabin ? cabin(2900, top + 600, 640) + foxyWaiting(3380, top + 700, 230) : ''}${near}`;
+  // Foxy is drawn after the trees: she sits in front of them, nearer the viewer.
+  return `<path d="${backHill}" fill="url(#hillBack)"/>${far}<path d="${frontHill}" fill="url(#hillFront)"/>${withCabin ? cabin(2900, top + 600, 640) : ''}${near}${withCabin ? foxyWaiting(3330, top + 760, 345) : ''}`;
 }
 
 /** The sleigh trail, rising from the cabin chimney to the red nose. */
