@@ -14,7 +14,7 @@ const TOKEN = process.env.PRINTFUL_TOKEN;
 const STORE = process.env.PRINTFUL_STORE_ID || '18292625';
 const SITE = 'https://lovefarfox.com/shop/designs';
 // Printful keeps the copy it first downloaded from a URL; bump a kit's revision when its files are rebuilt in place.
-const FILE_REVISION = { rednose: 2 };
+const FILE_REVISION = { rednose: 2, cobweb: 2, candycorn: 2 };
 const revision = (path) => FILE_REVISION[Object.keys(FILE_REVISION).find((k) => path.includes(`sj-${k}-`))] || 1;
 const KIT_CATALOG = 644;
 const KIT_VARIANTS = { XS: 16259, S: 16260, M: 16261, L: 16262, XL: 16263, '2XL': 16264, '3XL': 16265 };
