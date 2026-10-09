@@ -334,8 +334,8 @@ function foxyWaiting(x, base, h) {
       <path d="M48 -40 C 122 -30 118 22 30 18 C -30 16 -92 18 -128 2 C -96 -22 -36 -12 8 -16 C 30 -18 46 -24 48 -40 Z" fill="${fur}"/>
       <path d="M-128 2 C -112 -14 -88 -16 -70 -12 C -78 4 -92 12 -128 2 Z" fill="${tip}"/>
       <g transform="rotate(-14 -6 -176)">
-        <path d="M-42 -192 L-52 -272 L-10 -214 Z" fill="${fur}"/><path d="M-52 -272 L-47 -238 L-36 -246 Z" fill="${dark}"/>
-        <path d="M4 -214 L26 -276 L42 -200 Z" fill="${fur}"/><path d="M26 -276 L24 -242 L36 -244 Z" fill="${dark}"/>
+        <g id="foxyEar"><path d="M-42 -192 L-52 -272 L-10 -214 Z" fill="${fur}"/><path d="M-52 -272 L-48.5 -244 L-37.3 -251.7 Z" fill="${dark}"/></g>
+        <use href="#foxyEar" transform="translate(-12 0) scale(-1 1)"/>
         <ellipse cx="-6" cy="-176" rx="46" ry="42" fill="${fur}"/>
         <path d="M-40 -190 C -62 -200 -84 -212 -100 -224 C -90 -200 -70 -172 -44 -160 Z" fill="${fur}"/>
         <path d="M-100 -224 C -86 -204 -68 -180 -44 -166 C -66 -170 -86 -190 -100 -224 Z" fill="${tip}"/>
