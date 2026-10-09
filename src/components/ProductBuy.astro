@@ -1,11 +1,15 @@
 ---
-import { kitSlugForName, kitForColour } from '../lib/kits.mjs';
+import { kitSlugForName, kitForColour, isOrnamentName } from '../lib/kits.mjs';
+// @ts-ignore - plain-JS module shared with the ornament renderer
+import { CITY_MAX } from '../lib/ornamentArt.mjs';
 import { cartLive } from '../lib/snipcart';
 import { SITE, type ShopProduct } from '../lib/productPages';
 
 // Colour, size and personalisation pickers plus the add-to-cart button; ShopCart.astro wires them up.
 interface Props { product: ShopProduct }
 const { product: p } = Astro.props;
+const ornament = isOrnamentName(p.name);
+const cityInput = 'flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text uppercase placeholder:normal-case placeholder:font-600 placeholder:text-fox-text-light/60 focus:outline-none focus:border-fox-pink';
 ---
 {p.colors && p.colors.length > 0 && (
   <div class="mb-3">
@@ -71,6 +75,18 @@ const { product: p } = Astro.props;
   </div>
 )}
 
+{ornament && (
+  <div class="mb-3 rounded-xl border border-fox-pink/15 bg-fox-pink/[0.04] p-3" data-ornament data-product={p.id}>
+    <div class="text-xs font-800 uppercase tracking-wide text-fox-text-light mb-2">
+      Personalize <span class="font-600 normal-case tracking-normal text-fox-text-light/70">· optional, your two cities</span>
+    </div>
+    <div class="flex gap-2">
+      <input id={`ocity1-${p.id}`} type="text" maxlength={CITY_MAX} placeholder="Your city" aria-label="Your city" class={cityInput} />
+      <input id={`ocity2-${p.id}`} type="text" maxlength={CITY_MAX} placeholder="Their city" aria-label="Their city" class={cityInput} />
+    </div>
+  </div>
+)}
+
 {cartLive ? (
   <button
     class="snipcart-add-item mt-auto w-full px-5 py-3 rounded-full bg-fox-pink text-white font-800 hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200"
@@ -93,6 +109,12 @@ const { product: p } = Astro.props;
     data-item-custom4-name={kitSlugForName(p.name) ? 'Number' : undefined}
     data-item-custom4-required={kitSlugForName(p.name) ? 'false' : undefined}
     data-number-input={kitSlugForName(p.name) ? `pnum-${p.id}` : undefined}
+    data-item-custom5-name={ornament ? 'Your city' : undefined}
+    data-item-custom5-required={ornament ? 'false' : undefined}
+    data-city-a-input={ornament ? `ocity1-${p.id}` : undefined}
+    data-item-custom6-name={ornament ? 'Their city' : undefined}
+    data-item-custom6-required={ornament ? 'false' : undefined}
+    data-city-b-input={ornament ? `ocity2-${p.id}` : undefined}
   >
     Add to cart
   </button>

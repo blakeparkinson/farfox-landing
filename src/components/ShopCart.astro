@@ -148,6 +148,32 @@ import { SNIPCART_KEY, cartLive } from '../lib/snipcart';
           }
         }, true);
       });
+      // Ornament: as the shopper types their two cities, preview the personalised heart.
+      document.querySelectorAll('[data-ornament]').forEach((wrap) => {
+        const pid = wrap.getAttribute('data-product');
+        const img = document.getElementById(`img-${pid}`);
+        const stock = img && img.getAttribute('src');
+        const a = document.getElementById(`ocity1-${pid}`), b = document.getElementById(`ocity2-${pid}`);
+        let t;
+        const update = () => {
+          clearTimeout(t);
+          t = setTimeout(() => {
+            const top = (a.value || '').trim(), bottom = (b.value || '').trim();
+            if (!top && !bottom) { swapImage(img, stock); return; }
+            swapImage(img, `/api/ornament.png?${new URLSearchParams({ top, bottom, w: '720' })}`);
+          }, 400);
+        };
+        a.addEventListener('input', update);
+        b.addEventListener('input', update);
+      });
+      document.querySelectorAll('.snipcart-add-item[data-city-a-input]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          for (const [attr, field] of [['data-city-a-input', 5], ['data-city-b-input', 6]]) {
+            const input = document.getElementById(btn.getAttribute(attr));
+            btn.setAttribute(`data-item-custom${field}-value`, input ? input.value.toUpperCase().trim() : '');
+          }
+        }, true);
+      });
       // A product page link from Google Shopping names its variant (?color=…&size=…): open on it.
       const wanted = new URLSearchParams(location.search);
       if (document.querySelector('[data-product-page]')) {

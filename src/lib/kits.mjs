@@ -23,6 +23,11 @@ export function kitSlugForName(name) {
   // Moose Lodge launches in Blush only.
   if (/jersey/.test(n) && /moose/.test(n)) return 'moose-blush';
   if (/jersey/.test(n) && /flyway/.test(n)) return 'flyway';
+  // Holiday 2026.
+  if (/jersey/.test(n) && /cobweb/.test(n)) return 'cobweb';
+  if (/jersey/.test(n) && /candy\s*corn/.test(n)) return 'candycorn';
+  if (/jersey/.test(n) && /fair\s*isle/.test(n)) return 'fairisle';
+  if (/jersey/.test(n) && /red\s*nose/.test(n)) return 'rednose';
   // Soccer kits.
   if (/flight\s*path/.test(n)) return 'flight';
   if (/same\s*stars/.test(n)) return 'stars';
@@ -46,6 +51,14 @@ export function kitForColour(name, colour) {
   if (!colourways) return kit;
   const pick = colourways.find((c) => c.label.toLowerCase() === String(colour || '').toLowerCase()) || colourways[0];
   return `${kit}-${pick.key}`;
+}
+
+/** The Christmas ornament can carry two city names in place of its stock lines. */
+export const isOrnamentName = (name) => /ornament/i.test(String(name || ''));
+/** Public URL Printful fetches for a personalised ornament (src/pages/api/ornament.png.ts). */
+export function ornamentUrl(top, bottom) {
+  const q = new URLSearchParams({ top: top || '', bottom: bottom || '' });
+  return `${SITE}/api/ornament.png?${q.toString()}`;
 }
 
 /** Public URL Printful fetches to get a personalized back for this kit/name/number. */
