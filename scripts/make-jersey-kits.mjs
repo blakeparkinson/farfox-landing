@@ -125,44 +125,28 @@ function alongQuad(a, c, b, gap) {
 }
 
 /** Flight Path: airmail kit. One hero route with a plane, faint routes, airmail stripes. */
-function flight() {
-  const bg = `<rect width="${D}" height="${D}" fill="#F5F1E7"/>`;
-  const RED = '#C8323C', NAVY = '#1F3A6E', INK = '#1C1A2E';
-  const r = rng(5);
-  let routes = '';
-  for (let k = 0; k < 9; k++) {
-    const a = { x: r() * D, y: 600 + r() * 4800 }, b = { x: r() * D, y: 600 + r() * 4800 };
-    const lift = 500 + r() * 900;
-    const c = { x: (a.x + b.x) / 2, y: Math.min(a.y, b.y) - lift };
-    const col = k % 2 ? RED : NAVY;
-    routes += `<path d="M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}" stroke="${col}" stroke-opacity="0.28" stroke-width="12" stroke-dasharray="46 34" stroke-linecap="round" fill="none"/>
-      <circle cx="${a.x}" cy="${a.y}" r="30" fill="${col}" fill-opacity="0.35"/><circle cx="${b.x}" cy="${b.y}" r="30" fill="${col}" fill-opacity="0.35"/>`;
-  }
-  // Airmail envelope border: alternating red and navy slanted bars between two rules.
-  const airmail = (y0, h) => {
-    let bars = `<rect x="0" y="${y0}" width="${D}" height="${h}" fill="#F5F1E7"/>`;
-    for (let x = -h; x < D + h; x += 360) {
-      for (const [dx, col] of [[0, RED], [180, NAVY]]) {
-        const x0 = x + dx;
-        bars += `<polygon points="${x0},${y0} ${x0 + 100},${y0} ${x0 + 100 - h},${y0 + h} ${x0 - h},${y0 + h}" fill="${col}"/>`;
-      }
+// The airmail stripe is the kit's language: trim on the sleeves and hem, and one broad sash across the front
+// from the wearer's right shoulder to left hip (clear of the crest), in place of the old plane-and-route graphic.
+const FLIGHT = { paper: '#F5F1E7', red: '#C8323C', navy: '#1F3A6E', sash: { width: 640, angle: 58, cx: 2900, cy: 3500 } };
+function airmailBand(y0, h, x0 = 0, x1 = D) {
+  let bars = `<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${h}" fill="${FLIGHT.paper}"/>`;
+  for (let x = x0 - h; x < x1 + h; x += 360) {
+    for (const [dx, col] of [[0, FLIGHT.red], [180, FLIGHT.navy]]) {
+      const left = x + dx;
+      bars += `<polygon points="${left},${y0} ${left + 100},${y0} ${left + 100 - h},${y0 + h} ${left - h},${y0 + h}" fill="${col}"/>`;
     }
-    return `${bars}<rect x="0" y="${y0 - 14}" width="${D}" height="14" fill="${NAVY}"/><rect x="0" y="${y0 + h}" width="${D}" height="14" fill="${NAVY}"/>`;
-  };
-  const a = { x: 2150, y: 4350 }, b = { x: 3900, y: 4050 }, c = { x: 2950, y: 2950 };
-  const t = 0.5;
-  const mid = { x: 0.25 * a.x + 0.5 * c.x + 0.25 * b.x, y: 0.25 * a.y + 0.5 * c.y + 0.25 * b.y };
-  const tan = { x: 2 * (1 - t) * (c.x - a.x) + 2 * t * (b.x - c.x), y: 2 * (1 - t) * (c.y - a.y) + 2 * t * (b.y - c.y) };
-  const angle = (Math.atan2(tan.y, tan.x) * 180) / Math.PI + 90; // plane art points up
-  const plane = `<g transform="translate(${mid.x} ${mid.y}) rotate(${angle}) scale(4.2) translate(-50 -50)">
-      <path d="M50 0 C54 0 56 6 56 14 L56 38 L96 60 L96 70 L56 58 L56 82 L68 92 L68 98 L50 93 L32 98 L32 92 L44 82 L44 58 L4 70 L4 60 L44 38 L44 14 C44 6 46 0 50 0 Z" fill="${INK}"/></g>`;
-  const end = (p) => `<circle cx="${p.x}" cy="${p.y}" r="120" fill="#F5F1E7" stroke="${INK}" stroke-width="30"/><circle cx="${p.x}" cy="${p.y}" r="58" fill="${RED}"/>`;
-  const hero = `<path d="M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}" stroke="${INK}" stroke-width="46" stroke-dasharray="130 80" stroke-linecap="round" fill="none"/>
-    <circle cx="${mid.x}" cy="${mid.y}" r="300" fill="#F5F1E7"/>${plane}${end(a)}${end(b)}`;
+  }
+  return `${bars}<rect x="${x0}" y="${y0 - 14}" width="${x1 - x0}" height="14" fill="${FLIGHT.navy}"/><rect x="${x0}" y="${y0 + h}" width="${x1 - x0}" height="14" fill="${FLIGHT.navy}"/>`;
+}
+function flight() {
+  const bg = `<rect width="${D}" height="${D}" fill="${FLIGHT.paper}"/>`;
+  const { width, angle, cx, cy } = FLIGHT.sash;
+  // The sash is a long horizontal airmail band, rotated into place; it overruns the canvas so it reaches both edges.
+  const sash = `<g transform="rotate(${angle} ${cx} ${cy})">${airmailBand(cy - width / 2, width, cx - 6000, cx + 6000)}</g>`;
   return {
-    front: svg(routes + hero + airmail(5380, 300) + crest(CREST.x, CREST.y, CREST.w, 'navy'), bg),
-    pattern: svg(routes + airmail(5380, 300), bg),
-    sleeve: svg(routes + airmail(3640, 260) + cuff(RED, NAVY), bg),
+    front: svg(airmailBand(5380, 300) + sash + crest(CREST.x, CREST.y, CREST.w, 'navy'), bg),
+    pattern: svg(airmailBand(5380, 300), bg),
+    sleeve: svg(airmailBand(3640, 260) + cuff(FLIGHT.red, FLIGHT.navy), bg),
   };
 }
 
