@@ -149,21 +149,46 @@ function flight() {
     }
     return `${bars}<rect x="0" y="${y0 - 14}" width="${D}" height="14" fill="${NAVY}"/><rect x="0" y="${y0 + h}" width="${D}" height="14" fill="${NAVY}"/>`;
   };
-  const a = { x: 2150, y: 4350 }, b = { x: 3900, y: 4050 }, c = { x: 2950, y: 2950 };
-  const t = 0.5;
-  const mid = { x: 0.25 * a.x + 0.5 * c.x + 0.25 * b.x, y: 0.25 * a.y + 0.5 * c.y + 0.25 * b.y };
-  const tan = { x: 2 * (1 - t) * (c.x - a.x) + 2 * t * (b.x - c.x), y: 2 * (1 - t) * (c.y - a.y) + 2 * t * (b.y - c.y) };
-  const angle = (Math.atan2(tan.y, tan.x) * 180) / Math.PI + 90; // plane art points up
-  const plane = `<g transform="translate(${mid.x} ${mid.y}) rotate(${angle}) scale(4.2) translate(-50 -50)">
-      <path d="M50 0 C54 0 56 6 56 14 L56 38 L96 60 L96 70 L56 58 L56 82 L68 92 L68 98 L50 93 L32 98 L32 92 L44 82 L44 58 L4 70 L4 60 L44 38 L44 14 C44 6 46 0 50 0 Z" fill="${INK}"/></g>`;
-  const end = (p) => `<circle cx="${p.x}" cy="${p.y}" r="120" fill="#F5F1E7" stroke="${INK}" stroke-width="30"/><circle cx="${p.x}" cy="${p.y}" r="58" fill="${RED}"/>`;
-  const hero = `<path d="M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}" stroke="${INK}" stroke-width="46" stroke-dasharray="130 80" stroke-linecap="round" fill="none"/>
-    <circle cx="${mid.x}" cy="${mid.y}" r="300" fill="#F5F1E7"/>${plane}${end(a)}${end(b)}`;
+  const variant = process.env.FLIGHT_VARIANT || 'postmark';
+  const chest = variant === 'contrails' ? contrails(RED, NAVY) : postmark(NAVY);
   return {
-    front: svg(routes + hero + airmail(5380, 300) + crest(CREST.x, CREST.y, CREST.w, 'navy'), bg),
+    front: svg(FLIGHT_DEFS + chest + airmail(5380, 300) + crest(CREST.x, CREST.y, CREST.w, 'navy'), bg),
     pattern: svg(routes + airmail(5380, 300), bg),
     sleeve: svg(routes + airmail(3640, 260) + cuff(RED, NAVY), bg),
   };
+}
+
+// A round date stamp with wavy cancellation lines, like the franking on an airmail letter, worn by a few knocked-out specks.
+const POSTMARK = { cx: 2480, cy: 3420, r: 400, waves: { x0: 2950, x1: 4600, y: 3440, count: 6, gap: 74, amp: 34, length: 380 } };
+const FLIGHT_DEFS = (() => {
+  const r = rng(77);
+  const specks = Array.from({ length: 420 }, () => `<circle cx="${(1900 + r() * 2800).toFixed(0)}" cy="${(2700 + r() * 1500).toFixed(0)}" r="${(4 + r() * 12).toFixed(0)}" fill="#000"/>`).join('');
+  return `<mask id="worn"><rect width="${D}" height="${D}" fill="#fff"/>${specks}</mask>`;
+})();
+function postmark(ink) {
+  const { cx, cy, r, waves: w } = POSTMARK;
+  const ring = (rad, sw) => `<circle cx="${cx}" cy="${cy}" r="${rad}" fill="none" stroke="${ink}" stroke-width="${sw}"/>`;
+  const arc = (id, rad, sweep) => `<path id="${id}" d="M ${cx - rad} ${cy} A ${rad} ${rad} 0 0 ${sweep} ${cx + rad} ${cy}" fill="none"/>`;
+  const label = (id, text) => `<text font-family="Oswald" font-weight="700" font-size="92" letter-spacing="20" fill="${ink}"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${text}</textPath></text>`;
+  let lines = '';
+  for (let i = 0; i < w.count; i++) {
+    const y = w.y + (i - (w.count - 1) / 2) * w.gap;
+    let d = `M ${w.x0} ${y}`;
+    for (let x = w.x0; x < w.x1; x += w.length / 2) d += ` q ${w.length / 4} ${(((x - w.x0) / (w.length / 2)) % 2 ? 1 : -1) * w.amp} ${w.length / 2} 0`;
+    lines += `<path d="${d}" fill="none" stroke="${ink}" stroke-width="16" stroke-linecap="round"/>`;
+  }
+  return `<g mask="url(#worn)" opacity="0.88">${arc('pmTop', r - 120, 1)}${arc('pmBottom', r - 50, 0)}${ring(r, 26)}${ring(r - 190, 12)}
+    ${label('pmTop', 'PAR AVION')}${label('pmBottom', 'FAR FOX FC')}
+    <text x="${cx}" y="${cy + 70}" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="200" fill="${ink}">143</text>
+    ${lines}</g>`;
+}
+
+// Two contrails, one from each side, fading in as they near the crest: two people flying towards each other.
+function contrails(red, navy) {
+  const trail = (id, d, color, from, to) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${from[0]}" y1="${from[1]}" x2="${to[0]}" y2="${to[1]}"><stop offset="0" stop-color="${color}" stop-opacity="0"/><stop offset="0.55" stop-color="${color}" stop-opacity="0.55"/><stop offset="1" stop-color="${color}"/></linearGradient>
+    <g fill="none" stroke="url(#${id})" stroke-width="22" stroke-linecap="round"><path d="${d}"/><path d="${d}" transform="translate(40 18)"/></g>`;
+  return trail('trailL', 'M 1650 4900 C 2300 4200 2900 3000 3300 2640', navy, [1650, 4900], [3300, 2640])
+    + trail('trailR', 'M 4150 5000 C 4180 4100 4080 3150 3820 2660', red, [4150, 5000], [3820, 2660]);
 }
 
 /** A leaning palm silhouette: tapered trunk plus drooping crescent fronds. */
