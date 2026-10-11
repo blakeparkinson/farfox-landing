@@ -143,6 +143,9 @@ const featureGroups = [
     ],
   },
 ];
+import { ROUTES, routeBySlug } from '../lib/ldrRoutes';
+// The city guides couples search for most; the homepage passes its authority into the guide cluster.
+const POPULAR_ROUTES = ['new-york-to-london', 'london-to-sydney', 'los-angeles-to-manila', 'toronto-to-mumbai', 'new-york-to-los-angeles', 'chicago-to-london', 'london-to-singapore'].map(routeBySlug).filter(Boolean);
 ---
 
 <Layout title="Far Fox — Free Long-Distance Relationship App for Couples" appSchema>
@@ -511,6 +514,23 @@ const featureGroups = [
           <h3 class="font-900 text-2xl mb-2 group-hover:text-fox-pink transition-colors">Time zone calculator</h3>
           <p class="text-fox-text-light leading-relaxed">Pick two cities. See the hour gap and the overlap when you’re both actually awake.</p>
         </a>
+        <a href="/reunion-countdown/" class="group rounded-3xl border border-fox-pink/10 bg-fox-bg/40 p-7 hover:border-fox-pink/25 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fox-pink/10 transition-all">
+          <p class="text-xs font-900 uppercase tracking-wider text-fox-pink mb-2">Shareable</p>
+          <h3 class="font-900 text-2xl mb-2 group-hover:text-fox-pink transition-colors">Reunion countdown</h3>
+          <p class="text-fox-text-light leading-relaxed">Set the date you see each other next and send them a live countdown.</p>
+        </a>
+        <a href="/halfway-point-calculator/" class="group rounded-3xl border border-fox-pink/10 bg-fox-bg/40 p-7 hover:border-fox-pink/25 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fox-pink/10 transition-all">
+          <p class="text-xs font-900 uppercase tracking-wider text-fox-purple mb-2">Plan a trip</p>
+          <h3 class="font-900 text-2xl mb-2 group-hover:text-fox-pink transition-colors">Halfway point calculator</h3>
+          <p class="text-fox-text-light leading-relaxed">Find the fairest city to meet in the middle, about the same distance from both of you.</p>
+        </a>
+      </div>
+      <div class="mt-10 text-center">
+        <h3 class="font-900 text-xl mb-4">Long-distance city guides</h3>
+        <div class="flex flex-wrap justify-center gap-2">
+          {POPULAR_ROUTES.map((r) => <a href={`/long-distance/${r.slug}/`} class="rounded-full border border-fox-pink/15 px-4 py-2 text-sm font-800 hover:border-fox-pink/40 hover:text-fox-pink transition-colors">{r.a.city} to {r.b.city}</a>)}
+        </div>
+        <a href="/long-distance/" class="inline-block mt-5 font-800 text-fox-pink hover:text-fox-purple">All {ROUTES.length} city guides →</a>
       </div>
     </div>
   </section>

@@ -29,7 +29,7 @@
     "test:growth": "node scripts/test-couples-game.mjs && node scripts/test-growth-pages.mjs && node scripts/test-halfway-point.mjs && node scripts/test-canonical-urls.mjs",
     "test:brand": "node scripts/test-foxy-brand.mjs",
     "seo:indexnow": "node scripts/submit-indexnow.mjs",
-    "build": "node scripts/sync-catalog.mjs && astro build && node scripts/add-canonical-redirects.mjs && node scripts/test-analytics-output.mjs",
+    "build": "node scripts/sync-catalog.mjs && astro build && node scripts/optimize-built-images.mjs && node scripts/add-canonical-redirects.mjs && node scripts/test-analytics-output.mjs && node scripts/test-image-weight.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

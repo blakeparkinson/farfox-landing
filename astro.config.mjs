@@ -33,6 +33,7 @@ export default defineConfig({
           '/map/',
           '/couple-quiz/',
           '/etsy-map-redeem/',
+          '/embed/',
         ].some((skip) => page.includes(skip)),
       serialize: (item) => {
         const lastmod = blogLastmod[item.url];

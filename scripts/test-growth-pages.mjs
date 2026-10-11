@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 const page = slug => readFileSync(new URL(`../dist/client/blog/${slug}/index.html`, import.meta.url), 'utf8');
 const game = page('long-distance-relationship-games');
 assert.match(game, /id="couples-game"/);
-assert.match(game, /foxy-letter-v1.png/);
+assert.match(game, /foxy-letter-v1\.(png|webp)/, "the games page shows Foxy (the build serves the optimised WebP)");
 assert.match(game, /Auto-advance/);
 assert.match(game, /Copy partner link/);
 assert.match(game, /They answer before seeing your choice/);
