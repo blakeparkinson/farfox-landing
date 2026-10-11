@@ -204,10 +204,16 @@ function bigBen(x, base, f) {
     + [-45, -15, 15, 45].map((dx) => `<rect x="${x + dx - 8}" y="${yBelfry - 78}" width="16" height="56" rx="8" fill="${SKIES.dawn[2]}" opacity="0.7"/>`).join('');
   return { shapes: shapes.join(''), detail };
 }
+/**
+ * The Shard as overlapping glass panels, each rising to its own tip: the crown splinters apart with sky between
+ * the tips, and where panels overlap the sides step instead of running as one straight line.
+ * Each panel is [left foot, right foot, tip x, tip height] relative to the building's centre line.
+ */
+const SHARD_PANELS = [[-165, 30, -52, 1370], [-125, 90, -18, 1505], [-45, 150, 20, 1570], [5, 168, 54, 1410], [-150, -20, -70, 1260]];
 function shard(x, base) {
-  const h = 1500;
-  const shapes = `<path d="M${x - 160} ${base} L${x - 22} ${base - h + 60} L${x - 36} ${base - h} L${x - 6} ${base - h + 50} L${x + 8} ${base - h - 30} L${x + 24} ${base - h + 60} L${x + 160} ${base} Z"/>`;
-  const detail = `<path d="M${x - 90} ${base} L${x - 6} ${base - h + 50} M${x + 70} ${base} L${x + 10} ${base - h + 40}" stroke="${LONDON.rim}" stroke-width="5" opacity="0.5" fill="none"/>`;
+  const shapes = SHARD_PANELS.map(([l, rgt, tip, h]) => `<path d="M${x + l} ${base} L${x + tip} ${base - h} L${x + rgt} ${base} Z"/>`).join('');
+  // Seams where the panels meet: from each tip down its inner edge.
+  const detail = SHARD_PANELS.slice(0, 4).map(([l, rgt, tip, h]) => `<path d="M${x + tip} ${base - h} L${x + (l + rgt) / 2 + (tip > 0 ? -30 : 30)} ${base}" stroke="${LONDON.rim}" stroke-width="5" opacity="0.45" fill="none"/>`).join('');
   return { shapes, detail };
 }
 function londonEye(cx, base, r, f) {
