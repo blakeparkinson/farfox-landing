@@ -90,9 +90,9 @@ function windows(r, x, top, w, base, density = 0.84) {
   return out;
 }
 /**
- * Manhattan landmarks, drawn to their real proportions as lists of flat shapes standing on `base`. The same
- * shapes clip each building's lit windows; heights keep the real order: One WTC, then Empire State, then Chrysler.
- * They also (so none float in the sky) and, shifted right, draw a faint moonlit rim.
+ * Manhattan landmarks to their real proportions, kept in their real height order (One WTC, Empire State, Chrysler),
+ * as flat shapes standing on `base`. The same shapes clip each building's lit windows, so none float in the sky,
+ * and, shifted right, draw a faint moonlit rim.
  */
 const rect = (x, y, w, h) => `<rect x="${x - w / 2}" y="${y - h}" width="${w}" height="${h + 1}"/>`;
 const trap = (x, y, wBottom, wTop, h) => `<path d="M${x - wBottom / 2} ${y} L${x - wTop / 2} ${y - h} L${x + wTop / 2} ${y - h} L${x + wBottom / 2} ${y} Z"/>`;
