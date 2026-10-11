@@ -3,7 +3,7 @@
  * Same 6000×6000 space and helpers as kit-designs-2026-10.mjs. Whichever is chosen replaces its kit;
  * the rest are deleted with their BACKS and jerseyBack.mjs entries.
  *   twilight-halftone  deep night purple fading out through a halftone dot field, a crescent moon by the crest
- *   twilight-skies     two skies over two cities: night over Manhattan on the front, dawn over another city on the back
+ *   twilight-skies     two skies over two cities: night over Manhattan on the front, dawn over London on the back
  *   paradise-aloha     the Paradise print as a vintage aloha shirt: full-colour leaves and hibiscus on cream
  */
 import { D, CREST, rng, crest } from './kit-designs-2026-10.mjs';
@@ -190,6 +190,41 @@ function nycSkyline(seed, base) {
   return towerRow(r, base, NYC_DEPTH.far, NYC_DEPTH.farH, { unlit: '#24205A', litStart: 0.06 }) + landmarks + towerRow(r, base + 40, SKIES.nightCity, NYC_DEPTH.nearH, { tanks: true, unlit: '#1C1946' });
 }
 
+/**
+ * Dawn London for the back: Big Ben in front of the rising sun, the Shard to the left, the London Eye to the right,
+ * all below the FAR FOX FC line (to y 4720) and clear of its width (about x 2350–3650).
+ */
+export const LONDON = { city: '#6E5480', rim: '#C99AA6', clock: '#FFE9CF', base: 5880 };
+function bigBen(x, base, f) {
+  const shaft = 560, stage = 150, belfry = 90, roof = 160, needle = 80;
+  const yStage = base - shaft, yBelfry = yStage - stage, yRoof = yBelfry - belfry;
+  const shapes = [rect(x, base, 150, shaft), rect(x, yStage, 176, stage), rect(x, yBelfry, 150, belfry), trap(x, yRoof, 150, 40, roof), trap(x, yRoof - roof, 40, 4, needle),
+    ...[-1, 1].map((side) => `<path d="M${x + side * 75 - 12} ${yRoof} L${x + side * 75} ${yRoof - 70} L${x + side * 75 + 12} ${yRoof} Z"/>`)];
+  const detail = `<circle cx="${x}" cy="${yStage - stage / 2}" r="58" fill="${LONDON.clock}"/><path d="M${x} ${yStage - stage / 2} V${yStage - stage / 2 - 40} M${x} ${yStage - stage / 2} L${x + 28} ${yStage - stage / 2 + 8}" stroke="${f}" stroke-width="7" stroke-linecap="round"/>`
+    + [-45, -15, 15, 45].map((dx) => `<rect x="${x + dx - 8}" y="${yBelfry - 78}" width="16" height="56" rx="8" fill="${SKIES.dawn[2]}" opacity="0.7"/>`).join('');
+  return { shapes: shapes.join(''), detail };
+}
+function shard(x, base) {
+  const h = 1500;
+  const shapes = `<path d="M${x - 160} ${base} L${x - 22} ${base - h + 60} L${x - 36} ${base - h} L${x - 6} ${base - h + 50} L${x + 8} ${base - h - 30} L${x + 24} ${base - h + 60} L${x + 160} ${base} Z"/>`;
+  const detail = `<path d="M${x - 90} ${base} L${x - 6} ${base - h + 50} M${x + 70} ${base} L${x + 10} ${base - h + 40}" stroke="${LONDON.rim}" stroke-width="5" opacity="0.5" fill="none"/>`;
+  return { shapes, detail };
+}
+function londonEye(cx, base, r, f) {
+  const cy = base - r - 120;
+  const spokes = Array.from({ length: 16 }, (_, i) => { const a = (i / 16) * Math.PI * 2; return `<line x1="${cx}" y1="${cy}" x2="${(cx + Math.cos(a) * r).toFixed(0)}" y2="${(cy + Math.sin(a) * r).toFixed(0)}"/>`; }).join('');
+  const pods = Array.from({ length: 32 }, (_, i) => { const a = (i / 32) * Math.PI * 2; return `<ellipse cx="${(cx + Math.cos(a) * (r + 14)).toFixed(0)}" cy="${(cy + Math.sin(a) * (r + 14)).toFixed(0)}" rx="13" ry="9" fill="${f}"/>`; }).join('');
+  return `<g stroke="${f}" fill="none"><circle cx="${cx}" cy="${cy}" r="${r}" stroke-width="16"/><g stroke-width="5">${spokes}</g>
+    <path d="M${cx - r * 0.55} ${base} L${cx} ${cy} L${cx + r * 0.2} ${base}" stroke-width="22"/></g>${pods}<circle cx="${cx}" cy="${cy}" r="26" fill="${f}"/>`;
+}
+function londonDawn(seed) {
+  const r = rng(seed), f = LONDON.city, base = LONDON.base;
+  const low = towerRow(r, base + 20, f, [120, 220], { unlit: '#7F6491', litStart: 0.03 });
+  const ben = bigBen(3000, base, f), sh = shard(1960, base);
+  const piece = (id, built) => `<clipPath id="${id}">${built.shapes}</clipPath><g fill="${LONDON.rim}" transform="translate(-9 0)">${built.shapes}</g><g fill="${f}">${built.shapes}</g><g clip-path="url(#${id})">${built.detail}</g>`;
+  return londonEye(4020, base, 330, f) + piece('ldn-shard', sh) + piece('ldn-ben', ben) + low;
+}
+
 /** The moon with flat poster-style halo rings. */
 const posterMoon = (x, y, r) => [3.2, 2.4, 1.7].map((k, i) => `<circle cx="${x}" cy="${y}" r="${r * k}" fill="${SKIES.moon}" opacity="${[0.05, 0.08, 0.12][i]}"/>`).join('') + crescent(x, y, r, SKIES.moon, 'moonS');
 /** The sun half-risen behind the dawn skyline, with flat rings. */
@@ -198,8 +233,8 @@ function twilightSkies() {
   const keep = (x, y) => Math.hypot(x - CREST.x, y - CREST.y) > 320 && Math.hypot(x - 2420, y - 2250) > 520;
   return {
     front: svg(SPIRE_DEFS + stars(5, 300, 5000, '#FFF6E6', keep) + posterMoon(2420, 2250, 210) + nycSkyline(61, 5550) + crest(CREST.x, CREST.y, CREST.w, 'light'), bands(SKIES.night, 5450)),
-    // The dawn city stays low, under the FAR FOX FC line (to y 4720), so the sun rises clear of it.
-    pattern: svg(posterSun(3000, 5250, 400) + skyline(83, 5900, { fill: SKIES.dawnCity, lit: false, scale: 0.5 }), bands(SKIES.dawn, 5400)),
+    // Dawn London: Big Ben stands in front of the rising sun.
+    pattern: svg(posterSun(3000, 5330, 380) + londonDawn(83), bands(SKIES.dawn, 5400)),
     // Sleeves stay on the night side; the dawn shows in the cuff band.
     sleeve: svg(stars(15, 120, 3900, '#FFF6E6') + cuff(SKIES.moon, SKIES.dawn[4]), bands(SKIES.night, 4000)),
     backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="306" viewBox="0 0 300 306">${crest(150, 153, 300, 'navy')}</svg>`,
