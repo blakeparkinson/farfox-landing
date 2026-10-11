@@ -201,14 +201,15 @@ function londonDawn(seed) {
   return londonEye(4020, base, 330, f) + piece('ldn-shard', sh) + piece('ldn-ben', ben) + low;
 }
 
-/** The moon with flat poster-style halo rings. */
-const posterMoon = (x, y, r) => [3.2, 2.4, 1.7].map((k, i) => `<circle cx="${x}" cy="${y}" r="${r * k}" fill="${SKIES.moon}" opacity="${[0.05, 0.08, 0.12][i]}"/>`).join('') + crescent(x, y, r, SKIES.moon, 'moonNy');
+/** The moon: small, with one faint ring, so it sits in the sky as a detail rather than a second chest badge. */
+export const MOON = { x: 2300, y: 1900, r: 125 };
+const posterMoon = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r * 1.8}" fill="${SKIES.moon}" opacity="0.07"/>` + crescent(x, y, r, SKIES.moon, 'moonNy');
 /** The sun half-risen behind the dawn skyline, with flat rings. */
 const posterSun = (x, y, r) => [2.6, 1.9, 1.4].map((k, i) => `<circle cx="${x}" cy="${y}" r="${r * k}" fill="${SKIES.sun}" opacity="${[0.16, 0.24, 0.34][i]}"/>`).join('') + `<circle cx="${x}" cy="${y}" r="${r}" fill="${SKIES.sun}"/>`;
 function twoSkiesNyLondon() {
-  const keep = (x, y) => Math.hypot(x - CREST.x, y - CREST.y) > 320 && Math.hypot(x - 2420, y - 2250) > 520;
+  const keep = (x, y) => Math.hypot(x - CREST.x, y - CREST.y) > 320 && Math.hypot(x - MOON.x, y - MOON.y) > MOON.r * 2.2;
   return {
-    front: svg(SPIRE_DEFS + stars(5, 300, 5000, '#FFF6E6', keep) + posterMoon(2420, 2250, 210) + nycSkyline(61, 5550) + crest(CREST.x, CREST.y, CREST.w, 'light'), bands(SKIES.night, 5450)),
+    front: svg(SPIRE_DEFS + stars(5, 300, 5000, '#FFF6E6', keep) + posterMoon(MOON.x, MOON.y, MOON.r) + nycSkyline(61, 5550) + crest(CREST.x, CREST.y, CREST.w, 'light'), bands(SKIES.night, 5450)),
     // Dawn London: Big Ben stands in front of the rising sun.
     pattern: svg(posterSun(3000, 5330, 380) + londonDawn(83), bands(SKIES.dawn, 5400)),
     // Sleeves stay on the night side; the dawn shows in the cuff band.
