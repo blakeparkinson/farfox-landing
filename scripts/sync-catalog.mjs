@@ -105,7 +105,7 @@ async function main() {
   // Coordinates (443266945) + Orange (437126197) — retired in the Oct 2026 drop;
   // the mascot LDC tee (436883116) + Worth Every Mile (436882976) — replaced by the Oct 2026 tee line;
   // the three baseball jerseys (436911930, 437021439, 437052584) — replaced by the Ballpark jersey.
-  const RETIRED = new Set([437126174, 437120257, 443266945, 437126197, 436883116, 436882976, 436911930, 437021439, 437052584]);
+  const RETIRED = new Set([437126174, 437120257, 443266945, 437126197, 436883116, 436882976, 436911930, 437021439, 437052584, 443164966]);
   const products = [];
   for (const p of list) {
     if (RETIRED.has(Number(p.id))) continue;

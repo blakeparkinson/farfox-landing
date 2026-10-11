@@ -17,3 +17,9 @@ export function canonicalRedirectRules(pages) {
 }
 
 export const isCanonicalRedirect = (route) => route.status === 308 && route.headers?.Location === '/$1/' && route.src?.startsWith('^/(');
+
+/** An Astro redirect route (`^/old$` with a Location) made to match `/old/` as well. */
+export const acceptTrailingSlash = (route) =>
+  [301, 302, 307, 308].includes(route.status) && route.headers?.Location && /^\^\/[^()]*[^/]\$$/.test(route.src || '')
+    ? { ...route, src: route.src.replace(/\$$/, '/?$') }
+    : route;

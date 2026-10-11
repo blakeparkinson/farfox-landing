@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { PRODUCT_COPY, PAIRS, kindOf, productPath, productTitle, relatedProducts, merchantFeedItems, merchantFeedXml } from '../src/lib/productPages.ts';
+import { PRODUCT_COPY, PAIRS, kindOf, productPath, productTitle, relatedProducts, merchantFeedItems, merchantFeedXml, cityPairKit } from '../src/lib/productPages.ts';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/catalog.json', import.meta.url), 'utf8')).products;
 
@@ -44,5 +44,14 @@ const xml = merchantFeedXml(items);
 assert.ok(xml.startsWith('<?xml') && xml.includes('xmlns:g="http://base.google.com/ns/1.0"'));
 assert.equal(xml.split('<item>').length - 1, items.length);
 assert.ok(!/&(?!amp;|lt;|gt;|quot;|apos;)/.test(xml), 'every ampersand is escaped');
+
+// City guides find their Two Skies jersey either way round, and only for the pair it shows.
+const twoSkies = products.find((p) => /Two Skies: New York \/ London/.test(p.name));
+assert.ok(twoSkies, 'the New York / London Two Skies jersey is in the catalog');
+assert.equal(cityPairKit(products, 'London', 'New York'), twoSkies);
+assert.equal(cityPairKit(products, 'New York', 'London'), twoSkies);
+assert.equal(cityPairKit(products, 'New York', 'Paris'), null);
+assert.equal(productPath(twoSkies), '/shop/long-distance-fc-jersey-two-skies-new-york-london/');
+assert.ok(!products.some((p) => p.id === 443164966), 'Twilight is retired from the shop');
 
 console.log(`product pages: ${products.length} pages, ${items.length} feed items, all checks passed`);

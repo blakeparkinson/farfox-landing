@@ -2,6 +2,8 @@
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import { ROUTES, AWAKE, awakeWindows, bestCall, windowMinutes, clock, flightHours, gapSentence, hoursLabel, halfwayHubs, relatedRoutes, yearOfGaps, type Route } from '../../lib/ldrRoutes';
 import { formatDistance, halfwayUrl } from '../../lib/halfwayPoint';
+import catalog from '../../data/catalog.json';
+import { cityPairKit, formatPrice, productPath, type ShopProduct } from '../../lib/productPages';
 
 export function getStaticPaths() {
   return ROUTES.map((route) => ({ params: { route: route.slug }, props: { route } }));
@@ -44,6 +46,7 @@ const faqs: [string, string][] = [
   ...(hubs.length ? [[`Where can a couple meet halfway between ${a.city} and ${b.city}?`, `The fairest cities to meet in are ${hubs.map((h) => h.city).join(', ')}. ${hubs[0].city} is ${formatDistance(hubs[0].fromKm)} from ${a.city} and ${formatDistance(hubs[0].toKm)} from ${b.city}.`] as [string, string]] : []),
 ];
 const faqSchema = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(([q, ans]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: ans } })) };
+const pairKit = cityPairKit(catalog.products as ShopProduct[], a.city, b.city);
 const utm = `utm_source=route_guide&utm_medium=onsite&utm_campaign=city_pairs&utm_content=${route.slug}`;
 ---
 <ToolLayout title={title} description={description}>
@@ -78,6 +81,13 @@ const utm = `utm_source=route_guide&utm_medium=onsite&utm_campaign=city_pairs&ut
 
   <section class="tips"><h2>Making {a.city}–{b.city} work</h2><ul>{tips.map((t) => <li>{t}</li>)}</ul></section>
 
+  {pairKit && (
+    <a class="pair-kit" href={`${productPath(pairKit)}?${utm}`} data-umami-event="route-pair-kit" data-umami-event-route={route.slug}>
+      <img src={pairKit.image} alt={pairKit.name} width="180" height="180" loading="lazy" />
+      <span><strong>Wear both skies</strong>The Two Skies jersey: {a.city} on the front, {b.city} on the back, with your name and number. {formatPrice(pairKit.price)} →</span>
+    </a>
+  )}
+
   <section class="next">
     <article><h2>Count down to your next visit</h2><p>Set the date and send them a countdown.</p><a href={`/reunion-countdown/?${utm}`} data-umami-event="route-countdown" data-umami-event-route={route.slug}>Start a reunion countdown →</a></article>
     <article><h2>{a.city} and {b.city} on one map</h2><p>A personalised print of the two of you, and the distance in between.</p><a href={`/personalized-long-distance-map/?${utm}`} data-umami-event="route-map" data-umami-event-route={route.slug}>Make your map →</a></article>
@@ -110,6 +120,7 @@ const utm = `utm_source=route_guide&utm_medium=onsite&utm_campaign=city_pairs&ut
   .facts h2,.next h2,.tips h2,.faq h2,.related h2{font-size:1.2rem}.facts ul,.tips ul{list-style:disc;padding-left:1.25rem;line-height:1.7;color:var(--muted)}.facts li,.tips li{margin:6px 0}
   .big{font-size:1.5rem;font-weight:900;color:var(--ink)!important}.small{font-size:.9rem}
   .tips{margin:40px 0;max-width:760px}
+  .pair-kit{display:flex;align-items:center;gap:20px;margin:40px 0;max-width:760px;padding:16px 24px 16px 16px;background:var(--panel);border:1px solid var(--line);border-radius:24px;text-decoration:none;color:inherit}.pair-kit img{width:120px;height:120px;object-fit:contain;flex-shrink:0}.pair-kit strong{display:block;font-size:1.15rem;margin-bottom:4px}
   .next{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:40px 0}.next a{font-weight:800}
   .faq{max-width:760px;margin:40px 0}.faq details{border-bottom:1px solid var(--line);padding:12px 0}.faq summary{font-weight:800;cursor:pointer}
   .related ul{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0}.related a{display:inline-block;padding:8px 14px;border:1px solid var(--line);border-radius:999px;text-decoration:none;font-weight:700}
