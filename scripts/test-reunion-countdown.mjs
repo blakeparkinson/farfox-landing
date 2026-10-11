@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
-import { validDate, daysUntil, readReunion, reunionUrl, cleanName, reunionLabel } from '../src/lib/reunionCountdown.ts';
+import { validDate, daysUntil, readReunion, reunionUrl, cleanName, reunionLabel, embedUrl, embedCode } from '../src/lib/reunionCountdown.ts';
 const countdownPage = readFileSync(new URL('../src/pages/reunion-countdown.astro', import.meta.url), 'utf8');
 assert.match(countdownPage, /Send the countdown to your person/);
 assert.match(countdownPage, /Copy partner link/);
@@ -35,3 +35,16 @@ assert.equal(new URL(safe.url).searchParams.get('utm_campaign'),'reunion_countdo
 assert.equal(beforeSend({url:'http://['}),null);
 assert.match(readFileSync(new URL('../src/layouts/Layout.astro', import.meta.url),'utf8'), /data-exclude-hash="true"/);
 console.log('Both analytics integrations explicitly exclude private URL fragments.');
+
+// The embeddable widget: names and date stay in the hash, the snippet carries a plain link back to the tool,
+// and nothing a couple types can break out of the HTML attributes.
+const couple = { you: 'Sam "the" <Bold>', partner: 'Alex & Co', date: '2027-02-14', zone: 'Europe/London' };
+const embed = new URL(embedUrl('https://lovefarfox.com', couple));
+assert.equal(embed.pathname, '/embed/countdown/');
+assert.equal(embed.search, '', 'no tracking query on the framed page');
+assert.deepEqual(readReunion(embed.hash), { ...couple, you: cleanName(couple.you), partner: cleanName(couple.partner) });
+const snippet = embedCode('https://lovefarfox.com', couple);
+assert.match(snippet, /^<iframe src="https:\/\/lovefarfox\.com\/embed\/countdown\/#v=1&amp;/);
+assert.match(snippet, /<a href="https:\/\/lovefarfox\.com\/reunion-countdown\/">Long-distance reunion countdown<\/a> by Far Fox/);
+assert.ok(!/<Bold>|"the"/.test(snippet), 'names are escaped inside attributes');
+console.log('Embed widget: hash round trip, escaping and the attribution link passed.');

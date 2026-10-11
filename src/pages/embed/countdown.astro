@@ -1,0 +1,53 @@
+---
+// A framed widget for other sites: kept out of search results, with the tool itself as its canonical page.
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reunion countdown | Far Fox</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="https://lovefarfox.com/reunion-countdown/" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet" />
+    <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id="9094af54-517f-4e51-bc4b-f2bf5f86d7f8" data-exclude-hash="true"></script>
+    <style>
+      html, body { margin: 0; height: 100%; }
+      body { font-family: Nunito, system-ui, sans-serif; background: linear-gradient(160deg, #fff5f0, #fde7ef); color: #2d1b4e; display: flex; align-items: center; justify-content: center; text-align: center; }
+      main { padding: 20px; }
+      img { width: 150px; height: 150px; }
+      .names { font-weight: 900; color: #e0689a; letter-spacing: .02em; margin: 0 0 4px; }
+      .days { font-size: 3.4rem; font-weight: 900; line-height: 1; margin: 6px 0 2px; }
+      .label { font-weight: 800; margin: 0 0 10px; }
+      .date { font-size: .9rem; opacity: .75; margin: 0 0 14px; }
+      a { color: #6e3e8c; font-size: .78rem; font-weight: 800; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/brand/foxy-letter-v1.png" alt="Foxy holding a love letter" width="150" height="150" />
+      <p class="names" id="names">You &amp; me</p>
+      <p class="days" id="days">–</p>
+      <p class="label" id="label">days until we're together</p>
+      <p class="date" id="date"></p>
+      <a href="https://lovefarfox.com/reunion-countdown/?utm_source=countdown_embed&utm_medium=referral&utm_campaign=reunion_countdown" target="_blank" rel="noopener">Make your own with Far Fox</a>
+    </main>
+    <script>
+      import { readReunion, daysUntil, reunionHeading } from '../../lib/reunionCountdown';
+      const get = (id: string) => document.getElementById(id)!;
+      function render() {
+        const r = readReunion(location.hash);
+        if (!r) { get('days').textContent = '♥'; get('label').textContent = 'Count down to your next visit'; return; }
+        const days = daysUntil(r.date, r.zone);
+        get('names').textContent = reunionHeading(r);
+        get('days').textContent = days > 0 ? String(days) : '♥';
+        get('label').textContent = days > 1 ? 'days until we’re together' : days === 1 ? 'day until we’re together' : days === 0 ? 'Today is the day' : 'Together again';
+        get('date').textContent = new Intl.DateTimeFormat('en', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${r.date}T00:00:00Z`));
+      }
+      render();
+      // Midnight in the couple's zone moves the count, so check again every minute.
+      setInterval(render, 60_000);
+      addEventListener('hashchange', render);
+    </script>
+  </body>
+</html>

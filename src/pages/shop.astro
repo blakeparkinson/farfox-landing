@@ -111,7 +111,7 @@ const grouped = [...SHOP_CATEGORIES.map((c) => c.title), 'More']
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {group.items.map((p) => (
         <div class="group flex flex-col rounded-3xl bg-white/70 border border-fox-pink/10 overflow-hidden hover:border-fox-pink/25 hover:shadow-xl hover:shadow-fox-pink/10 transition-all duration-200 hover:-translate-y-1">
-          <a href={productPath(p)} aria-label={p.name}><ProductImage product={p} /></a>
+          <ProductImage product={p} href={productPath(p)} />
           <div class="flex flex-col flex-1 p-5">
             <div class="flex items-baseline justify-between gap-2 mb-3">
               <h2 class="font-800 text-lg leading-tight"><a href={productPath(p)} class="hover:text-fox-pink transition-colors">{p.name}</a></h2>
