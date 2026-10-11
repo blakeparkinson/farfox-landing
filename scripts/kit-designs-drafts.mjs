@@ -89,33 +89,64 @@ function windows(r, x, top, w, base, density = 0.84) {
   for (let wy = top + 50; wy < base - 40; wy += 80) for (let wx = x + 22; wx < x + w - 30; wx += 52) if (r() > density) out += `<rect x="${wx.toFixed(0)}" y="${wy.toFixed(0)}" width="20" height="30" fill="${SKIES.window}" opacity="${(0.55 + r() * 0.45).toFixed(2)}"/>`;
   return out;
 }
-/** Manhattan landmarks as flat silhouettes standing on `base`; each returns [markup, top y]. */
+/**
+ * Manhattan landmarks, drawn to their real proportions as lists of flat shapes standing on `base`. The same
+ * shapes clip each building's lit windows; heights keep the real order: One WTC, then Empire State, then Chrysler.
+ * They also (so none float in the sky) and, shifted right, draw a faint moonlit rim.
+ */
+const rect = (x, y, w, h) => `<rect x="${x - w / 2}" y="${y - h}" width="${w}" height="${h + 1}"/>`;
+const trap = (x, y, wBottom, wTop, h) => `<path d="M${x - wBottom / 2} ${y} L${x - wTop / 2} ${y - h} L${x + wTop / 2} ${y - h} L${x + wBottom / 2} ${y} Z"/>`;
 const NYC = {
-  empire(x, base, f) { // stepped setbacks, mast and spire
-    const tiers = [[300, 600], [220, 260], [150, 300], [92, 120], [40, 150], [12, 190]];
-    let y = base, out = '';
-    for (const [w, h] of tiers) { out += `<rect x="${x - w / 2}" y="${y - h}" width="${w}" height="${h + 2}" fill="${f}"/>`; y -= h; }
-    return out;
+  empire(x, base) {
+    const shapes = [rect(x, base, 360, 90), rect(x, base - 90, 300, 820), rect(x, base - 90, 240, 1000)];
+    let y = base - 1090;
+    for (const [w, h] of [[190, 70], [150, 60], [110, 50]]) { shapes.push(rect(x, y, w, h)); y -= h; }
+    shapes.push(trap(x, y, 70, 44, 120), trap(x, y - 120, 14, 4, 280));
+    // Vertical piers down the main shaft, the building's Art Deco lines.
+    const piers = Array.from({ length: 7 }, (_, i) => `<rect x="${x - 105 + i * 35}" y="${base - 1050}" width="5" height="900" fill="#221E52"/>`).join('');
+    return { shapes: shapes.join(''), detail: piers, top: y - 400 };
   },
-  chrysler(x, base, f) { // shaft, stacked sunburst arches, needle spire
-    const shaft = 900, top = base - shaft;
-    let out = `<rect x="${x - 110}" y="${top}" width="220" height="${shaft + 2}" fill="${f}"/>`;
-    [[200, 0], [160, 70], [120, 140], [80, 210]].forEach(([w, dy], i) => {
-      const cy = top - dy;
-      out += `<path d="M${x - w / 2} ${cy} A ${w / 2} ${w * 0.55} 0 0 1 ${x + w / 2} ${cy} Z" fill="${f}"/>`;
-      for (const k of [-0.28, 0, 0.28]) out += `<path d="M${x + k * w - 9} ${cy - 8} L${x + k * w} ${cy - 30 - i * 2} L${x + k * w + 9} ${cy - 8} Z" fill="${SKIES.window}" opacity="0.85"/>`;
+  chrysler(x, base) {
+    const shapes = [rect(x, base, 340, 220), rect(x, base - 220, 280, 80), rect(x, base - 300, 220, 520)];
+    let y = base - 820, rays = '';
+    [220, 190, 160, 130, 100, 72].forEach((w, i) => {
+      const h = 55;
+      shapes.push(`<path d="M${x - w / 2} ${y} V${y - h * 0.4} A ${w / 2} ${h * 1.1} 0 0 1 ${x + w / 2} ${y - h * 0.4} V${y} Z"/>`);
+      // Each terrace carries a fan of triangular windows, the crown's sunburst.
+      const n = Math.max(3, Math.round(w / 40));
+      for (let k = 0; k < n; k++) {
+        const t = (k + 0.5) / n, wx = x - w / 2 + w * t, lift = Math.sin(t * Math.PI) * h * 0.5;
+        rays += `<path d="M${(wx - 8).toFixed(1)} ${(y - 10).toFixed(1)} L${wx.toFixed(1)} ${(y - 26 - lift).toFixed(1)} L${(wx + 8).toFixed(1)} ${(y - 10).toFixed(1)} Z" fill="${SKIES.window}" opacity="0.9"/>`;
+      }
+      y -= h;
     });
-    return out + `<path d="M${x - 16} ${top - 270} L${x} ${top - 560} L${x + 16} ${top - 270} Z" fill="${f}"/>`;
+    shapes.push(trap(x, y - 20, 24, 2, 420));
+    return { shapes: shapes.join(''), detail: rays, top: y - 440 };
   },
-  oneWtc(x, base, f) { // tapering tower and antenna
-    const h = 1450;
-    return `<path d="M${x - 160} ${base} L${x - 70} ${base - h} L${x + 70} ${base - h} L${x + 160} ${base} Z" fill="${f}"/><rect x="${x - 8}" y="${base - h - 380}" width="16" height="382" fill="${f}"/>`;
+  oneWtc(x, base) {
+    const podium = 220, taper = 1400, top = base - podium - taper;
+    const shapes = [rect(x, base, 300, podium), trap(x, base - podium, 300, 170, taper), rect(x, top, 186, 20), trap(x, top - 20, 44, 36, 50), trap(x, top - 70, 12, 3, 380)];
+    // The tower's faceted faces: long triangles meeting at the middle of each edge.
+    const facets = `<path d="M${x - 150} ${base - podium} L${x} ${top} L${x + 150} ${base - podium} M${x - 85} ${top} L${x} ${base - podium} L${x + 85} ${top}" fill="none" stroke="#24205A" stroke-width="5"/>`;
+    return { shapes: shapes.join(''), detail: facets, top: top - 450 };
   },
 };
+const RIM = { colour: '#3B3680', shift: 9 };
+/** One landmark: a moonlit rim, the silhouette, its windows clipped to it, then its own detail. */
+function landmark(id, built, base, seed) {
+  const r = rng(seed);
+  let lit = '';
+  for (let wy = built.top + 500; wy < base - 30; wy += 70) for (let wx = 1800; wx < 4300; wx += 46) if (r() > 0.86) lit += `<rect x="${wx}" y="${wy}" width="18" height="28" fill="${SKIES.window}" opacity="${(0.55 + r() * 0.45).toFixed(2)}"/>`;
+  return `<clipPath id="${id}">${built.shapes}</clipPath>
+    <g fill="${RIM.colour}" transform="translate(${RIM.shift} 0)">${built.shapes}</g>
+    <g fill="${SKIES.nightCity}">${built.shapes}</g>
+    <g clip-path="url(#${id})">${built.detail}${lit}</g>`;
+}
+
 /** A rooftop water tower, the small detail that says New York. */
 const waterTower = (x, top, f) => `<rect x="${x - 34}" y="${top - 70}" width="68" height="60" rx="6" fill="${f}"/><path d="M${x - 40} ${top - 70} L${x} ${top - 108} L${x + 40} ${top - 70} Z" fill="${f}"/><rect x="${x - 30}" y="${top - 12}" width="8" height="12" fill="${f}"/><rect x="${x + 22}" y="${top - 12}" width="8" height="12" fill="${f}"/>`;
 /** Night Manhattan in three depths: hazy far towers, the three landmarks well above them, short blocks in front. */
-const NYC_DEPTH = { far: '#1C1848', farH: [420, 520], nearH: [180, 300], landmarkScale: 1.15 };
+const NYC_DEPTH = { far: '#1C1848', farH: [420, 520], nearH: [180, 300] };
 function towerRow(r, base, fill, [hMin, hRange], { tanks = false, density = 0.84 } = {}) {
   let out = '', x = -100;
   while (x < D + 100) {
@@ -127,12 +158,11 @@ function towerRow(r, base, fill, [hMin, hRange], { tanks = false, density = 0.84
   return out;
 }
 function nycSkyline(seed, base) {
-  const r = rng(seed), f = SKIES.nightCity, k = NYC_DEPTH.landmarkScale;
+  const r = rng(seed);
   // The landmarks sit inside the visible front (x 1850–4230), clear of the crest's column.
-  const landmarks = [[NYC.empire, 2250], [NYC.chrysler, 2900], [NYC.oneWtc, 3700]].map(([build, at]) =>
-    `<g transform="translate(${at} ${base}) scale(${k}) translate(${-at} ${-base})">${build(at, base, f)}</g>`).join('');
-  const lit = windows(r, 2080, base - 690 * k, 330, base, 0.8) + windows(r, 2770, base - 1030 * k, 250, base, 0.8) + windows(r, 3610, base - 1300 * k, 180, base, 0.8); // a narrow column, inside the tower's taper
-  return towerRow(r, base, NYC_DEPTH.far, NYC_DEPTH.farH, { density: 0.9 }) + landmarks + lit + towerRow(r, base + 40, f, NYC_DEPTH.nearH, { tanks: true });
+  const landmarks = [['empire', NYC.empire, 2250], ['chrysler', NYC.chrysler, 2920], ['onewtc', NYC.oneWtc, 3720]]
+    .map(([id, build, at], i) => landmark(`nyc-${id}`, build(at, base), base, seed + i)).join('');
+  return towerRow(r, base, NYC_DEPTH.far, NYC_DEPTH.farH, { density: 0.9 }) + landmarks + towerRow(r, base + 40, SKIES.nightCity, NYC_DEPTH.nearH, { tanks: true });
 }
 
 /** The moon with flat poster-style halo rings. */
