@@ -114,9 +114,14 @@ const NYC = {
     let y = base - 1090;
     for (const [w, h] of [[190, 70], [150, 60], [110, 50]]) { shapes.push(rect(x, y, w, h)); y -= h; }
     shapes.push(trap(x, y, 70, 44, 120), trap(x, y - 120, 14, 4, 280));
+    const crownTop = y, crownBottom = base - 1090;
     // Vertical piers down the main shaft, the building's Art Deco lines.
     const piers = Array.from({ length: 7 }, (_, i) => `<rect x="${x - 105 + i * 35}" y="${base - 1050}" width="5" height="900" fill="#221E52"/>`).join('');
-    return { shapes: shapes.join(''), detail: piers, x, width: 300, windowTop: base - 1090 };
+    // Floodlit crown: the setbacks and mast washed in pink from below, with a soft halo.
+    const lights = glow(x, crownBottom - 110, 170, 230, SPIRE_LIGHTS.empire, 0.32)
+      + `<g fill="${SPIRE_LIGHTS.empire}" opacity="0.82">${[[190, 70], [150, 60], [110, 50]].reduce((acc, [w, h]) => ({ y: acc.y - h, out: acc.out + rect(x, acc.y, w, h) }), { y: crownBottom, out: '' }).out}${trap(x, crownTop, 70, 44, 120)}</g>`
+      + beacon(x, crownTop - 400);
+    return { shapes: shapes.join(''), detail: piers, x, width: 300, windowTop: base - 1090, lights };
   },
   chrysler(x, base) {
     const shapes = [rect(x, base, 340, 220), rect(x, base - 220, 280, 80), rect(x, base - 300, 220, 520)];
@@ -133,17 +138,26 @@ const NYC = {
       y -= h;
     });
     shapes.push(trap(x, y - 20, 24, 2, 420));
-    return { shapes: shapes.join(''), detail: rays, x, width: 280, windowTop: base - 820 };
+    const lights = glow(x, y + 150, 150, 200, SPIRE_LIGHTS.chrysler, 0.26) + beacon(x, y - 440);
+    return { shapes: shapes.join(''), detail: rays, x, width: 280, windowTop: base - 820, lights };
   },
   oneWtc(x, base) {
     const podium = 220, taper = 1400, top = base - podium - taper;
     const shapes = [rect(x, base, 300, podium), trap(x, base - podium, 300, 170, taper), rect(x, top, 186, 20), trap(x, top - 20, 44, 36, 50), trap(x, top - 70, 12, 3, 380)];
     // The tower's faceted faces: long triangles meeting at the middle of each edge.
     const facets = `<path d="M${x - 150} ${base - podium} L${x} ${top} L${x + 150} ${base - podium} M${x - 85} ${top} L${x} ${base - podium} L${x + 85} ${top}" fill="none" stroke="#24205A" stroke-width="5"/>`;
-    return { shapes: shapes.join(''), detail: facets, x, width: 300, windowTop: top };
+    // The antenna glows white its whole height, with a beacon at the tip.
+    const lights = glow(x, top - 260, 40, 230, SPIRE_LIGHTS.wtc, 0.4) + `<path d="M${x - 5} ${top - 70} L${x - 1.5} ${top - 450} L${x + 1.5} ${top - 450} L${x + 5} ${top - 70} Z" fill="${SPIRE_LIGHTS.wtc}" opacity="0.9"/>` + beacon(x, top - 455);
+    return { shapes: shapes.join(''), detail: facets, x, width: 300, windowTop: top, lights };
   },
 };
 const RIM = { colour: '#3B3680', shift: 9 };
+// How each tower is lit at night: the Empire State's crown floodlit in Far Fox pink (it changes colour for
+// occasions), a glow round the Chrysler's lit crown, One WTC's white antenna, and red aircraft beacons on each tip.
+export const SPIRE_LIGHTS = { empire: '#FF7FA8', chrysler: '#FFE3A3', wtc: '#F4F6FF', beacon: '#FF3B3B' };
+const glow = (x, y, rx, ry, colour, opacity) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${colour}" opacity="${opacity}" filter="url(#spireGlow)"/>`;
+const beacon = (x, y) => `<circle cx="${x}" cy="${y}" r="22" fill="${SPIRE_LIGHTS.beacon}" opacity="0.35" filter="url(#spireGlow)"/><circle cx="${x}" cy="${y}" r="8" fill="${SPIRE_LIGHTS.beacon}"/>`;
+const SPIRE_DEFS = '<filter id="spireGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="26"/></filter>';
 /** One landmark: a moonlit rim, the silhouette, its windows clipped to it, then its own detail. */
 function landmark(id, built, base, seed) {
   const r = rng(seed);
@@ -151,7 +165,7 @@ function landmark(id, built, base, seed) {
   return `<clipPath id="${id}">${built.shapes}</clipPath>
     <g fill="${RIM.colour}" transform="translate(${RIM.shift} 0)">${built.shapes}</g>
     <g fill="${SKIES.nightCity}">${built.shapes}</g>
-    <g clip-path="url(#${id})">${lit}${built.detail}</g>`;
+    <g clip-path="url(#${id})">${lit}${built.detail}</g>${built.lights || ''}`;
 }
 
 /** A rooftop water tower, the small detail that says New York. */
@@ -183,7 +197,7 @@ const posterSun = (x, y, r) => [2.6, 1.9, 1.4].map((k, i) => `<circle cx="${x}" 
 function twilightSkies() {
   const keep = (x, y) => Math.hypot(x - CREST.x, y - CREST.y) > 320 && Math.hypot(x - 2420, y - 2250) > 520;
   return {
-    front: svg(stars(5, 300, 5000, '#FFF6E6', keep) + posterMoon(2420, 2250, 210) + nycSkyline(61, 5550) + crest(CREST.x, CREST.y, CREST.w, 'light'), bands(SKIES.night, 5450)),
+    front: svg(SPIRE_DEFS + stars(5, 300, 5000, '#FFF6E6', keep) + posterMoon(2420, 2250, 210) + nycSkyline(61, 5550) + crest(CREST.x, CREST.y, CREST.w, 'light'), bands(SKIES.night, 5450)),
     // The dawn city stays low, under the FAR FOX FC line (to y 4720), so the sun rises clear of it.
     pattern: svg(posterSun(3000, 5250, 400) + skyline(83, 5900, { fill: SKIES.dawnCity, lit: false, scale: 0.5 }), bands(SKIES.dawn, 5400)),
     // Sleeves stay on the night side; the dawn shows in the cuff band.
