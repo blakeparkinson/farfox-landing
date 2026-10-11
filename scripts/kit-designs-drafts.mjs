@@ -118,7 +118,7 @@ const NYC = {
     // Vertical piers down the main shaft, the building's Art Deco lines.
     const piers = Array.from({ length: 7 }, (_, i) => `<rect x="${x - 105 + i * 35}" y="${base - 1050}" width="5" height="900" fill="#221E52"/>`).join('');
     // Floodlit crown: the setbacks and mast washed in pink from below, with a soft halo.
-    const lights = glow(x, crownBottom - 110, 170, 230, SPIRE_LIGHTS.empire, 0.32)
+    const lights = glow(x, crownBottom - 120, 110, 160, SPIRE_LIGHTS.empire, 0.2)
       + `<g fill="${SPIRE_LIGHTS.empire}" opacity="0.82">${[[190, 70], [150, 60], [110, 50]].reduce((acc, [w, h]) => ({ y: acc.y - h, out: acc.out + rect(x, acc.y, w, h) }), { y: crownBottom, out: '' }).out}${trap(x, crownTop, 70, 44, 120)}</g>`
       + beacon(x, crownTop - 400);
     return { shapes: shapes.join(''), detail: piers, x, width: 300, windowTop: base - 1090, lights };
@@ -138,7 +138,8 @@ const NYC = {
       y -= h;
     });
     shapes.push(trap(x, y - 20, 24, 2, 420));
-    const lights = glow(x, y + 150, 150, 200, SPIRE_LIGHTS.chrysler, 0.26) + beacon(x, y - 440);
+    // No halo: the lit triangle crown is how it looks at night, and the pink Empire State stays the one glow.
+    const lights = beacon(x, y - 440);
     return { shapes: shapes.join(''), detail: rays, x, width: 280, windowTop: base - 820, lights };
   },
   oneWtc(x, base) {
@@ -153,7 +154,7 @@ const NYC = {
 };
 const RIM = { colour: '#3B3680', shift: 9 };
 // How each tower is lit at night: the Empire State's crown floodlit in Far Fox pink (it changes colour for
-// occasions), a glow round the Chrysler's lit crown, One WTC's white antenna, and red aircraft beacons on each tip.
+// occasions), the Chrysler's lit crown, One WTC's white antenna, and red aircraft beacons on each tip.
 export const SPIRE_LIGHTS = { empire: '#FF7FA8', chrysler: '#FFE3A3', wtc: '#F4F6FF', beacon: '#FF3B3B' };
 const glow = (x, y, rx, ry, colour, opacity) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${colour}" opacity="${opacity}" filter="url(#spireGlow)"/>`;
 const beacon = (x, y) => `<circle cx="${x}" cy="${y}" r="22" fill="${SPIRE_LIGHTS.beacon}" opacity="0.35" filter="url(#spireGlow)"/><circle cx="${x}" cy="${y}" r="8" fill="${SPIRE_LIGHTS.beacon}"/>`;
@@ -195,14 +196,27 @@ function nycSkyline(seed, base) {
  * all below the FAR FOX FC line (to y 4720) and clear of its width (about x 2350–3650).
  */
 export const LONDON = { city: '#6E5480', rim: '#C99AA6', clock: '#FFE9CF', base: 5880 };
+/**
+ * The Elizabeth Tower (Big Ben): panelled shaft with corner buttresses, the framed clock stage, a belfry of
+ * pointed arches, then the steep spire with corner pinnacles, the Ayrton lantern and the finial.
+ */
 function bigBen(x, base, f) {
-  const shaft = 560, stage = 150, belfry = 90, roof = 160, needle = 80;
-  const yStage = base - shaft, yBelfry = yStage - stage, yRoof = yBelfry - belfry;
-  const shapes = [rect(x, base, 150, shaft), rect(x, yStage, 176, stage), rect(x, yBelfry, 150, belfry), trap(x, yRoof, 150, 40, roof), trap(x, yRoof - roof, 40, 4, needle),
-    ...[-1, 1].map((side) => `<path d="M${x + side * 75 - 12} ${yRoof} L${x + side * 75} ${yRoof - 70} L${x + side * 75 + 12} ${yRoof} Z"/>`)];
-  const detail = `<circle cx="${x}" cy="${yStage - stage / 2}" r="58" fill="${LONDON.clock}"/><path d="M${x} ${yStage - stage / 2} V${yStage - stage / 2 - 40} M${x} ${yStage - stage / 2} L${x + 28} ${yStage - stage / 2 + 8}" stroke="${f}" stroke-width="7" stroke-linecap="round"/>`
-    + [-45, -15, 15, 45].map((dx) => `<rect x="${x + dx - 8}" y="${yBelfry - 78}" width="16" height="56" rx="8" fill="${SKIES.dawn[2]}" opacity="0.7"/>`).join('');
-  return { shapes: shapes.join(''), detail };
+  const shaft = 520, stage = 170, belfry = 100, roof = 230, lantern = 34, finial = 70;
+  const yStage = base - shaft, yBelfry = yStage - stage, yRoof = yBelfry - belfry, yLantern = yRoof - roof;
+  const shapes = [
+    rect(x, base, 150, shaft), ...[-1, 1].map((side) => rect(x + side * 70, base, 22, shaft + 10)),
+    rect(x, yStage, 184, stage), rect(x, yBelfry + 6, 196, 12),
+    rect(x, yBelfry, 156, belfry),
+    trap(x, yRoof, 160, 34, roof), rect(x, yLantern, 30, lantern), trap(x, yLantern - lantern, 8, 2, finial),
+    ...[-1, 1].map((side) => trap(x + side * 74, yRoof, 22, 3, 120)),
+  ];
+  const cy = yStage - stage / 2;
+  const panelling = Array.from({ length: 5 }, (_, i) => `<rect x="${x - 50 + i * 25 - 2}" y="${yStage + 30}" width="4" height="${shaft - 60}" fill="${LONDON.rim}" opacity="0.28"/>`).join('');
+  const clock = `<rect x="${x - 78}" y="${cy - 78}" width="156" height="156" fill="none" stroke="${LONDON.rim}" stroke-width="5" opacity="0.55"/>
+    <circle cx="${x}" cy="${cy}" r="62" fill="${LONDON.clock}"/><circle cx="${x}" cy="${cy}" r="62" fill="none" stroke="${f}" stroke-width="5"/>
+    <path d="M${x} ${cy} V${cy - 42} M${x} ${cy} L${x + 30} ${cy + 9}" stroke="${f}" stroke-width="7" stroke-linecap="round"/>`;
+  const arches = [-48, -16, 16, 48].map((dx) => `<path d="M${x + dx - 10} ${yBelfry - 14} V${yBelfry - 64} L${x + dx} ${yBelfry - 84} L${x + dx + 10} ${yBelfry - 64} V${yBelfry - 14} Z" fill="${SKIES.dawn[2]}" opacity="0.75"/>`).join('');
+  return { shapes: shapes.join(''), detail: panelling + clock + arches };
 }
 /**
  * The Shard as overlapping glass panels, each rising to its own tip: the crown splinters apart with sky between
