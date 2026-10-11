@@ -240,6 +240,40 @@ const insideLabel = (p) => `<svg xmlns="http://www.w3.org/2000/svg" width="${LAB
   <text x="${LABEL.w / 2}" y="290" text-anchor="middle" font-family="${WORDMARK_FONT}" font-size="230" fill="${p.dark}">N’écris pas !</text>
   <text x="${LABEL.w / 2}" y="500" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="140" fill="${p.dark}">…mais appelle-moi.</text></svg>`;
 
+// --- Draft: the poem as the pattern ---------------------------------------------------------------
+// Solid ground, pinstripes that are lines of the poem set small, "Far Fox" and the crest, one Monet station
+// as a woven tag at the hem, and "N’écris pas !" as an inscription on the back. Written as review drafts
+// (sj-lesseparespoem-<colourway>-*.png) so scripts/mockup-preview.mjs can show them on the garment.
+const POEM_STRIPES = { gap: 240, size: 42, opacity: 0.5, perStripe: 340, step: 137 };
+const POEM_FLAT = POEM.split('\n').slice(1).join(' · ').replace(/ \/ /g, ' · ');
+function poemPinstripes(p, offset = 0) {
+  let out = '';
+  for (let i = 0, x = 60; x < D; i++, x += POEM_STRIPES.gap) {
+    const from = (offset + i * POEM_STRIPES.step) % POEM_FLAT.length;
+    const line = (POEM_FLAT + ' · ' + POEM_FLAT).slice(from, from + POEM_STRIPES.perStripe);
+    out += `<text transform="translate(${x} -20) rotate(90)" font-family="EB Garamond" font-size="${POEM_STRIPES.size}" letter-spacing="2" fill="${p.hi}" fill-opacity="${POEM_STRIPES.opacity}">${esc(line)}</text>`;
+  }
+  return out;
+}
+const MONET_TAG = { x: 2230, y: 5180, w: 520, h: 350, border: 18 };
+async function monetTag(p) {
+  const { x, y, w, h, border } = MONET_TAG;
+  const art = await twoTone(join(FRONT_PHOTOS, HERO.photo), w, h, 0, p);
+  return `<rect x="${x - w / 2 - border}" y="${y - h / 2 - border}" width="${w + 2 * border}" height="${h + 2 * border}" rx="10" fill="${p.hi}"/>
+    <image href="${art}" x="${x - w / 2}" y="${y - h / 2}" width="${w}" height="${h}"/>
+    <rect x="${x - w / 2 - border / 2}" y="${y - h / 2 - border / 2}" width="${w + border}" height="${h + border}" rx="8" fill="none" stroke="${p.dark}" stroke-width="5" stroke-dasharray="18 12"/>`;
+}
+async function poemFront(p) {
+  return svg(`<rect width="${D}" height="${D}" fill="${p.dark}"/>${poemPinstripes(p)}${wordmark(p)}${foxMark(CREST.x, CREST.y, CREST.w, p)}${await monetTag(p)}`);
+}
+function poemBack(p) {
+  return svg(`<rect width="${D}" height="${D}" fill="${p.dark}"/>${poemPinstripes(p, 600)}
+    <rect x="1700" y="2150" width="2600" height="900" fill="${p.dark}" opacity="0.9"/>
+    <text x="3000" y="2560" text-anchor="middle" font-family="${WORDMARK_FONT}" font-size="320" fill="${p.word}" stroke="${p.wordStroke}" stroke-width="18" paint-order="stroke">N’écris pas !</text>
+    <text x="3000" y="2760" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="104" fill="${p.hi}">Je suis triste, et je voudrais m’éteindre…</text>
+    <text x="3000" y="2920" text-anchor="middle" font-family="EB Garamond" font-size="64" letter-spacing="10" fill="${p.hi}" fill-opacity="0.75">MARCELINE DESBORDES-VALMORE · LES SÉPARÉS · 1886</text>`);
+}
+
 const args = process.argv.slice(2);
 const only = args.includes('--colorway') ? args[args.indexOf('--colorway') + 1].split(',') : null;
 const previewOut = args.includes('--preview') ? args[args.indexOf('--preview') + 1] : null;
@@ -247,6 +281,18 @@ const fontFiles = await loadFonts();
 const render = (markup) => new Resvg(markup, { fitTo: { mode: 'width', value: D }, font: { fontFiles, loadSystemFonts: false } }).render().asPng();
 await mkdir(OUT, { recursive: true });
 const previews = [];
+if (args.includes('--style') && args[args.indexOf('--style') + 1] === 'poem') {
+  const drafts = new URL('../public/shop/designs/kits-drafts/', import.meta.url);
+  await mkdir(drafts, { recursive: true });
+  for (const { key } of LES_SEPARES.colorways.filter((c) => !only || only.includes(c.key))) {
+    const p = PALETTES[key];
+    for (const [part, markup] of [['front', await poemFront(p)], ['back', poemBack(p)], ['sleeve', sleeve(p)]]) {
+      await sharp(render(markup)).png({ compressionLevel: 9 }).toFile(new URL(`sj-lesseparespoem-${key}-${part}.png`, drafts).pathname);
+    }
+    console.log(`[les-separes] ${key}: poem drafts written`);
+  }
+  process.exit(0);
+}
 for (const { key } of LES_SEPARES.colorways) {
   if (only && !only.includes(key)) continue;
   const palette = PALETTES[key];
