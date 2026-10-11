@@ -83,10 +83,22 @@ function skyline(seed, base, { fill, lit, scale = 1 }) {
   }
   return out;
 }
-/** Lit window grid on a building face, sparse so it reads as night. */
-function windows(r, x, top, w, base, density = 0.84) {
+/**
+ * A building face's windows as a regular grid, floor by floor: unlit windows a shade lighter than the wall,
+ * lit ones warm, and lit windows running in short stretches along a floor the way offices and flats light up.
+ */
+export const WINDOWS = { col: 34, row: 46, w: 16, h: 24, litStart: 0.1, litRun: 0.62 };
+function windowGrid(r, cx, top, width, base, { unlit, litStart = WINDOWS.litStart } = {}) {
+  const cols = Math.max(1, Math.floor((width - 20) / WINDOWS.col));
+  const x0 = cx - ((cols - 1) * WINDOWS.col) / 2 - WINDOWS.w / 2;
   let out = '';
-  for (let wy = top + 50; wy < base - 40; wy += 80) for (let wx = x + 22; wx < x + w - 30; wx += 52) if (r() > density) out += `<rect x="${wx.toFixed(0)}" y="${wy.toFixed(0)}" width="20" height="30" fill="${SKIES.window}" opacity="${(0.55 + r() * 0.45).toFixed(2)}"/>`;
+  for (let y = top + 40; y < base - 30; y += WINDOWS.row) {
+    let lit = false;
+    for (let c = 0; c < cols; c++) {
+      lit = r() < (lit ? WINDOWS.litRun : litStart);
+      out += `<rect x="${(x0 + c * WINDOWS.col).toFixed(0)}" y="${y.toFixed(0)}" width="${WINDOWS.w}" height="${WINDOWS.h}" fill="${lit ? SKIES.window : unlit}"${lit ? ` opacity="${(0.7 + r() * 0.3).toFixed(2)}"` : ''}/>`;
+    }
+  }
   return out;
 }
 /**
@@ -104,7 +116,7 @@ const NYC = {
     shapes.push(trap(x, y, 70, 44, 120), trap(x, y - 120, 14, 4, 280));
     // Vertical piers down the main shaft, the building's Art Deco lines.
     const piers = Array.from({ length: 7 }, (_, i) => `<rect x="${x - 105 + i * 35}" y="${base - 1050}" width="5" height="900" fill="#221E52"/>`).join('');
-    return { shapes: shapes.join(''), detail: piers, top: y - 400 };
+    return { shapes: shapes.join(''), detail: piers, x, width: 300, windowTop: base - 1090 };
   },
   chrysler(x, base) {
     const shapes = [rect(x, base, 340, 220), rect(x, base - 220, 280, 80), rect(x, base - 300, 220, 520)];
@@ -121,37 +133,36 @@ const NYC = {
       y -= h;
     });
     shapes.push(trap(x, y - 20, 24, 2, 420));
-    return { shapes: shapes.join(''), detail: rays, top: y - 440 };
+    return { shapes: shapes.join(''), detail: rays, x, width: 280, windowTop: base - 820 };
   },
   oneWtc(x, base) {
     const podium = 220, taper = 1400, top = base - podium - taper;
     const shapes = [rect(x, base, 300, podium), trap(x, base - podium, 300, 170, taper), rect(x, top, 186, 20), trap(x, top - 20, 44, 36, 50), trap(x, top - 70, 12, 3, 380)];
     // The tower's faceted faces: long triangles meeting at the middle of each edge.
     const facets = `<path d="M${x - 150} ${base - podium} L${x} ${top} L${x + 150} ${base - podium} M${x - 85} ${top} L${x} ${base - podium} L${x + 85} ${top}" fill="none" stroke="#24205A" stroke-width="5"/>`;
-    return { shapes: shapes.join(''), detail: facets, top: top - 450 };
+    return { shapes: shapes.join(''), detail: facets, x, width: 300, windowTop: top };
   },
 };
 const RIM = { colour: '#3B3680', shift: 9 };
 /** One landmark: a moonlit rim, the silhouette, its windows clipped to it, then its own detail. */
 function landmark(id, built, base, seed) {
   const r = rng(seed);
-  let lit = '';
-  for (let wy = built.top + 500; wy < base - 30; wy += 70) for (let wx = 1800; wx < 4300; wx += 46) if (r() > 0.86) lit += `<rect x="${wx}" y="${wy}" width="18" height="28" fill="${SKIES.window}" opacity="${(0.55 + r() * 0.45).toFixed(2)}"/>`;
+  const lit = windowGrid(r, built.x, built.windowTop, built.width, base, { unlit: '#211D50' });
   return `<clipPath id="${id}">${built.shapes}</clipPath>
     <g fill="${RIM.colour}" transform="translate(${RIM.shift} 0)">${built.shapes}</g>
     <g fill="${SKIES.nightCity}">${built.shapes}</g>
-    <g clip-path="url(#${id})">${built.detail}${lit}</g>`;
+    <g clip-path="url(#${id})">${lit}${built.detail}</g>`;
 }
 
 /** A rooftop water tower, the small detail that says New York. */
 const waterTower = (x, top, f) => `<rect x="${x - 34}" y="${top - 70}" width="68" height="60" rx="6" fill="${f}"/><path d="M${x - 40} ${top - 70} L${x} ${top - 108} L${x + 40} ${top - 70} Z" fill="${f}"/><rect x="${x - 30}" y="${top - 12}" width="8" height="12" fill="${f}"/><rect x="${x + 22}" y="${top - 12}" width="8" height="12" fill="${f}"/>`;
 /** Night Manhattan in three depths: hazy far towers, the three landmarks well above them, short blocks in front. */
 const NYC_DEPTH = { far: '#1C1848', farH: [420, 520], nearH: [180, 300] };
-function towerRow(r, base, fill, [hMin, hRange], { tanks = false, density = 0.84 } = {}) {
+function towerRow(r, base, fill, [hMin, hRange], { tanks = false, unlit, litStart } = {}) {
   let out = '', x = -100;
   while (x < D + 100) {
     const w = 160 + r() * 260, h = hMin + r() ** 1.3 * hRange, top = base - h;
-    out += `<rect x="${x.toFixed(0)}" y="${top.toFixed(0)}" width="${(w + 2).toFixed(0)}" height="${(D - top).toFixed(0)}" fill="${fill}"/>` + windows(r, x, top, w, base, density);
+    out += `<rect x="${x.toFixed(0)}" y="${top.toFixed(0)}" width="${(w + 2).toFixed(0)}" height="${(D - top).toFixed(0)}" fill="${fill}"/>` + windowGrid(r, x + w / 2, top, w - 30, base, { unlit, litStart });
     if (tanks && r() > 0.5) out += waterTower(x + w * (0.3 + r() * 0.4), top, fill);
     x += w;
   }
@@ -162,7 +173,7 @@ function nycSkyline(seed, base) {
   // The landmarks sit inside the visible front (x 1850–4230), clear of the crest's column.
   const landmarks = [['empire', NYC.empire, 2250], ['chrysler', NYC.chrysler, 2920], ['onewtc', NYC.oneWtc, 3720]]
     .map(([id, build, at], i) => landmark(`nyc-${id}`, build(at, base), base, seed + i)).join('');
-  return towerRow(r, base, NYC_DEPTH.far, NYC_DEPTH.farH, { density: 0.9 }) + landmarks + towerRow(r, base + 40, SKIES.nightCity, NYC_DEPTH.nearH, { tanks: true });
+  return towerRow(r, base, NYC_DEPTH.far, NYC_DEPTH.farH, { unlit: '#24205A', litStart: 0.06 }) + landmarks + towerRow(r, base + 40, SKIES.nightCity, NYC_DEPTH.nearH, { tanks: true, unlit: '#1C1946' });
 }
 
 /** The moon with flat poster-style halo rings. */
