@@ -11,6 +11,7 @@ import { sanitizeCity } from '../src/lib/ornamentArt.mjs';
 import { kitConfig } from '../src/lib/jerseyBack.mjs';
 import { BACKS, mooseBack } from './kit-designs-2026-10.mjs';
 import { BACKS as HOLIDAY_BACKS } from './kit-designs-holiday-2026.mjs';
+import { BACKS as TWO_SKIES_BACKS } from './kit-designs-two-skies.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const builtPage = resolve(root, 'dist/client/personalized-long-distance-jersey/index.html');
@@ -59,7 +60,8 @@ for (const [kit, expected] of Object.entries(BACKS).filter(([kit]) => kit !== 'm
 for (const [kit, expected] of Object.entries(HOLIDAY_BACKS).filter(([kit]) => kit !== 'mistletoe')) {
   assert.deepEqual({ ...kitConfig(kit) }, expected, `jerseyBack.mjs ${kit} matches BACKS in kit-designs-holiday-2026.mjs`);
 }
-for (const [name, kit] of [['Long Distance FC Jersey (Cobweb)', 'cobweb'], ['Long Distance FC Jersey (Candy Corn)', 'candycorn'], ['Long Distance FC Jersey (Fair Isle)', 'fairisle'], ['Long Distance FC Jersey (Red Nose)', 'rednose']]) {
+for (const [kit, expected] of Object.entries(TWO_SKIES_BACKS)) assert.deepEqual({ ...kitConfig(kit) }, expected, `jerseyBack.mjs ${kit} matches BACKS in kit-designs-two-skies.mjs`);
+for (const [name, kit] of [['Long Distance FC Jersey (Two Skies: New York / London)', 'twoskies-ny-london'], ['Long Distance FC Jersey (Cobweb)', 'cobweb'], ['Long Distance FC Jersey (Candy Corn)', 'candycorn'], ['Long Distance FC Jersey (Fair Isle)', 'fairisle'], ['Long Distance FC Jersey (Red Nose)', 'rednose']]) {
   assert.equal(kitSlugForName(name), kit, `${name} gets the ${kit} back`);
 }
 // The ornament: only it takes cities, the inputs print safely, and the webhook swaps in the personalised file.

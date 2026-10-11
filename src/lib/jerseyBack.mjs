@@ -129,6 +129,11 @@ const KITS = {
     pattern: 'bb-home-pattern.png', crest: null, layout: 'baseball', font: 'slab',
     number: '#1C4096', numberStroke: '#C0202E', name: '#1C4096', nameStroke: '#C0202E',
   },
+  // Two Skies city pairs (values mirror BACKS in scripts/kit-designs-two-skies.mjs).
+  'twoskies-ny-london': {
+    pattern: 'two-skies/sj-twoskies-ny-london-pattern.png', crest: 'two-skies/fox-crest-twoskies-ny-london.png',
+    number: '#1F2350', numberStroke: '#FFF6EE', name: '#1F2350', nameStroke: '#FFF6EE',
+  },
   // Holiday 2026 (values mirror BACKS in scripts/kit-designs-holiday-2026.mjs).
   cobweb: {
     pattern: 'kits-2026-holiday/sj-cobweb-pattern.png', crest: 'kits-2026-holiday/fox-crest-cobweb.png',
