@@ -23,6 +23,8 @@ export function kitSlugForName(name) {
   // Moose Lodge launches in Blush only.
   if (/jersey/.test(n) && /moose/.test(n)) return 'moose-blush';
   if (/jersey/.test(n) && /flyway/.test(n)) return 'flyway';
+  // Two Skies city pairs.
+  if (/jersey/.test(n) && /two\s*skies/.test(n) && /new\s*york/.test(n) && /london/.test(n)) return 'twoskies-ny-london';
   // Holiday 2026.
   if (/jersey/.test(n) && /cobweb/.test(n)) return 'cobweb';
   if (/jersey/.test(n) && /candy\s*corn/.test(n)) return 'candycorn';

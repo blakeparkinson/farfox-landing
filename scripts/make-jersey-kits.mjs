@@ -29,19 +29,19 @@ import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { KITS as OCT_KITS } from './kit-designs-2026-10.mjs';
 import { KITS as HOLIDAY_KITS } from './kit-designs-holiday-2026.mjs';
-import { KITS as DRAFT_KITS } from './kit-designs-drafts.mjs';
+import { KITS as TWO_SKIES_KITS } from './kit-designs-two-skies.mjs';
 
 const D = 6000;
 // October 2026 kits write to kits-2026-10/; everything else stays in kits-2026-09/.
 const OUT_SEPT = new URL('../public/shop/designs/kits-2026-09/', import.meta.url);
 const OUT_OCT = new URL('../public/shop/designs/kits-2026-10/', import.meta.url);
 const OUT_HOLIDAY = new URL('../public/shop/designs/kits-2026-holiday/', import.meta.url);
-const OUT_DRAFTS = new URL('../public/shop/designs/kits-drafts/', import.meta.url);
+const OUT_TWO_SKIES = new URL('../public/shop/designs/two-skies/', import.meta.url);
 // Moose Lodge launches in Blush only, as `moose-blush`; the module's other
 // colorways stay unbuilt, so its generic `moose` entry is left out.
 const { moose: mooseKit, ...OCT_REST } = OCT_KITS;
 const OCT_BUILD = { ...OCT_REST, 'moose-blush': () => mooseKit({ colorway: 'blush', style: 'foxy-antlers' }) };
-const outFor = (kit) => (kit in DRAFT_KITS || kit === 'paradise-aloha' ? OUT_DRAFTS : kit in HOLIDAY_KITS ? OUT_HOLIDAY : kit in OCT_BUILD ? OUT_OCT : OUT_SEPT);
+const outFor = (kit) => (kit in TWO_SKIES_KITS ? OUT_TWO_SKIES : kit in HOLIDAY_KITS ? OUT_HOLIDAY : kit in OCT_BUILD ? OUT_OCT : OUT_SEPT);
 const CREST = { x: 3550, y: 2400, w: 440 };
 
 // --- helpers -------------------------------------------------------------
@@ -209,7 +209,7 @@ const HIBISCUS_MASK = `<g transform="translate(100 115)">${[0, 72, 144, 216, 288
 const hibiscus = (fill) => `<rect width="200" height="220" fill="${fill}" mask="url(#hibiscus)"/>`;
 // A crisp print, not a texture: a few large motifs, spaced so silhouettes never stack.
 const PRINT = { count: 46, minDist: 760, sizeMin: 720, sizeMax: 1150 };
-function hawaiianPrint(seed, keep, palette = null) {
+function hawaiianPrint(seed, keep) {
   const r = rng(seed), placed = [];
   for (let tries = 0; placed.length < PRINT.count && tries < 4000; tries++) {
     const x = r() * D, y = r() * D;
@@ -217,7 +217,7 @@ function hawaiianPrint(seed, keep, palette = null) {
     placed.push({ x, y, kind: r(), size: PRINT.sizeMin + r() * (PRINT.sizeMax - PRINT.sizeMin), rot: r() * 360, light: r() > 0.25 });
   }
   const out = placed.map(({ x, y, kind, size, rot, light }) => {
-    const [fill, opacity] = palette ? palette(kind, light) : [light ? '#FFFFFF' : '#0E5E57', light ? 0.2 : 0.16];
+    const fill = light ? '#FFFFFF' : '#0E5E57', opacity = light ? 0.2 : 0.16;
     const body = kind < 0.45 ? `<rect width="200" height="220" fill="${fill}" mask="url(#monstera)"/>` : kind < 0.78 ? frond(fill) : hibiscus(fill);
     return `<g transform="translate(${(x - size / 2).toFixed(0)} ${(y - size / 2).toFixed(0)}) rotate(${rot.toFixed(0)} ${(size / 2).toFixed(0)} ${(size / 2).toFixed(0)}) scale(${(size / 200).toFixed(3)})" opacity="${opacity}">${body}</g>`;
   }).join('');
@@ -231,21 +231,6 @@ function paradise() {
     front: svg(hawaiianPrint(11, clearOfCrest) + crest(CREST.x, CREST.y, CREST.w, 'navy'), SUNSET),
     pattern: svg(hawaiianPrint(23, () => true), SUNSET),
     sleeve: svg(hawaiianPrint(37, () => true) + cuff('#FF6B8A', '#1A564E'), SUNSET),
-  };
-}
-
-// Draft: the Paradise print as a vintage aloha shirt, full colour on cream, so it stops sharing Twilight's gradient.
-const ALOHA = { cream: '#F6EEDC', leaf: '#2F6B4F', leafLight: '#5C9A73', hibiscus: '#E8546A', hibiscusDeep: '#C73A55', band: '#1F4D3A' };
-const alohaColour = (strength) => (kind, light) => (kind < 0.78 ? [light ? ALOHA.leafLight : ALOHA.leaf, strength] : [light ? ALOHA.hibiscus : ALOHA.hibiscusDeep, strength]);
-// The back print is faded so the number and name read over it.
-const ALOHA_BACK_STRENGTH = 0.32;
-function paradiseAloha() {
-  const bg = `<rect width="${D}" height="${D}" fill="${ALOHA.cream}"/>`;
-  const clearOfCrest = (x, y) => Math.hypot(x - CREST.x, y - CREST.y) > 560;
-  return {
-    front: svg(hawaiianPrint(11, clearOfCrest, alohaColour(1)) + crest(CREST.x, CREST.y, CREST.w, 'navy'), bg),
-    pattern: svg(hawaiianPrint(23, () => true, alohaColour(ALOHA_BACK_STRENGTH)), bg),
-    sleeve: svg(hawaiianPrint(37, () => true, alohaColour(1)) + cuff(ALOHA.hibiscus, ALOHA.band), bg),
   };
 }
 
@@ -307,7 +292,7 @@ const bbRed = () => ({ front: svg(teamPatch({ ring: '#1B2A6B', rim: '#F4ECE0', t
 
 // Coordinates (chart), Orange and Mardi Gras are retired; their kits-2026-09
 // files stay so jerseyBack.mjs can still render backs for existing orders.
-const KITS = { flight, paradise, 'bb-home': bbHome, 'bb-royal': bbRoyal, 'bb-red': bbRed, ...OCT_BUILD, ...HOLIDAY_KITS, ...DRAFT_KITS, 'paradise-aloha': paradiseAloha };
+const KITS = { flight, paradise, 'bb-home': bbHome, 'bb-royal': bbRoyal, 'bb-red': bbRed, ...OCT_BUILD, ...HOLIDAY_KITS, ...TWO_SKIES_KITS };
 
 // --- default back, via the live personalized-back renderer ----------------
 
@@ -389,7 +374,7 @@ const previewOut = args.includes('--preview') ? args[args.indexOf('--preview') +
 await mkdir(OUT_SEPT, { recursive: true });
 await mkdir(OUT_OCT, { recursive: true });
 await mkdir(OUT_HOLIDAY, { recursive: true });
-await mkdir(OUT_DRAFTS, { recursive: true });
+await mkdir(OUT_TWO_SKIES, { recursive: true });
 await loadFonts();
 await loadFoxFace();
 const previews = [];

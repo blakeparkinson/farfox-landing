@@ -1,5 +1,6 @@
 /**
- * The holiday 2026 drop in Printful: four Long Distance FC kits (catalog 644) and the heart ornament (catalog 900).
+ * The holiday 2026 drop in Printful: the Long Distance FC kits (catalog 644: four holiday kits and the Two Skies city
+ * pairs) and the heart ornament (catalog 900).
  *
  *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs             # dry run: what would be created
  *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs --create    # create the products that don't exist yet
@@ -26,6 +27,7 @@ const KITS = [
   { kit: 'candycorn', name: 'Long Distance FC Jersey (Candy Corn)', stitch: 'black' },
   { kit: 'fairisle', name: 'Long Distance FC Jersey (Fair Isle)', stitch: 'white' },
   { kit: 'rednose', name: 'Long Distance FC Jersey (Red Nose)', stitch: 'white' },
+  { kit: 'twoskies-ny-london', name: 'Long Distance FC Jersey (Two Skies: New York / London)', stitch: 'white', folder: 'two-skies' },
 ];
 const KIT_PRICE = '50.00';
 const ORNAMENT = { name: '"Miles Apart" Heart Ornament', price: '20.00', file: 'ornament-2026/ornament-heart.png' };
@@ -47,7 +49,8 @@ async function pf(path, init = {}, attempt = 0) {
 }
 
 const url = (path) => `${SITE}/${path}?v=${revision(path)}`;
-const kitFile = (kit, part) => url(`kits-2026-holiday/sj-${kit}-${part}.png`);
+const folderOf = (kit) => KITS.find((k) => k.kit === kit)?.folder || 'kits-2026-holiday';
+const kitFile = (kit, part) => url(`${folderOf(kit)}/sj-${kit}-${part}.png`);
 const fullName = (name) => `Far Fox — ${name}`;
 
 function plans() {

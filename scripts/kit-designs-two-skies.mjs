@@ -1,10 +1,9 @@
 /**
- * Kit drafts under review (October 2026): two new directions for Twilight and an alternative Paradise.
- * Same 6000×6000 space and helpers as kit-designs-2026-10.mjs. Whichever is chosen replaces its kit;
- * the rest are deleted with their BACKS and jerseyBack.mjs entries.
- *   twilight-halftone  deep night purple fading out through a halftone dot field, a crescent moon by the crest
- *   twilight-skies     two skies over two cities: night over Manhattan on the front, dawn over London on the back
- *   paradise-aloha     the Paradise print as a vintage aloha shirt: full-colour leaves and hibiscus on cream
+ * Long Distance FC "Two Skies" kits: one city at night on the front, the other at dawn on the back, so the shirt
+ * carries both of a couple's time zones. The skies are flat bands, like a travel poster.
+ *   twoskies-ny-london   night Manhattan (Empire State lit pink, Chrysler, One WTC) / dawn London (Big Ben, the Shard, the Eye)
+ * Each landmark is a reusable drawing, so a new city pair is mostly one more skyline.
+ * Same 6000×6000 space and helpers as kit-designs-2026-10.mjs; files go to public/shop/designs/two-skies/.
  */
 import { D, CREST, rng, crest } from './kit-designs-2026-10.mjs';
 
@@ -28,35 +27,6 @@ function stars(seed, count, maxY, colour, keep = () => true) {
   return out;
 }
 
-// --- Twilight: halftone dusk --------------------------------------------------
-
-export const HALFTONE = { night: '#241A47', dot: '#E8739A', spacing: 118, maxR: 54, from: 2700, to: 5900 };
-/** Dots on a 45° grid, growing from nothing at `from` to touching at `to`, the way print fades are screened. */
-function halftone(shift = 0) {
-  const { spacing, maxR, from, to } = HALFTONE;
-  let dots = '';
-  for (let gy = -D; gy < 2 * D; gy += spacing) {
-    for (let gx = -D; gx < 2 * D; gx += spacing) {
-      const x = (gx - gy) * Math.SQRT1_2 + D / 2, y = (gx + gy) * Math.SQRT1_2 + shift;
-      if (x < -100 || x > D + 100 || y < from - 200 || y > D + 100) continue;
-      const t = Math.min(1, Math.max(0, (y - from) / (to - from)));
-      if (t <= 0.02) continue;
-      dots += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(maxR * t ** 0.9).toFixed(1)}"/>`;
-    }
-  }
-  return `<g fill="${HALFTONE.dot}">${dots}</g>`;
-}
-function twilightHalftone() {
-  const bg = `<rect width="${D}" height="${D}" fill="${HALFTONE.night}"/>`;
-  const keep = (x, y) => Math.hypot(x - CREST.x, y - CREST.y) > 320;
-  return {
-    front: svg(stars(3, 120, 2600, '#FFF1E6', keep) + crescent(2480, 2260, 150, '#FFE7C2', 'moonF') + halftone() + crest(CREST.x, CREST.y, CREST.w, 'light'), bg),
-    pattern: svg(stars(9, 110, 1700, '#FFF1E6') + halftone(400), bg),
-    sleeve: svg(stars(15, 90, 3600, '#FFF1E6') + cuff(HALFTONE.dot, HALFTONE.night), bg),
-  };
-}
-
-// --- Twilight: two skies --------------------------------------------------------
 // Two skies over two cities: night over one skyline on the front, dawn over another on the back. The skies
 // are flat bands, like a travel poster, so the kit never reads as another sunset gradient.
 
@@ -68,20 +38,6 @@ export const SKIES = {
 function bands(colours, bottom) {
   const h = bottom / colours.length;
   return colours.map((c, i) => `<rect x="0" y="${(i * h).toFixed(0)}" width="${D}" height="${i === colours.length - 1 ? D : (h + 2).toFixed(0)}" fill="${c}"/>`).join('');
-}
-/** A skyline of flat blocks, towers and spires; lit windows when it's night. */
-function skyline(seed, base, { fill, lit, scale = 1 }) {
-  const r = rng(seed);
-  let out = '', x = -100;
-  while (x < D + 100) {
-    const w = 140 + r() * 300, h = (260 + r() ** 1.6 * 980) * scale, top = base - h;
-    out += `<rect x="${x.toFixed(0)}" y="${top.toFixed(0)}" width="${(w + 2).toFixed(0)}" height="${(D - top).toFixed(0)}" fill="${fill}"/>`;
-    if (r() > 0.72) out += `<rect x="${(x + w / 2 - 10).toFixed(0)}" y="${(top - 140 - r() * 160).toFixed(0)}" width="20" height="300" fill="${fill}"/>`;
-    if (r() > 0.85) out += `<path d="M${(x + w * 0.2).toFixed(0)} ${top.toFixed(0)} L${(x + w / 2).toFixed(0)} ${(top - 220).toFixed(0)} L${(x + w * 0.8).toFixed(0)} ${top.toFixed(0)} Z" fill="${fill}"/>`;
-    if (lit) for (let wy = top + 60; wy < base - 40; wy += 90) for (let wx = x + 30; wx < x + w - 40; wx += 70) if (r() > 0.86) out += `<rect x="${wx.toFixed(0)}" y="${wy.toFixed(0)}" width="26" height="36" fill="${SKIES.window}" opacity="${(0.55 + r() * 0.45).toFixed(2)}"/>`;
-    x += w;
-  }
-  return out;
 }
 /**
  * A building face's windows as a regular grid, floor by floor: unlit windows a shade lighter than the wall,
@@ -246,10 +202,10 @@ function londonDawn(seed) {
 }
 
 /** The moon with flat poster-style halo rings. */
-const posterMoon = (x, y, r) => [3.2, 2.4, 1.7].map((k, i) => `<circle cx="${x}" cy="${y}" r="${r * k}" fill="${SKIES.moon}" opacity="${[0.05, 0.08, 0.12][i]}"/>`).join('') + crescent(x, y, r, SKIES.moon, 'moonS');
+const posterMoon = (x, y, r) => [3.2, 2.4, 1.7].map((k, i) => `<circle cx="${x}" cy="${y}" r="${r * k}" fill="${SKIES.moon}" opacity="${[0.05, 0.08, 0.12][i]}"/>`).join('') + crescent(x, y, r, SKIES.moon, 'moonNy');
 /** The sun half-risen behind the dawn skyline, with flat rings. */
 const posterSun = (x, y, r) => [2.6, 1.9, 1.4].map((k, i) => `<circle cx="${x}" cy="${y}" r="${r * k}" fill="${SKIES.sun}" opacity="${[0.16, 0.24, 0.34][i]}"/>`).join('') + `<circle cx="${x}" cy="${y}" r="${r}" fill="${SKIES.sun}"/>`;
-function twilightSkies() {
+function twoSkiesNyLondon() {
   const keep = (x, y) => Math.hypot(x - CREST.x, y - CREST.y) > 320 && Math.hypot(x - 2420, y - 2250) > 520;
   return {
     front: svg(SPIRE_DEFS + stars(5, 300, 5000, '#FFF6E6', keep) + posterMoon(2420, 2250, 210) + nycSkyline(61, 5550) + crest(CREST.x, CREST.y, CREST.w, 'light'), bands(SKIES.night, 5450)),
@@ -261,11 +217,9 @@ function twilightSkies() {
   };
 }
 
-export const KITS = { 'twilight-halftone': twilightHalftone, 'twilight-skies': twilightSkies };
+export const KITS = { 'twoskies-ny-london': twoSkiesNyLondon };
 
-/** Back lettering, mirrored in jerseyBack.mjs while these are under review. */
+/** Back lettering for jerseyBack.mjs KITS (test-jersey-offer.mjs checks they match). */
 export const BACKS = {
-  'twilight-halftone': { pattern: 'kits-drafts/sj-twilight-halftone-pattern.png', crest: 'fox-crest.png', number: '#FFF1E6', numberStroke: HALFTONE.night, name: '#FFF1E6', nameStroke: HALFTONE.night },
-  'twilight-skies': { pattern: 'kits-drafts/sj-twilight-skies-pattern.png', crest: 'kits-drafts/fox-crest-twilight-skies.png', number: SKIES.ink, numberStroke: '#FFF6EE', name: SKIES.ink, nameStroke: '#FFF6EE' },
-  'paradise-aloha': { pattern: 'kits-drafts/sj-paradise-aloha-pattern.png', crest: 'fox-crest-navy.png', number: '#1F4D3A', numberStroke: '#F6EEDC', name: '#1F4D3A', nameStroke: '#F6EEDC' },
+  'twoskies-ny-london': { pattern: 'two-skies/sj-twoskies-ny-london-pattern.png', crest: 'two-skies/fox-crest-twoskies-ny-london.png', number: SKIES.ink, numberStroke: '#FFF6EE', name: SKIES.ink, nameStroke: '#FFF6EE' },
 };
