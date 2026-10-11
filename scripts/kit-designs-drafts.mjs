@@ -3,7 +3,7 @@
  * Same 6000×6000 space and helpers as kit-designs-2026-10.mjs. Whichever is chosen replaces its kit;
  * the rest are deleted with their BACKS and jerseyBack.mjs entries.
  *   twilight-halftone  deep night purple fading out through a halftone dot field, a crescent moon by the crest
- *   twilight-skies     night sky on the front, dawn on the back: evening for one of you, morning for the other
+ *   twilight-skies     two skies over two cities: night over one skyline on the front, dawn over another on the back
  *   paradise-aloha     the Paradise print as a vintage aloha shirt: full-colour leaves and hibiscus on cream
  */
 import { D, CREST, rng, crest } from './kit-designs-2026-10.mjs';
@@ -57,19 +57,44 @@ function twilightHalftone() {
 }
 
 // --- Twilight: two skies --------------------------------------------------------
+// Two skies over two cities: night over one skyline on the front, dawn over another on the back. The skies
+// are flat bands, like a travel poster, so the kit never reads as another sunset gradient.
 
-export const SKIES = { night: '#1B1840', nightLow: '#2E2560', dawnTop: '#BFD6EC', dawnMid: '#F8D3B8', dawnLow: '#FFB27A', sun: '#FFC861', ink: '#1F2350', moon: '#FFE7C2' };
-const NIGHT_SKY = `<defs><linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${SKIES.night}"/><stop offset="1" stop-color="${SKIES.nightLow}"/></linearGradient></defs><rect width="${D}" height="${D}" fill="url(#nightSky)"/>`;
-const DAWN_SKY = `<defs><linearGradient id="dawnSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${SKIES.dawnTop}"/><stop offset="0.55" stop-color="${SKIES.dawnMid}"/><stop offset="1" stop-color="${SKIES.dawnLow}"/></linearGradient><radialGradient id="sunGlow"><stop offset="0" stop-color="${SKIES.sun}" stop-opacity="0.75"/><stop offset="1" stop-color="${SKIES.sun}" stop-opacity="0"/></radialGradient></defs><rect width="${D}" height="${D}" fill="url(#dawnSky)"/>`;
-/** The sun just clearing the horizon under the back lettering. */
-const sunrise = () => `<circle cx="3000" cy="5750" r="1500" fill="url(#sunGlow)"/><circle cx="3000" cy="5750" r="520" fill="${SKIES.sun}"/><rect x="0" y="5750" width="${D}" height="${D}" fill="${SKIES.dawnLow}"/><rect x="0" y="5740" width="${D}" height="14" fill="${SKIES.ink}" opacity="0.35"/>`;
+export const SKIES = {
+  night: ['#141139', '#19164A', '#1F1B57', '#262064'], dawn: ['#C4D9EE', '#DCDDEA', '#F2D7C8', '#F9C3A3', '#FFAA78'],
+  nightCity: '#0D0B26', window: '#FFD27A', dawnCity: '#7A5E86', sun: '#FFC861', ink: '#1F2350', moon: '#FFE7C2',
+};
+/** Flat horizontal bands of sky from the top down to `bottom`, then the last colour below. */
+function bands(colours, bottom) {
+  const h = bottom / colours.length;
+  return colours.map((c, i) => `<rect x="0" y="${(i * h).toFixed(0)}" width="${D}" height="${i === colours.length - 1 ? D : (h + 2).toFixed(0)}" fill="${c}"/>`).join('');
+}
+/** A skyline of flat blocks, towers and spires; lit windows when it's night. */
+function skyline(seed, base, { fill, lit, scale = 1 }) {
+  const r = rng(seed);
+  let out = '', x = -100;
+  while (x < D + 100) {
+    const w = 140 + r() * 300, h = (260 + r() ** 1.6 * 980) * scale, top = base - h;
+    out += `<rect x="${x.toFixed(0)}" y="${top.toFixed(0)}" width="${(w + 2).toFixed(0)}" height="${(D - top).toFixed(0)}" fill="${fill}"/>`;
+    if (r() > 0.72) out += `<rect x="${(x + w / 2 - 10).toFixed(0)}" y="${(top - 140 - r() * 160).toFixed(0)}" width="20" height="300" fill="${fill}"/>`;
+    if (r() > 0.85) out += `<path d="M${(x + w * 0.2).toFixed(0)} ${top.toFixed(0)} L${(x + w / 2).toFixed(0)} ${(top - 220).toFixed(0)} L${(x + w * 0.8).toFixed(0)} ${top.toFixed(0)} Z" fill="${fill}"/>`;
+    if (lit) for (let wy = top + 60; wy < base - 40; wy += 90) for (let wx = x + 30; wx < x + w - 40; wx += 70) if (r() > 0.86) out += `<rect x="${wx.toFixed(0)}" y="${wy.toFixed(0)}" width="26" height="36" fill="${SKIES.window}" opacity="${(0.55 + r() * 0.45).toFixed(2)}"/>`;
+    x += w;
+  }
+  return out;
+}
+/** The moon with flat poster-style halo rings. */
+const posterMoon = (x, y, r) => [3.2, 2.4, 1.7].map((k, i) => `<circle cx="${x}" cy="${y}" r="${r * k}" fill="${SKIES.moon}" opacity="${[0.05, 0.08, 0.12][i]}"/>`).join('') + crescent(x, y, r, SKIES.moon, 'moonS');
+/** The sun half-risen behind the dawn skyline, with flat rings. */
+const posterSun = (x, y, r) => [2.6, 1.9, 1.4].map((k, i) => `<circle cx="${x}" cy="${y}" r="${r * k}" fill="${SKIES.sun}" opacity="${[0.16, 0.24, 0.34][i]}"/>`).join('') + `<circle cx="${x}" cy="${y}" r="${r}" fill="${SKIES.sun}"/>`;
 function twilightSkies() {
-  const keep = (x, y) => Math.hypot(x - CREST.x, y - CREST.y) > 320;
+  const keep = (x, y) => Math.hypot(x - CREST.x, y - CREST.y) > 320 && Math.hypot(x - 2420, y - 2250) > 520;
   return {
-    front: svg(stars(5, 260, 6000, '#FFF6E6', keep) + crescent(2480, 2280, 170, SKIES.moon, 'moonS') + crest(CREST.x, CREST.y, CREST.w, 'light'), NIGHT_SKY),
-    pattern: svg(sunrise(), DAWN_SKY),
+    front: svg(stars(5, 300, 5000, '#FFF6E6', keep) + posterMoon(2420, 2250, 210) + skyline(61, 5450, { fill: SKIES.nightCity, lit: true }) + crest(CREST.x, CREST.y, CREST.w, 'light'), bands(SKIES.night, 5450)),
+    // The dawn city stays low, under the FAR FOX FC line (to y 4720), so the sun rises clear of it.
+    pattern: svg(posterSun(3000, 5250, 400) + skyline(83, 5900, { fill: SKIES.dawnCity, lit: false, scale: 0.5 }), bands(SKIES.dawn, 5400)),
     // Sleeves stay on the night side; the dawn shows in the cuff band.
-    sleeve: svg(stars(15, 120, 3900, '#FFF6E6') + cuff(SKIES.moon, SKIES.dawnLow), NIGHT_SKY),
+    sleeve: svg(stars(15, 120, 3900, '#FFF6E6') + cuff(SKIES.moon, SKIES.dawn[4]), bands(SKIES.night, 4000)),
     backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="306" viewBox="0 0 300 306">${crest(150, 153, 300, 'navy')}</svg>`,
   };
 }
