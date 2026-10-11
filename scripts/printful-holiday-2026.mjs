@@ -4,7 +4,7 @@
  *
  *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs             # dry run: what would be created
  *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs --create    # create the products that don't exist yet
- *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs --mockups   # Ghost-style shop photos for each product
+ *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs --mockups [--only twoskies-ny-london]   # Ghost-style shop photos
  *   PRINTFUL_TOKEN=… node scripts/printful-holiday-2026.mjs --update-files [--apply]   # re-point variants at the current file revisions
  *
  * The print files must already be live on lovefarfox.com (make-jersey-kits.mjs and make-ornament.mjs, then deploy).
@@ -35,6 +35,7 @@ const ORNAMENT = { name: '"Miles Apart" Heart Ornament', price: '20.00', file: '
 if (!TOKEN) { console.error('Set PRINTFUL_TOKEN.'); process.exit(1); }
 const args = process.argv.slice(2);
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const only = args.includes('--only') ? args[args.indexOf('--only') + 1].split(',') : null;
 
 async function pf(path, init = {}, attempt = 0) {
   const r = await fetch(`https://api.printful.com${path}`, { ...init, headers: { Authorization: `Bearer ${TOKEN}`, 'X-PF-Store-Id': STORE, 'Content-Type': 'application/json', ...init.headers } });
@@ -92,7 +93,7 @@ async function create() {
 /** Ghost-style front (and back, for kits) photos into public/shop/mockups and public/shop/backs. */
 async function mockups() {
   const existing = await existingByName();
-  for (const plan of plans()) {
+  for (const plan of plans().filter((p) => !only || only.includes(p.key))) {
     const id = existing[plan.name];
     if (!id) { console.log(`${plan.name}: not created yet`); continue; }
     const spec = await pf(`/mockup-generator/printfiles/${plan.catalog}`);

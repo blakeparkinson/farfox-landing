@@ -1,7 +1,7 @@
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { canonicalRedirectRules, isCanonicalRedirect } from './canonical-redirect-rules.mjs';
+import { canonicalRedirectRules, isCanonicalRedirect, acceptTrailingSlash } from './canonical-redirect-rules.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const clientDir = join(root, 'dist/client');
@@ -30,7 +30,9 @@ if (!Array.isArray(config.routes)) throw new Error('Vercel Build Output config h
 
 // Replace any earlier canonical rules (a re-run, or a page list that changed) with fresh ones, first in the list.
 const rules = canonicalRedirectRules(pages);
-config.routes = [...rules, ...config.routes.filter((route) => !isCanonicalRedirect(route))];
+// Astro's own redirects (astro.config `redirects`) match only the slashless path; the canonical URLs Google
+// indexed end in a slash, so accept both.
+config.routes = [...rules, ...config.routes.filter((route) => !isCanonicalRedirect(route)).map(acceptTrailingSlash)];
 
 await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`);
 console.log(`[canonical-redirects] ${rules.length} 308 redirect rule${rules.length === 1 ? '' : 's'} for ${pages.length} prerendered page paths.`);

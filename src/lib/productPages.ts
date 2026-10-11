@@ -131,7 +131,6 @@ export const PRODUCT_COPY: Record<string, string> = {
   '443420345': 'A rainbow drop trail cuts across a deep purple kit, battle-royale style. For couples whose date night is a duo queue from two different time zones.',
   '443266866': 'A midnight-navy kit with constellation lines picked out in stars, because wherever you each are, you are under the same ones.',
   '443213452': 'A cream kit with a dotted flight path that ends in a heart, and airmail stripes on the sleeves and hem. For the next flight home.',
-  '443164966': 'A purple-to-sunset gradient fading into mountains, with the first stars coming out. Twilight is the hour when it is evening for one of you and the day is just starting for the other.',
   '436909622': 'Morse code for "I love you" runs down the chest, with each letter spelled out beside its dots and dashes, and a small Far Fox mark underneath. Only the people who know will read it.',
   '436909615': 'A small Long Distance Club fox crest on the front, and the full club badge across the back: LONG DISTANCE CLUB, est. wherever you are.',
   '436908862': 'Two clocks, one marked here and one marked there, joined by a heart, over "same love, different time zones". For every couple who keeps two clocks on their phone.',
@@ -149,6 +148,7 @@ export const PRODUCT_COPY: Record<string, string> = {
   '436883186': 'Foxy with "miss you too" underneath. Half of a pair with the Miss You sticker: send one, keep one.',
   '436883173': 'Foxy with "miss you" underneath. Half of a pair with the Miss You Too sticker: send one, keep one.',
   '436883154': 'A small Foxy on the chest, and an airmail envelope across the back over WORTH EVERY MILE. The hoodie to steal on a visit, and to send home smelling like you.',
+  '480534575': 'Two skies, two cities, one shirt. The front is New York at night: the Empire State lit pink for the two of you, the Chrysler crown and One World Trade over a city of lit windows. The back is London at dawn, with Big Ben in front of the rising sun, the Shard and the London Eye. Evening for one of you, morning for the other.',
   '479940069': 'A black kit with one bone-white web spun out from an orange fox crest, and a sleek orange spider dropping in from the collar with a heart on its back. Orange cuffs, and an orange 143 on the back. For the Halloween you spend apart, or the one you finally spend together.',
   '479940099': 'Cream at the chest, orange through the middle and sunny yellow at the hem, in crisp chevrons piped in black that follow the V-neck, like a piece of candy corn. A black fox crest on the front and a black 143 on the back.',
   '479940104': 'A Christmas jumper knitted into a football kit. Pine green with a knit texture, and a cream yoke across the chest where two foxes face a heart: the two of you, miles apart. Snowflakes and hearts run round the sleeves and the hem.',
@@ -176,8 +176,8 @@ export const PAIRS: Record<string, string> = {
 export const KIT_COLOURS: Record<string, string> = {
   '475849115': 'Purple/Pink', '475844805': 'Navy/White', '475844798': 'Purple/Pink', '475844794': 'Pink/Purple',
   '443631285': 'Purple/Gold', '443578239': 'White/Black', '443540637': 'Teal/Orange', '443420345': 'Purple',
-  '443266866': 'Navy', '443213452': 'Cream', '443164966': 'Purple',
-  '479940069': 'Black/Orange', '479940099': 'Orange/Yellow', '479940104': 'Green/Cream', '479940112': 'Navy/White',
+  '443266866': 'Navy', '443213452': 'Cream',
+  '479940069': 'Black/Orange', '479940099': 'Orange/Yellow', '479940104': 'Green/Cream', '479940112': 'Navy/White', '480534575': 'Navy/Peach',
 };
 
 /** The product's own copy, followed by the Les Séparés-style story when the shop has one for it. */
@@ -273,3 +273,10 @@ export function merchantFeedXml(items: FeedItem[]) {
 }
 
 export const formatPrice = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
+
+/** The Two Skies jersey for a city pair, either way round, if the shop sells one ("Two Skies: New York / London"). */
+export function cityPairKit(products: ShopProduct[], cityA: string, cityB: string) {
+  const pair = (name: string) => /Two Skies: (.+?) \/ (.+?)\)/.exec(name)?.slice(1).map((c) => c.toLowerCase()) ?? [];
+  const want = [cityA, cityB].map((c) => c.toLowerCase()).sort().join('|');
+  return products.find((p) => { const cities = pair(p.name); return cities.length === 2 && [...cities].sort().join('|') === want; }) ?? null;
+}

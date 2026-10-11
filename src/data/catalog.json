@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-09T22:21:10.457Z",
+  "generatedAt": "2026-10-11T20:02:01.759Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -38,6 +38,25 @@
           "back": "/shop/backs/6ac56a091644af57a506ee5b-red-black.png"
         }
       ]
+    },
+    {
+      "id": "480534575",
+      "slug": "far-fox-long-distance-fc-jersey-two-skies-new-york-london",
+      "name": "Long Distance FC Jersey (Two Skies: New York / London)",
+      "price": 50,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-480534575.png",
+      "back": "/shop/backs/480534575.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
     },
     {
       "id": "479940120",
@@ -516,25 +535,6 @@
       "currency": "USD",
       "image": "/shop/auto/mockup-443213452.png",
       "back": "/shop/backs/443213452.png",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL",
-        "2XL",
-        "3XL"
-      ],
-      "colors": []
-    },
-    {
-      "id": "443164966",
-      "slug": "far-fox-long-distance-fc-jersey-twilight",
-      "name": "Long Distance FC Jersey (Twilight)",
-      "price": 50,
-      "currency": "USD",
-      "image": "/shop/auto/mockup-443164966.png",
-      "back": "/shop/backs/443164966.png",
       "sizes": [
         "XS",
         "S",

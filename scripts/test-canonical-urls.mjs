@@ -1,4 +1,4 @@
-import { canonicalRedirectRules, isCanonicalRedirect, MAX_ROUTE_SRC } from './canonical-redirect-rules.mjs';
+import { canonicalRedirectRules, isCanonicalRedirect, acceptTrailingSlash, MAX_ROUTE_SRC } from './canonical-redirect-rules.mjs';
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
@@ -103,5 +103,13 @@ for (const match of rss.matchAll(/<(?:link|guid)\b[^>]*>([\s\S]*?)<\/(?:link|gui
   checkUrl(match[1].trim(), 'rss.xml');
 }
 for (const match of rss.matchAll(/\bhref="([^"]+)"/g)) checkUrl(match[1], 'rss.xml');
+
+// Retired product pages redirect whether the old URL is asked for with or without its trailing slash.
+const retired = acceptTrailingSlash({ src: '^/shop/long-distance-fc-jersey-twilight$', headers: { Location: '/shop/long-distance-fc-jersey-two-skies-new-york-london/' }, status: 301 });
+for (const path of ['/shop/long-distance-fc-jersey-twilight', '/shop/long-distance-fc-jersey-twilight/']) assert.ok(new RegExp(retired.src).test(path), `${path} redirects`);
+assert.ok(!new RegExp(retired.src).test('/shop/long-distance-fc-jersey-twilight-x/'), 'the redirect matches only its own page');
+assert.equal(acceptTrailingSlash({ src: '^/(a|b)$', headers: { Location: '/$1/' }, status: 308 }).src, '^/(a|b)$', 'canonical rules are left alone');
+const twilight = config.routes.find((r) => /twilight/.test(r.src || ''));
+assert.ok(twilight && new RegExp(twilight.src).test('/shop/long-distance-fc-jersey-twilight/') && twilight.status === 301, 'the built config sends Twilight to Two Skies');
 
 console.log(`Canonical URL checks passed: redirect scope and ${checked} internal page links checked.`);

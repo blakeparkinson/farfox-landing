@@ -22,6 +22,10 @@ const blogLastmod = Object.fromEntries(
 // https://astro.build/config
 export default defineConfig({
   site: 'https://lovefarfox.com',
+  // Retired products keep their search value by pointing at the kit that replaced them.
+  redirects: {
+    '/shop/long-distance-fc-jersey-twilight/': { status: 301, destination: '/shop/long-distance-fc-jersey-two-skies-new-york-london/' },
+  },
   vite: {
     plugins: [tailwindcss()]
   },
