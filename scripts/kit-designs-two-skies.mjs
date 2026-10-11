@@ -31,7 +31,7 @@ function stars(seed, count, maxY, colour, keep = () => true) {
 // are flat bands, like a travel poster, so the kit never reads as another sunset gradient.
 
 export const SKIES = {
-  night: ['#141139', '#19164A', '#1F1B57', '#262064'], dawn: ['#C4D9EE', '#DCDDEA', '#F2D7C8', '#F9C3A3', '#FFAA78'],
+  night: ['#141139', '#19164A', '#1F1B57', '#262064'], dawn: ['#262064', '#3A2970', '#553276', '#753C7B', '#9C4A7E', '#C45A7C', '#E57574', '#FB9873', '#FFB27A'],
   nightCity: '#0D0B26', window: '#FFD27A', dawnCity: '#7A5E86', sun: '#FFC861', ink: '#1F2350', moon: '#FFE7C2',
 };
 /** Flat horizontal bands of sky from the top down to `bottom`, then the last colour below. */
@@ -151,7 +151,7 @@ function nycSkyline(seed, base) {
  * Dawn London for the back: Big Ben in front of the rising sun, the Shard to the left, the London Eye to the right,
  * all below the FAR FOX FC line (to y 4720) and clear of its width (about x 2350–3650).
  */
-export const LONDON = { city: '#6E5480', rim: '#C99AA6', clock: '#FFE9CF', base: 5880 };
+export const LONDON = { city: '#3E2A55', far: '#7A4A78', rim: '#FFB98A', clock: '#FFE9CF', unlit: '#4C3866', farUnlit: '#86567F', base: 5880, sunX: 3000 };
 /**
  * The Elizabeth Tower (Big Ben): panelled shaft with corner buttresses, the framed clock stage, a belfry of
  * pointed arches, then the steep spire with corner pinnacles, the Ayrton lantern and the finial.
@@ -172,7 +172,8 @@ function bigBen(x, base, f) {
     <circle cx="${x}" cy="${cy}" r="62" fill="${LONDON.clock}"/><circle cx="${x}" cy="${cy}" r="62" fill="none" stroke="${f}" stroke-width="5"/>
     <path d="M${x} ${cy} V${cy - 42} M${x} ${cy} L${x + 30} ${cy + 9}" stroke="${f}" stroke-width="7" stroke-linecap="round"/>`;
   const arches = [-48, -16, 16, 48].map((dx) => `<path d="M${x + dx - 10} ${yBelfry - 14} V${yBelfry - 64} L${x + dx} ${yBelfry - 84} L${x + dx + 10} ${yBelfry - 64} V${yBelfry - 14} Z" fill="${SKIES.dawn[2]}" opacity="0.75"/>`).join('');
-  return { shapes: shapes.join(''), detail: panelling + clock + arches };
+  const slits = [0.25, 0.45, 0.65].map((t) => `<rect x="${x - 6}" y="${(base - shaft * t).toFixed(0)}" width="12" height="34" rx="6" fill="${SKIES.window}" opacity="0.8"/>`).join('');
+  return { shapes: shapes.join(''), detail: panelling + clock + arches + slits };
 }
 /**
  * The Shard as overlapping glass panels, each rising to its own tip: the crown splinters apart with sky between
@@ -184,7 +185,8 @@ function shard(x, base) {
   const shapes = SHARD_PANELS.map(([l, rgt, tip, h]) => `<path d="M${x + l} ${base} L${x + tip} ${base - h} L${x + rgt} ${base} Z"/>`).join('');
   // Seams where the panels meet: from each tip down its inner edge.
   const detail = SHARD_PANELS.slice(0, 4).map(([l, rgt, tip, h]) => `<path d="M${x + tip} ${base - h} L${x + (l + rgt) / 2 + (tip > 0 ? -30 : 30)} ${base}" stroke="${LONDON.rim}" stroke-width="5" opacity="0.45" fill="none"/>`).join('');
-  return { shapes, detail };
+  const floors = Array.from({ length: 30 }, (_, i) => `<line x1="${x - 170}" y1="${base - 40 - i * 46}" x2="${x + 170}" y2="${base - 40 - i * 46}" stroke="${LONDON.rim}" stroke-width="2" opacity="0.18"/>`).join('');
+  return { shapes, detail: detail + floors };
 }
 function londonEye(cx, base, r, f) {
   const cy = base - r - 120;
@@ -193,12 +195,27 @@ function londonEye(cx, base, r, f) {
   return `<g stroke="${f}" fill="none"><circle cx="${cx}" cy="${cy}" r="${r}" stroke-width="16"/><g stroke-width="5">${spokes}</g>
     <path d="M${cx - r * 0.55} ${base} L${cx} ${cy} L${cx + r * 0.2} ${base}" stroke-width="22"/></g>${pods}<circle cx="${cx}" cy="${cy}" r="26" fill="${f}"/>`;
 }
+/** The Gherkin: a rounded bullet with its diagonal lattice of glass. */
+function gherkin(x, base) {
+  const h = 860, w = 300;
+  const shapes = `<path d="M${x - w * 0.36} ${base} C ${x - w * 0.6} ${base - h * 0.45} ${x - w * 0.42} ${base - h * 0.92} ${x} ${base - h} C ${x + w * 0.42} ${base - h * 0.92} ${x + w * 0.6} ${base - h * 0.45} ${x + w * 0.36} ${base} Z"/>`;
+  let lattice = '';
+  for (let k = -12; k <= 12; k++) lattice += `<path d="M${x + k * 40 - 400} ${base} L${x + k * 40 + 400} ${base - h}" /><path d="M${x + k * 40 + 400} ${base} L${x + k * 40 - 400} ${base - h}" />`;
+  return { shapes, detail: `<g stroke="${LONDON.rim}" stroke-width="4" opacity="0.32" fill="none">${lattice}</g>` };
+}
+/** Dawn London in three depths like the Manhattan front: hazy far blocks, the landmarks, short blocks in front. */
 function londonDawn(seed) {
   const r = rng(seed), f = LONDON.city, base = LONDON.base;
-  const low = towerRow(r, base + 20, f, [120, 220], { unlit: '#7F6491', litStart: 0.03 });
-  const ben = bigBen(3000, base, f), sh = shard(1960, base);
-  const piece = (id, built) => `<clipPath id="${id}">${built.shapes}</clipPath><g fill="${LONDON.rim}" transform="translate(-9 0)">${built.shapes}</g><g fill="${f}">${built.shapes}</g><g clip-path="url(#${id})">${built.detail}</g>`;
-  return londonEye(4020, base, 330, f) + piece('ldn-shard', sh) + piece('ldn-ben', ben) + low;
+  // Sunlight from the horizon behind Big Ben: buildings left of it are lit on their right edge, and vice versa.
+  const piece = (id, built, x) => {
+    const dx = x < LONDON.sunX ? 10 : -10;
+    const lit = windowGrid(r, x, base - 1500, built.windowWidth || 0, base, { unlit: LONDON.unlit, litStart: 0.05 });
+    return `<clipPath id="${id}">${built.shapes}</clipPath><g fill="${LONDON.rim}" opacity="0.85" transform="translate(${dx} 0)">${built.shapes}</g><g fill="${f}">${built.shapes}</g><g clip-path="url(#${id})">${built.windowWidth ? lit : ''}${built.detail}</g>`;
+  };
+  const far = towerRow(r, base, LONDON.far, [300, 260], { unlit: LONDON.farUnlit, litStart: 0.02 });
+  const near = towerRow(r, base + 30, f, [110, 160], { unlit: LONDON.unlit, litStart: 0.04 });
+  const sh = { ...shard(1960, base), windowWidth: 300 }, gh = { ...gherkin(2480, base), windowWidth: 0 }, ben = { ...bigBen(3000, base, f), windowWidth: 0 };
+  return far + londonEye(4020, base, 330, f) + piece('ldn-shard', sh, 1960) + piece('ldn-gherkin', gh, 2480) + piece('ldn-ben', ben, 3000) + near;
 }
 
 /** The moon: small, with one faint ring, so it sits in the sky as a detail rather than a second chest badge. */
@@ -214,7 +231,7 @@ function twoSkiesNyLondon() {
     pattern: svg(posterSun(3000, 5330, 380) + londonDawn(83), bands(SKIES.dawn, 5400)),
     // Sleeves stay on the night side; the dawn shows in the cuff band.
     sleeve: svg(stars(15, 120, 3900, '#FFF6E6') + cuff(SKIES.moon, SKIES.dawn[4]), bands(SKIES.night, 4000)),
-    backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="306" viewBox="0 0 300 306">${crest(150, 153, 300, 'navy')}</svg>`,
+    backCrest: `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="306" viewBox="0 0 300 306">${crest(150, 153, 300, 'light')}</svg>`,
   };
 }
 
@@ -222,5 +239,5 @@ export const KITS = { 'twoskies-ny-london': twoSkiesNyLondon };
 
 /** Back lettering for jerseyBack.mjs KITS (test-jersey-offer.mjs checks they match). */
 export const BACKS = {
-  'twoskies-ny-london': { pattern: 'two-skies/sj-twoskies-ny-london-pattern.png', crest: 'two-skies/fox-crest-twoskies-ny-london.png', number: SKIES.ink, numberStroke: '#FFF6EE', name: SKIES.ink, nameStroke: '#FFF6EE' },
+  'twoskies-ny-london': { pattern: 'two-skies/sj-twoskies-ny-london-pattern.png', crest: 'two-skies/fox-crest-twoskies-ny-london.png', number: '#FFF6EE', numberStroke: SKIES.ink, name: '#FFF6EE', nameStroke: SKIES.ink },
 };
