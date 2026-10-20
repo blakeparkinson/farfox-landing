@@ -21,6 +21,7 @@ export const SITE = 'https://lovefarfox.com';
 export const SHOP_CATEGORIES: { title: string; test: (name: string) => boolean }[] = [
   { title: 'Jerseys', test: (n) => /jersey/i.test(n) },
   { title: 'Tees, Sweats & Flannels', test: (n) => /tee|hoodie|crewneck|flannel/i.test(n) },
+  { title: 'Jackets & Beanies', test: (n) => /jacket|beanie/i.test(n) },
   { title: 'Mugs', test: (n) => /mug/i.test(n) },
   { title: 'Ornaments', test: (n) => /ornament/i.test(n) },
   { title: 'Art Prints', test: (n) => /print/i.test(n) },
@@ -67,6 +68,14 @@ const KINDS: Record<string, Kind> = {
     label: 'Embroidered crewneck sweatshirt', productType: 'Apparel > Tops > Sweatshirts', apparel: true,
     facts: ['Lane Seven LS14004 premium fleece, 100% cotton face', 'Heavyweight 8.25 oz/yd², regular fit', 'Embroidered, not printed', 'Size up for a looser fit'],
   },
+  bomber: {
+    label: 'Bomber jacket', productType: 'Apparel > Outerwear > Jackets', apparel: true,
+    facts: ['100% polyester shell, 7.37 oz/yd², printed edge to edge', 'Brushed fleece inside', 'Silver YKK zip, two self-fabric pockets, ribbed collar, cuffs and hem', 'Relaxed unisex fit'],
+  },
+  beanie: {
+    label: 'Embroidered beanie', productType: 'Apparel > Hats > Beanies', apparel: true,
+    facts: ['Yupoong 1501KC, 100% Turbo Acrylic', '12 in long with a fold-up cuff, one size', 'Embroidered on the cuff in thread, not printed', 'Hypoallergenic, hand washable'],
+  },
   flannel: {
     label: 'Flannel shirt', productType: 'Apparel > Tops > Flannel Shirts', apparel: true,
     facts: ['Independent Trading Co. EXP50F cotton flannel', 'Button front with chest pockets', 'Printed by DTF for a soft, flexible finish'],
@@ -103,6 +112,8 @@ export function kindOf(p: Pick<ShopProduct, 'name'>): Kind {
   if (/hoodie/i.test(n)) return KINDS.hoodie;
   if (/crewneck/i.test(n)) return KINDS.crewneck;
   if (/flannel/i.test(n)) return KINDS.flannel;
+  if (/jacket/i.test(n)) return KINDS.bomber;
+  if (/beanie/i.test(n)) return KINDS.beanie;
   if (/mug/i.test(n)) return KINDS.mug;
   if (/art print/i.test(n)) return KINDS.print;
   if (/sticker sheet/i.test(n)) return KINDS.stickerSheet;
