@@ -126,8 +126,10 @@ async function main() {
       // Comfort Colors 6030 pocket tee and Lane Seven crewneck, from Printful's catalog colour codes.
       'Butter':'#ffe09e','Violet':'#9a8ad2','Watermelon':'#d15c68','True Navy':'#424150','Berry':'#8e5a7b',
       'Oatmeal Heather':'#f7f2eb',
+      // Yupoong 1501KC beanie, from Printful's catalog colour codes.
+      'Spruce':'#005234','Heather Grey':'#a19f9b','Baby Pink':'#ffc6cd',
     };
-    const DARKISH = new Set(['Black','Navy','Maroon','Forest','Heather Navy','True Royal','Team Purple','Heather Midnight Navy','True Navy','Berry']);
+    const DARKISH = new Set(['Black','Navy','Maroon','Forest','Heather Navy','True Royal','Team Purple','Heather Midnight Navy','True Navy','Berry','Spruce']);
     const colorNames = [...new Set(variants.map((v) => variantColor(v)).filter(Boolean))];
     colorNames.sort((a, b) => (DARKISH.has(a) ? 1 : 0) - (DARKISH.has(b) ? 1 : 0));
     const colorSlug = (s) => s.toLowerCase().replace(/ /g, '-');

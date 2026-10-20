@@ -21,6 +21,7 @@ export const SITE = 'https://lovefarfox.com';
 export const SHOP_CATEGORIES: { title: string; test: (name: string) => boolean }[] = [
   { title: 'Jerseys', test: (n) => /jersey/i.test(n) },
   { title: 'Tees, Sweats & Flannels', test: (n) => /tee|hoodie|crewneck|flannel/i.test(n) },
+  { title: 'Jackets & Beanies', test: (n) => /jacket|beanie/i.test(n) },
   { title: 'Mugs', test: (n) => /mug/i.test(n) },
   { title: 'Ornaments', test: (n) => /ornament/i.test(n) },
   { title: 'Art Prints', test: (n) => /print/i.test(n) },
@@ -67,6 +68,14 @@ const KINDS: Record<string, Kind> = {
     label: 'Embroidered crewneck sweatshirt', productType: 'Apparel > Tops > Sweatshirts', apparel: true,
     facts: ['Lane Seven LS14004 premium fleece, 100% cotton face', 'Heavyweight 8.25 oz/yd², regular fit', 'Embroidered, not printed', 'Size up for a looser fit'],
   },
+  bomber: {
+    label: 'Bomber jacket', productType: 'Apparel > Outerwear > Jackets', apparel: true,
+    facts: ['100% polyester shell, 7.37 oz/yd², printed edge to edge', 'Brushed fleece inside', 'Silver YKK zip, two self-fabric pockets, ribbed collar, cuffs and hem', 'Relaxed unisex fit'],
+  },
+  beanie: {
+    label: 'Embroidered beanie', productType: 'Apparel > Hats > Beanies', apparel: true,
+    facts: ['Yupoong 1501KC, 100% Turbo Acrylic', '12 in long with a fold-up cuff, one size', 'Embroidered on the cuff in thread, not printed', 'Hypoallergenic, hand washable'],
+  },
   flannel: {
     label: 'Flannel shirt', productType: 'Apparel > Tops > Flannel Shirts', apparel: true,
     facts: ['Independent Trading Co. EXP50F cotton flannel', 'Button front with chest pockets', 'Printed by DTF for a soft, flexible finish'],
@@ -103,6 +112,8 @@ export function kindOf(p: Pick<ShopProduct, 'name'>): Kind {
   if (/hoodie/i.test(n)) return KINDS.hoodie;
   if (/crewneck/i.test(n)) return KINDS.crewneck;
   if (/flannel/i.test(n)) return KINDS.flannel;
+  if (/jacket/i.test(n)) return KINDS.bomber;
+  if (/beanie/i.test(n)) return KINDS.beanie;
   if (/mug/i.test(n)) return KINDS.mug;
   if (/art print/i.test(n)) return KINDS.print;
   if (/sticker sheet/i.test(n)) return KINDS.stickerSheet;
@@ -155,6 +166,9 @@ export const PRODUCT_COPY: Record<string, string> = {
   '479940112': 'A snowy night over a little log cabin, and a reindeer fox crest whose red nose lights the sleigh trail all the way home. Look closely by the cabin: Foxy is sitting in the snow, watching the sky for you.',
   '479940120': 'A glossy ceramic heart with Foxy in a Santa hat, holding a love letter. Add your two cities and it reads, say, NEW YORK ♥ LONDON, Christmas 2026. Leave them blank and it says Miles Apart, Close at Heart. The same design prints on both sides.',
   '436883133': 'Foxy with heart eyes, over HEART EYES, only for you. Our original design, and still the one people buy for each other most.',
+  '483412102': 'A flight jacket for the airline that only flies one route. Night-plum under a scatter of stars, Far Fox Airways wings on the left chest and a WORTH EVERY MILE name tape on the right. Across the back, the Long Distance Club globe: two cities, a dashed flight path between them and a heart at the top of the arc. Airmail stripes run down each sleeve, and the collar, cuffs and hem are ribbed in pink and blush.',
+  '483444820': 'The Two Skies kit as a flight jacket. The front is New York at night: the Empire State lit pink for the two of you, the Chrysler crown and One World Trade over a city of lit windows, a crescent moon by the shoulder. The back is London at dawn, the sky warming from that same night into sunrise, with Big Ben in front of the sun, the Shard, the Gherkin and the London Eye. Night sleeves, and the dawn\'s peach and cream in the collar, cuffs and hem. Evening for one of you, morning for the other.',
+  '483412154': 'FAR · fox · FOX, embroidered in thread across the cuff of a snug knit beanie, with the crest\'s eyes and ears left unstitched so the knit shows through. Pink thread on every colour; white letters on the dark beanies, purple on the light ones. For cold-weather calls, the airport, and the walk back from dropping them off.',
 };
 
 /** The small label on a product photo: Pride, or the holiday a seasonal piece is for. */
@@ -178,6 +192,7 @@ export const KIT_COLOURS: Record<string, string> = {
   '443631285': 'Purple/Gold', '443578239': 'White/Black', '443540637': 'Teal/Orange', '443420345': 'Purple',
   '443266866': 'Navy', '443213452': 'Cream',
   '479940069': 'Black/Orange', '479940099': 'Orange/Yellow', '479940104': 'Green/Cream', '479940112': 'Navy/White', '480534575': 'Navy/Peach',
+  '483412102': 'Night/Pink', '483444820': 'Navy/Peach',
 };
 
 /** The product's own copy, followed by the Les Séparés-style story when the shop has one for it. */
@@ -244,7 +259,8 @@ export function merchantFeedItems(products: ShopProduct[], stories: Record<strin
           price: `${p.price.toFixed(2)} ${p.currency || 'USD'}`,
           productType: kind.productType,
           color: colour?.name ?? KIT_COLOURS[p.id],
-          size: size ?? undefined,
+          // One-size apparel (the beanie) still needs a size in the feed.
+          size: size ?? (kind.apparel ? 'One size' : undefined),
           apparel: kind.apparel,
         });
       }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11T20:02:01.759Z",
+  "generatedAt": "2026-10-20T17:10:12.217Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -38,6 +38,86 @@
           "back": "/shop/backs/6ac56a091644af57a506ee5b-red-black.png"
         }
       ]
+    },
+    {
+      "id": "483444820",
+      "slug": "far-fox-two-skies-flight-jacket-new-york-london",
+      "name": "Two Skies Flight Jacket (New York / London)",
+      "price": 95,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-483444820.png",
+      "back": "/shop/backs/483444820.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
+    },
+    {
+      "id": "483412154",
+      "slug": "far-fox-beanie",
+      "name": "Beanie",
+      "price": 26,
+      "currency": "USD",
+      "image": "/shop/colors/483412154-heather-grey.png",
+      "back": null,
+      "sizes": [],
+      "colors": [
+        {
+          "name": "Heather Grey",
+          "hex": "#a19f9b",
+          "image": "/shop/colors/483412154-heather-grey.png",
+          "back": null
+        },
+        {
+          "name": "Baby Pink",
+          "hex": "#ffc6cd",
+          "image": "/shop/colors/483412154-baby-pink.png",
+          "back": null
+        },
+        {
+          "name": "Navy",
+          "hex": "#212642",
+          "image": "/shop/colors/483412154-navy.png",
+          "back": null
+        },
+        {
+          "name": "Black",
+          "hex": "#0c0c0c",
+          "image": "/shop/colors/483412154-black.png",
+          "back": null
+        },
+        {
+          "name": "Spruce",
+          "hex": "#005234",
+          "image": "/shop/colors/483412154-spruce.png",
+          "back": null
+        }
+      ]
+    },
+    {
+      "id": "483412102",
+      "slug": "far-fox-airways-flight-jacket",
+      "name": "Airways Flight Jacket",
+      "price": 95,
+      "currency": "USD",
+      "image": "/shop/auto/mockup-483412102.png",
+      "back": "/shop/backs/483412102.png",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
     },
     {
       "id": "480534575",
