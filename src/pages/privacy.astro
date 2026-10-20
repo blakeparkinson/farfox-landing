@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Privacy Policy — Far Fox" description="Far Fox privacy policy. Learn how we protect your data and respect your privacy.">
+<Layout title="Privacy Policy — Far Fox" description="How lovefarfox.com, its free tools and the Far Fox shop handle your data, and where to find the Far Fox app privacy policy.">
   <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
     <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="/" class="flex items-center gap-2">
@@ -25,88 +25,78 @@ import Layout from '../layouts/Layout.astro';
       <h1 class="text-3xl sm:text-4xl font-900 tracking-tight mb-8">
         Privacy <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Policy</span>
       </h1>
-      <p class="text-fox-text-light text-sm mb-8">Last updated: March 30, 2026</p>
+      <p class="text-fox-text-light text-sm mb-8">Last updated: October 20, 2026</p>
 
       <div class="space-y-8 text-fox-text-light leading-relaxed">
+        <section class="rounded-2xl border border-fox-pink/20 bg-fox-pink/5 p-5">
+          <h2 class="text-xl font-800 text-fox-text mb-3">Using the Far Fox app?</h2>
+          <p>
+            Far Fox is made by <a href="https://primemenagerie.com" class="text-fox-pink hover:underline">Prime Menagerie</a>, the app studio of Blake Parkinson and Amanda Roth.
+            How the app handles your account, your shared space, location, notifications and Foxy's AI features is in the
+            <a href="https://primemenagerie.com/privacy#far-fox" class="text-fox-pink hover:underline">Prime Menagerie privacy policy</a>.
+            This page covers lovefarfox.com: the website, its free tools and the shop.
+          </p>
+        </section>
+
         <section>
-          <h2 class="text-xl font-800 text-fox-text mb-3">1. Information We Collect</h2>
-          <p>When you use Far Fox, we collect the following information:</p>
+          <h2 class="text-xl font-800 text-fox-text mb-3">1. Analytics</h2>
+          <p>
+            We count page views with Vercel Web Analytics and Umami Cloud. Neither uses cookies or personal identifiers, and we strip the part of the address after <code>#</code> before anything is counted. The site keeps campaign tags (such as utm_source) in session storage for the current browser tab so we can tell which campaigns bring people in. Those tags never include names, places, payment details or orders.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-800 text-fox-text mb-3">2. Free tools</h2>
           <ul class="list-disc pl-6 mt-2 space-y-1">
-            <li><strong>Account information:</strong> Email address and display name when you sign up.</li>
-            <li><strong>Content you create:</strong> Photos, letters, question answers, mood entries, and other content you share with your partner.</li>
-            <li><strong>Usage data:</strong> How you interact with the app, including features used, streaks, and challenge completions.</li>
-            <li><strong>Device information:</strong> Device type, operating system, and timezone for delivering a personalized experience.</li>
+            <li><strong>Couple quiz:</strong> the name and answers you enter are saved so we can make your shareable profile page. Anyone with the link can see it, and it isn't listed in search engines. Email us to delete it.</li>
+            <li><strong>Countdown and couple games:</strong> what you type stays in the link itself, after the <code>#</code>, which browsers don't send to our server.</li>
+            <li><strong>Halfway point and city lookups:</strong> place names you type are sent, through our server, to OpenStreetMap's Nominatim service to find them. Your IP address isn't passed along.</li>
           </ul>
         </section>
 
         <section>
-          <h2 class="text-xl font-800 text-fox-text mb-3">2. How We Use Your Information</h2>
-          <p>We use your information to:</p>
+          <h2 class="text-xl font-800 text-fox-text mb-3">3. The shop</h2>
           <ul class="list-disc pl-6 mt-2 space-y-1">
-            <li>Provide and maintain the Far Fox app and its features.</li>
-            <li>Share your content with your connected partner (and only your partner).</li>
-            <li>Track streaks, XP, and fox companion progression.</li>
-            <li>Send notifications about partner activity and daily prompts.</li>
-            <li>Improve the app based on aggregated, anonymized usage patterns.</li>
+            <li><strong>Checkout:</strong> Snipcart runs the cart and checkout, and collects your name, email, addresses and payment. We never see your card number. Snipcart may use its own cookies or browser storage to keep your cart.</li>
+            <li><strong>Printing and shipping:</strong> when you order, we send your name, email, phone number, shipping address and items to Printful or Printify so they can print and ship them.</li>
+            <li><strong>Personalized products:</strong> the names, numbers, cities, messages and dates you add are used to draw your design and are sent to the printer with your order. We don't store the designs.</li>
+            <li><strong>Digital maps:</strong> Snipcart emails you a download link. If you bought on Etsy, you enter your order number and purchase email, which we check with Etsy and don't keep.</li>
           </ul>
         </section>
 
         <section>
-          <h2 class="text-xl font-800 text-fox-text mb-3">3. Data Sharing</h2>
+          <h2 class="text-xl font-800 text-fox-text mb-3">4. Other services</h2>
           <p>
-            Your content is shared only with your connected partner. We do not sell, rent, or share your personal data with third parties for marketing purposes. We may share data with:
-          </p>
-          <ul class="list-disc pl-6 mt-2 space-y-1">
-            <li><strong>Supabase:</strong> Our backend infrastructure provider, which hosts your data securely.</li>
-            <li><strong>Vercel:</strong> Our web hosting provider for the landing page and web app.</li>
-            <li><strong>Law enforcement:</strong> Only when required by law or to protect the safety of our users.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 class="text-xl font-800 text-fox-text mb-3">4. Data Storage & Security</h2>
-          <p>
-            Your data is stored securely using Supabase with row-level security policies. Photos and media are stored in encrypted cloud storage. We use HTTPS for all data transmission and require authentication for all API access.
+            Pages load the Nunito font from Google Fonts, so Google sees your IP address when the font loads. The site is hosted on Vercel, which keeps standard server logs.
           </p>
         </section>
 
         <section>
-          <h2 class="text-xl font-800 text-fox-text mb-3">5. Your Rights</h2>
-          <p>You have the right to:</p>
-          <ul class="list-disc pl-6 mt-2 space-y-1">
-            <li>Access and download your personal data.</li>
-            <li>Delete your account and all associated data.</li>
-            <li>Opt out of non-essential notifications.</li>
-            <li>Request correction of inaccurate data.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 class="text-xl font-800 text-fox-text mb-3">6. Cookies & Analytics</h2>
+          <h2 class="text-xl font-800 text-fox-text mb-3">5. What we don't do</h2>
           <p>
-            The Far Fox landing page uses Vercel Web Analytics and Umami Cloud, both of which collect anonymized page view and referrer data without cookies or personal identifiers. The landing page also keeps campaign tags in session storage for the current browser tab so we can understand which campaigns lead to product interest. This attribution record contains campaign tags, not names, locations, payment details, or order data. Product interaction events include those campaign tags. The app itself does not use cookies or third-party tracking.
+            We don't sell your personal information, show ads, or use advertising trackers.
           </p>
         </section>
 
         <section>
-          <h2 class="text-xl font-800 text-fox-text mb-3">7. Children's Privacy</h2>
+          <h2 class="text-xl font-800 text-fox-text mb-3">6. Your rights</h2>
           <p>
-            Far Fox is not intended for users under 13 years of age. We do not knowingly collect personal information from children under 13.
+            You can ask for a copy of your data, to correct it, or to delete it, including a quiz profile. Order records are kept by Snipcart, Printful and Printify as they need for payments, shipping and returns.
           </p>
         </section>
 
         <section>
-          <h2 class="text-xl font-800 text-fox-text mb-3">8. Changes to This Policy</h2>
+          <h2 class="text-xl font-800 text-fox-text mb-3">7. Children's privacy</h2>
           <p>
-            We may update this privacy policy from time to time. We will notify users of significant changes through the app or via email.
+            Far Fox and this site aren't intended for children under 13, and we don't knowingly collect their information.
           </p>
         </section>
 
         <section>
-          <h2 class="text-xl font-800 text-fox-text mb-3">9. Contact</h2>
+          <h2 class="text-xl font-800 text-fox-text mb-3">8. Changes and contact</h2>
           <p>
-            If you have questions about this privacy policy or your data, reach out to us at
-            <a href="mailto:hello@lovefarfox.com" class="text-fox-pink hover:underline">hello@lovefarfox.com</a>.
+            When the site changes what it collects, we'll update this page and the date at the top. Questions go to
+            <a href="mailto:blake@lovefarfox.com" class="text-fox-pink hover:underline">blake@lovefarfox.com</a>.
           </p>
         </section>
       </div>
@@ -119,6 +109,7 @@ import Layout from '../layouts/Layout.astro';
       <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light/50">
         <a href="/privacy/" class="hover:text-fox-pink transition-colors">Privacy</a>
         <a href="/terms/" class="hover:text-fox-pink transition-colors">Terms</a>
+        <a href="https://primemenagerie.com" class="hover:text-fox-pink transition-colors">A Prime Menagerie app</a>
         <span>&copy; {new Date().getFullYear()} Far Fox</span>
       </div>
     </div>
