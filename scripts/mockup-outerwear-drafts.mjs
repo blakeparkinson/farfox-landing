@@ -43,7 +43,10 @@ for (const c of concepts) {
     const spec = await pf(`/mockup-generator/printfiles/${KNIT}`);
     const variant = (await pf(`/products/${KNIT}`)).variants[0].id;
     const files = [{ placement: 'front', image_url: `${RAW}/knit-beanie.png`, position: area(spec, 'front') }];
-    for (const mk of await generate(KNIT, [variant], files, { option_groups: ['Flat'], options: ['Front'] })) await save('knit-front.png', mk.mockup_url);
+    // Knitwear needs its yarns declared: the base and every colour in the file (make-outerwear-drafts.mjs YARN).
+    const yarns = ['#343d55', '#e2dfdc', '#f66274', '#cd5e38'];
+    const style = { option_groups: ['Flat'], options: ['Front'], product_options: { base_color: yarns[0], trim_color: yarns[0], yarn_colors: yarns } };
+    for (const mk of await generate(KNIT, [variant], files, style)) await save('knit-front.png', mk.mockup_url);
     continue;
   }
   const spec = await pf(`/mockup-generator/printfiles/${BOMBER}`);
