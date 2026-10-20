@@ -88,7 +88,7 @@ const put = (name, buf) => { files[name] = buf; };
 {
   const cx = MID, cy = 3200, r = 1050;
   // Rays all round the emblem except straight up, where the title sits.
-  const sunRays = [...Array(16)].filter((_, i) => i < 11 || i > 13).map((_, i) => { const a = (i * Math.PI) / 8; return `<line x1="${cx + 1420 * Math.cos(a)}" y1="${cy + 1420 * Math.sin(a)}" x2="${cx + 1560 * Math.cos(a)}" y2="${cy + 1560 * Math.sin(a)}" stroke="${GOLD}" stroke-width="26" stroke-linecap="round"/>`; }).join('');
+  const sunRays = [...Array(16).keys()].filter((i) => i < 11 || i > 13).map((i) => { const a = (i * Math.PI) / 8; return `<line x1="${cx + 1420 * Math.cos(a)}" y1="${cy + 1420 * Math.sin(a)}" x2="${cx + 1560 * Math.cos(a)}" y2="${cy + 1560 * Math.sin(a)}" stroke="${GOLD}" stroke-width="26" stroke-linecap="round"/>`; }).join('');
   const emblem = `<defs><clipPath id="left"><rect x="${cx - r - 20}" y="${cy - r - 20}" width="${r + 20}" height="${2 * r + 40}"/></clipPath><clipPath id="right"><rect x="${cx}" y="${cy - r - 20}" width="${r + 20}" height="${2 * r + 40}"/></clipPath></defs>
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="#141139" clip-path="url(#left)"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFB27A" clip-path="url(#right)"/>
     <g clip-path="url(#left)">${stars(9, 160, [cx - r, cy - r, cx, cy + r], '#FFF6E6')}
