@@ -1,5 +1,5 @@
 /**
- * Far Fox outerwear, winter 2026: the Far Fox Airways flight jacket and the Far Fox beanie.
+ * Far Fox outerwear, winter 2026: the Far Fox Airways flight jacket, the Two Skies flight jacket and the Far Fox beanie.
  *
  * Jacket: All-Over Print Unisex Bomber Jacket (Printful 390), cut-and-sew at 150 dpi. A night-plum body
  * under a faint star field; a wings insignia on the left chest and a WORTH EVERY MILE name tape on the
@@ -8,6 +8,10 @@
  * cuff and waistband ribbing. Files: front, back and both sleeves at 4650×5400, ribbing and pocket welts
  * at 7950×2700, the inside label at 375×150. Panel geometry comes from Printful's mockup templates,
  * mapped into print-file pixels (template px − print-area offset, × print-file / print-area width).
+ *
+ * Two Skies jacket: the same bomber wearing the Two Skies kit (kit-designs-two-skies.mjs): night New York on the
+ * front, dawn London on the back, night sleeves, the dawn's peach and cream in the ribbing. The kit's 6000-square
+ * art is scaled to 5400 tall and cropped to each panel.
  *
  * Beanie: Yupoong 1501KC cuffed beanie (Printful 266), flat embroidery on the cuff, 1500×525 at 300 dpi.
  * FAR · fox crest · FOX in exact Printful thread colours. The crest's ears, eyes and nose are
@@ -22,6 +26,7 @@ import { join } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { rng } from './kit-designs-2026-10.mjs';
+import { KITS, SKIES } from './kit-designs-two-skies.mjs';
 
 const OUT = new URL('../public/shop/designs/outerwear-2026/', import.meta.url).pathname;
 await mkdir(OUT, { recursive: true });
@@ -82,7 +87,7 @@ function stars(seed, count, [x0, y0, x1, y1]) {
   return out;
 }
 /** Bomber ribbing: a pink and a blush stripe, mirrored about the fold so both faces of the rib match. */
-const ribbing = ([x0, x1], fold) => [[70, 140, PINK], [165, 205, BLUSH]].map(([a, b, c]) =>
+const ribbing = ([x0, x1], fold, first = PINK, second = BLUSH) => [[70, 140, first], [165, 205, second]].map(([a, b, c]) =>
   `<rect x="${x0}" y="${fold - b}" width="${x1 - x0}" height="${b - a}" fill="${c}"/><rect x="${x0}" y="${fold + a}" width="${x1 - x0}" height="${b - a}" fill="${c}"/>`).join('');
 /** Airmail chevrons down a vertical band: pink and blush parallelograms with the body showing between. */
 function airmail(x0, w, y0, y1) {
@@ -172,6 +177,27 @@ const beanieSvg = (letters) => `<text x="550" y="334" text-anchor="end" font-fam
   ${knockFox('bf', 750, 262, 290, THREAD.flamingo)}
   <text x="950" y="334" font-family="Graduate" font-size="200" letter-spacing="10" fill="${letters}">FOX</text>`;
 
+// --- Two Skies jacket: the kit art covering each panel --------------------------------------------------
+const kit = KITS['twoskies-ny-london']();
+/** The kit's 6000-square SVG scaled to the panel height and cropped to its width, with an optional overlay. */
+async function coverPanel(svg, overlay = '') {
+  const big = await sharp(Buffer.from(new Resvg(svg, { fitTo: { mode: 'width', value: PANEL.h }, font: { fontFiles, loadSystemFonts: false } }).render().asPng()))
+    .extract({ left: (PANEL.h - PANEL.w) / 2, top: 0, width: PANEL.w, height: PANEL.h }).png().toBuffer();
+  return overlay ? sharp(big).composite([{ input: render(PANEL.w, PANEL.h, overlay), left: 0, top: 0 }]).png().toBuffer() : big;
+}
+const skyRib = (box, fold) => ribbing(box, fold, SKIES.dawn[7], SKIES.moon);
+const nightBands = (h) => SKIES.night.map((c, i) => `<rect x="0" y="${(i * h) / 4}" width="${PANEL.w}" height="${h / 4 + 2}" fill="${c}"/>`).join('') + `<rect x="0" y="${h}" width="${PANEL.w}" height="${PANEL.h - h}" fill="${SKIES.night[3]}"/>`;
+const skyStars = (seed, count, box) => { const r = rng(seed); let out = ''; for (let k = 0; k < count; k++) out += `<circle cx="${(box[0] + r() * (box[2] - box[0])).toFixed(0)}" cy="${(box[1] + r() * (box[3] - box[1])).toFixed(0)}" r="${(3 + r() * 6).toFixed(1)}" fill="#FFF6E6" opacity="${(0.2 + r() * 0.5).toFixed(2)}"/>`; return out; };
+const twoSkies = {
+  'twoskies-front': await coverPanel(kit.front),
+  'twoskies-back': await coverPanel(kit.pattern, skyRib(BACK.collar.x, BACK.collar.fold)),
+  'twoskies-sleeve': render(PANEL.w, PANEL.h, `${nightBands(SLEEVE.end)}${skyStars(15, 320, [0, 0, PANEL.w, SLEEVE.end])}${skyRib(SLEEVE.cuff.x, SLEEVE.cuff.fold)}`),
+  'twoskies-details': render(DETAILS.w, DETAILS.h, `<rect width="${DETAILS.w}" height="${DETAILS.h}" fill="${SKIES.night[3]}"/>${skyRib(BAND.x, BAND.fold)}`),
+  'twoskies-label': render(LABEL.w, LABEL.h, `<rect width="${LABEL.w}" height="${LABEL.h}" fill="#FFF6E6"/>${fox(60, 72, 56, SKIES.ink, '#FFF6E6')}
+    <text x="225" y="66" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="34" letter-spacing="6" fill="${SKIES.ink}">FAR FOX</text>
+    <text x="225" y="112" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="30" fill="${SKIES.dawn[6]}">Worth every mile.</text>`),
+};
+
 const files = {
   'bomber-front': [PANEL, frontSvg], 'bomber-back': [PANEL, backSvg()], 'bomber-sleeve': [PANEL, sleeveSvg],
   'bomber-details': [DETAILS, detailsSvg], 'bomber-label': [LABEL, labelSvg],
@@ -181,6 +207,7 @@ for (const [name, [{ w, h }, body]] of Object.entries(files)) {
   await writeFile(join(OUT, `${name}.png`), render(w, h, body));
   console.log(`${name}.png ${w}×${h}`);
 }
+for (const [name, buf] of Object.entries(twoSkies)) { await writeFile(join(OUT, `${name}.png`), buf); console.log(`${name}.png`); }
 
 // --- previews: each file under its Printful template, so the panel shape and seams show ---------------
 const args = process.argv.slice(2);

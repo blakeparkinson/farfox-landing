@@ -1,13 +1,13 @@
 /**
- * Far Fox outerwear in Printful: the Airways flight jacket (All-Over Print Unisex Bomber Jacket, catalog 390)
- * and the Far Fox beanie (Yupoong 1501KC cuffed beanie, catalog 266, flat embroidery). Files come from
+ * Far Fox outerwear in Printful: the Airways and Two Skies flight jackets (All-Over Print Unisex Bomber Jacket,
+ * catalog 390) and the Far Fox beanie (Yupoong 1501KC cuffed beanie, catalog 266, flat embroidery). Files come from
  * public/shop/designs/outerwear-2026/ (make-outerwear-2026.mjs). Printful fetches them from the public GitHub
  * repo at a pushed commit (--sha, default HEAD), so the products can be created before the site deploys;
  * --live points at lovefarfox.com instead.
  *
  *   node --env-file=.env scripts/printful-outerwear-2026.mjs                 # dry run
- *   node --env-file=.env scripts/printful-outerwear-2026.mjs --apply         # create both products (skips ones that exist)
- *   node --env-file=.env scripts/printful-outerwear-2026.mjs --mockups       # shop photos into public/shop/{mockups,backs,colors}/
+ *   node --env-file=.env scripts/printful-outerwear-2026.mjs --apply         # create the products (skips ones that exist)
+ *   node --env-file=.env scripts/printful-outerwear-2026.mjs --mockups       # shop photos into public/shop/{mockups,backs,colors}/; --only=twoskies,beanie limits it
  */
 import { execSync } from 'node:child_process';
 import { writeFile } from 'node:fs/promises';
@@ -23,14 +23,16 @@ const BASE = args.includes('--live')
   : `https://raw.githubusercontent.com/blakeparkinson/farfox-landing/${arg('--sha', execSync('git rev-parse HEAD').toString().trim())}/public/shop/designs/outerwear-2026`;
 const url = (name) => `${BASE}/${name}.png?v=${REVISION}`;
 
-const BOMBER = {
-  name: 'Far Fox — Airways Flight Jacket', catalog: 390, price: '95.00', sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'],
-  files: [
-    { type: 'default', url: url('bomber-front') }, { type: 'back', url: url('bomber-back') },
-    { type: 'sleeve_left', url: url('bomber-sleeve') }, { type: 'sleeve_right', url: url('bomber-sleeve') },
-    { type: 'details', url: url('bomber-details') }, { type: 'label_inside', url: url('bomber-label') },
-  ],
-  options: [{ id: 'stitch_color', value: 'black' }],
+const SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
+// Each jacket's print files share a prefix: <prefix>-front, -back, -sleeve (both arms), -details, -label.
+const jacketFiles = (prefix) => [
+  { type: 'default', url: url(`${prefix}-front`) }, { type: 'back', url: url(`${prefix}-back`) },
+  { type: 'sleeve_left', url: url(`${prefix}-sleeve`) }, { type: 'sleeve_right', url: url(`${prefix}-sleeve`) },
+  { type: 'details', url: url(`${prefix}-details`) }, { type: 'label_inside', url: url(`${prefix}-label`) },
+];
+const BOMBERS = {
+  airways: { name: 'Far Fox — Airways Flight Jacket', catalog: 390, price: '95.00', sizes: SIZES, files: jacketFiles('bomber'), options: [{ id: 'stitch_color', value: 'black' }] },
+  twoskies: { name: 'Far Fox — Two Skies Flight Jacket (New York / London)', catalog: 390, price: '95.00', sizes: SIZES, files: jacketFiles('twoskies'), options: [{ id: 'stitch_color', value: 'black' }] },
 };
 // Thread colours are Printful's own: Flamingo for the crest everywhere, White lettering on dark knits, Purple on light.
 const FLAMINGO = '#CC3366', WHITE = '#FFFFFF', PURPLE = '#6B5294';
@@ -60,7 +62,7 @@ async function pf(path, init = {}, attempt = 0) {
 }
 
 async function assertReachable() {
-  for (const n of ['bomber-front', 'bomber-back', 'bomber-sleeve', 'bomber-details', 'bomber-label', 'beanie-dark', 'beanie-light']) {
+  for (const n of [...Object.values(BOMBERS).flatMap((b) => b.files.map((f) => f.url.split('/').pop().split('?')[0].replace('.png', ''))), 'beanie-dark', 'beanie-light']) {
     const r = await fetch(url(n), { method: 'HEAD' });
     if (!r.ok) throw new Error(`${url(n)} -> ${r.status}: push the commit first, or pass --live once the site has deployed`);
   }
@@ -78,8 +80,8 @@ async function create(plan, variantsOf) {
   console.log(`  created ${created.id}`);
   return created.id;
 }
-const createBomber = () => create(BOMBER, (catalog) => BOMBER.sizes.map((size) => ({
-  variant_id: catalog.find((v) => v.size === size).id, external_id: `airways-jacket--${size}`, retail_price: BOMBER.price, files: BOMBER.files, options: BOMBER.options,
+const createBomber = (key) => create(BOMBERS[key], (catalog) => BOMBERS[key].sizes.map((size) => ({
+  variant_id: catalog.find((v) => v.size === size).id, external_id: `${key}-jacket--${size}`, retail_price: BOMBERS[key].price, files: BOMBERS[key].files, options: BOMBERS[key].options,
 })));
 const createBeanie = () => create(BEANIE, (catalog) => Object.entries(BEANIE.colours).map(([colour, tone]) => ({
   variant_id: catalog.find((v) => v.color === colour).id, external_id: `beanie--${colour.toLowerCase().replace(/ /g, '-')}`, retail_price: BEANIE.price, ...beanieFiles(tone),
@@ -101,9 +103,12 @@ const area = (spec, placement) => { const f = spec.printfiles.find((x) => x.prin
 
 /** Shop photos: the jacket's front and back on a ghost mannequin, the beanie flat in each colour. */
 async function mockups() {
+  const only = args.find((a) => a.startsWith('--only='))?.slice(7).split(',');
   const products = await pf('/store/products?limit=100');
-  const bomber = products.find((p) => p.name === BOMBER.name), beanie = products.find((p) => p.name === BEANIE.name);
-  if (bomber) {
+  const beanie = products.find((p) => p.name === BEANIE.name);
+  for (const [key, BOMBER] of Object.entries(BOMBERS)) {
+    const bomber = products.find((p) => p.name === BOMBER.name);
+    if (!bomber || (only && !only.includes(key))) continue;
     const spec = await pf(`/mockup-generator/printfiles/${BOMBER.catalog}`);
     const files = BOMBER.files.map((f) => ({ placement: f.type === 'default' ? 'front' : f.type, image_url: f.url, position: area(spec, f.type === 'default' ? 'front' : f.type) }));
     const m = (await pf(`/products/${BOMBER.catalog}`)).variants.find((v) => v.size === 'M').id;
@@ -117,7 +122,7 @@ async function mockups() {
       }
     }
   }
-  if (beanie) {
+  if (beanie && !(only && !only.includes('beanie'))) {
     const spec = await pf(`/mockup-generator/printfiles/${BEANIE.catalog}`);
     const catalog = (await pf(`/products/${BEANIE.catalog}`)).variants;
     for (const tone of ['dark', 'light']) {
@@ -140,7 +145,7 @@ async function mockups() {
 if (args.includes('--mockups')) await mockups();
 else {
   await assertReachable();
-  await createBomber();
+  for (const key of Object.keys(BOMBERS)) await createBomber(key);
   await createBeanie();
   if (!apply) console.log('\nDry run only. Re-run with --apply.');
 }

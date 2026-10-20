@@ -1,11 +1,10 @@
 /**
- * Draft concepts for review, next to the Airways flight jacket in make-outerwear-2026.mjs:
+ * Draft concepts for review, next to the finished outerwear in make-outerwear-2026.mjs:
  *
- *   twoskies   the Two Skies kit as a bomber: night New York on the front, dawn London on the back, night sleeves
- *   souvenir   a sukajan-style souvenir jacket: plum body, cream sleeves, a day-and-night emblem across the back
- *   paravion   an airmail envelope you can wear: cream body, chevron borders, a postmark and stamp
- *   knit       a knitted beanie (Printful 850): the pattern is knitted in, one pixel per stitch (410×229),
- *              four yarns, FAR FOX on the fold-up cuff and a Fair Isle row of foxes and hearts round the body
+ *   knit   a knitted beanie (Printful 850): the pattern is knitted in, one pixel per stitch (410×229),
+ *          four yarns, FAR FOX on the fold-up cuff and a Fair Isle row of foxes and hearts round the body
+ *
+ * The Two Skies bomber draft graduated to make-outerwear-2026.mjs; the souvenir and Par Avion bombers were retired.
  *
  * Writes public/shop/designs/outerwear-drafts/. Usage: node scripts/make-outerwear-drafts.mjs
  * Render them on the garment with mockup-outerwear-drafts.mjs once the commit is pushed.
@@ -66,81 +65,6 @@ const label = (bg, ink, accent) => render(375, 150, `<rect width="375" height="1
 
 const files = {};
 const put = (name, buf) => { files[name] = buf; };
-
-// --- twoskies: the kit's 6000-square art scaled to cover each 4650×5400 panel ----------------------------
-{
-  const kit = KITS['twoskies-ny-london']();
-  const cover = async (svg, overlay = '') => {
-    const big = await sharp(Buffer.from(new Resvg(svg, { fitTo: { mode: 'width', value: 5400 }, font: { fontFiles, loadSystemFonts: false } }).render().asPng()))
-      .extract({ left: 375, top: 0, width: PANEL.w, height: PANEL.h }).png().toBuffer();
-    return overlay ? sharp(big).composite([{ input: render(PANEL.w, PANEL.h, overlay), left: 0, top: 0 }]).png().toBuffer() : big;
-  };
-  const night = (h) => SKIES.night.map((c, i) => `<rect x="0" y="${(i * h) / 4}" width="${PANEL.w}" height="${h / 4 + 2}" fill="${c}"/>`).join('') + `<rect x="0" y="${h}" width="${PANEL.w}" height="${PANEL.h - h}" fill="${SKIES.night[3]}"/>`;
-  const rib = (box, fold) => ribbing(box, fold, SKIES.dawn[7], SKIES.moon);
-  put('twoskies-front', await cover(kit.front));
-  put('twoskies-back', await cover(kit.pattern, rib(COLLAR.x, COLLAR.fold)));
-  put('twoskies-sleeve', render(PANEL.w, PANEL.h, `${night(SLEEVE_END)}${stars(15, 320, [0, 0, PANEL.w, SLEEVE_END], '#FFF6E6')}${rib(CUFF.x, CUFF.fold)}`));
-  put('twoskies-details', render(DETAILS.w, DETAILS.h, `<rect width="${DETAILS.w}" height="${DETAILS.h}" fill="${SKIES.night[3]}"/>${rib(BAND.x, BAND.fold)}`));
-  put('twoskies-label', label('#FFF6E6', SKIES.ink, SKIES.dawn[6]));
-}
-
-// --- souvenir: plum body, cream sleeves, a day-and-night emblem on the back -------------------------------
-{
-  const cx = MID, cy = 3200, r = 1050;
-  // Rays all round the emblem except straight up, where the title sits.
-  const sunRays = [...Array(16).keys()].filter((i) => i < 11 || i > 13).map((i) => { const a = (i * Math.PI) / 8; return `<line x1="${cx + 1420 * Math.cos(a)}" y1="${cy + 1420 * Math.sin(a)}" x2="${cx + 1560 * Math.cos(a)}" y2="${cy + 1560 * Math.sin(a)}" stroke="${GOLD}" stroke-width="26" stroke-linecap="round"/>`; }).join('');
-  const emblem = `<defs><clipPath id="left"><rect x="${cx - r - 20}" y="${cy - r - 20}" width="${r + 20}" height="${2 * r + 40}"/></clipPath><clipPath id="right"><rect x="${cx}" y="${cy - r - 20}" width="${r + 20}" height="${2 * r + 40}"/></clipPath></defs>
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="#141139" clip-path="url(#left)"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFB27A" clip-path="url(#right)"/>
-    <g clip-path="url(#left)">${stars(9, 160, [cx - r, cy - r, cx, cy + r], '#FFF6E6')}
-      <circle cx="${cx - 560}" cy="${cy - 420}" r="200" fill="${SKIES.moon}"/><circle cx="${cx - 470}" cy="${cy - 470}" r="170" fill="#141139"/></g>
-    <g clip-path="url(#right)"><circle cx="${cx + 560}" cy="${cy - 420}" r="200" fill="${GOLD}"/>${[...Array(8)].map((_, i) => { const a = (i * Math.PI) / 4; return `<line x1="${cx + 560 + 250 * Math.cos(a)}" y1="${cy - 420 + 250 * Math.sin(a)}" x2="${cx + 560 + 330 * Math.cos(a)}" y2="${cy - 420 + 330 * Math.sin(a)}" stroke="${GOLD}" stroke-width="30" stroke-linecap="round"/>`; }).join('')}</g>
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${GOLD}" stroke-width="36"/><circle cx="${cx}" cy="${cy}" r="${r + 90}" fill="none" stroke="${GOLD}" stroke-width="12"/>
-    ${sunRays}${fox(cx, cy + 120, 820, BLUSH, PLUM)}`;
-  const branch = (dir) => [...Array(7)].map((_, i) => { const t = i / 6, x = cx + dir * (520 + t * 1000), y = cy + r + 420 + Math.sin(t * Math.PI) * -160;
-    return `<ellipse cx="${x}" cy="${y}" rx="60" ry="26" transform="rotate(${dir * (30 - t * 70)} ${x} ${y})" fill="${GOLD}"/>`; }).join('') + `<path d="M ${cx + dir * 520} ${cy + r + 420} Q ${cx + dir * 1000} ${cy + r + 180} ${cx + dir * 1520} ${cy + r + 420}" fill="none" stroke="${GOLD}" stroke-width="16"/>`;
-  const sleeveS = `<rect width="${PANEL.w}" height="${PANEL.h}" fill="${BLUSH}"/>${ribbing(CUFF.x, CUFF.fold, PLUM, GOLD)}`;
-  put('souvenir-front', render(PANEL.w, PANEL.h, `<rect width="${PANEL.w}" height="${PANEL.h}" fill="${PLUM}"/>
-    ${fox((FRONT.rightSafe[0] + FRONT.rightSafe[1]) / 2, FRONT.neck + 480, 300, BLUSH, PLUM)}
-    <text x="${(FRONT.rightSafe[0] + FRONT.rightSafe[1]) / 2}" y="${FRONT.neck + 820}" text-anchor="middle" font-family="Graduate" font-size="150" letter-spacing="14" fill="${GOLD}">143</text>
-    <text x="${(FRONT.leftSafe[0] + FRONT.leftSafe[1]) / 2}" y="${FRONT.neck + 540}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${BLUSH}">Far Fox</text>
-    <text x="${(FRONT.leftSafe[0] + FRONT.leftSafe[1]) / 2}" y="${FRONT.neck + 640}" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="44" letter-spacing="12" fill="${GOLD}">SOUVENIR OF THE DISTANCE</text>`));
-  put('souvenir-back', render(PANEL.w, PANEL.h, `<rect width="${PANEL.w}" height="${PANEL.h}" fill="${PLUM}"/>${ribbing(COLLAR.x, COLLAR.fold, GOLD, BLUSH)}
-    <text x="${cx}" y="${cy - r - 330}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="440" fill="${BLUSH}">Far Fox</text>
-    ${emblem}${branch(-1)}${branch(1)}
-    <text x="${cx}" y="${cy + r + 440}" text-anchor="middle" font-family="Graduate" font-size="118" letter-spacing="12" fill="${GOLD}">SAME LOVE</text>
-    <text x="${cx}" y="${cy + r + 640}" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="78" letter-spacing="14" fill="${BLUSH}">DIFFERENT TIME ZONES</text>`));
-  put('souvenir-sleeve', render(PANEL.w, PANEL.h, sleeveS));
-  put('souvenir-details', render(DETAILS.w, DETAILS.h, `<rect width="${DETAILS.w}" height="${DETAILS.h}" fill="${PLUM}"/>${ribbing(BAND.x, BAND.fold, GOLD, BLUSH)}`));
-  put('souvenir-label', label(PLUM, BLUSH, GOLD));
-}
-
-// --- paravion: an airmail envelope, worn ------------------------------------------------------------------
-{
-  const CREAM = '#FFF8F0', INK = PLUM, RED = '#D6336C', BLUE = '#2F4A9E';
-  const chevronsV = (x0, w, y0, y1) => airmail(x0, w, y0, y1, RED, BLUE);
-  const stamp = (cx, cy, s) => `<rect x="${cx - 170 * s}" y="${cy - 210 * s}" width="${340 * s}" height="${420 * s}" fill="#FFFFFF" stroke="${INK}" stroke-width="${6 * s}" stroke-dasharray="${16 * s} ${10 * s}"/>
-    ${fox(cx, cy - 40 * s, 200 * s, ORANGE, INK)}<text x="${cx}" y="${cy + 150 * s}" text-anchor="middle" font-family="Graduate" font-size="${50 * s}" letter-spacing="${4 * s}" fill="${INK}">LDC · 143</text>`;
-  const postmark = (cx, cy, R) => `<g opacity="0.9"><circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${INK}" stroke-width="18"/><circle cx="${cx}" cy="${cy}" r="${R - 110}" fill="none" stroke="${INK}" stroke-width="10"/>
-    ${arcText('pt', 'LONG DISTANCE CLUB', cx, cy, R - 55, 86, INK, 6, 'Nunito')}${arcText('pb', 'POSTE RESTANTE', cx, cy, R - 40, 86, INK, 6, 'Nunito', true)}
-    <text x="${cx}" y="${cy - 10}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="170" fill="${INK}">Far Fox</text>
-    <text x="${cx}" y="${cy + 130}" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="70" letter-spacing="8" fill="${INK}">WHEREVER YOU ARE</text>
-    ${[0, 1, 2, 3, 4].map((i) => `<path d="M ${cx - R - 760} ${cy - 170 + i * 85} q 90 -50 180 0 t 180 0 t 180 0 t 180 0" fill="none" stroke="${INK}" stroke-width="16"/>`).join('')}</g>`;
-  put('paravion-front', render(PANEL.w, PANEL.h, `<rect width="${PANEL.w}" height="${PANEL.h}" fill="${CREAM}"/>
-    ${chevronsV(2020, 240, 600, PANEL.h)}${chevronsV(2390, 240, 600, PANEL.h)}
-    ${stamp((FRONT.rightSafe[0] + FRONT.rightSafe[1]) / 2 + 120, FRONT.neck + 600, 1.4)}
-    ${plane((FRONT.leftSafe[0] + FRONT.leftSafe[1]) / 2 - 300, FRONT.neck + 470, -20, 2.2, RED)}
-    <text x="${(FRONT.leftSafe[0] + FRONT.leftSafe[1]) / 2}" y="${FRONT.neck + 720}" text-anchor="middle" font-family="Graduate" font-size="110" letter-spacing="14" fill="${BLUE}">PAR AVION</text>
-    <text x="${(FRONT.leftSafe[0] + FRONT.leftSafe[1]) / 2}" y="${FRONT.neck + 810}" text-anchor="middle" font-family="IM FELL French Canon" font-style="italic" font-size="64" fill="${INK}">by air mail</text>`));
-  put('paravion-back', render(PANEL.w, PANEL.h, `<rect width="${PANEL.w}" height="${PANEL.h}" fill="${CREAM}"/>${ribbing(COLLAR.x, COLLAR.fold, RED, BLUE)}
-    ${stamp(MID + 1050, 1900, 2)}${postmark(MID - 250, 2500, 760)}
-    <text x="${MID - 1000}" y="3850" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${INK}">To: the one far away</text>
-    <text x="${MID - 1000}" y="4120" font-family="IM FELL French Canon" font-style="italic" font-size="150" fill="${INK}">From: the one who misses you</text>
-    <text x="${MID}" y="4700" text-anchor="middle" font-family="Graduate" font-size="300" letter-spacing="30" fill="${BLUE}">PAR AVION</text>
-    ${plane(MID + 1500, 4610, -15, 2.6, RED)}`));
-  put('paravion-sleeve', render(PANEL.w, PANEL.h, `<rect width="${PANEL.w}" height="${PANEL.h}" fill="${CREAM}"/>${chevronsV(MID - 150, 300, 200, SLEEVE_END + 60)}${ribbing(CUFF.x, CUFF.fold, RED, BLUE)}`));
-  put('paravion-details', render(DETAILS.w, DETAILS.h, `<rect width="${DETAILS.w}" height="${DETAILS.h}" fill="${CREAM}"/>${ribbing(BAND.x, BAND.fold, RED, BLUE)}`));
-  put('paravion-label', label(CREAM, INK, RED));
-}
 
 // --- knit: one pixel per stitch, Printful yarn colours only ---------------------------------------------------
 // 410 stitches round, 229 rows: crown gores rows 0–79, body 80–137, rows 138–182 hide under the cuff, and the
