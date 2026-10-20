@@ -10,7 +10,7 @@
  *   node --env-file=.env scripts/printful-outerwear-2026.mjs --mockups       # shop photos into public/shop/{mockups,backs,colors}/
  */
 import { execSync } from 'node:child_process';
-import { copyFile, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 
 const TOKEN = process.env.PRINTFUL_TOKEN;
 const STORE = process.env.PRINTFUL_STORE_ID || '18292625';
@@ -41,7 +41,7 @@ const BEANIE = {
 };
 const beanieFiles = (tone) => ({
   files: [{ type: 'embroidery_front', url: url(`beanie-${tone}`) }],
-  options: [{ id: 'embroidery_type', value: 'flat' }, { id: 'thread_colors_front', value: BEANIE.threads[tone] }],
+  options: [{ id: 'embroidery_type', value: 'flat' }, { id: 'thread_colors', value: BEANIE.threads[tone] }],
 });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -107,16 +107,13 @@ async function mockups() {
     const spec = await pf(`/mockup-generator/printfiles/${BOMBER.catalog}`);
     const files = BOMBER.files.map((f) => ({ placement: f.type === 'default' ? 'front' : f.type, image_url: f.url, position: area(spec, f.type === 'default' ? 'front' : f.type) }));
     const m = (await pf(`/products/${BOMBER.catalog}`)).variants.find((v) => v.size === 'M').id;
-    for (const [style, label] of [[{ option_groups: ['Ghost'], options: ['Front', 'Back'] }, ''], [{ option_groups: ["Men's"], options: ['Front'] }, '-model']]) {
-      for (const mk of await generate(BOMBER.catalog, [m], files, style)) {
-        const views = [{ name: 'front', re: /front/i }, { name: 'back', re: /back/i }];
-        for (const view of views) {
-          const img = (mk.extra || []).find((e) => view.re.test(e.option || e.title || ''))?.url || (view.re.test(mk.placement) ? mk.mockup_url : null);
-          if (!img) continue;
-          const dest = view.name === 'back' ? `backs/${bomber.id}${label}.png` : `mockups/${bomber.id}${label}.png`;
-          await save(dest, img);
-          console.log(`  ${dest}`);
-        }
+    for (const mk of await generate(BOMBER.catalog, [m], files, { option_groups: ['Ghost'], options: ['Front', 'Back'] })) {
+      for (const view of [{ name: 'front', re: /front/i }, { name: 'back', re: /back/i }]) {
+        const img = (mk.extra || []).find((e) => view.re.test(e.option || e.title || ''))?.url || (view.re.test(mk.placement) ? mk.mockup_url : null);
+        if (!img) continue;
+        const dest = view.name === 'back' ? `backs/${bomber.id}.png` : `mockups/${bomber.id}.png`;
+        await save(dest, img);
+        console.log(`  ${dest}`);
       }
     }
   }
@@ -137,7 +134,6 @@ async function mockups() {
         }
       }
     }
-    await copyFile(shopFile(`colors/${beanie.id}-navy.png`), shopFile(`mockups/${beanie.id}.png`));
   }
 }
 

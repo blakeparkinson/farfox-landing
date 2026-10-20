@@ -166,6 +166,8 @@ export const PRODUCT_COPY: Record<string, string> = {
   '479940112': 'A snowy night over a little log cabin, and a reindeer fox crest whose red nose lights the sleigh trail all the way home. Look closely by the cabin: Foxy is sitting in the snow, watching the sky for you.',
   '479940120': 'A glossy ceramic heart with Foxy in a Santa hat, holding a love letter. Add your two cities and it reads, say, NEW YORK ♥ LONDON, Christmas 2026. Leave them blank and it says Miles Apart, Close at Heart. The same design prints on both sides.',
   '436883133': 'Foxy with heart eyes, over HEART EYES, only for you. Our original design, and still the one people buy for each other most.',
+  '483412102': 'A flight jacket for the airline that only flies one route. Night-plum under a scatter of stars, Far Fox Airways wings on the left chest and a WORTH EVERY MILE name tape on the right. Across the back, the Long Distance Club globe: two cities, a dashed flight path between them and a heart at the top of the arc. Airmail stripes run down each sleeve, and the collar, cuffs and hem are ribbed in pink and blush.',
+  '483412154': 'FAR · fox · FOX, embroidered in thread across the cuff of a snug knit beanie, with the crest\'s eyes and ears left unstitched so the knit shows through. Pink thread on every colour; white letters on the dark beanies, purple on the light ones. For cold-weather calls, the airport, and the walk back from dropping them off.',
 };
 
 /** The small label on a product photo: Pride, or the holiday a seasonal piece is for. */
@@ -189,6 +191,7 @@ export const KIT_COLOURS: Record<string, string> = {
   '443631285': 'Purple/Gold', '443578239': 'White/Black', '443540637': 'Teal/Orange', '443420345': 'Purple',
   '443266866': 'Navy', '443213452': 'Cream',
   '479940069': 'Black/Orange', '479940099': 'Orange/Yellow', '479940104': 'Green/Cream', '479940112': 'Navy/White', '480534575': 'Navy/Peach',
+  '483412102': 'Night/Pink',
 };
 
 /** The product's own copy, followed by the Les Séparés-style story when the shop has one for it. */
@@ -255,7 +258,8 @@ export function merchantFeedItems(products: ShopProduct[], stories: Record<strin
           price: `${p.price.toFixed(2)} ${p.currency || 'USD'}`,
           productType: kind.productType,
           color: colour?.name ?? KIT_COLOURS[p.id],
-          size: size ?? undefined,
+          // One-size apparel (the beanie) still needs a size in the feed.
+          size: size ?? (kind.apparel ? 'One size' : undefined),
           apparel: kind.apparel,
         });
       }
