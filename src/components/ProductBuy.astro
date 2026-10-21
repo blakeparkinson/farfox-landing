@@ -51,7 +51,7 @@ const cityInput = 'flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/
 {kitSlugForName(p.name) && (
   <div class="mb-3 rounded-xl border border-fox-pink/15 bg-fox-pink/[0.04] p-3" data-personalize data-product={p.id} data-kit={kitForColour(p.name, p.colors?.[0]?.name)}>
     <div class="text-xs font-800 uppercase tracking-wide text-fox-text-light mb-2">
-      Personalize <span class="font-600 normal-case tracking-normal text-fox-text-light/70">· optional, previews on the back</span>
+      Personalize <span class="font-600 normal-case tracking-normal text-fox-text-light">· optional, previews on the back</span>
     </div>
     <div class="flex gap-2">
       <input
@@ -78,7 +78,7 @@ const cityInput = 'flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/
 {ornament && (
   <div class="mb-3 rounded-xl border border-fox-pink/15 bg-fox-pink/[0.04] p-3" data-ornament data-product={p.id}>
     <div class="text-xs font-800 uppercase tracking-wide text-fox-text-light mb-2">
-      Personalize <span class="font-600 normal-case tracking-normal text-fox-text-light/70">· optional, your two cities</span>
+      Personalize <span class="font-600 normal-case tracking-normal text-fox-text-light">· optional, your two cities</span>
     </div>
     <div class="flex gap-2">
       <input id={`ocity1-${p.id}`} type="text" maxlength={CITY_MAX} placeholder="Your city" aria-label="Your city" class={cityInput} />
@@ -89,7 +89,7 @@ const cityInput = 'flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/
 
 {cartLive ? (
   <button
-    class="snipcart-add-item mt-auto w-full px-5 py-3 rounded-full bg-fox-pink text-white font-800 hover:bg-fox-purple hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200"
+    class="snipcart-add-item mt-auto w-full px-5 py-3 rounded-full bg-fox-pink-deep text-white font-800 hover:bg-fox-purple-deep hover:shadow-lg hover:shadow-fox-pink/30 transition-all duration-200"
     data-item-id={p.id}
     data-item-name={p.name}
     data-item-price={p.price}

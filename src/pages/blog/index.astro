@@ -51,8 +51,8 @@ const collections = [
 
 <Layout title="Long-Distance Relationship Blog — Tips, Questions & Ideas | Far Fox" description="Practical advice for long-distance couples: conversation questions, date ideas, love letter prompts, gift guides, and daily rituals that keep your relationship strong across any distance.">
   <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2">
+    <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+      <a href="/" class="flex items-center min-h-11 gap-2">
         <img src="/brand/foxy-icon-v1.png" alt="Far Fox" class="w-8 h-8" />
         <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">
           Far Fox
@@ -60,7 +60,7 @@ const collections = [
       </a>
       <a
         href="https://app.lovefarfox.com"
-        class="px-5 py-2 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-700 text-sm hover:shadow-lg hover:shadow-fox-pink/25 transition-all duration-200 hover:-translate-y-0.5"
+        class="inline-flex items-center min-h-11 px-5 py-2 rounded-full bg-gradient-to-r from-fox-pink-deep to-fox-purple-deep text-white font-700 text-sm hover:shadow-lg hover:shadow-fox-pink/25 transition-all duration-200 hover:-translate-y-0.5"
       >
         Open App
       </a>
@@ -70,7 +70,7 @@ const collections = [
   <main class="pt-28 pb-24 px-6">
     <div class="max-w-3xl mx-auto">
       <h1 class="text-3xl sm:text-4xl font-900 tracking-tight mb-4">
-        Long-Distance Relationship <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Guides</span>
+        Long-Distance Relationship <span class="bg-gradient-to-r from-fox-pink-deep to-fox-purple-deep bg-clip-text text-transparent">Guides</span>
       </h1>
       <p class="text-fox-text-light text-lg mb-12">
         Practical, honest advice for couples making long-distance work — questions to ask, love letters to write, gifts that mean something, and daily rituals that keep you close across any distance.
@@ -85,7 +85,7 @@ const collections = [
               <p class="text-sm text-fox-text-light leading-relaxed mb-4">{collection.description}</p>
               <ul class="space-y-2">
                 {collection.posts.map((post) => (
-                  <li><a href={`/blog/${post.id}/`} class="text-sm font-700 text-fox-pink hover:underline">{post.data.title}</a></li>
+                  <li><a href={`/blog/${post.id}/`} class="text-sm font-700 text-fox-pink-deep hover:underline">{post.data.title}</a></li>
                 ))}
               </ul>
             </section>
@@ -97,10 +97,10 @@ const collections = [
       <div class="space-y-8">
         {posts.map((post) => (
           <a href={`/blog/${post.id}/`} class="block group p-6 rounded-2xl bg-white/70 border border-fox-pink/8 hover:border-fox-pink/20 hover:shadow-lg hover:shadow-fox-pink/8 transition-all duration-200 hover:-translate-y-1">
-            <p class="text-sm text-fox-text-light/60 mb-2">
+            <p class="text-sm text-fox-text-light mb-2">
               {new Date(`${post.data.date}T12:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
-            <h2 class="text-xl font-800 mb-2 group-hover:text-fox-pink transition-colors">{post.data.title}</h2>
+            <h2 class="text-xl font-800 mb-2 group-hover:text-fox-pink-deep transition-colors">{post.data.title}</h2>
             <p class="text-fox-text-light leading-relaxed">{post.data.description}</p>
           </a>
         ))}

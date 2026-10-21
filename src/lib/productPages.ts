@@ -173,7 +173,7 @@ export const PRODUCT_COPY: Record<string, string> = {
 
 /** The small label on a product photo: Pride, or the holiday a seasonal piece is for. */
 export function badgeFor(name: string): { label: string; className: string } | null {
-  if (/pride/i.test(name)) return { label: 'Pride', className: 'bg-fox-pink' };
+  if (/pride/i.test(name)) return { label: 'Pride', className: 'bg-fox-pink-deep' };
   if (/cobweb|candy\s*corn/i.test(name)) return { label: 'Halloween', className: 'bg-[#E8641E]' };
   if (/fair\s*isle|red\s*nose|ornament/i.test(name)) return { label: 'Christmas', className: 'bg-[#1F5A40]' };
   return null;

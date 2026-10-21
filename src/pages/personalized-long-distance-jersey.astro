@@ -82,13 +82,13 @@ const faqs = [
   </Fragment>
 
   <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/85 border-b border-fox-pink/10">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <a href="/" class="flex items-center min-h-11 gap-2">
         <img src="/brand/foxy-icon-v1.png" alt="" class="w-8 h-8" />
         <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
       </a>
-      <button class="snipcart-checkout flex items-center gap-2 text-sm font-800 hover:text-fox-pink transition-colors">
-        Cart <span class="rounded-full bg-fox-pink text-white min-w-6 h-6 px-1 flex items-center justify-center snipcart-items-count">0</span>
+      <button class="snipcart-checkout flex items-center min-h-11 gap-2 text-sm font-800 hover:text-fox-pink-deep transition-colors">
+        Cart <span class="rounded-full bg-fox-pink-deep text-white min-w-6 h-6 px-1 flex items-center justify-center snipcart-items-count">0</span>
       </button>
     </div>
   </nav>
@@ -99,10 +99,10 @@ const faqs = [
       <div class="absolute bottom-0 -right-24 w-96 h-96 rounded-full bg-fox-purple/10 blur-3xl"></div>
       <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 lg:gap-16 items-center relative">
         <div class="order-2 lg:order-1">
-          <p class="text-xs uppercase tracking-[0.25em] text-fox-pink font-900 mb-4">Made for the miles between you</p>
+          <p class="text-xs uppercase tracking-[0.25em] text-fox-pink-deep font-900 mb-4">Made for the miles between you</p>
           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-900 tracking-tight leading-[1.03] mb-5">
             Their name. Their number.
-            <span class="bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Your team.</span>
+            <span class="bg-gradient-to-r from-fox-pink-deep to-fox-purple-deep bg-clip-text text-transparent">Your team.</span>
           </h1>
           <p class="text-lg sm:text-xl text-fox-text-light leading-relaxed mb-7 max-w-xl">
             Turn the distance into something you wear with pride. Personalize a Long Distance FC jersey for them—or make a matching pair for both of you.
@@ -112,10 +112,10 @@ const faqs = [
             <span>✓ Printed to order</span>
             <span>✓ Ships worldwide</span>
           </div>
-          <a href="#make-yours" class="inline-flex px-8 py-4 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-900 text-lg hover:shadow-xl hover:shadow-fox-pink/30 transition-all hover:-translate-y-0.5">
+          <a href="#make-yours" class="inline-flex px-8 py-4 rounded-full bg-gradient-to-r from-fox-pink-deep to-fox-purple-deep text-white font-900 text-lg hover:shadow-xl hover:shadow-fox-pink/30 transition-all hover:-translate-y-0.5">
             Make yours — {fmt(jerseys[0].price)} →
           </a>
-          <p class="mt-3 text-xs text-fox-text-light/70">Secure checkout · No account required</p>
+          <p class="mt-3 text-xs text-fox-text-light">Secure checkout · No account required</p>
         </div>
 
         <div class="order-1 lg:order-2 relative">
@@ -134,7 +134,7 @@ const faqs = [
     <section id="make-yours" class="py-16 sm:py-24 px-6 bg-white">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-10">
-          <p class="text-xs uppercase tracking-[0.25em] text-fox-pink font-900 mb-3">Make it theirs</p>
+          <p class="text-xs uppercase tracking-[0.25em] text-fox-pink-deep font-900 mb-3">Make it theirs</p>
           <h2 class="text-3xl sm:text-5xl font-900 tracking-tight mb-3">Choose your kit</h2>
           <p class="text-fox-text-light text-lg">Pick a design, type their name and number, then preview the back.</p>
         </div>
@@ -142,7 +142,7 @@ const faqs = [
         {pair.length > 0 && (
           <div class="mb-10 rounded-[2rem] border-2 border-fox-pink/20 bg-fox-bg/40 p-4 sm:p-6">
             <div class="text-center mb-6">
-              <p class="text-xs uppercase tracking-[0.25em] text-fox-pink font-900 mb-2">The Other Half kits</p>
+              <p class="text-xs uppercase tracking-[0.25em] text-fox-pink-deep font-900 mb-2">The Other Half kits</p>
               <h3 class="text-2xl sm:text-3xl font-900 tracking-tight">Each of you wears half.</h3>
             </div>
             <div class="grid sm:grid-cols-2 gap-6 lg:gap-8">
@@ -172,7 +172,7 @@ const faqs = [
           {faqs.map((faq) => (
             <details class="group rounded-2xl bg-white border border-fox-pink/10">
               <summary class="flex items-center justify-between gap-4 p-5 sm:p-6 cursor-pointer list-none font-900">
-                {faq.question}<span class="text-fox-pink text-2xl group-open:rotate-45 transition-transform">+</span>
+                {faq.question}<span class="text-fox-pink-deep text-2xl group-open:rotate-45 transition-transform">+</span>
               </summary>
               <p class="px-5 sm:px-6 pb-5 sm:pb-6 text-fox-text-light leading-relaxed">{faq.answer}</p>
             </details>
@@ -224,7 +224,7 @@ const faqs = [
         const buttons = card.querySelectorAll('.offer-view');
         const activate = (active) => buttons.forEach((button) => {
           const on = button === active;
-          button.classList.toggle('bg-fox-pink', on);
+          button.classList.toggle('bg-fox-pink-deep', on);
           button.classList.toggle('text-white', on);
           button.classList.toggle('text-fox-text-light', !on);
         });
