@@ -40,23 +40,23 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
           width="112"
           height="112"
         />
-        <div id="quiz-eyebrow" class="uppercase tracking-[0.3em] text-xs font-900 text-fox-pink mb-3">
+        <div id="quiz-eyebrow" class="uppercase tracking-[0.3em] text-xs font-900 text-fox-pink-deep mb-3">
           The Love Profile Quiz
         </div>
         <h1 id="quiz-title" class="text-4xl sm:text-5xl font-900 tracking-tight mb-4 leading-tight">
           How do you
-          <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">feel loved?</span>
+          <span class="bg-gradient-to-r from-fox-pink-deep via-fox-purple-deep to-fox-orange-deep bg-clip-text text-transparent">feel loved?</span>
         </h1>
         <p id="quiz-description" class="text-fox-text-light text-lg leading-snug mb-8 max-w-md mx-auto">
           Six honest questions. Two minutes. A shareable picture of how you actually want to be loved — built for couples who refuse to drift.
         </p>
         <button
           id="quiz-start"
-          class="px-10 py-4 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-900 text-lg hover:shadow-2xl hover:shadow-fox-pink/40 transition-all duration-200 hover:-translate-y-0.5"
+          class="px-10 py-4 rounded-full bg-gradient-to-r from-fox-pink-deep to-fox-purple-deep text-white font-900 text-lg hover:shadow-2xl hover:shadow-fox-pink/40 transition-all duration-200 hover:-translate-y-0.5"
         >
           Start the quiz →
         </button>
-        <p class="mt-4 text-sm text-fox-text-light/70">
+        <p class="mt-4 text-sm text-fox-text-light">
           No signup needed · Free
         </p>
       </section>
@@ -66,8 +66,8 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
         <!-- Progress -->
         <div class="mb-8">
           <div class="flex justify-between items-center mb-2">
-            <span class="text-xs font-800 uppercase tracking-wider text-fox-pink" id="q-progress-label">Question 1 of 6</span>
-            <a href="#" id="q-back" class="text-xs text-fox-text-light hover:text-fox-pink transition-colors hidden">← Back</a>
+            <span class="text-xs font-800 uppercase tracking-wider text-fox-pink-deep" id="q-progress-label">Question 1 of 6</span>
+            <a href="#" id="q-back" class="text-xs text-fox-text-light hover:text-fox-pink-deep transition-colors hidden">← Back</a>
           </div>
           <div class="h-1.5 bg-fox-pink/10 rounded-full overflow-hidden">
             <div id="q-progress-bar" class="h-full bg-gradient-to-r from-fox-pink to-fox-purple transition-all duration-300" style="width: 16.66%"></div>
@@ -101,7 +101,7 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
         <button
           id="quiz-finish"
           disabled
-          class="px-10 py-4 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-900 text-lg disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-2xl hover:shadow-fox-pink/40 transition-all duration-200 hover:-translate-y-0.5 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+          class="px-10 py-4 rounded-full bg-gradient-to-r from-fox-pink-deep to-fox-purple-deep text-white font-900 text-lg disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-2xl hover:shadow-fox-pink/40 transition-all duration-200 hover:-translate-y-0.5 disabled:hover:translate-y-0 disabled:hover:shadow-none"
         >
           See my love profile →
         </button>
@@ -155,13 +155,13 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
             <span>Is this good for long-distance couples?</span>
             <span class="ml-4 text-fox-pink/40 group-open:rotate-45 transition-transform text-2xl font-700">+</span>
           </summary>
-          <p class="mt-3 text-fox-text-light leading-relaxed">Especially. Distance forces you to be intentional about showing love, and knowing your partner's love language tells you exactly where to put that effort. See our guide on <a href="/blog/love-languages-long-distance-relationship/" class="text-fox-pink font-700 hover:underline">love languages in long-distance relationships</a> for how to act on your results.</p>
+          <p class="mt-3 text-fox-text-light leading-relaxed">Especially. Distance forces you to be intentional about showing love, and knowing your partner's love language tells you exactly where to put that effort. See our guide on <a href="/blog/love-languages-long-distance-relationship/" class="text-fox-pink-deep font-700 hover:underline">love languages in long-distance relationships</a> for how to act on your results.</p>
         </details>
       </div>
 
       <p class="text-fox-text-light leading-relaxed">
-        Want to go deeper? Read our complete guide on <a href="/blog/how-to-make-a-long-distance-relationship-work/" class="text-fox-pink font-700 hover:underline">how to make a long-distance relationship work</a>,
-        or browse all our <a href="/blog/" class="text-fox-pink font-700 hover:underline">long-distance relationship guides</a>.
+        Want to go deeper? Read our complete guide on <a href="/blog/how-to-make-a-long-distance-relationship-work/" class="text-fox-pink-deep font-700 hover:underline">how to make a long-distance relationship work</a>,
+        or browse all our <a href="/blog/" class="text-fox-pink-deep font-700 hover:underline">long-distance relationship guides</a>.
       </p>
     </section>
   </main>
@@ -223,7 +223,7 @@ const quizData = JSON.stringify(RITUAL_QUESTIONS);
       document.getElementById('partner-invite')!.classList.remove('hidden');
       document.getElementById('quiz-eyebrow')!.textContent = 'Your partner invited you';
       document.getElementById('quiz-title')!.innerHTML =
-        'See how your <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">love profiles match</span>';
+        'See how your <span class="bg-gradient-to-r from-fox-pink-deep via-fox-purple-deep to-fox-orange-deep bg-clip-text text-transparent">love profiles match</span>';
       document.getElementById('quiz-description')!.textContent =
         'Answer the same six questions. Your private comparison appears the moment you finish.';
       document.getElementById('quiz-start')!.textContent = 'Take my side of the quiz →';

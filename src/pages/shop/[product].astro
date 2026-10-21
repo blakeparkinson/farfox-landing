@@ -78,7 +78,7 @@ const breadcrumbs = {
   <main class="pt-28 pb-16 px-6" data-product-page>
     <div class="max-w-6xl mx-auto">
       <p class="text-sm font-700 text-fox-text-light mb-6">
-        <a href="/shop/" class="hover:text-fox-pink">Shop</a> <span aria-hidden="true">/</span> {category} <span aria-hidden="true">/</span> <span class="text-fox-text">{plainName}</span>
+        <a href="/shop/" class="hover:text-fox-pink-deep">Shop</a> <span aria-hidden="true">/</span> {category} <span aria-hidden="true">/</span> <span class="text-fox-text">{plainName}</span>
       </p>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
@@ -86,10 +86,10 @@ const breadcrumbs = {
 
         <div class="flex flex-col">
           <h1 class="text-3xl sm:text-4xl font-900 tracking-tight leading-tight mb-2">{p.name}</h1>
-          <p class="text-2xl font-900 text-fox-pink mb-5">{formatPrice(p.price)}</p>
+          <p class="text-2xl font-900 text-fox-pink-deep mb-5">{formatPrice(p.price)}</p>
           <p class="text-fox-text-light leading-relaxed mb-6">{story}</p>
           <ProductBuy product={p} />
-          <p class="mt-4 text-sm text-fox-text-light">Printed to order and shipped worldwide{personalised ? ', with or without a name and number' : ''}. Every order helps keep the Far Fox app free. <a href="/shipping-returns/" class="underline hover:text-fox-pink">Shipping &amp; returns</a></p>
+          <p class="mt-4 text-sm text-fox-text-light">Printed to order and shipped worldwide{personalised ? ', with or without a name and number' : ''}. Every order helps keep the Far Fox app free. <a href="/shipping-returns/" class="underline hover:text-fox-pink-deep">Shipping &amp; returns</a></p>
 
           <div class="mt-8 border-t border-fox-pink/10 pt-6">
             <h2 class="font-800 text-lg mb-3">Details</h2>
@@ -103,18 +103,18 @@ const breadcrumbs = {
           {pair && (
             <a href={productPath(pair)} class="mt-6 flex items-center gap-4 rounded-2xl border border-fox-pink/20 bg-fox-pink/[0.05] p-4 hover:border-fox-pink/40 transition-colors">
               <img src={pair.image} alt={pair.name} class="w-20 h-20 object-contain rounded-xl bg-white" loading="lazy" />
-              <span><span class="block text-xs font-800 uppercase tracking-wide text-fox-pink">Made as a pair</span><span class="font-800">{pair.name}</span><span class="block text-sm text-fox-text-light">One for you, one for them. {formatPrice(pair.price)}</span></span>
+              <span><span class="block text-xs font-800 uppercase tracking-wide text-fox-pink-deep">Made as a pair</span><span class="font-800">{pair.name}</span><span class="block text-sm text-fox-text-light">One for you, one for them. {formatPrice(pair.price)}</span></span>
             </a>
           )}
           {personalised && (
-            <p class="mt-6 text-sm text-fox-text-light">Making one for a birthday or an anniversary? <a href="/personalized-long-distance-jersey/" class="font-800 text-fox-pink hover:text-fox-purple">See how personalised jerseys work →</a></p>
+            <p class="mt-6 text-sm text-fox-text-light">Making one for a birthday or an anniversary? <a href="/personalized-long-distance-jersey/" class="font-800 text-fox-pink-deep hover:text-fox-purple-deep">See how personalised jerseys work →</a></p>
           )}
         </div>
       </div>
 
       <section class="mt-16 rounded-3xl bg-gradient-to-br from-fox-pink/[0.07] to-fox-purple/[0.07] p-6 sm:p-8">
         <h2 class="text-xl font-900 mb-2">A gift for someone far away</h2>
-        <p class="text-fox-text-light leading-relaxed max-w-3xl">Ship it straight to their door: put their address in at checkout and it goes to them, not you. Looking for more ideas? Read our <a href="/blog/long-distance-relationship-gifts/" class="font-800 text-fox-pink hover:text-fox-purple">long-distance gift guide</a> or the <a href="/blog/long-distance-care-package-ideas/" class="font-800 text-fox-pink hover:text-fox-purple">care package checklist</a>.</p>
+        <p class="text-fox-text-light leading-relaxed max-w-3xl">Ship it straight to their door: put their address in at checkout and it goes to them, not you. Looking for more ideas? Read our <a href="/blog/long-distance-relationship-gifts/" class="font-800 text-fox-pink-deep hover:text-fox-purple-deep">long-distance gift guide</a> or the <a href="/blog/long-distance-care-package-ideas/" class="font-800 text-fox-pink-deep hover:text-fox-purple-deep">care package checklist</a>.</p>
       </section>
 
       <section class="mt-16">
@@ -123,12 +123,12 @@ const breadcrumbs = {
           {related.map((r) => (
             <a href={productPath(r)} class="group rounded-3xl bg-white/70 border border-fox-pink/10 overflow-hidden hover:border-fox-pink/25 hover:shadow-lg transition-all">
               <img src={r.image} alt={r.name} class="w-full aspect-square object-contain p-2 bg-gradient-to-br from-fox-bg to-white" loading="lazy" />
-              <span class="block px-4 pt-3 font-800 leading-tight group-hover:text-fox-pink">{r.name}</span>
-              <span class="block px-4 pb-4 pt-1 font-900 text-fox-pink">{formatPrice(r.price)}</span>
+              <span class="block px-4 pt-3 font-800 leading-tight group-hover:text-fox-pink-deep">{r.name}</span>
+              <span class="block px-4 pb-4 pt-1 font-900 text-fox-pink-deep">{formatPrice(r.price)}</span>
             </a>
           ))}
         </div>
-        <p class="mt-8 text-center"><a href="/shop/" class="font-800 text-fox-pink hover:text-fox-purple">See the whole shop →</a></p>
+        <p class="mt-8 text-center"><a href="/shop/" class="font-800 text-fox-pink-deep hover:text-fox-purple-deep">See the whole shop →</a></p>
       </section>
     </div>
   </main>

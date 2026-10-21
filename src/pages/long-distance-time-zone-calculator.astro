@@ -57,12 +57,12 @@ const citiesJson = JSON.stringify(CITIES);
   <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
 
   <nav class="fixed top-0 w-full z-50 backdrop-blur-md bg-fox-bg/80 border-b border-fox-pink/10">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2">
+    <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+      <a href="/" class="flex items-center min-h-11 gap-2">
         <img src="/brand/foxy-icon-v1.png" alt="Far Fox" class="w-8 h-8" />
         <span class="text-xl font-900 tracking-tight bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
       </a>
-      <a href="https://app.lovefarfox.com" data-app-cta="tz_nav" class="px-5 py-2 rounded-full bg-gradient-to-r from-fox-pink to-fox-purple text-white font-700 text-sm hover:shadow-lg hover:shadow-fox-pink/25 transition-all duration-200 hover:-translate-y-0.5">Open App</a>
+      <a href="https://app.lovefarfox.com" data-app-cta="tz_nav" class="inline-flex items-center min-h-11 px-5 py-2 rounded-full bg-gradient-to-r from-fox-pink-deep to-fox-purple-deep text-white font-700 text-sm hover:shadow-lg hover:shadow-fox-pink/25 transition-all duration-200 hover:-translate-y-0.5">Open App</a>
     </div>
   </nav>
 
@@ -72,7 +72,7 @@ const citiesJson = JSON.stringify(CITIES);
         <img src="/brand/foxy-face-v1.png" alt="Far Fox companion" class="w-20 h-20 mx-auto mb-5 drop-shadow-lg" width="80" height="80" />
         <h1 class="text-3xl sm:text-5xl font-900 tracking-tight leading-tight mb-4">
           Find the hours you’re
-          <span class="bg-gradient-to-r from-fox-pink via-fox-purple to-fox-orange bg-clip-text text-transparent">both awake</span>
+          <span class="bg-gradient-to-r from-fox-pink-deep via-fox-purple-deep to-fox-orange-deep bg-clip-text text-transparent">both awake</span>
         </h1>
         <p class="text-fox-text-light text-lg leading-relaxed max-w-xl mx-auto">
           A free time zone calculator for long-distance couples. Pick two cities, set when you actually sleep, and see your overlap — including daylight saving.
@@ -82,7 +82,7 @@ const citiesJson = JSON.stringify(CITIES);
       <section class="rounded-3xl bg-white border border-fox-pink/10 p-5 sm:p-8 shadow-sm mb-10" aria-label="Time zone overlap calculator">
         <div class="grid sm:grid-cols-2 gap-4 mb-5">
           <label class="block">
-            <span class="text-xs font-900 uppercase tracking-wider text-fox-pink mb-1.5 block">You</span>
+            <span class="text-xs font-900 uppercase tracking-wider text-fox-pink-deep mb-1.5 block">You</span>
             <select id="tz-you" class="w-full rounded-xl border border-fox-pink/15 bg-fox-bg/50 px-3 py-3 font-800 text-fox-text">
               {REGIONS.map((region) => (
                 <optgroup label={region}>
@@ -95,7 +95,7 @@ const citiesJson = JSON.stringify(CITIES);
             <p id="tz-you-now" class="mt-2 text-sm font-800 text-fox-text"></p>
           </label>
           <label class="block">
-            <span class="text-xs font-900 uppercase tracking-wider text-fox-purple mb-1.5 block">Them</span>
+            <span class="text-xs font-900 uppercase tracking-wider text-fox-purple-deep mb-1.5 block">Them</span>
             <select id="tz-them" class="w-full rounded-xl border border-fox-pink/15 bg-fox-bg/50 px-3 py-3 font-800 text-fox-text">
               {REGIONS.map((region) => (
                 <optgroup label={region}>
@@ -113,7 +113,7 @@ const citiesJson = JSON.stringify(CITIES);
 
         <div class="grid sm:grid-cols-2 gap-4 mb-6">
           <fieldset class="rounded-2xl bg-fox-bg/60 p-4">
-            <legend class="text-xs font-900 uppercase tracking-wider text-fox-pink px-1">Your waking hours</legend>
+            <legend class="text-xs font-900 uppercase tracking-wider text-fox-pink-deep px-1">Your waking hours</legend>
             <div class="flex gap-3 mt-2">
               <label class="flex-1 text-sm font-700 text-fox-text-light">Wake
                 <input id="wake-you" type="number" min="0" max="23" value="7" class="mt-1 w-full rounded-lg border border-fox-pink/15 px-2 py-2 font-800 text-fox-text" />
@@ -124,7 +124,7 @@ const citiesJson = JSON.stringify(CITIES);
             </div>
           </fieldset>
           <fieldset class="rounded-2xl bg-fox-bg/60 p-4">
-            <legend class="text-xs font-900 uppercase tracking-wider text-fox-purple px-1">Their waking hours</legend>
+            <legend class="text-xs font-900 uppercase tracking-wider text-fox-purple-deep px-1">Their waking hours</legend>
             <div class="flex gap-3 mt-2">
               <label class="flex-1 text-sm font-700 text-fox-text-light">Wake
                 <input id="wake-them" type="number" min="0" max="23" value="7" class="mt-1 w-full rounded-lg border border-fox-pink/15 px-2 py-2 font-800 text-fox-text" />
@@ -138,7 +138,7 @@ const citiesJson = JSON.stringify(CITIES);
 
         <p class="text-xs font-800 uppercase tracking-wider text-fox-text-light mb-2">Your day (24 hours)</p>
         <div id="tz-bar" class="grid grid-cols-24 gap-px mb-2" style="grid-template-columns: repeat(24, minmax(0, 1fr));"></div>
-        <div class="flex justify-between text-[10px] font-800 text-fox-text-light/70 mb-5">
+        <div class="flex justify-between text-[10px] font-800 text-fox-text-light mb-5">
           <span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>12am</span>
         </div>
 
@@ -155,7 +155,7 @@ const citiesJson = JSON.stringify(CITIES);
           The highlighted hours are the only window where a live call is fair to both of you. Protect one slot inside that window the way you’d protect a date: same time, most days, phones down. Edge hours (the first hour after waking, the last hour before sleep) make for short, grouchy check-ins. Sit in the middle of the overlap if you can.
         </p>
         <p class="text-fox-text-light leading-relaxed mb-4">
-          If the overlap is under two hours, stop expecting the relationship to run on FaceTime. That is when <a href="/blog/long-distance-relationship-time-zones/" class="text-fox-pink font-700 hover:underline">async rituals</a> do the real work: voice notes through your day, a photo they wake up to, a letter scheduled for their morning. The calculator tells you when you can talk. The rituals cover the rest of the clock.
+          If the overlap is under two hours, stop expecting the relationship to run on FaceTime. That is when <a href="/blog/long-distance-relationship-time-zones/" class="text-fox-pink-deep font-700 hover:underline">async rituals</a> do the real work: voice notes through your day, a photo they wake up to, a letter scheduled for their morning. The calculator tells you when you can talk. The rituals cover the rest of the clock.
         </p>
         <p class="text-fox-text-light leading-relaxed">
           Recheck this page when clocks change. A standing “8pm your time” call can quietly become 3am for them twice a year, and that is how couples start thinking the other person “stopped trying.”
@@ -174,16 +174,16 @@ const citiesJson = JSON.stringify(CITIES);
         </div>
       </section>
 
-      <div class="rounded-3xl bg-gradient-to-br from-fox-pink to-fox-purple text-white p-8 text-center">
+      <div class="rounded-3xl bg-gradient-to-br from-fox-pink-deep to-fox-purple-deep text-white p-8 text-center">
         <h2 class="text-2xl sm:text-3xl font-900 mb-3">Use the overlap for something better than “wyd”</h2>
         <p class="text-white/90 mb-6 max-w-md mx-auto">A two-minute quiz you each take. Then a side-by-side reveal of how you actually want to be loved across the gap.</p>
-        <a href={quizUrl} class="inline-flex px-9 py-3.5 rounded-full bg-white text-fox-pink font-900 text-lg hover:-translate-y-0.5 transition-transform">Take the couple quiz →</a>
+        <a href={quizUrl} class="inline-flex px-9 py-3.5 rounded-full bg-white text-fox-pink-deep font-900 text-lg hover:-translate-y-0.5 transition-transform">Take the couple quiz →</a>
       </div>
 
       <p class="mt-10 text-fox-text-light text-sm text-center">
-        More on making the gap work: <a href="/blog/long-distance-relationship-time-zones/" class="text-fox-pink font-700 hover:underline">time-zone relationship guide</a>
-        · <a href="/blog/long-distance-relationship-texts/" class="text-fox-pink font-700 hover:underline">texts that land while they sleep</a>
-        · <a href="/blog/how-to-make-a-long-distance-relationship-work/" class="text-fox-pink font-700 hover:underline">the complete LDR guide</a>
+        More on making the gap work: <a href="/blog/long-distance-relationship-time-zones/" class="text-fox-pink-deep font-700 hover:underline">time-zone relationship guide</a>
+        · <a href="/blog/long-distance-relationship-texts/" class="text-fox-pink-deep font-700 hover:underline">texts that land while they sleep</a>
+        · <a href="/blog/how-to-make-a-long-distance-relationship-work/" class="text-fox-pink-deep font-700 hover:underline">the complete LDR guide</a>
       </p>
     </div>
   </main>

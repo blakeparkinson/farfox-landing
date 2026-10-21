@@ -42,16 +42,16 @@ const matchUrl = `https://lovefarfox.com/match/${left}/${right}`;
     <div class="max-w-3xl mx-auto">
       <header class="text-center mb-10">
         <img src="/brand/foxy-face-v1.png" alt="Far Fox companion" class="w-24 h-24 mx-auto mb-4 drop-shadow-lg" />
-        <p class="uppercase tracking-[0.28em] text-xs font-900 text-fox-pink mb-3">Your love overlap</p>
+        <p class="uppercase tracking-[0.28em] text-xs font-900 text-fox-pink-deep mb-3">Your love overlap</p>
         <h1 class="text-4xl sm:text-6xl font-900 tracking-tight leading-tight mb-3">
-          <span class="text-fox-pink">{leftName}</span>
+          <span class="text-fox-pink-deep">{leftName}</span>
           <span class="text-fox-text-light/40"> + </span>
-          <span class="text-fox-purple">{rightName}</span>
+          <span class="text-fox-purple-deep">{rightName}</span>
         </h1>
         <p class="text-fox-text-light text-lg">Not a compatibility verdict. A map for better conversations.</p>
       </header>
 
-      <section class="rounded-3xl bg-gradient-to-br from-fox-pink to-fox-purple text-white p-7 sm:p-10 text-center shadow-2xl shadow-fox-pink/25 mb-8">
+      <section class="rounded-3xl bg-gradient-to-br from-fox-pink-deep to-fox-purple-deep text-white p-7 sm:p-10 text-center shadow-2xl shadow-fox-pink/25 mb-8">
         <p class="text-white/75 text-sm font-800 uppercase tracking-widest mb-2">You chose the same answer</p>
         <div class="text-6xl sm:text-7xl font-900 mb-2">{comparison.matches}<span class="text-white/50 text-3xl">/{comparison.total}</span></div>
         <p class="text-white/90 max-w-md mx-auto">
@@ -68,17 +68,17 @@ const matchUrl = `https://lovefarfox.com/match/${left}/${right}`;
           <article class={`rounded-2xl border p-5 ${row.matches ? 'bg-green-50/60 border-green-200' : 'bg-white border-fox-pink/10'}`}>
             <div class="flex items-start justify-between gap-3 mb-4">
               <p class="text-xs uppercase tracking-wide font-800 text-fox-text-light">{row.prompt}</p>
-              <span class={`text-xs font-900 rounded-full px-2.5 py-1 ${row.matches ? 'bg-green-100 text-green-700' : 'bg-fox-pink/10 text-fox-pink'}`}>
+              <span class={`text-xs font-900 rounded-full px-2.5 py-1 ${row.matches ? 'bg-green-100 text-green-700' : 'bg-fox-pink/10 text-fox-pink-deep'}`}>
                 {row.matches ? 'Same instinct' : 'Talk about this'}
               </span>
             </div>
             <div class="grid grid-cols-2 gap-3">
               <div class="rounded-xl bg-white/80 p-3">
-                <p class="text-[11px] font-900 text-fox-pink uppercase mb-1">{leftName}</p>
+                <p class="text-[11px] font-900 text-fox-pink-deep uppercase mb-1">{leftName}</p>
                 <p class="font-800"><span class="text-xl mr-1">{row.left.emoji}</span>{row.left.label}</p>
               </div>
               <div class="rounded-xl bg-white/80 p-3">
-                <p class="text-[11px] font-900 text-fox-purple uppercase mb-1">{rightName}</p>
+                <p class="text-[11px] font-900 text-fox-purple-deep uppercase mb-1">{rightName}</p>
                 <p class="font-800"><span class="text-xl mr-1">{row.right.emoji}</span>{row.right.label}</p>
               </div>
             </div>
@@ -97,7 +97,7 @@ const matchUrl = `https://lovefarfox.com/match/${left}/${right}`;
           <a
             href={signupUrl}
             data-app-cta="match"
-            class="px-7 py-3.5 rounded-full bg-white text-fox-pink font-900 hover:-translate-y-0.5 transition-transform"
+            class="px-7 py-3.5 rounded-full bg-white text-fox-pink-deep font-900 hover:-translate-y-0.5 transition-transform"
           >
             Start Far Fox together →
           </a>

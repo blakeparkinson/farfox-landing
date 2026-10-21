@@ -25,16 +25,16 @@ const menagerie = [
 <footer class="py-12 px-6 border-t border-fox-pink/10">
   <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
     <a href="/" class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</a>
-    <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light/50">
+    <div class="flex flex-wrap items-center justify-center gap-x-5 text-sm text-fox-text-light">
       {links.map((link) => (
-        <a href={link.href} class="hover:text-fox-pink transition-colors">{link.label}</a>
+        <a href={link.href} class="inline-flex items-center min-h-11 hover:text-fox-pink-deep transition-colors">{link.label}</a>
       ))}
       <span>&copy; {new Date().getFullYear()} Far Fox</span>
     </div>
   </div>
-  <p class="max-w-5xl mx-auto mt-6 text-center sm:text-left text-sm text-fox-text-light/50">
-    Far Fox is a <a href="https://primemenagerie.com" class="underline underline-offset-4 hover:text-fox-pink transition-colors">Prime Menagerie</a> app.
+  <p class="max-w-5xl mx-auto mt-6 text-center sm:text-left text-sm text-fox-text-light">
+    Far Fox is a <a href="https://primemenagerie.com" class="underline underline-offset-4 hover:text-fox-pink-deep transition-colors">Prime Menagerie</a> app.
     More from the menagerie:
-    {menagerie.map((app, i) => <>{i > 0 && (i === menagerie.length - 1 ? ' and ' : ', ')}<a href={app.href} class="hover:text-fox-pink transition-colors">{app.label}</a></>)}.
+    {menagerie.map((app, i) => <>{i > 0 && (i === menagerie.length - 1 ? ' and ' : ', ')}<a href={app.href} class="hover:text-fox-pink-deep transition-colors">{app.label}</a></>)}.
   </p>
 </footer>

@@ -15,6 +15,13 @@ html {
   --color-fox-orange: #FF9A5C;
   --color-fox-pink: #FF6B8A;
   --color-fox-purple: #B76CFD;
+  /* Text-safe accents: at least 4.5:1 on fox-bg, white and the light pink
+     tints, and with white text on top. Use these for text, links and button
+     fills; keep the light accents above for glows, borders and decoration,
+     and for text on the dark fox-text sections. */
+  --color-fox-orange-deep: #A84C16;
+  --color-fox-pink-deep: #C42F57;
+  --color-fox-purple-deep: #8B3FD9;
   --color-fox-bg: #FFF5F0;
   --color-fox-text: #2D1B4E;
   --color-fox-text-light: #6B5B7B;
