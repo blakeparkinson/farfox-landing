@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import catalog from '../data/catalog.json';
 import { kitSlugForName } from '../lib/kits.mjs';
 import JerseyOfferCard from '../components/JerseyOfferCard.astro';
+import ShopFooter from '../components/ShopFooter.astro';
 
 const SITE = 'https://lovefarfox.com';
 const SNIPCART_KEY = import.meta.env.PUBLIC_SNIPCART_KEY ?? 'ZDBhODA3ZGEtNzM5Zi00MGYxLTg4ODItOGY3NTYyMTQwNmRmNjM5MTYzNzE4NTA1NTczODE3';
@@ -181,9 +182,7 @@ const faqs = [
     </section>
   </main>
 
-  <footer class="py-10 px-6 border-t border-fox-pink/10 text-center text-sm text-fox-text-light">
-    <p><a href="/" class="font-900 text-fox-pink">Far Fox</a> · Built for couples who refuse to drift · <a href="/shop/" class="hover:text-fox-pink">Shop all</a></p>
-  </footer>
+  <ShopFooter />
 
   <div hidden id="snipcart" data-api-key={SNIPCART_KEY} data-config-modal-style="side"></div>
   <script is:inline src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>

@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import SiteFooter from '../../components/SiteFooter.astro';
 
 const posts = (await getCollection('blog')).sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
@@ -107,21 +108,5 @@ const collections = [
     </div>
   </main>
 
-  <footer class="py-12 px-6 border-t border-fox-pink/10">
-    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-      <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
-      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light/50">
-        <a href="/quiz/" class="hover:text-fox-pink transition-colors">Couple Quiz</a>
-        <a href="/long-distance-relationship-quiz/" class="hover:text-fox-pink transition-colors">LDR Quiz</a>
-        <a href="/long-distance-time-zone-calculator/" class="hover:text-fox-pink transition-colors">Time Zones</a>
-        <a href="/tools/" class="hover:text-fox-pink transition-colors">Free Tools</a>
-        <a href="/shop/" class="hover:text-fox-pink transition-colors">Shop</a>
-        <a href="/blog/" class="hover:text-fox-pink transition-colors">Blog</a>
-        <a href="/privacy/" class="hover:text-fox-pink transition-colors">Privacy</a>
-        <a href="/terms/" class="hover:text-fox-pink transition-colors">Terms</a>
-        <a href="mailto:blake@lovefarfox.com" class="hover:text-fox-pink transition-colors">Contact</a>
-        <span>&copy; {new Date().getFullYear()} Far Fox</span>
-      </div>
-    </div>
-  </footer>
+  <SiteFooter />
 </Layout>

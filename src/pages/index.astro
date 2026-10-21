@@ -144,6 +144,7 @@ const featureGroups = [
   },
 ];
 import { ROUTES, routeBySlug } from '../lib/ldrRoutes';
+import SiteFooter from '../components/SiteFooter.astro';
 // The city guides couples search for most; the homepage passes its authority into the guide cluster.
 const POPULAR_ROUTES = ['new-york-to-london', 'london-to-sydney', 'los-angeles-to-manila', 'toronto-to-mumbai', 'new-york-to-los-angeles', 'chicago-to-london', 'london-to-singapore'].map(routeBySlug).filter(Boolean);
 ---
@@ -642,33 +643,7 @@ const POPULAR_ROUTES = ['new-york-to-london', 'london-to-sydney', 'los-angeles-t
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="py-12 px-6 border-t border-fox-pink/10">
-    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-      <span class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</span>
-      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light/50">
-        <a href="/quiz/" class="hover:text-fox-pink transition-colors">Couple Quiz</a>
-        <a href="/long-distance-time-zone-calculator/" class="hover:text-fox-pink transition-colors">Time Zones</a>
-        <a href="/tools/" class="hover:text-fox-pink transition-colors">Free Tools</a>
-        <a href="/long-distance-relationship-quiz/" class="hover:text-fox-pink transition-colors">LDR Quiz</a>
-        <a href="/compare/" class="hover:text-fox-pink transition-colors">Compare</a>
-        <a href="/shop/" class="hover:text-fox-pink transition-colors">Shop</a>
-        <a href="/blog/" class="hover:text-fox-pink transition-colors">Blog</a>
-        <a href="/privacy/" class="hover:text-fox-pink transition-colors">Privacy</a>
-        <a href="/terms/" class="hover:text-fox-pink transition-colors">Terms</a>
-        <a href="mailto:blake@lovefarfox.com" class="hover:text-fox-pink transition-colors">Contact</a>
-        <span>&copy; {new Date().getFullYear()} Far Fox</span>
-      </div>
-    </div>
-    <p class="max-w-5xl mx-auto mt-6 text-center sm:text-left text-sm text-fox-text-light/50">
-      Far Fox is a <a href="https://primemenagerie.com" class="underline underline-offset-4 hover:text-fox-pink transition-colors">Prime Menagerie</a> app.
-      More from the menagerie:
-      <a href="https://affirmingantelope.com" class="hover:text-fox-pink transition-colors">Affirming Antelope</a>,
-      <a href="https://primemenagerie.com/#loot-goose" class="hover:text-fox-pink transition-colors">Loot Goose</a>,
-      <a href="https://primemenagerie.com/#slab-rat" class="hover:text-fox-pink transition-colors">Slab Rat</a> and
-      <a href="https://primemenagerie.com/#scan-yak" class="hover:text-fox-pink transition-colors">Scan Yak</a>.
-    </p>
-  </footer>
+  <SiteFooter />
 </Layout>
 
 <style>

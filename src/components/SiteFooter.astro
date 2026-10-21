@@ -1,0 +1,40 @@
+---
+// The footer for every page outside the shop (the shop uses ShopFooter).
+// Far Fox is a Prime Menagerie app: the last line credits the studio and
+// links the other apps in the menagerie.
+const links = [
+  { href: '/quiz/', label: 'Couple Quiz' },
+  { href: '/long-distance-time-zone-calculator/', label: 'Time Zones' },
+  { href: '/tools/', label: 'Free Tools' },
+  { href: '/long-distance-relationship-quiz/', label: 'LDR Quiz' },
+  { href: '/compare/', label: 'Compare' },
+  { href: '/shop/', label: 'Shop' },
+  { href: '/blog/', label: 'Blog' },
+  { href: '/privacy/', label: 'Privacy' },
+  { href: '/terms/', label: 'Terms' },
+  { href: 'mailto:blake@lovefarfox.com', label: 'Contact' },
+];
+
+const menagerie = [
+  { href: 'https://affirmingantelope.com', label: 'Affirming Antelope' },
+  { href: 'https://primemenagerie.com/#loot-goose', label: 'Loot Goose' },
+  { href: 'https://primemenagerie.com/#slab-rat', label: 'Slab Rat' },
+  { href: 'https://primemenagerie.com/#scan-yak', label: 'Scan Yak' },
+];
+---
+<footer class="py-12 px-6 border-t border-fox-pink/10">
+  <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <a href="/" class="font-800 text-lg bg-gradient-to-r from-fox-pink to-fox-purple bg-clip-text text-transparent">Far Fox</a>
+    <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-fox-text-light/50">
+      {links.map((link) => (
+        <a href={link.href} class="hover:text-fox-pink transition-colors">{link.label}</a>
+      ))}
+      <span>&copy; {new Date().getFullYear()} Far Fox</span>
+    </div>
+  </div>
+  <p class="max-w-5xl mx-auto mt-6 text-center sm:text-left text-sm text-fox-text-light/50">
+    Far Fox is a <a href="https://primemenagerie.com" class="underline underline-offset-4 hover:text-fox-pink transition-colors">Prime Menagerie</a> app.
+    More from the menagerie:
+    {menagerie.map((app, i) => <>{i > 0 && (i === menagerie.length - 1 ? ' and ' : ', ')}<a href={app.href} class="hover:text-fox-pink transition-colors">{app.label}</a></>)}.
+  </p>
+</footer>

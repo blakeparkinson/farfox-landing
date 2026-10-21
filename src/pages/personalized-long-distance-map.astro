@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { DIGITAL_MAP_PRICE, DIGITAL_MAP_SKU, MAP_PALETTES } from '../lib/coupleMap.mjs';
+import ShopFooter from '../components/ShopFooter.astro';
 
 const SITE = 'https://lovefarfox.com';
 const SNIPCART_KEY = import.meta.env.PUBLIC_SNIPCART_KEY ?? 'ZDBhODA3ZGEtNzM5Zi00MGYxLTg4ODItOGY3NTYyMTQwNmRmNjM5MTYzNzE4NTA1NTczODE3';
@@ -200,9 +201,7 @@ const previewUrl = `/api/couple-map-preview.png?${sample}`;
     </section>
   </main>
 
-  <footer class="py-10 px-6 text-center text-sm text-fox-text-light border-t border-fox-pink/10">
-    <a href="/" class="font-900 text-fox-pink">Far Fox</a> · Made for the miles between you
-  </footer>
+  <ShopFooter />
 
   <div hidden id="snipcart" data-api-key={SNIPCART_KEY} data-config-modal-style="side"></div>
   <script is:inline src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
