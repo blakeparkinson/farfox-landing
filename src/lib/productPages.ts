@@ -125,6 +125,7 @@ const FC_BACK = 'The back reads 143 (pager code for I love you) over FAR FOX FC,
 
 /** What is on each product, in a few sentences, keyed by provider product id. */
 export const PRODUCT_COPY: Record<string, string> = {
+  '490092600': 'A bubble-blowing afternoon gets a little out of hand. The Prime Menagerie elephant makes a bubble big enough to carry Slab Rat, while Foxy, Scan Yak, Loot Goose and Affirming Antelope join the fun. The colorful six-character scene fills the back, with a small elephant mark on the real chest pocket. Choose White, Butter, Violet or True Navy.',
   '490057447': 'A little encouragement for cold days. The dark-brown Affirming Antelope waves from the cuff, wearing its blue scarf and leaning over a cobalt line. Full-color embroidery on a soft cuffed beanie, in Heather Grey or Navy.',
   '490057449': 'Office chair. Rodeo rules. Scan Yak rides a tiny blue desk chair backwards, one hoof in the air and a chart flying behind him. The full-body scene and SCAN YAK lettering are embroidered on the cuff, in Black or Baby Pink.',
   '489992811': 'Five animals, one campsite, and a missing cookie. Foxy roasts a heart-shaped marshmallow, Scan Yak takes his marshmallow stack a little too far, and Affirming Antelope brings the cocoa. Loot Goose follows the crumbs while Slab Rat hides the evidence. The large campfire scene fills the back of a Butter garment-dyed pocket tee, with a moss-green elephant on the real chest pocket, the Prime Menagerie wordmark and a small website address.',
