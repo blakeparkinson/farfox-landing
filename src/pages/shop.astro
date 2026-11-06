@@ -9,7 +9,7 @@ import ShopCart from '../components/ShopCart.astro';
 import ProductImage from '../components/ProductImage.astro';
 import ProductBuy from '../components/ProductBuy.astro';
 import { cartLive } from '../lib/snipcart';
-import { SITE, SHOP_CATEGORIES, shopCategoryOf, formatPrice as fmt, productPath, productUrl, type ShopProduct } from '../lib/productPages';
+import { SITE, SHOP_CATEGORIES, shopCategoryOf, formatPrice as fmt, productPath, productBrand, productUrl, type ShopProduct } from '../lib/productPages';
 
 /**
  * Far Fox Shop — print-on-demand storefront.
@@ -59,7 +59,7 @@ const grouped = [...SHOP_CATEGORIES.map((c) => c.title), 'More']
           "name": p.name,
           "image": `${SITE}${p.image}`,
           "url": productUrl(p),
-          "brand": { "@type": "Brand", "name": "Far Fox" },
+          "brand": { "@type": "Brand", "name": productBrand(p) },
           "offers": {
             "@type": "Offer",
             "price": p.price,

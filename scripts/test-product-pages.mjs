@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { PRODUCT_COPY, PAIRS, kindOf, productPath, productTitle, relatedProducts, merchantFeedItems, merchantFeedXml, cityPairKit } from '../src/lib/productPages.ts';
+import { PRODUCT_COPY, PAIRS, kindOf, productPath, productBrand, productTitle, relatedProducts, merchantFeedItems, merchantFeedXml, cityPairKit } from '../src/lib/productPages.ts';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/catalog.json', import.meta.url), 'utf8')).products;
 
@@ -9,7 +9,7 @@ for (const p of products) {
   assert.ok(PRODUCT_COPY[p.id], `${p.name} has product copy`);
   assert.ok(kindOf(p).facts.length >= 3, `${p.name} has details`);
   assert.match(productPath(p), /^\/shop\/[a-z0-9-]+\/$/, productPath(p));
-  assert.ok(!productTitle(p).includes('"') && productTitle(p).startsWith('Far Fox '), productTitle(p));
+  assert.ok(!productTitle(p).includes('"') && productTitle(p).startsWith(`${productBrand(p)} `), productTitle(p));
 }
 assert.equal(new Set(products.map(productPath)).size, products.length, 'product URLs are unique');
 assert.equal(productPath({ name: 'Pocket Tee' }), '/shop/pocket-tee/');
@@ -53,5 +53,14 @@ assert.equal(cityPairKit(products, 'New York', 'London'), twoSkies);
 assert.equal(cityPairKit(products, 'New York', 'Paris'), null);
 assert.equal(productPath(twoSkies), '/shop/long-distance-fc-jersey-two-skies-new-york-london/');
 assert.ok(!products.some((p) => p.id === 443164966), 'Twilight is retired from the shop');
+
+
+assert.equal(productTitle({ name: 'Prime Menagerie Pocket Tee' }), 'Prime Menagerie Pocket Tee');
+assert.equal(productBrand({ name: 'Prime Menagerie Pocket Tee' }), 'Prime Menagerie');
+
+const studioItems = items.filter(i => i.itemGroupId === '489992811');
+assert.equal(studioItems.length, 5);
+assert.ok(studioItems.every(i => i.brand === 'Prime Menagerie' && i.color === 'Butter'));
+assert.match(merchantFeedXml(studioItems), /<g:brand>Prime Menagerie<\/g:brand>/);
 
 console.log(`product pages: ${products.length} pages, ${items.length} feed items, all checks passed`);
