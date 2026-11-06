@@ -79,7 +79,10 @@ for (const color of derbyTee.colors) {
   assert.equal(color.back, `/shop/backs/${suffix}`, 'each color has its own matching back preview');
 }
 
-for (const [brand, colors] of [['Affirming Antelope', ['Heather Grey', 'Navy']], ['Scan Yak', ['Baby Pink', 'Black']]]) {
+assert.ok(!products.some(p => p.id === '490057449'), 'Scan Yak beanie is removed from the shop');
+assert.ok(!items.some(i => i.itemGroupId === '490057449'), 'Scan Yak beanie is removed from the shopping feed');
+
+for (const [brand, colors] of [['Affirming Antelope', ['Heather Grey', 'Navy']]]) {
   const hat = products.find(p => p.name === `${brand} Beanie`);
   assert.ok(hat, `${brand} beanie is in the shop`);
   assert.equal(productBrand(hat), brand);
