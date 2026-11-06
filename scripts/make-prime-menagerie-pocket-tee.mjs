@@ -30,7 +30,9 @@ async function save(name, w, h, body) {
   await writeFile(join(out, `${name}.svg`), outlined);
   await sharp(renderer.render().asPng()).withMetadata({ density: 150 }).png().toFile(join(out, `${name}.png`));
 }
-const animals = image('scene', 135, 600, 1530, 1020);
+// Fill nearly the full 12-inch print width using the illustration's content bounds.
+// This is 30% wider than the first release; preserve the approved character art.
+const animals = `<svg x="20" y="560" width="1760" height="1256" viewBox="89 22 1356 968">${image('scene', 0, 0, 1536, 1024)}</svg>`;
 
 for (const [tone, ink] of [['light', '#1D5A3D'], ['dark', '#7CC79C']]) {
   const pocket = `<defs><mask id="elephant" mask-type="alpha">${image('elephant', 145, 30, 160, 114)}</mask></defs>
@@ -38,7 +40,7 @@ for (const [tone, ink] of [['light', '#1D5A3D'], ['dark', '#7CC79C']]) {
     ${text('Prime', 225, 200, 49, ink)}${text('Menagerie', 225, 250, 49, ink)}`;
   const back = `${text('Prime', 900, 275, 190, ink)}${text('Menagerie', 900, 480, 235, ink)}
     ${animals}
-    ${text('primemenagerie.com', 900, 1730, 48, ink, 1)}`;
+    ${text('primemenagerie.com', 900, 1910, 48, ink, 1)}`;
   await save(`pocket-${tone}`, 450, 300, pocket);
   await save(`back-${tone}`, 1800, 2400, back);
 }
@@ -55,7 +57,7 @@ const proof = svg(1500, 1400, `<rect width="1500" height="1400" fill="#EEF0EA"/>
   ${text('3 × 2 in print area', 345, 1175, 26, '#1D5A3D')}
   ${text('BACK', 1052, 215, 25, '#1D5A3D', 3)}
   <svg x="675" y="220" width="755" height="1007" viewBox="0 0 1800 2400">${lightBack.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')}</svg>
-  ${text('Comfort Colors 6030 · White / Butter / True Navy', 750, 1350, 26, '#142019')}`);
+  ${text('Comfort Colors 6030 · Butter · Enlarged back scene', 750, 1350, 26, '#142019')}`);
 await sharp(new Resvg(proof, { font: fonts }).render().asPng()).png().toFile(join(out, 'artwork-proof.png'));
 await writeFile(join(out, 'sources.json'), JSON.stringify({ sources, font: fonts.fontFiles[0], density: 150, pocket: [450, 300], back: [1800, 2400], antelopeVariant: 'deep', colors: { light: '#1D5A3D', dark: '#7CC79C' } }, null, 2) + '\n');
 console.log(`Wrote pocket and back SVG/PNG files and artwork proof to ${out}`);

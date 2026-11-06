@@ -25,6 +25,8 @@ export default defineConfig({
   // Retired products keep their search value by pointing at the kit that replaced them.
   redirects: {
     '/shop/long-distance-fc-jersey-twilight/': { status: 301, destination: '/shop/long-distance-fc-jersey-two-skies-new-york-london/' },
+    '/shop/long-distance-fc-jersey-cobweb/': { status: 302, destination: '/shop/' },
+    '/shop/long-distance-fc-jersey-candy-corn/': { status: 302, destination: '/shop/' },
   },
   vite: {
     plugins: [tailwindcss()]
@@ -38,6 +40,8 @@ export default defineConfig({
           '/couple-quiz/',
           '/etsy-map-redeem/',
           '/embed/',
+          '/shop/long-distance-fc-jersey-cobweb/',
+          '/shop/long-distance-fc-jersey-candy-corn/',
         ].some((skip) => page.includes(skip)),
       serialize: (item) => {
         const lastmod = blogLastmod[item.url];

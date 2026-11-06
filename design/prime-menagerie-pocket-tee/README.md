@@ -2,6 +2,8 @@
 
 Approved 2026-11-06: all five animals together in a woodland scene, the rich dark brown Antelope, moss lettering, elephant pocket mark, and the small website address. The tagline has been removed.
 
+Revision: the woodland scene is now about 30% wider, occupying 11.73 inches of the 12-inch back print area. The approved illustration and pocket mark are unchanged. The production photos show the current placement; the earlier photographic concept is retained only as a design reference.
+
 Launch: Comfort Colors 6030 in Butter, S–2XL, $34. The printer specification was checked against Printful catalog product 593 on 2026-11-06.
 
 - `pocket-light.png`: 450 × 300 px, 150 ppi, transparent; fits the 3 × 2 inch pocket print area.

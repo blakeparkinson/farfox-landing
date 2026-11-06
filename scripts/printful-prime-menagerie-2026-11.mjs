@@ -1,5 +1,5 @@
 /** Publishes only the approved Butter Prime Menagerie Pocket Tee. Never places an order.
- * PRINTFUL_TOKEN=... node scripts/printful-prime-menagerie-2026-11.mjs --files-base=<immutable public URL> --mockups|--poll|--create|--verify
+ * PRINTFUL_TOKEN=... node scripts/printful-prime-menagerie-2026-11.mjs --files-base=<immutable public URL> --mockups|--poll|--create|--update|--verify
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 const NAME = 'Prime Menagerie Pocket Tee';
@@ -13,8 +13,8 @@ const base = args.find(a => a.startsWith('--files-base='))?.slice(13) || state.f
 if (!process.env.PRINTFUL_TOKEN) throw new Error('PRINTFUL_TOKEN is required.');
 if (!base) throw new Error('Pass --files-base with the published print files URL.');
 const headers = { Authorization: `Bearer ${process.env.PRINTFUL_TOKEN}`, 'X-PF-Store-Id': process.env.PRINTFUL_STORE_ID || '18292625', 'Content-Type': 'application/json' };
-async function pf(path, body) {
-  const r = await fetch(`https://api.printful.com${path}`, { method: body ? 'POST' : 'GET', headers, ...(body ? { body: JSON.stringify(body) } : {}) });
+async function pf(path, body, method = body ? 'POST' : 'GET') {
+  const r = await fetch(`https://api.printful.com${path}`, { method, headers, ...(body ? { body: JSON.stringify(body) } : {}) });
   const j = await r.json();
   if (!r.ok) throw new Error(`Printful ${r.status}: ${j.error?.message || j.result}`);
   return j.result;
@@ -30,7 +30,7 @@ async function catalog() {
   });
 }
 if (args.includes('--mockups')) {
-  if (state.taskKey) { console.log('Mockup task already started; use --poll.'); process.exit(0); }
+  if (state.taskKey && state.filesBase === base) { console.log('Mockup task already started; use --poll.'); process.exit(0); }
   for (const f of files) { const r = await fetch(f.url); if (!r.ok) throw new Error(`Print file is not accessible: ${r.status}`); }
   const variants = await catalog();
   const specs = await pf('/mockup-generator/printfiles/593');
@@ -59,6 +59,22 @@ if (args.includes('--mockups')) {
   if (!front) throw new Error('Generate the provider mockups before creating the product.');
   const created = await pf('/store/products', { sync_product: { name: NAME, thumbnail: front.mockup_url }, sync_variants: variants.map(v => ({ variant_id: v.id, retail_price: PRICE, files })) });
   state.productId = created.id; await persist(); console.log({ productId: created.id, name: NAME, color: 'Butter', sizes: SIZES, price: PRICE });
+} else if (args.includes('--update')) {
+  if (!state.productId) throw new Error('An existing product is required.');
+  const detail = await pf(`/store/products/${state.productId}`);
+  if (detail.sync_product.name !== NAME || detail.sync_variants.length !== SIZES.length) throw new Error('Unexpected product or variant count.');
+  for (const v of detail.sync_variants) {
+    if (v.color !== 'Butter' || !SIZES.includes(v.size)) throw new Error('Unexpected variant.');
+    const next = v.files.filter(f => f.type !== 'preview').map(f => {
+      const replacement = files.find(target => target.type === f.type);
+      return replacement || { type: f.type, id: f.id };
+    });
+    if (!files.every(f => next.some(n => n.type === f.type))) throw new Error('Missing print placement.');
+    if (files.every(f => v.files.some(a => a.type === f.type && a.url === f.url))) continue;
+    await pf(`/store/variants/${v.id}`, { files: next, options: v.options || [] }, 'PUT');
+  }
+  await persist();
+  console.log({ updated: NAME, variants: detail.sync_variants.length });
 } else if (args.includes('--verify')) {
   if (!state.productId) throw new Error('Create the product first.');
   const detail = await pf(`/store/products/${state.productId}`);
@@ -81,4 +97,4 @@ if (args.includes('--mockups')) {
     if (back) await writeFile(new URL(`${state.productId}.png`, dir), bytes);
   }
   console.log({ verified: NAME, variants: detail.sync_variants.length, productId: state.productId });
-} else console.log('Choose --mockups, --poll, --create or --verify.');
+} else console.log('Choose --mockups, --poll, --create, --update or --verify.');
