@@ -1,4 +1,4 @@
-/** Approved Prime Menagerie woodland pocket tee. No tagline.
+/** Approved Prime Menagerie campfire pocket tee. No tagline.
  * node scripts/make-prime-menagerie-pocket-tee.mjs
  * Self-contained source art is preserved in design/prime-menagerie-pocket-tee/.
  */
@@ -13,7 +13,7 @@ const out = join(repo, 'design/prime-menagerie-pocket-tee');
 await mkdir(out, { recursive: true });
 const sources = {
   elephant: join(out, 'sources/elephant.png'),
-  scene: join(out, 'woodland-scene.png'),
+  scene: join(out, 'campfire-scene.png'),
 };
 const art = Object.fromEntries(await Promise.all(Object.entries(sources).map(async ([k, p]) =>
   [k, `data:image/png;base64,${(await readFile(p)).toString('base64')}`])));
@@ -30,9 +30,9 @@ async function save(name, w, h, body) {
   await writeFile(join(out, `${name}.svg`), outlined);
   await sharp(renderer.render().asPng()).withMetadata({ density: 150 }).png().toFile(join(out, `${name}.png`));
 }
-// Fill nearly the full 12-inch print width using the illustration's content bounds.
-// This is 30% wider than the first release; preserve the approved character art.
-const animals = `<svg x="20" y="560" width="1760" height="1256" viewBox="89 22 1356 968">${image('scene', 0, 0, 1536, 1024)}</svg>`;
+// Keep the enlarged 11.73-inch scene width and fit the corrected campsite art
+// without cropping ears, horns, marshmallows, or the ground at its outer edges.
+const animals = `<svg x="20" y="560" width="1760" height="1256" viewBox="0 0 1536 1024">${image('scene', 0, 0, 1536, 1024)}</svg>`;
 
 for (const [tone, ink] of [['light', '#1D5A3D'], ['dark', '#7CC79C']]) {
   const pocket = `<defs><mask id="elephant" mask-type="alpha">${image('elephant', 145, 30, 160, 114)}</mask></defs>
@@ -57,7 +57,7 @@ const proof = svg(1500, 1400, `<rect width="1500" height="1400" fill="#EEF0EA"/>
   ${text('3 × 2 in print area', 345, 1175, 26, '#1D5A3D')}
   ${text('BACK', 1052, 215, 25, '#1D5A3D', 3)}
   <svg x="675" y="220" width="755" height="1007" viewBox="0 0 1800 2400">${lightBack.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')}</svg>
-  ${text('Comfort Colors 6030 · Butter · Enlarged back scene', 750, 1350, 26, '#142019')}`);
+  ${text('Comfort Colors 6030 · Butter · Campfire scene', 750, 1350, 26, '#142019')}`);
 await sharp(new Resvg(proof, { font: fonts }).render().asPng()).png().toFile(join(out, 'artwork-proof.png'));
 await writeFile(join(out, 'sources.json'), JSON.stringify({ sources, font: fonts.fontFiles[0], density: 150, pocket: [450, 300], back: [1800, 2400], antelopeVariant: 'deep', colors: { light: '#1D5A3D', dark: '#7CC79C' } }, null, 2) + '\n');
 console.log(`Wrote pocket and back SVG/PNG files and artwork proof to ${out}`);
