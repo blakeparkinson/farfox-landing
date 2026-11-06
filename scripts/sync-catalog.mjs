@@ -128,11 +128,11 @@ async function main() {
       'Heather Navy':'#303643','True Royal':'#01408d','Team Purple':'#230f46',
       // Comfort Colors 6030 pocket tee and Lane Seven crewneck, from Printful's catalog colour codes.
       'Butter':'#ffe09e','Violet':'#9a8ad2','Watermelon':'#d15c68','True Navy':'#424150','Berry':'#8e5a7b',
-      'Oatmeal Heather':'#f7f2eb',
+      'Oatmeal Heather':'#f7f2eb','Blue Spruce':'#4c6151','Pepper':'#514f4c','Blue Jean':'#6b7c8f',
       // Yupoong 1501KC beanie, from Printful's catalog colour codes.
       'Spruce':'#005234','Heather Grey':'#a19f9b','Baby Pink':'#ffc6cd',
     };
-    const DARKISH = new Set(['Black','Navy','Maroon','Forest','Heather Navy','True Royal','Team Purple','Heather Midnight Navy','True Navy','Berry','Spruce']);
+    const DARKISH = new Set(['Black','Navy','Maroon','Forest','Heather Navy','True Royal','Team Purple','Heather Midnight Navy','True Navy','Berry','Spruce','Blue Spruce','Pepper','Blue Jean']);
     const colorNames = [...new Set(variants.map((v) => variantColor(v)).filter(Boolean))];
     colorNames.sort((a, b) => (DARKISH.has(a) ? 1 : 0) - (DARKISH.has(b) ? 1 : 0));
     const colorSlug = (s) => s.toLowerCase().replace(/ /g, '-');
@@ -142,7 +142,10 @@ async function main() {
       const colorwayHex = variants.map(variantColorway).find((c) => c?.label === name)?.hex;
       // A colour may have its own back photo (colourway products); otherwise the product back is used.
       const back = existsSync(join(BACKS_DIR, file)) ? `/shop/backs/${file}` : null;
-      return { name, hex: COLOR_HEX[name] || colorwayHex || '#cccccc', image: hasImg ? `/shop/colors/${file}` : null, back };
+      const colorSizes = sizes.filter(size => variants.some(v => variantColor(v) === name && v.size === size));
+      const clubHex = /Prime Menagerie Bowling Club/i.test(p.name) ? { Butter:'#ffdc8f', 'True Navy':'#202845' } : /Prime Menagerie Pickleball Club/i.test(p.name) ? { Black:'#080808', Navy:'#3e4459' } : {};
+      return { name, hex: clubHex[name] || COLOR_HEX[name] || colorwayHex || '#cccccc', image: hasImg ? `/shop/colors/${file}` : null, back,
+        ...(colorSizes.length !== sizes.length ? { sizes: colorSizes } : {}) };
     });
     // If we have per-colour images, use the first colour's image as the card default.
     const firstColorImg = colors.find((c) => c.image)?.image;

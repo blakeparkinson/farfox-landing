@@ -1,7 +1,7 @@
 // One page per shop product, and the Google Merchant Center feed built from the same facts, so the
 // page a shopper lands on from Google always matches the listing that sent them.
 
-export type ShopColour = { name: string; hex: string; image?: string | null; back?: string | null };
+export type ShopColour = { name: string; hex: string; image?: string | null; back?: string | null; sizes?: string[] };
 export type ShopProduct = {
   id: string;
   slug: string;
@@ -20,7 +20,7 @@ export const SITE = 'https://lovefarfox.com';
 /** The shop's sections, in display order; a product sits in the first whose test matches its name. */
 export const SHOP_CATEGORIES: { title: string; test: (name: string) => boolean }[] = [
   { title: 'Jerseys', test: (n) => /jersey/i.test(n) },
-  { title: 'Tees, Sweats & Flannels', test: (n) => /tee|hoodie|crewneck|flannel/i.test(n) },
+  { title: 'Tees, Sweats & Flannels', test: (n) => /tee|long sleeve|hoodie|crewneck|flannel/i.test(n) },
   { title: 'Jackets & Beanies', test: (n) => /jacket|beanie/i.test(n) },
   { title: 'Mugs', test: (n) => /mug/i.test(n) },
   { title: 'Ornaments', test: (n) => /ornament/i.test(n) },
@@ -70,7 +70,11 @@ const KINDS: Record<string, Kind> = {
   },
   bowlingCrewneck: {
     label: 'Garment-dyed crewneck sweatshirt', productType: 'Apparel > Tops > Sweatshirts', apparel: true,
-    facts: ['Comfort Colors 1566, 80% ring-spun cotton and 20% polyester', 'Heavyweight 9.5 oz/yd² fleece with a 100% cotton face', 'Relaxed fit with ribbed collar, cuffs and waistband', 'Blue Spruce, a washed dark green; garment dye may vary slightly', 'Printed left-chest badge and large back illustration'],
+    facts: ['Comfort Colors 1566, 80% ring-spun cotton and 20% polyester', 'Heavyweight 9.5 oz/yd² fleece with a 100% cotton face', 'Relaxed fit with ribbed collar, cuffs and waistband', 'Blue Spruce, Pepper, True Navy or Butter; garment dye may vary slightly', 'Printed left-chest badge and 15-inch-wide back illustration'],
+  },
+  pickleballLongSleeve: {
+    label: 'Garment-dyed heavyweight long sleeve', productType: 'Apparel > Tops > Long Sleeve Shirts', apparel: true,
+    facts: ['Comfort Colors 6014, 100% ring-spun cotton', 'Heavyweight 6.1 oz/yd², relaxed fit with ribbed cuffs', 'Garment-dyed and pre-shrunk; shades may vary slightly', 'Black, Blue Jean, Navy or White; sizes vary by color', 'Printed left-chest badge and 12-inch-wide back illustration'],
   },
   bomber: {
     label: 'Bomber jacket', productType: 'Apparel > Outerwear > Jackets', apparel: true,
@@ -112,6 +116,7 @@ export function kindOf(p: Pick<ShopProduct, 'name'>): Kind {
   if (/baseball/i.test(n)) return KINDS.baseball;
   if (/jersey/i.test(n)) return KINDS.fcJersey;
   if (/pocket tee/i.test(n)) return KINDS.pocketTee;
+  if (/prime menagerie pickleball club long sleeve/i.test(n)) return KINDS.pickleballLongSleeve;
   if (/tee/i.test(n)) return KINDS.tee;
   if (/hoodie/i.test(n)) return KINDS.hoodie;
   if (/prime menagerie bowling club crewneck/i.test(n)) return KINDS.bowlingCrewneck;
@@ -130,7 +135,8 @@ const FC_BACK = 'The back reads 143 (pager code for I love you) over FAR FOX FC,
 
 /** What is on each product, in a few sentences, keyed by provider product id. */
 export const PRODUCT_COPY: Record<string, string> = {
-  '490151911': 'Six animals, one lane, and nobody keeping a straight face. The Prime Menagerie elephant bowls with his trunk while Scan Yak slides toward the pins. Foxy celebrates early, Antelope keeps score, Goose investigates a stubborn pin, and Slab Rat eats fries on the ball return. A small cream Bowling Club badge sits on the left chest, with the full scene and primemenagerie.com across the back. Printed on a soft, garment-dyed Blue Spruce crewneck.',
+  '490192967': 'Rooftop doubles with the whole Prime Menagerie. Antelope teams up with the elephant across the net from Foxy and Scan Yak, Goose inspects the ball, and Slab Rat takes an exceptionally relaxed umpire shift. The New York skyline glows behind the court. A small Pickleball Club badge sits on the left chest, with the full scene and primemenagerie.com across the back. Printed on a garment-dyed Comfort Colors long sleeve in Black, Blue Jean, Navy or White.',
+  '490151911': 'Six animals, one lane, and nobody keeping a straight face. The Prime Menagerie elephant bowls with his trunk while Scan Yak slides toward the pins. Foxy celebrates early, Antelope keeps score, Goose investigates a stubborn pin, and Slab Rat eats fries on the ball return. A small Bowling Club badge sits on the left chest, with the full scene and primemenagerie.com across the back. Printed on a soft Comfort Colors crewneck in Blue Spruce, Pepper, True Navy or Butter.',
   '490092600': 'Six animals, one questionable racecar, and a trophy already claimed. Foxy takes the wheel, Scan Yak throws his hooves up, and the Prime Menagerie elephant supplies the horsepower. Antelope waves the flag, Goose inspects a wheel, and Slab Rat lounges in the prize. Bold Prime Menagerie lettering sits above the large back scene, with primemenagerie.com below and a small elephant mark on the real chest pocket. Choose White, Butter, Violet or True Navy.',
   '490057447': 'A little encouragement for cold days. The dark-brown Affirming Antelope waves from the cuff, wearing its blue scarf and leaning over a cobalt line. Full-color embroidery on a soft cuffed beanie, in Heather Grey or Navy.',
   '490057449': 'Office chair. Rodeo rules. Scan Yak rides a tiny blue desk chair backwards, one hoof in the air and a chart flying behind him. The full-body scene and SCAN YAK lettering are embroidered on the cuff, in Black or Baby Pink.',
@@ -258,7 +264,7 @@ export function merchantFeedItems(products: ShopProduct[], stories: Record<strin
     const colours: (ShopColour | null)[] = p.colors?.length ? p.colors : [null];
     const sizes: (string | null)[] = p.sizes?.length ? p.sizes : [null];
     colours.forEach((colour, ci) => {
-      for (const size of sizes) {
+      for (const size of colour?.sizes ?? sizes) {
         const query = new URLSearchParams();
         if (colour) query.set('color', colour.name);
         if (size) query.set('size', size);
