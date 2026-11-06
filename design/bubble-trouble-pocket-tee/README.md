@@ -6,14 +6,14 @@ Six-character bubble scene featuring the Prime Menagerie elephant in the approve
 
 - Comfort Colors 6030 garment-dyed pocket tee (Printful catalog 593).
 - White, Butter, Violet, True Navy; S, M, L, XL, 2XL; $34.
-- Back: artwork only, no title, tagline, or URL. 1760 px wide within the 1800 × 2400 px / 150 ppi print area: 11.73 inches across.
+- Back: restored two-line “Prime Menagerie” heading in Bricolage Grotesque ExtraBold above the scene; moss on White, Butter, and Violet, pale mint on True Navy. No tagline or URL. The scene remains 1760 px wide within the 1800 × 2400 px / 150 ppi print area: 11.73 inches across.
 - Pocket: elephant silhouette only; moss on White, Butter, and Violet, pale mint on True Navy. 450 × 300 px / 150 ppi print area.
 - Scene is a 1536 × 1024 raster illustration. The print layout enlarges it slightly; export density does not imply additional native detail.
-- All 20 variant combinations use the same back and their appropriate pocket color.
+- All 20 variant combinations use the same scene with their appropriate heading and pocket colors.
 
 ## Store setup
 
-Printful sync product: `490092600`. All 20 variants were verified with the correct pocket and back files, ready status, and $34 price. Artwork is pinned to commit `0b719c72f8e0079a47abfc51bf883ee5e684fa8b`. Provider previews were reviewed on white and navy backs and the violet front.
+Printful sync product: `490092600`. The original pocket artwork remains pinned to commit `0b719c72f8e0079a47abfc51bf883ee5e684fa8b`. The revised back artwork is pinned to commit `9c8d00d73e9a84b068180fabb0e4e22a6142df13`. The active backs are `back-light.png` and `back-dark.png`; `back.png` preserves the previous version without lettering. The heading restores the same typeface and proportions as the original Prime Menagerie tee, with outlined lettering for font-independent production files.
 
 Store URL: https://lovefarfox.com/shop/prime-menagerie-bubble-trouble-pocket-tee/
 

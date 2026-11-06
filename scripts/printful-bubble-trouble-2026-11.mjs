@@ -1,9 +1,9 @@
 /** Publish only the Bubble Trouble pocket tee. Never places an order.
- * --files-base=<immutable URL> --mockups|--poll|--create|--verify
+ * --files-base=<immutable URL> --mockups|--poll|--create|--update|--verify
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
-const stateFile = new URL('design/bubble-trouble-pocket-tee/release-state.json', root);
+const stateFile = new URL('design/bubble-trouble-pocket-tee/title-release-state.json', root);
 const state = JSON.parse(await readFile(stateFile, 'utf8').catch(() => '{}'));
 const args = process.argv.slice(2);
 const base = args.find(a => a.startsWith('--files-base='))?.slice(13) || state.filesBase;
@@ -15,13 +15,23 @@ const SIZES = ['S', 'M', 'L', 'XL', '2XL'];
 const PRICE = '34.00';
 const tone = color => color === 'True Navy' ? 'dark' : 'light';
 const slug = s => s.toLowerCase().replace(/ /g, '-');
-const files = color => [{ type: 'pocket', url: `${base}/pocket-${tone(color)}.png` }, { type: 'back', url: `${base}/back.png` }];
+const pocketBase = 'https://raw.githubusercontent.com/blakeparkinson/farfox-landing/0b719c72f8e0079a47abfc51bf883ee5e684fa8b/public/shop/designs/bubble-trouble-2026-11';
+const files = color => [{ type: 'pocket', url: `${pocketBase}/pocket-${tone(color)}.png` }, { type: 'back', url: `${base}/back-${tone(color)}.png` }];
 const headers = { Authorization: `Bearer ${process.env.PRINTFUL_TOKEN}`, 'X-PF-Store-Id': process.env.PRINTFUL_STORE_ID || '18292625', 'Content-Type': 'application/json' };
-async function pf(path, body) {
-  const r = await fetch(`https://api.printful.com${path}`, { method: body ? 'POST' : 'GET', headers, ...(body ? { body: JSON.stringify(body) } : {}) });
-  const j = await r.json();
-  if (!r.ok) throw new Error(`Printful ${r.status}: ${j.error?.message || j.result}`);
-  return j.result;
+async function pf(path, body, method = body ? 'POST' : 'GET') {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const r = await fetch(`https://api.printful.com${path}`, { method, headers, ...(body ? { body: JSON.stringify(body) } : {}) });
+    const j = await r.json();
+    if (r.status === 429 && attempt < 2) {
+      const headerDelay = Number(r.headers.get('retry-after'));
+      const seconds = Math.max(60, Number.isFinite(headerDelay) ? headerDelay : 60) + 1;
+      console.log(`Printer rate limit; retrying after ${seconds}s.`);
+      await new Promise(resolve => setTimeout(resolve, seconds * 1000));
+      continue;
+    }
+    if (!r.ok) throw new Error(`Printful ${r.status}: ${j.error?.message || j.result}`);
+    return j.result;
+  }
 }
 async function catalog() {
   const all = (await pf('/products/593')).variants;
@@ -70,6 +80,23 @@ if (args.includes('--mockups')) {
   if (!front) throw new Error('White front mockup missing.');
   const created = await pf('/store/products', { sync_product: { name: NAME, thumbnail: front.mockup_url }, sync_variants: state.variants.map(v => ({ variant_id: v.id, external_id: `pm-bubble-${slug(v.color)}-${v.size.toLowerCase()}`, retail_price: PRICE, files: files(v.color) })) });
   state.productId = created.id; await persist(); console.log({ productId: created.id, name: NAME, variants: state.variants.length, price: PRICE });
+} else if (args.includes('--update')) {
+  if (!state.productId) throw new Error('An existing product is required.');
+  if (!['light', 'dark'].every(t => state.tasks?.[t]?.status === 'completed')) throw new Error('Complete both mockup tasks first.');
+  const detail = await pf(`/store/products/${state.productId}`);
+  if (detail.sync_product.name !== NAME || detail.sync_variants.length !== COLORS.length * SIZES.length) throw new Error('Unexpected product or variant count.');
+  for (const color of COLORS) for (const size of SIZES) {
+    const v = detail.sync_variants.find(v => v.color === color && v.size === size);
+    if (!v || Number(v.retail_price) !== Number(PRICE)) throw new Error(`Unexpected variant: ${color} ${size}`);
+  }
+  for (const v of detail.sync_variants) {
+    const back = files(v.color).find(f => f.type === 'back');
+    if (v.files.some(f => f.type === 'back' && f.url === back.url)) continue;
+    if (!v.files.some(f => f.type === 'back')) throw new Error('Missing back placement.');
+    const next = v.files.filter(f => f.type !== 'preview').map(f => f.type === 'back' ? back : { type: f.type, id: f.id });
+    await pf(`/store/variants/${v.id}`, { files: next, options: v.options || [] }, 'PUT');
+  }
+  await persist(); console.log({ updated: NAME, variants: detail.sync_variants.length });
 } else if (args.includes('--verify')) {
   if (!state.productId) throw new Error('Create the product first.');
   const detail = await pf(`/store/products/${state.productId}`);
@@ -86,6 +113,7 @@ if (args.includes('--mockups')) {
     const medium = state.variants.find(v => v.color === color && v.size === 'M');
     const mockups = state.tasks[tone(color)].mockups;
     for (const placement of ['pocket', 'back']) {
+      if (placement === 'pocket' && args.includes('--backs-only')) continue;
       const m = mockups.find(m => m.placement === placement && m.variant_ids.includes(medium.id));
       if (!m) throw new Error(`Missing ${color} ${placement} photo.`);
       const r = await fetch(m.mockup_url); if (!r.ok) throw new Error(`Photo download ${r.status}`);
@@ -101,4 +129,4 @@ if (args.includes('--mockups')) {
     }
   }
   state.verifiedAt = new Date().toISOString(); await persist(); console.log({ verified: NAME, productId: state.productId, variants: detail.sync_variants.length, colors: COLORS });
-} else throw new Error('Choose --mockups, --poll, --create or --verify.');
+} else throw new Error('Choose --mockups, --poll, --create, --update or --verify.');
