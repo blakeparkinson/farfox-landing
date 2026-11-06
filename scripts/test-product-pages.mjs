@@ -91,16 +91,18 @@ assert.equal(bowlingVariants.length, 24);
 assert.deepEqual(bowlingCrewneck.colors.map(c => c.name).sort(), ['Blue Spruce', 'Butter', 'Pepper', 'True Navy']);
 assert.ok(bowlingVariants.every(i => i.price === '59.00 USD' && i.brand === 'Prime Menagerie'));
 
-const pickleball = products.find(p => p.id === '490192967');
-assert.ok(pickleball, 'Pickleball Club long sleeve is in the shop');
-assert.equal(pickleball.price, 44);
-assert.match(kindOf(pickleball).facts.join(' '), /Comfort Colors 6014/);
-assert.deepEqual(pickleball.colors.map(c => c.name).sort(), ['Black', 'Blue Jean', 'Navy', 'White']);
+const pickleball = products.find(p => p.name === 'Prime Menagerie Pickleball Club Crewneck');
+assert.ok(pickleball, 'Pickleball Club uses the crewneck blank');
+assert.equal(pickleball.price, 59);
+assert.match(kindOf(pickleball).facts.join(' '), /Comfort Colors 1566/);
+assert.match(kindOf(pickleball).facts.join(' '), /15-inch-wide/);
+assert.deepEqual(pickleball.colors.map(c => c.name).sort(), ['Blue Spruce', 'Butter', 'Pepper', 'True Navy']);
+assert.deepEqual(pickleball.sizes, ['S', 'M', 'L', 'XL', '2XL', '3XL']);
 const pickleballVariants = items.filter(i => i.itemGroupId === pickleball.id);
-assert.equal(pickleballVariants.length, 21, 'only stocked color/size combinations enter the shopping feed');
-assert.ok(pickleballVariants.every(i => i.price === '44.00 USD' && i.brand === 'Prime Menagerie'));
-assert.ok(!pickleballVariants.some(i => (i.color === 'White' && ['2XL','3XL'].includes(i.size)) || (i.color === 'Navy' && i.size === '3XL')));
-assert.ok(pickleballVariants.some(i => i.color === 'Black' && i.size === '3XL'));
+assert.equal(pickleballVariants.length, 24);
+assert.ok(pickleballVariants.every(i => i.price === '59.00 USD' && i.brand === 'Prime Menagerie'));
+assert.ok(!products.some(p => p.id === '490192967'), 'replaced long sleeve is absent from the shop');
+assert.ok(!items.some(i => i.itemGroupId === '490192967'), 'replaced long sleeve is absent from the shopping feed');
 for (const product of [pickleball, bowlingCrewneck]) for (const color of product.colors) {
   const suffix = `${product.id}-${color.name.toLowerCase().replace(/ /g, '-')}.png`;
   assert.equal(color.image, `/shop/colors/${suffix}`);

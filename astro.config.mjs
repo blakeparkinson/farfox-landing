@@ -24,6 +24,7 @@ export default defineConfig({
   site: 'https://lovefarfox.com',
   // Retired products keep their search value by pointing at the kit that replaced them.
   redirects: {
+    '/shop/prime-menagerie-pickleball-club-long-sleeve/': { status: 301, destination: '/shop/prime-menagerie-pickleball-club-crewneck/' },
     '/shop/scan-yak-beanie/': { status: 302, destination: '/shop/' },
     '/shop/prime-menagerie-bubble-trouble-pocket-tee/': { status: 301, destination: '/shop/prime-menagerie-soapbox-derby-pocket-tee/' },
     '/shop/long-distance-fc-jersey-twilight/': { status: 301, destination: '/shop/long-distance-fc-jersey-two-skies-new-york-london/' },
@@ -43,6 +44,7 @@ export default defineConfig({
           '/etsy-map-redeem/',
           '/embed/',
           '/shop/scan-yak-beanie/',
+          '/shop/prime-menagerie-pickleball-club-long-sleeve/',
           '/shop/prime-menagerie-bubble-trouble-pocket-tee/',
           '/shop/long-distance-fc-jersey-cobweb/',
           '/shop/long-distance-fc-jersey-candy-corn/',

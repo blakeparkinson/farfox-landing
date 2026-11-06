@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T22:10:30.377Z",
+  "generatedAt": "2026-11-06T23:31:27.392Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -40,13 +40,13 @@
       ]
     },
     {
-      "id": "490192967",
-      "slug": "prime-menagerie-pickleball-club-long-sleeve",
-      "name": "Prime Menagerie Pickleball Club Long Sleeve",
-      "price": 44,
+      "id": "490239643",
+      "slug": "prime-menagerie-pickleball-club-crewneck",
+      "name": "Prime Menagerie Pickleball Club Crewneck",
+      "price": 59,
       "currency": "USD",
-      "image": "/shop/colors/490192967-white.png",
-      "back": "/shop/backs/490192967.png",
+      "image": "/shop/colors/490239643-butter.png",
+      "back": "/shop/backs/490239643.png",
       "sizes": [
         "S",
         "M",
@@ -57,41 +57,28 @@
       ],
       "colors": [
         {
-          "name": "White",
-          "hex": "#ffffff",
-          "image": "/shop/colors/490192967-white.png",
-          "back": "/shop/backs/490192967-white.png",
-          "sizes": [
-            "S",
-            "M",
-            "L",
-            "XL"
-          ]
+          "name": "Butter",
+          "hex": "#ffdc8f",
+          "image": "/shop/colors/490239643-butter.png",
+          "back": "/shop/backs/490239643-butter.png"
         },
         {
-          "name": "Black",
-          "hex": "#080808",
-          "image": "/shop/colors/490192967-black.png",
-          "back": "/shop/backs/490192967-black.png"
+          "name": "Blue Spruce",
+          "hex": "#4c6151",
+          "image": "/shop/colors/490239643-blue-spruce.png",
+          "back": "/shop/backs/490239643-blue-spruce.png"
         },
         {
-          "name": "Blue Jean",
-          "hex": "#6b7c8f",
-          "image": "/shop/colors/490192967-blue-jean.png",
-          "back": "/shop/backs/490192967-blue-jean.png"
+          "name": "Pepper",
+          "hex": "#514f4c",
+          "image": "/shop/colors/490239643-pepper.png",
+          "back": "/shop/backs/490239643-pepper.png"
         },
         {
-          "name": "Navy",
-          "hex": "#3e4459",
-          "image": "/shop/colors/490192967-navy.png",
-          "back": "/shop/backs/490192967-navy.png",
-          "sizes": [
-            "S",
-            "M",
-            "L",
-            "XL",
-            "2XL"
-          ]
+          "name": "True Navy",
+          "hex": "#202845",
+          "image": "/shop/colors/490239643-true-navy.png",
+          "back": "/shop/backs/490239643-true-navy.png"
         }
       ]
     },

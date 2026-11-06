@@ -107,8 +107,8 @@ async function main() {
   // the three baseball jerseys (436911930, 437021439, 437052584) — replaced by the Ballpark jersey.
   // Halloween designs are paused after the season; their artwork and fulfillment setup remain available.
   const SEASONALLY_HIDDEN = new Set([479940069, 479940099]); // Cobweb, Candy Corn
-  // Scan Yak beanie is removed from the storefront; keep its production setup for past orders.
-  const RETIRED = new Set([437126174, 437120257, 443266945, 437126197, 436883116, 436882976, 436911930, 437021439, 437052584, 443164966, 490057449]);
+  // Retain retired production setups for past orders, including the replaced Pickleball long sleeve.
+  const RETIRED = new Set([437126174, 437120257, 443266945, 437126197, 436883116, 436882976, 436911930, 437021439, 437052584, 443164966, 490057449, 490192967]);
   const products = [];
   for (const p of list) {
     if (RETIRED.has(Number(p.id)) || SEASONALLY_HIDDEN.has(Number(p.id))) continue;
@@ -143,7 +143,7 @@ async function main() {
       // A colour may have its own back photo (colourway products); otherwise the product back is used.
       const back = existsSync(join(BACKS_DIR, file)) ? `/shop/backs/${file}` : null;
       const colorSizes = sizes.filter(size => variants.some(v => variantColor(v) === name && v.size === size));
-      const clubHex = /Prime Menagerie Bowling Club/i.test(p.name) ? { Butter:'#ffdc8f', 'True Navy':'#202845' } : /Prime Menagerie Pickleball Club/i.test(p.name) ? { Black:'#080808', Navy:'#3e4459' } : {};
+      const clubHex = /Prime Menagerie (Bowling|Pickleball) Club Crewneck/i.test(p.name) ? { Butter:'#ffdc8f', 'True Navy':'#202845' } : {};
       return { name, hex: clubHex[name] || COLOR_HEX[name] || colorwayHex || '#cccccc', image: hasImg ? `/shop/colors/${file}` : null, back,
         ...(colorSizes.length !== sizes.length ? { sizes: colorSizes } : {}) };
     });
