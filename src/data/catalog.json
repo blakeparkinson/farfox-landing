@@ -205,44 +205,6 @@
       "colors": []
     },
     {
-      "id": "479940099",
-      "slug": "far-fox-long-distance-fc-jersey-candy-corn",
-      "name": "Long Distance FC Jersey (Candy Corn)",
-      "price": 50,
-      "currency": "USD",
-      "image": "/shop/auto/mockup-479940099.png",
-      "back": "/shop/backs/479940099.png",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL",
-        "2XL",
-        "3XL"
-      ],
-      "colors": []
-    },
-    {
-      "id": "479940069",
-      "slug": "far-fox-long-distance-fc-jersey-cobweb",
-      "name": "Long Distance FC Jersey (Cobweb)",
-      "price": 50,
-      "currency": "USD",
-      "image": "/shop/auto/mockup-479940069.png",
-      "back": "/shop/backs/479940069.png",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL",
-        "2XL",
-        "3XL"
-      ],
-      "colors": []
-    },
-    {
       "id": "478884090",
       "slug": "far-fox-miss-you-too-mug",
       "name": "\"Miss You Too\" Mug",

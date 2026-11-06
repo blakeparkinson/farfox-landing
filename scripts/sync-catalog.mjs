@@ -105,10 +105,12 @@ async function main() {
   // Coordinates (443266945) + Orange (437126197) — retired in the Oct 2026 drop;
   // the mascot LDC tee (436883116) + Worth Every Mile (436882976) — replaced by the Oct 2026 tee line;
   // the three baseball jerseys (436911930, 437021439, 437052584) — replaced by the Ballpark jersey.
+  // Halloween designs are paused after the season; their artwork and fulfillment setup remain available.
+  const SEASONALLY_HIDDEN = new Set([479940069, 479940099]); // Cobweb, Candy Corn
   const RETIRED = new Set([437126174, 437120257, 443266945, 437126197, 436883116, 436882976, 436911930, 437021439, 437052584, 443164966]);
   const products = [];
   for (const p of list) {
-    if (RETIRED.has(Number(p.id))) continue;
+    if (RETIRED.has(Number(p.id)) || SEASONALLY_HIDDEN.has(Number(p.id))) continue;
     const detail = await pf(`/store/products/${p.id}`);
     const variants = (detail.sync_variants || []).filter((v) => !v.is_ignored);
     if (!variants.length) continue;
