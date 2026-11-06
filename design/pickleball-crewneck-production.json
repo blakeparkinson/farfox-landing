@@ -1,0 +1,135 @@
+{
+  "name": "Prime Menagerie Pickleball Club Crewneck",
+  "productId": 490239643,
+  "replacesStoreProduct": 490192967,
+  "blank": "Comfort Colors 1566",
+  "catalogProductId": 839,
+  "price": 59,
+  "currency": "USD",
+  "backPrintWidthInches": 15,
+  "technique": "DTFILM",
+  "filesBase": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11",
+  "verifiedAt": "2026-11-06T23:30:34.881Z",
+  "variants": [
+    {
+      "catalogVariantId": 21932,
+      "color": "Blue Spruce",
+      "size": "S"
+    },
+    {
+      "catalogVariantId": 21933,
+      "color": "Blue Spruce",
+      "size": "M"
+    },
+    {
+      "catalogVariantId": 21934,
+      "color": "Blue Spruce",
+      "size": "L"
+    },
+    {
+      "catalogVariantId": 21935,
+      "color": "Blue Spruce",
+      "size": "XL"
+    },
+    {
+      "catalogVariantId": 21936,
+      "color": "Blue Spruce",
+      "size": "2XL"
+    },
+    {
+      "catalogVariantId": 21937,
+      "color": "Blue Spruce",
+      "size": "3XL"
+    },
+    {
+      "catalogVariantId": 21980,
+      "color": "Pepper",
+      "size": "S"
+    },
+    {
+      "catalogVariantId": 21981,
+      "color": "Pepper",
+      "size": "M"
+    },
+    {
+      "catalogVariantId": 21982,
+      "color": "Pepper",
+      "size": "L"
+    },
+    {
+      "catalogVariantId": 21983,
+      "color": "Pepper",
+      "size": "XL"
+    },
+    {
+      "catalogVariantId": 21984,
+      "color": "Pepper",
+      "size": "2XL"
+    },
+    {
+      "catalogVariantId": 21985,
+      "color": "Pepper",
+      "size": "3XL"
+    },
+    {
+      "catalogVariantId": 21992,
+      "color": "True Navy",
+      "size": "S"
+    },
+    {
+      "catalogVariantId": 21993,
+      "color": "True Navy",
+      "size": "M"
+    },
+    {
+      "catalogVariantId": 21994,
+      "color": "True Navy",
+      "size": "L"
+    },
+    {
+      "catalogVariantId": 21995,
+      "color": "True Navy",
+      "size": "XL"
+    },
+    {
+      "catalogVariantId": 21996,
+      "color": "True Navy",
+      "size": "2XL"
+    },
+    {
+      "catalogVariantId": 21997,
+      "color": "True Navy",
+      "size": "3XL"
+    },
+    {
+      "catalogVariantId": 21938,
+      "color": "Butter",
+      "size": "S"
+    },
+    {
+      "catalogVariantId": 21939,
+      "color": "Butter",
+      "size": "M"
+    },
+    {
+      "catalogVariantId": 21940,
+      "color": "Butter",
+      "size": "L"
+    },
+    {
+      "catalogVariantId": 21941,
+      "color": "Butter",
+      "size": "XL"
+    },
+    {
+      "catalogVariantId": 21942,
+      "color": "Butter",
+      "size": "2XL"
+    },
+    {
+      "catalogVariantId": 21943,
+      "color": "Butter",
+      "size": "3XL"
+    }
+  ]
+}

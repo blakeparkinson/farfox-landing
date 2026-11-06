@@ -68,7 +68,7 @@ const KINDS: Record<string, Kind> = {
     label: 'Embroidered crewneck sweatshirt', productType: 'Apparel > Tops > Sweatshirts', apparel: true,
     facts: ['Lane Seven LS14004 premium fleece, 100% cotton face', 'Heavyweight 8.25 oz/yd², regular fit', 'Embroidered, not printed', 'Size up for a looser fit'],
   },
-  bowlingCrewneck: {
+  menagerieCrewneck: {
     label: 'Garment-dyed crewneck sweatshirt', productType: 'Apparel > Tops > Sweatshirts', apparel: true,
     facts: ['Comfort Colors 1566, 80% ring-spun cotton and 20% polyester', 'Heavyweight 9.5 oz/yd² fleece with a 100% cotton face', 'Relaxed fit with ribbed collar, cuffs and waistband', 'Blue Spruce, Pepper, True Navy or Butter; garment dye may vary slightly', 'Printed left-chest badge and 15-inch-wide back illustration'],
   },
@@ -119,7 +119,7 @@ export function kindOf(p: Pick<ShopProduct, 'name'>): Kind {
   if (/prime menagerie pickleball club long sleeve/i.test(n)) return KINDS.pickleballLongSleeve;
   if (/tee/i.test(n)) return KINDS.tee;
   if (/hoodie/i.test(n)) return KINDS.hoodie;
-  if (/prime menagerie bowling club crewneck/i.test(n)) return KINDS.bowlingCrewneck;
+  if (/prime menagerie (bowling|pickleball) club crewneck/i.test(n)) return KINDS.menagerieCrewneck;
   if (/crewneck/i.test(n)) return KINDS.crewneck;
   if (/flannel/i.test(n)) return KINDS.flannel;
   if (/jacket/i.test(n)) return KINDS.bomber;
@@ -135,6 +135,7 @@ const FC_BACK = 'The back reads 143 (pager code for I love you) over FAR FOX FC,
 
 /** What is on each product, in a few sentences, keyed by provider product id. */
 export const PRODUCT_COPY: Record<string, string> = {
+  '490239643': 'Rooftop doubles with the whole Prime Menagerie. Antelope teams up with the elephant across the net from Foxy and Scan Yak, Goose inspects the ball, and Slab Rat takes an exceptionally relaxed umpire shift. The New York skyline glows behind the court. A small Pickleball Club badge sits on the left chest, with the full scene and primemenagerie.com across the back. Printed on a soft Comfort Colors crewneck in Blue Spruce, Pepper, True Navy or Butter.',
   '490192967': 'Rooftop doubles with the whole Prime Menagerie. Antelope teams up with the elephant across the net from Foxy and Scan Yak, Goose inspects the ball, and Slab Rat takes an exceptionally relaxed umpire shift. The New York skyline glows behind the court. A small Pickleball Club badge sits on the left chest, with the full scene and primemenagerie.com across the back. Printed on a garment-dyed Comfort Colors long sleeve in Black, Blue Jean, Navy or White.',
   '490151911': 'Six animals, one lane, and nobody keeping a straight face. The Prime Menagerie elephant bowls with his trunk while Scan Yak slides toward the pins. Foxy celebrates early, Antelope keeps score, Goose investigates a stubborn pin, and Slab Rat eats fries on the ball return. A small Bowling Club badge sits on the left chest, with the full scene and primemenagerie.com across the back. Printed on a soft Comfort Colors crewneck in Blue Spruce, Pepper, True Navy or Butter.',
   '490092600': 'Six animals, one questionable racecar, and a trophy already claimed. Foxy takes the wheel, Scan Yak throws his hooves up, and the Prime Menagerie elephant supplies the horsepower. Antelope waves the flag, Goose inspects a wheel, and Slab Rat lounges in the prize. Bold Prime Menagerie lettering sits above the large back scene, with primemenagerie.com below and a small elephant mark on the real chest pocket. Choose White, Butter, Violet or True Navy.',
