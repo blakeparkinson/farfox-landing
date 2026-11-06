@@ -24,6 +24,7 @@ export default defineConfig({
   site: 'https://lovefarfox.com',
   // Retired products keep their search value by pointing at the kit that replaced them.
   redirects: {
+    '/shop/prime-menagerie-bubble-trouble-pocket-tee/': { status: 301, destination: '/shop/prime-menagerie-soapbox-derby-pocket-tee/' },
     '/shop/long-distance-fc-jersey-twilight/': { status: 301, destination: '/shop/long-distance-fc-jersey-two-skies-new-york-london/' },
     '/shop/long-distance-fc-jersey-cobweb/': { status: 302, destination: '/shop/' },
     '/shop/long-distance-fc-jersey-candy-corn/': { status: 302, destination: '/shop/' },
@@ -40,6 +41,7 @@ export default defineConfig({
           '/couple-quiz/',
           '/etsy-map-redeem/',
           '/embed/',
+          '/shop/prime-menagerie-bubble-trouble-pocket-tee/',
           '/shop/long-distance-fc-jersey-cobweb/',
           '/shop/long-distance-fc-jersey-candy-corn/',
         ].some((skip) => page.includes(skip)),

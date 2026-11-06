@@ -63,16 +63,18 @@ assert.equal(studioItems.length, 5);
 assert.ok(studioItems.every(i => i.brand === 'Prime Menagerie' && i.color === 'Butter'));
 assert.match(merchantFeedXml(studioItems), /<g:brand>Prime Menagerie<\/g:brand>/);
 
-const bubbleTee = products.find(p => p.name === 'Prime Menagerie Bubble Trouble Pocket Tee');
-assert.ok(bubbleTee, 'Bubble Trouble tee is in the shop');
-assert.equal(bubbleTee.price, 34);
-assert.deepEqual(bubbleTee.colors.map(c => c.name).sort(), ['Butter', 'True Navy', 'Violet', 'White']);
-assert.deepEqual(bubbleTee.sizes, ['S', 'M', 'L', 'XL', '2XL']);
-const bubbleVariants = items.filter(i => i.itemGroupId === bubbleTee.id);
-assert.equal(bubbleVariants.length, 20, 'every Bubble Trouble color and size is shoppable');
-assert.ok(bubbleVariants.every(i => i.brand === 'Prime Menagerie' && i.price === '34.00 USD'));
-for (const color of bubbleTee.colors) {
-  const suffix = `${bubbleTee.id}-${color.name.toLowerCase().replace(/ /g, '-')}.png`;
+const derbyTee = products.find(p => p.name === 'Prime Menagerie Soapbox Derby Pocket Tee');
+assert.ok(derbyTee, 'Soapbox Derby tee is in the shop');
+assert.equal(derbyTee.id, '490092600', 'the existing scene shirt is replaced in place');
+assert.ok(!products.some(p => /Bubble Trouble/.test(p.name)), 'the old scene is no longer listed');
+assert.equal(derbyTee.price, 34);
+assert.deepEqual(derbyTee.colors.map(c => c.name).sort(), ['Butter', 'True Navy', 'Violet', 'White']);
+assert.deepEqual(derbyTee.sizes, ['S', 'M', 'L', 'XL', '2XL']);
+const derbyVariants = items.filter(i => i.itemGroupId === derbyTee.id);
+assert.equal(derbyVariants.length, 20, 'every Soapbox Derby color and size is shoppable');
+assert.ok(derbyVariants.every(i => i.brand === 'Prime Menagerie' && i.price === '34.00 USD'));
+for (const color of derbyTee.colors) {
+  const suffix = `${derbyTee.id}-${color.name.toLowerCase().replace(/ /g, '-')}.png`;
   assert.equal(color.image, `/shop/colors/${suffix}`);
   assert.equal(color.back, `/shop/backs/${suffix}`, 'each color has its own matching back preview');
 }
