@@ -79,6 +79,17 @@ for (const color of derbyTee.colors) {
   assert.equal(color.back, `/shop/backs/${suffix}`, 'each color has its own matching back preview');
 }
 
+const bowlingCrewneck = products.find(p => p.id === '490151911');
+assert.ok(bowlingCrewneck, 'Bowling Club crewneck is in the shop');
+assert.equal(bowlingCrewneck.price, 59);
+assert.deepEqual(bowlingCrewneck.sizes, ['S', 'M', 'L', 'XL', '2XL', '3XL']);
+assert.equal(bowlingCrewneck.back, '/shop/backs/490151911.png');
+assert.match(kindOf(bowlingCrewneck).facts.join(' '), /Comfort Colors 1566/);
+assert.ok(!kindOf(bowlingCrewneck).facts.join(' ').includes('Embroidered'), 'printed crewneck has the correct garment and decoration facts');
+const bowlingVariants = items.filter(i => i.itemGroupId === bowlingCrewneck.id);
+assert.equal(bowlingVariants.length, 6);
+assert.ok(bowlingVariants.every(i => i.color === 'Blue Spruce' && i.price === '59.00 USD' && i.brand === 'Prime Menagerie'));
+
 assert.ok(!products.some(p => p.id === '490057449'), 'Scan Yak beanie is removed from the shop');
 assert.ok(!items.some(i => i.itemGroupId === '490057449'), 'Scan Yak beanie is removed from the shopping feed');
 

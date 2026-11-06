@@ -20,6 +20,13 @@ async function pf(path,body) {
   return j.result;
 }
 const persist=async()=>{state.filesBase=base;await writeFile(stateFile,JSON.stringify(state,null,2)+'\n');};
+function photoFor(placement){
+  const mock=state.task?.mockups?.find(m=>m.placement===placement);
+  const explicit=mock?.extra?.find(e=>e.option?.toLowerCase()===placement && e.option_group==='Flat');
+  if(explicit)return explicit.url;
+  if(mock?.mockup_url.includes(`-${placement}-`))return mock.mockup_url;
+  throw new Error(`No unambiguous ${placement} provider photo.`);
+}
 async function catalog(){
   const all=(await pf('/products/839')).variants;
   return SIZES.map(size=>{
@@ -52,9 +59,7 @@ if(args.includes('--mockups')){
   const existing=(await pf('/store/products?limit=100')).find(p=>p.name===NAME);
   if(existing){state.productId=existing.id;await persist();console.log({existing:existing.id});process.exit(0);}
   state.variants=await catalog();
-  const front=state.task.mockups.find(m=>m.placement==='front');
-  if(!front)throw new Error('Front mockup missing.');
-  const created=await pf('/store/products',{sync_product:{name:NAME,thumbnail:front.mockup_url},sync_variants:state.variants.map(v=>({variant_id:v.id,external_id:`pm-bowling-blue-spruce-${v.size.toLowerCase()}`,retail_price:PRICE,files}))});
+  const created=await pf('/store/products',{sync_product:{name:NAME,thumbnail:photoFor('front')},sync_variants:state.variants.map(v=>({variant_id:v.id,external_id:`pm-bowling-blue-spruce-${v.size.toLowerCase()}`,retail_price:PRICE,files}))});
   state.productId=created.id;await persist();console.log({productId:created.id,name:NAME,variants:state.variants.length,price:PRICE});
 }else if(args.includes('--verify')){
   if(!state.productId)throw new Error('Product not created.');
@@ -66,9 +71,7 @@ if(args.includes('--mockups')){
     for(const f of files){const a=v.files.find(a=>a.type===f.type);if(a?.url!==f.url || a.status!=='ok')throw new Error(`Artwork not ready: ${size} ${f.type} (${a?.status})`);}
   }
   for(const placement of ['front','back']){
-    const mock=state.task.mockups.find(m=>m.placement===placement);
-    if(!mock)throw new Error(`Missing ${placement} mockup.`);
-    const r=await fetch(mock.mockup_url);if(!r.ok)throw new Error(`Mockup download ${r.status}`);
+    const r=await fetch(photoFor(placement));if(!r.ok)throw new Error(`Mockup download ${r.status}`);
     const data=Buffer.from(await r.arrayBuffer());
     const out=new URL(`public/shop/${placement==='front'?'colors':'backs'}/`,root);await mkdir(out,{recursive:true});
     await writeFile(new URL(`${state.productId}-blue-spruce.png`,out),data);
@@ -79,6 +82,6 @@ if(args.includes('--mockups')){
 }else if(args.includes('--preview')){
   if(state.task?.status!=='completed')throw new Error('Mockups not complete.');
   const out=new URL('design/prime-menagerie-bowling-club/provider-preview/',root);await mkdir(out,{recursive:true});
-  for(const m of state.task.mockups){const r=await fetch(m.mockup_url);if(!r.ok)throw new Error(`Preview ${r.status}`);await writeFile(new URL(`${m.placement}.png`,out),Buffer.from(await r.arrayBuffer()));}
+  for(const placement of ['front','back']){const r=await fetch(photoFor(placement));if(!r.ok)throw new Error(`Preview ${r.status}`);await writeFile(new URL(`${placement}.png`,out),Buffer.from(await r.arrayBuffer()));}
   console.log('Saved provider previews.');
 }else throw new Error('Choose --mockups, --poll, --preview, --create or --verify.');
