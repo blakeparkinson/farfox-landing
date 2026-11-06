@@ -9,7 +9,7 @@ import ProductImage from '../../components/ProductImage.astro';
 import ProductBuy from '../../components/ProductBuy.astro';
 import { cartLive } from '../../lib/snipcart';
 import { kitSlugForName } from '../../lib/kits.mjs';
-import { SITE, PAIRS, formatPrice, kindOf, productPath, productStory, productTitle, productUrl, relatedProducts, shopCategoryOf, type ShopProduct } from '../../lib/productPages';
+import { SITE, PAIRS, formatPrice, kindOf, productPath, productBrand, productStory, productTitle, productUrl, relatedProducts, shopCategoryOf, type ShopProduct } from '../../lib/productPages';
 
 const PRODUCTS = catalog.products as ShopProduct[];
 
@@ -24,8 +24,9 @@ const pair = PRODUCTS.find((o) => o.id === PAIRS[p.id]);
 const related = relatedProducts(p, PRODUCTS);
 const personalised = Boolean(kitSlugForName(p.name));
 const category = shopCategoryOf(p.name);
+const studioMerch = productBrand(p) === 'Prime Menagerie';
 const plainName = p.name.replace(/"/g, '');
-const title = `${plainName}: Gift for Long-Distance Couples | Far Fox Shop`;
+const title = studioMerch ? `${plainName} | Far Fox Shop` : `${plainName}: Gift for Long-Distance Couples | Far Fox Shop`;
 const description = `${story.split(/(?<=\.)\s/)[0]} ${formatPrice(p.price)}, printed to order and shipped worldwide.`;
 const images = [p.image, p.back, ...(p.colors ?? []).flatMap((c) => [c.image, c.back])].filter((x): x is string => Boolean(x));
 
@@ -37,7 +38,7 @@ const productSchema = {
   sku: p.id,
   url: productUrl(p),
   image: [...new Set(images)].map((i) => `${SITE}${i}`),
-  brand: { '@type': 'Brand', name: 'Far Fox' },
+  brand: { '@type': 'Brand', name: productBrand(p) },
   category: kind.productType,
   ...(p.colors?.length ? { color: p.colors.map((c) => c.name).join(', ') } : {}),
   ...(p.sizes?.length ? { size: p.sizes.join(', ') } : {}),
@@ -89,7 +90,7 @@ const breadcrumbs = {
           <p class="text-2xl font-900 text-fox-pink-deep mb-5">{formatPrice(p.price)}</p>
           <p class="text-fox-text-light leading-relaxed mb-6">{story}</p>
           <ProductBuy product={p} />
-          <p class="mt-4 text-sm text-fox-text-light">Printed to order and shipped worldwide{personalised ? ', with or without a name and number' : ''}. Every order helps keep the Far Fox app free. <a href="/shipping-returns/" class="underline hover:text-fox-pink-deep">Shipping &amp; returns</a></p>
+          <p class="mt-4 text-sm text-fox-text-light">Printed to order and shipped worldwide{personalised ? ', with or without a name and number' : ''}. {studioMerch ? 'Made for the Prime Menagerie studio.' : 'Every order helps keep the Far Fox app free.'} <a href="/shipping-returns/" class="underline hover:text-fox-pink-deep">Shipping &amp; returns</a></p>
 
           <div class="mt-8 border-t border-fox-pink/10 pt-6">
             <h2 class="font-800 text-lg mb-3">Details</h2>
@@ -113,8 +114,9 @@ const breadcrumbs = {
       </div>
 
       <section class="mt-16 rounded-3xl bg-gradient-to-br from-fox-pink/[0.07] to-fox-purple/[0.07] p-6 sm:p-8">
-        <h2 class="text-xl font-900 mb-2">A gift for someone far away</h2>
-        <p class="text-fox-text-light leading-relaxed max-w-3xl">Ship it straight to their door: put their address in at checkout and it goes to them, not you. Looking for more ideas? Read our <a href="/blog/long-distance-relationship-gifts/" class="font-800 text-fox-pink-deep hover:text-fox-purple-deep">long-distance gift guide</a> or the <a href="/blog/long-distance-care-package-ideas/" class="font-800 text-fox-pink-deep hover:text-fox-purple-deep">care package checklist</a>.</p>
+        <h2 class="text-xl font-900 mb-2">{studioMerch ? 'Meet the menagerie' : 'A gift for someone far away'}</h2>
+        {studioMerch ? <p class="text-fox-text-light leading-relaxed max-w-3xl">Foxy, Affirming Antelope, Loot Goose, Scan Yak and Slab Rat, together in one woodland scene. <a href="https://primemenagerie.com" class="font-800 text-fox-pink-deep hover:text-fox-purple-deep">Meet the studio and its apps →</a></p> :
+        <p class="text-fox-text-light leading-relaxed max-w-3xl">Ship it straight to their door: put their address in at checkout and it goes to them, not you. Looking for more ideas? Read our <a href="/blog/long-distance-relationship-gifts/" class="font-800 text-fox-pink-deep hover:text-fox-purple-deep">long-distance gift guide</a> or the <a href="/blog/long-distance-care-package-ideas/" class="font-800 text-fox-pink-deep hover:text-fox-purple-deep">care package checklist</a>.</p>}
       </section>
 
       <section class="mt-16">

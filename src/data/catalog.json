@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T17:10:12.217Z",
+  "generatedAt": "2026-11-06T14:23:21.676Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -38,6 +38,23 @@
           "back": "/shop/backs/6ac56a091644af57a506ee5b-red-black.png"
         }
       ]
+    },
+    {
+      "id": "489992811",
+      "slug": "prime-menagerie-pocket-tee",
+      "name": "Prime Menagerie Pocket Tee",
+      "price": 34,
+      "currency": "USD",
+      "image": "/shop/colors/489992811-butter.png",
+      "back": "/shop/backs/489992811.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "colors": []
     },
     {
       "id": "483444820",

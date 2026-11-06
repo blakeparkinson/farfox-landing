@@ -125,6 +125,7 @@ const FC_BACK = 'The back reads 143 (pager code for I love you) over FAR FOX FC,
 
 /** What is on each product, in a few sentences, keyed by provider product id. */
 export const PRODUCT_COPY: Record<string, string> = {
+  '489992811': 'The whole menagerie, together. A moss-green elephant marks the real chest pocket; on the back, Foxy shares a letter with Affirming Antelope, Loot Goose, Scan Yak and Slab Rat in a little woodland clearing. The antelope wears its rich brown coat. Printed on a Butter garment-dyed pocket tee, with the Prime Menagerie wordmark and a small website address.',
   '6ac56a091644af57a506ee5b': 'A plaid flannel with a vintage national-park badge across the back, Foxy at its centre, like a park founded for two people who live far apart. A small Foxy patch sits on the chest pocket. Made for cold-weather calls and the airport pickup.',
   '478884090': 'Foxy on the front with "miss you too", and a pink heart on the back signed "from right here". It is one half of a pair: the Miss You mug says "from far away", so you each drink from your own side of the distance.',
   '478884086': 'Foxy on the front with "miss you", and a pink heart on the back signed "from far away". Send it to them and keep the Miss You Too mug, which answers "from right here".',
@@ -188,6 +189,7 @@ export const PAIRS: Record<string, string> = {
 
 /** Google requires a colour on clothing, so single-colourway kits name theirs here. */
 export const KIT_COLOURS: Record<string, string> = {
+  '489992811': 'Butter',
   '475849115': 'Purple/Pink', '475844805': 'Navy/White', '475844798': 'Purple/Pink', '475844794': 'Pink/Purple',
   '443631285': 'Purple/Gold', '443578239': 'White/Black', '443540637': 'Teal/Orange', '443420345': 'Purple',
   '443266866': 'Navy', '443213452': 'Cream',
@@ -200,8 +202,12 @@ export function productStory(p: Pick<ShopProduct, 'id'>, stories: Record<string,
   return [PRODUCT_COPY[p.id], stories[p.id]].filter(Boolean).join(' ');
 }
 
-/** "Far Fox" plus the product name: every name already says what the product is (tee, mug, print…). */
-export const productTitle = (p: Pick<ShopProduct, 'name'>) => `Far Fox ${p.name.replace(/"/g, '')}`.replace(/^Far Fox Far Fox/, 'Far Fox');
+/** Studio merchandise keeps its own brand in product pages and merchant feeds. */
+export const productBrand = (p: Pick<ShopProduct, 'name'>) => /^Prime Menagerie\b/i.test(p.name) ? 'Prime Menagerie' : 'Far Fox';
+export const productTitle = (p: Pick<ShopProduct, 'name'>) => {
+  const name = p.name.replace(/"/g, '');
+  return productBrand(p) === 'Prime Menagerie' ? name : `Far Fox ${name}`.replace(/^Far Fox Far Fox/, 'Far Fox');
+};
 
 /** Other products from the same shop section first, then the rest, never the product itself. */
 export function relatedProducts(p: ShopProduct, all: ShopProduct[], count = 4) {
@@ -215,6 +221,7 @@ export function relatedProducts(p: ShopProduct, all: ShopProduct[], count = 4) {
 export type FeedItem = {
   id: string;
   itemGroupId: string;
+  brand: string;
   title: string;
   description: string;
   link: string;
@@ -251,6 +258,7 @@ export function merchantFeedItems(products: ShopProduct[], stories: Record<strin
         items.push({
           id: [p.id, colour ? `c${ci}` : '', size ? size.replace(/\s+/g, '') : ''].filter(Boolean).join('-'),
           itemGroupId: p.id,
+          brand: productBrand(p),
           title: [productTitle(p), colour?.name, size].filter(Boolean).join(', '),
           description,
           link: `${productUrl(p)}${qs ? `?${qs}` : ''}`,
@@ -279,7 +287,7 @@ export function merchantFeedXml(items: FeedItem[]) {
     tag('id', i.id), tag('item_group_id', i.itemGroupId),
     `<title>${xml(i.title)}</title>`, `<description>${xml(i.description)}</description>`, `<link>${xml(i.link)}</link>`,
     tag('image_link', i.imageLink), ...i.additionalImageLinks.map((l) => tag('additional_image_link', l)),
-    tag('availability', 'in_stock'), tag('price', i.price), tag('condition', 'new'), tag('brand', 'Far Fox'),
+    tag('availability', 'in_stock'), tag('price', i.price), tag('condition', 'new'), tag('brand', i.brand),
     tag('identifier_exists', 'no'), tag('product_type', i.productType),
     tag('color', i.color), tag('size', i.size),
     i.apparel ? `${tag('gender', 'unisex')}${tag('age_group', 'adult')}` : '',
