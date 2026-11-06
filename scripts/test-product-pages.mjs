@@ -63,6 +63,20 @@ assert.equal(studioItems.length, 5);
 assert.ok(studioItems.every(i => i.brand === 'Prime Menagerie' && i.color === 'Butter'));
 assert.match(merchantFeedXml(studioItems), /<g:brand>Prime Menagerie<\/g:brand>/);
 
+const bubbleTee = products.find(p => p.name === 'Prime Menagerie Bubble Trouble Pocket Tee');
+assert.ok(bubbleTee, 'Bubble Trouble tee is in the shop');
+assert.equal(bubbleTee.price, 34);
+assert.deepEqual(bubbleTee.colors.map(c => c.name).sort(), ['Butter', 'True Navy', 'Violet', 'White']);
+assert.deepEqual(bubbleTee.sizes, ['S', 'M', 'L', 'XL', '2XL']);
+const bubbleVariants = items.filter(i => i.itemGroupId === bubbleTee.id);
+assert.equal(bubbleVariants.length, 20, 'every Bubble Trouble color and size is shoppable');
+assert.ok(bubbleVariants.every(i => i.brand === 'Prime Menagerie' && i.price === '34.00 USD'));
+for (const color of bubbleTee.colors) {
+  const suffix = `${bubbleTee.id}-${color.name.toLowerCase().replace(/ /g, '-')}.png`;
+  assert.equal(color.image, `/shop/colors/${suffix}`);
+  assert.equal(color.back, `/shop/backs/${suffix}`, 'each color has its own matching back preview');
+}
+
 for (const [brand, colors] of [['Affirming Antelope', ['Heather Grey', 'Navy']], ['Scan Yak', ['Baby Pink', 'Black']]]) {
   const hat = products.find(p => p.name === `${brand} Beanie`);
   assert.ok(hat, `${brand} beanie is in the shop`);

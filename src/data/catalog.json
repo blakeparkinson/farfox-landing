@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T17:40:04.264Z",
+  "generatedAt": "2026-11-06T19:03:41.380Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -36,6 +36,48 @@
           "hex": "#b22a2e",
           "image": "/shop/colors/6ac56a091644af57a506ee5b-red-black.png",
           "back": "/shop/backs/6ac56a091644af57a506ee5b-red-black.png"
+        }
+      ]
+    },
+    {
+      "id": "490092600",
+      "slug": "prime-menagerie-bubble-trouble-pocket-tee",
+      "name": "Prime Menagerie Bubble Trouble Pocket Tee",
+      "price": 34,
+      "currency": "USD",
+      "image": "/shop/colors/490092600-white.png",
+      "back": "/shop/backs/490092600.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#ffffff",
+          "image": "/shop/colors/490092600-white.png",
+          "back": "/shop/backs/490092600-white.png"
+        },
+        {
+          "name": "Butter",
+          "hex": "#ffe09e",
+          "image": "/shop/colors/490092600-butter.png",
+          "back": "/shop/backs/490092600-butter.png"
+        },
+        {
+          "name": "Violet",
+          "hex": "#9a8ad2",
+          "image": "/shop/colors/490092600-violet.png",
+          "back": "/shop/backs/490092600-violet.png"
+        },
+        {
+          "name": "True Navy",
+          "hex": "#424150",
+          "image": "/shop/colors/490092600-true-navy.png",
+          "back": "/shop/backs/490092600-true-navy.png"
         }
       ]
     },
