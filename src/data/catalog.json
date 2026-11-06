@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T20:09:45.891Z",
+  "generatedAt": "2026-11-06T21:10:45.845Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -38,6 +38,24 @@
           "back": "/shop/backs/6ac56a091644af57a506ee5b-red-black.png"
         }
       ]
+    },
+    {
+      "id": "490151911",
+      "slug": "prime-menagerie-bowling-club-crewneck",
+      "name": "Prime Menagerie Bowling Club Crewneck",
+      "price": 59,
+      "currency": "USD",
+      "image": "/shop/colors/490151911-blue-spruce.png",
+      "back": "/shop/backs/490151911.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": []
     },
     {
       "id": "490092600",

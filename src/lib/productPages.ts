@@ -68,6 +68,10 @@ const KINDS: Record<string, Kind> = {
     label: 'Embroidered crewneck sweatshirt', productType: 'Apparel > Tops > Sweatshirts', apparel: true,
     facts: ['Lane Seven LS14004 premium fleece, 100% cotton face', 'Heavyweight 8.25 oz/yd², regular fit', 'Embroidered, not printed', 'Size up for a looser fit'],
   },
+  bowlingCrewneck: {
+    label: 'Garment-dyed crewneck sweatshirt', productType: 'Apparel > Tops > Sweatshirts', apparel: true,
+    facts: ['Comfort Colors 1566, 80% ring-spun cotton and 20% polyester', 'Heavyweight 9.5 oz/yd² fleece with a 100% cotton face', 'Relaxed fit with ribbed collar, cuffs and waistband', 'Blue Spruce, a washed dark green; garment dye may vary slightly', 'Printed left-chest badge and large back illustration'],
+  },
   bomber: {
     label: 'Bomber jacket', productType: 'Apparel > Outerwear > Jackets', apparel: true,
     facts: ['100% polyester shell, 7.37 oz/yd², printed edge to edge', 'Brushed fleece inside', 'Silver YKK zip, two self-fabric pockets, ribbed collar, cuffs and hem', 'Relaxed unisex fit'],
@@ -110,6 +114,7 @@ export function kindOf(p: Pick<ShopProduct, 'name'>): Kind {
   if (/pocket tee/i.test(n)) return KINDS.pocketTee;
   if (/tee/i.test(n)) return KINDS.tee;
   if (/hoodie/i.test(n)) return KINDS.hoodie;
+  if (/prime menagerie bowling club crewneck/i.test(n)) return KINDS.bowlingCrewneck;
   if (/crewneck/i.test(n)) return KINDS.crewneck;
   if (/flannel/i.test(n)) return KINDS.flannel;
   if (/jacket/i.test(n)) return KINDS.bomber;
@@ -125,6 +130,7 @@ const FC_BACK = 'The back reads 143 (pager code for I love you) over FAR FOX FC,
 
 /** What is on each product, in a few sentences, keyed by provider product id. */
 export const PRODUCT_COPY: Record<string, string> = {
+  '490151911': 'Six animals, one lane, and nobody keeping a straight face. The Prime Menagerie elephant bowls with his trunk while Scan Yak slides toward the pins. Foxy celebrates early, Antelope keeps score, Goose investigates a stubborn pin, and Slab Rat eats fries on the ball return. A small cream Bowling Club badge sits on the left chest, with the full scene and primemenagerie.com across the back. Printed on a soft, garment-dyed Blue Spruce crewneck.',
   '490092600': 'Six animals, one questionable racecar, and a trophy already claimed. Foxy takes the wheel, Scan Yak throws his hooves up, and the Prime Menagerie elephant supplies the horsepower. Antelope waves the flag, Goose inspects a wheel, and Slab Rat lounges in the prize. Bold Prime Menagerie lettering sits above the large back scene, with primemenagerie.com below and a small elephant mark on the real chest pocket. Choose White, Butter, Violet or True Navy.',
   '490057447': 'A little encouragement for cold days. The dark-brown Affirming Antelope waves from the cuff, wearing its blue scarf and leaning over a cobalt line. Full-color embroidery on a soft cuffed beanie, in Heather Grey or Navy.',
   '490057449': 'Office chair. Rodeo rules. Scan Yak rides a tiny blue desk chair backwards, one hoof in the air and a chart flying behind him. The full-body scene and SCAN YAK lettering are embroidered on the cuff, in Black or Baby Pink.',
@@ -192,6 +198,7 @@ export const PAIRS: Record<string, string> = {
 
 /** Google requires a colour on clothing, so single-colourway kits name theirs here. */
 export const KIT_COLOURS: Record<string, string> = {
+  '490151911': 'Blue Spruce',
   '489992811': 'Butter',
   '475849115': 'Purple/Pink', '475844805': 'Navy/White', '475844798': 'Purple/Pink', '475844794': 'Pink/Purple',
   '443631285': 'Purple/Gold', '443578239': 'White/Black', '443540637': 'Teal/Orange', '443420345': 'Purple',
