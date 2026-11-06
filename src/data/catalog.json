@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T19:44:05.417Z",
+  "generatedAt": "2026-11-06T20:09:45.891Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -78,30 +78,6 @@
           "hex": "#424150",
           "image": "/shop/colors/490092600-true-navy.png",
           "back": "/shop/backs/490092600-true-navy.png"
-        }
-      ]
-    },
-    {
-      "id": "490057449",
-      "slug": "scan-yak-beanie",
-      "name": "Scan Yak Beanie",
-      "price": 26,
-      "currency": "USD",
-      "image": "/shop/colors/490057449-baby-pink.png",
-      "back": null,
-      "sizes": [],
-      "colors": [
-        {
-          "name": "Baby Pink",
-          "hex": "#ffc6cd",
-          "image": "/shop/colors/490057449-baby-pink.png",
-          "back": null
-        },
-        {
-          "name": "Black",
-          "hex": "#0c0c0c",
-          "image": "/shop/colors/490057449-black.png",
-          "back": null
         }
       ]
     },
