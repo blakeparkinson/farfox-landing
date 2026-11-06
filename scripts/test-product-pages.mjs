@@ -27,7 +27,7 @@ for (const p of products) assert.ok(!relatedProducts(p, products).some((r) => r.
 
 // One feed item per colour and size, with ids Merchant Center accepts and links that open on the variant.
 const items = merchantFeedItems(products);
-const expected = products.reduce((n, p) => n + Math.max(1, p.colors?.length ?? 0) * Math.max(1, p.sizes?.length ?? 0), 0);
+const expected = products.reduce((n, p) => n + (p.colors?.length ? p.colors.reduce((sum, c) => sum + Math.max(1, (c.sizes ?? p.sizes)?.length ?? 0), 0) : Math.max(1, p.sizes?.length ?? 0)), 0);
 assert.equal(items.length, expected);
 assert.equal(new Set(items.map((i) => i.id)).size, items.length, 'feed ids are unique');
 for (const i of items) {
@@ -87,8 +87,25 @@ assert.equal(bowlingCrewneck.back, '/shop/backs/490151911.png');
 assert.match(kindOf(bowlingCrewneck).facts.join(' '), /Comfort Colors 1566/);
 assert.ok(!kindOf(bowlingCrewneck).facts.join(' ').includes('Embroidered'), 'printed crewneck has the correct garment and decoration facts');
 const bowlingVariants = items.filter(i => i.itemGroupId === bowlingCrewneck.id);
-assert.equal(bowlingVariants.length, 6);
-assert.ok(bowlingVariants.every(i => i.color === 'Blue Spruce' && i.price === '59.00 USD' && i.brand === 'Prime Menagerie'));
+assert.equal(bowlingVariants.length, 24);
+assert.deepEqual(bowlingCrewneck.colors.map(c => c.name).sort(), ['Blue Spruce', 'Butter', 'Pepper', 'True Navy']);
+assert.ok(bowlingVariants.every(i => i.price === '59.00 USD' && i.brand === 'Prime Menagerie'));
+
+const pickleball = products.find(p => p.id === '490192967');
+assert.ok(pickleball, 'Pickleball Club long sleeve is in the shop');
+assert.equal(pickleball.price, 44);
+assert.match(kindOf(pickleball).facts.join(' '), /Comfort Colors 6014/);
+assert.deepEqual(pickleball.colors.map(c => c.name).sort(), ['Black', 'Blue Jean', 'Navy', 'White']);
+const pickleballVariants = items.filter(i => i.itemGroupId === pickleball.id);
+assert.equal(pickleballVariants.length, 21, 'only stocked color/size combinations enter the shopping feed');
+assert.ok(pickleballVariants.every(i => i.price === '44.00 USD' && i.brand === 'Prime Menagerie'));
+assert.ok(!pickleballVariants.some(i => (i.color === 'White' && ['2XL','3XL'].includes(i.size)) || (i.color === 'Navy' && i.size === '3XL')));
+assert.ok(pickleballVariants.some(i => i.color === 'Black' && i.size === '3XL'));
+for (const product of [pickleball, bowlingCrewneck]) for (const color of product.colors) {
+  const suffix = `${product.id}-${color.name.toLowerCase().replace(/ /g, '-')}.png`;
+  assert.equal(color.image, `/shop/colors/${suffix}`);
+  assert.equal(color.back, `/shop/backs/${suffix}`);
+}
 
 assert.ok(!products.some(p => p.id === '490057449'), 'Scan Yak beanie is removed from the shop');
 assert.ok(!items.some(i => i.itemGroupId === '490057449'), 'Scan Yak beanie is removed from the shopping feed');

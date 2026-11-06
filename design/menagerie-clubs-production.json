@@ -1,0 +1,245 @@
+{
+  "artCommit": "ed675df7f90c84c6c478b2eb8a8a576083a3a3cd",
+  "artBase": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/ed675df/public/shop/designs/menagerie-clubs-2026-11",
+  "products": {
+    "pickleball": {
+      "id": 490192967,
+      "variants": [
+        {
+          "catalogVariantId": 19412,
+          "color": "Black",
+          "size": "S"
+        },
+        {
+          "catalogVariantId": 19419,
+          "color": "Black",
+          "size": "M"
+        },
+        {
+          "catalogVariantId": 19426,
+          "color": "Black",
+          "size": "L"
+        },
+        {
+          "catalogVariantId": 19433,
+          "color": "Black",
+          "size": "XL"
+        },
+        {
+          "catalogVariantId": 19440,
+          "color": "Black",
+          "size": "2XL"
+        },
+        {
+          "catalogVariantId": 19447,
+          "color": "Black",
+          "size": "3XL"
+        },
+        {
+          "catalogVariantId": 19413,
+          "color": "Blue Jean",
+          "size": "S"
+        },
+        {
+          "catalogVariantId": 19420,
+          "color": "Blue Jean",
+          "size": "M"
+        },
+        {
+          "catalogVariantId": 19427,
+          "color": "Blue Jean",
+          "size": "L"
+        },
+        {
+          "catalogVariantId": 19434,
+          "color": "Blue Jean",
+          "size": "XL"
+        },
+        {
+          "catalogVariantId": 19441,
+          "color": "Blue Jean",
+          "size": "2XL"
+        },
+        {
+          "catalogVariantId": 19448,
+          "color": "Blue Jean",
+          "size": "3XL"
+        },
+        {
+          "catalogVariantId": 19415,
+          "color": "Navy",
+          "size": "S"
+        },
+        {
+          "catalogVariantId": 19422,
+          "color": "Navy",
+          "size": "M"
+        },
+        {
+          "catalogVariantId": 19429,
+          "color": "Navy",
+          "size": "L"
+        },
+        {
+          "catalogVariantId": 19436,
+          "color": "Navy",
+          "size": "XL"
+        },
+        {
+          "catalogVariantId": 19443,
+          "color": "Navy",
+          "size": "2XL"
+        },
+        {
+          "catalogVariantId": 19418,
+          "color": "White",
+          "size": "S"
+        },
+        {
+          "catalogVariantId": 19425,
+          "color": "White",
+          "size": "M"
+        },
+        {
+          "catalogVariantId": 19432,
+          "color": "White",
+          "size": "L"
+        },
+        {
+          "catalogVariantId": 19439,
+          "color": "White",
+          "size": "XL"
+        }
+      ],
+      "backPrintWidthInches": 12,
+      "verifiedAt": "2026-11-06T22:09:34.717Z"
+    },
+    "bowling": {
+      "id": 490151911,
+      "variants": [
+        {
+          "catalogVariantId": 21932,
+          "color": "Blue Spruce",
+          "size": "S"
+        },
+        {
+          "catalogVariantId": 21933,
+          "color": "Blue Spruce",
+          "size": "M"
+        },
+        {
+          "catalogVariantId": 21934,
+          "color": "Blue Spruce",
+          "size": "L"
+        },
+        {
+          "catalogVariantId": 21935,
+          "color": "Blue Spruce",
+          "size": "XL"
+        },
+        {
+          "catalogVariantId": 21936,
+          "color": "Blue Spruce",
+          "size": "2XL"
+        },
+        {
+          "catalogVariantId": 21937,
+          "color": "Blue Spruce",
+          "size": "3XL"
+        },
+        {
+          "catalogVariantId": 21980,
+          "color": "Pepper",
+          "size": "S"
+        },
+        {
+          "catalogVariantId": 21981,
+          "color": "Pepper",
+          "size": "M"
+        },
+        {
+          "catalogVariantId": 21982,
+          "color": "Pepper",
+          "size": "L"
+        },
+        {
+          "catalogVariantId": 21983,
+          "color": "Pepper",
+          "size": "XL"
+        },
+        {
+          "catalogVariantId": 21984,
+          "color": "Pepper",
+          "size": "2XL"
+        },
+        {
+          "catalogVariantId": 21985,
+          "color": "Pepper",
+          "size": "3XL"
+        },
+        {
+          "catalogVariantId": 21992,
+          "color": "True Navy",
+          "size": "S"
+        },
+        {
+          "catalogVariantId": 21993,
+          "color": "True Navy",
+          "size": "M"
+        },
+        {
+          "catalogVariantId": 21994,
+          "color": "True Navy",
+          "size": "L"
+        },
+        {
+          "catalogVariantId": 21995,
+          "color": "True Navy",
+          "size": "XL"
+        },
+        {
+          "catalogVariantId": 21996,
+          "color": "True Navy",
+          "size": "2XL"
+        },
+        {
+          "catalogVariantId": 21997,
+          "color": "True Navy",
+          "size": "3XL"
+        },
+        {
+          "catalogVariantId": 21938,
+          "color": "Butter",
+          "size": "S"
+        },
+        {
+          "catalogVariantId": 21939,
+          "color": "Butter",
+          "size": "M"
+        },
+        {
+          "catalogVariantId": 21940,
+          "color": "Butter",
+          "size": "L"
+        },
+        {
+          "catalogVariantId": 21941,
+          "color": "Butter",
+          "size": "XL"
+        },
+        {
+          "catalogVariantId": 21942,
+          "color": "Butter",
+          "size": "2XL"
+        },
+        {
+          "catalogVariantId": 21943,
+          "color": "Butter",
+          "size": "3XL"
+        }
+      ],
+      "backPrintWidthInches": 15,
+      "verifiedAt": "2026-11-06T22:09:39.964Z"
+    }
+  }
+}

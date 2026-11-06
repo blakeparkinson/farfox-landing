@@ -22,6 +22,14 @@ import { SNIPCART_KEY, cartLive } from '../lib/snipcart';
           if (hidden) hidden.value = name;
           const label = document.getElementById(`color-label-${pid}`);
           if (label) label.textContent = name;
+          const sizeSelect = document.getElementById(`size-${pid}`);
+          const colorSizes = sw.getAttribute('data-sizes');
+          if (sizeSelect && colorSizes) {
+            const previous = sizeSelect.value;
+            const available = JSON.parse(colorSizes);
+            sizeSelect.replaceChildren(...available.map(size => new Option(`Size: ${size}`, size)));
+            if (available.includes(previous)) sizeSelect.value = previous;
+          }
           // Colourway jerseys have one personalised back per colour.
           const kit = sw.getAttribute('data-kit');
           const wrap = document.querySelector(`[data-personalize][data-product="${pid}"]`);
@@ -29,6 +37,8 @@ import { SNIPCART_KEY, cartLive } from '../lib/snipcart';
           // Point both view buttons at this colour, then show whichever view is active.
           const front = sw.getAttribute('data-image');
           const back = sw.getAttribute('data-back');
+          const buy = document.querySelector(`.snipcart-add-item[data-item-id="${pid}"]`);
+          if (buy && front) buy.setAttribute('data-item-image', new URL(front, location.origin).href);
           let showingBack = false;
           document.querySelectorAll(`.view-btn[data-product="${pid}"]`).forEach((b) => {
             const isBack = (b.textContent || '').trim().toLowerCase() === 'back';

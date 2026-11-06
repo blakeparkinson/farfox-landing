@@ -9,6 +9,8 @@ import { SITE, type ShopProduct } from '../lib/productPages';
 interface Props { product: ShopProduct }
 const { product: p } = Astro.props;
 const ornament = isOrnamentName(p.name);
+const limitedSizes = p.colors?.some(c => c.sizes);
+const initialSizes = p.colors?.[0]?.sizes ?? p.sizes;
 const cityInput = 'flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text uppercase placeholder:normal-case placeholder:font-600 placeholder:text-fox-text-light/60 focus:outline-none focus:border-fox-pink';
 ---
 {p.colors && p.colors.length > 0 && (
@@ -24,6 +26,7 @@ const cityInput = 'flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/
           class="color-swatch w-6 h-6 rounded-full border transition-transform hover:scale-110"
           data-product={p.id}
           data-color={c.name}
+          data-sizes={limitedSizes ? JSON.stringify(c.sizes ?? p.sizes) : undefined}
           data-image={c.image || p.image}
           data-back={c.back || p.back || undefined}
           data-kit={kitSlugForName(p.name) ? kitForColour(p.name, c.name) : undefined}
@@ -44,7 +47,7 @@ const cityInput = 'flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/
     class="mb-3 w-full rounded-xl border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text focus:outline-none focus:border-fox-pink"
     aria-label={`Size for ${p.name}`}
   >
-    {p.sizes.map((s) => <option value={s}>{`Size: ${s}`}</option>)}
+    {initialSizes?.map((s) => <option value={s}>{`Size: ${s}`}</option>)}
   </select>
 )}
 
@@ -97,10 +100,12 @@ const cityInput = 'flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/
     data-item-image={`${SITE}${p.image}`}
     data-item-description={p.name}
     data-item-custom1-name={p.sizes?.length ? 'Size' : undefined}
-    data-item-custom1-options={p.sizes?.length ? p.sizes.join('|') : undefined}
+    data-item-custom1-options={!limitedSizes && p.sizes?.length ? p.sizes.join('|') : undefined}
+    data-item-custom1-type={limitedSizes ? 'readonly' : undefined}
     data-size-select={p.sizes?.length ? `size-${p.id}` : undefined}
     data-item-custom2-name={p.colors?.length ? 'Color' : undefined}
-    data-item-custom2-options={p.colors?.length ? p.colors.map((c) => c.name).join('|') : undefined}
+    data-item-custom2-options={!limitedSizes && p.colors?.length ? p.colors.map((c) => c.name).join('|') : undefined}
+    data-item-custom2-type={limitedSizes ? 'readonly' : undefined}
     data-item-custom2-value={p.colors?.length ? p.colors[0].name : undefined}
     data-color-input={p.colors?.length ? `color-${p.id}` : undefined}
     data-item-custom3-name={kitSlugForName(p.name) ? 'Name' : undefined}
