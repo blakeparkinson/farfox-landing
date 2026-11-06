@@ -63,4 +63,17 @@ assert.equal(studioItems.length, 5);
 assert.ok(studioItems.every(i => i.brand === 'Prime Menagerie' && i.color === 'Butter'));
 assert.match(merchantFeedXml(studioItems), /<g:brand>Prime Menagerie<\/g:brand>/);
 
+for (const [brand, colors] of [['Affirming Antelope', ['Heather Grey', 'Navy']], ['Scan Yak', ['Baby Pink', 'Black']]]) {
+  const hat = products.find(p => p.name === `${brand} Beanie`);
+  assert.ok(hat, `${brand} beanie is in the shop`);
+  assert.equal(productBrand(hat), brand);
+  assert.equal(productTitle(hat), `${brand} Beanie`);
+  assert.equal(hat.price, 26);
+  assert.deepEqual(hat.colors.map(c => c.name).sort(), colors);
+  const variants = items.filter(i => i.itemGroupId === hat.id);
+  assert.equal(variants.length, 2);
+  assert.ok(variants.every(i => i.brand === brand && i.size === 'One size' && i.price === '26.00 USD'));
+  assert.ok(hat.colors.every(c => c.image?.includes(`/${hat.id}-`)), 'each hat color has its own production photo');
+}
+
 console.log(`product pages: ${products.length} pages, ${items.length} feed items, all checks passed`);

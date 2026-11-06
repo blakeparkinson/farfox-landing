@@ -125,6 +125,8 @@ const FC_BACK = 'The back reads 143 (pager code for I love you) over FAR FOX FC,
 
 /** What is on each product, in a few sentences, keyed by provider product id. */
 export const PRODUCT_COPY: Record<string, string> = {
+  '490057447': 'A little encouragement for cold days. The dark-brown Affirming Antelope waves from the cuff, wearing its blue scarf and leaning over a cobalt line. Full-color embroidery on a soft cuffed beanie, in Heather Grey or Navy.',
+  '490057449': 'Office chair. Rodeo rules. Scan Yak rides a tiny blue desk chair backwards, one hoof in the air and a chart flying behind him. The full-body scene and SCAN YAK lettering are embroidered on the cuff, in Black or Baby Pink.',
   '489992811': 'The whole menagerie, together. A moss-green elephant marks the real chest pocket; on the back, Foxy shares a letter with Affirming Antelope, Loot Goose, Scan Yak and Slab Rat in a little woodland clearing. The antelope wears its rich brown coat. Printed on a Butter garment-dyed pocket tee, with the Prime Menagerie wordmark and a small website address.',
   '6ac56a091644af57a506ee5b': 'A plaid flannel with a vintage national-park badge across the back, Foxy at its centre, like a park founded for two people who live far apart. A small Foxy patch sits on the chest pocket. Made for cold-weather calls and the airport pickup.',
   '478884090': 'Foxy on the front with "miss you too", and a pink heart on the back signed "from right here". It is one half of a pair: the Miss You mug says "from far away", so you each drink from your own side of the distance.',
@@ -203,10 +205,10 @@ export function productStory(p: Pick<ShopProduct, 'id'>, stories: Record<string,
 }
 
 /** Studio merchandise keeps its own brand in product pages and merchant feeds. */
-export const productBrand = (p: Pick<ShopProduct, 'name'>) => /^Prime Menagerie\b/i.test(p.name) ? 'Prime Menagerie' : 'Far Fox';
+export const productBrand = (p: Pick<ShopProduct, 'name'>) => ['Prime Menagerie', 'Affirming Antelope', 'Scan Yak'].find(brand => p.name.toLowerCase().startsWith(`${brand.toLowerCase()} `)) ?? 'Far Fox';
 export const productTitle = (p: Pick<ShopProduct, 'name'>) => {
   const name = p.name.replace(/"/g, '');
-  return productBrand(p) === 'Prime Menagerie' ? name : `Far Fox ${name}`.replace(/^Far Fox Far Fox/, 'Far Fox');
+  return productBrand(p) !== 'Far Fox' ? name : `Far Fox ${name}`.replace(/^Far Fox Far Fox/, 'Far Fox');
 };
 
 /** Other products from the same shop section first, then the rest, never the product itself. */
@@ -244,7 +246,7 @@ export function merchantFeedItems(products: ShopProduct[], stories: Record<strin
   const items: FeedItem[] = [];
   for (const p of products) {
     const kind = kindOf(p);
-    const description = `${productStory(p, stories)} ${kind.facts.join('. ')}. Printed to order and shipped worldwide.`;
+    const description = `${productStory(p, stories)} ${kind.facts.join('. ')}. Made to order and shipped worldwide.`;
     const colours: (ShopColour | null)[] = p.colors?.length ? p.colors : [null];
     const sizes: (string | null)[] = p.sizes?.length ? p.sizes : [null];
     colours.forEach((colour, ci) => {

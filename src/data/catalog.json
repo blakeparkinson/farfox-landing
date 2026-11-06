@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T14:23:21.676Z",
+  "generatedAt": "2026-11-06T17:40:04.264Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -36,6 +36,54 @@
           "hex": "#b22a2e",
           "image": "/shop/colors/6ac56a091644af57a506ee5b-red-black.png",
           "back": "/shop/backs/6ac56a091644af57a506ee5b-red-black.png"
+        }
+      ]
+    },
+    {
+      "id": "490057449",
+      "slug": "scan-yak-beanie",
+      "name": "Scan Yak Beanie",
+      "price": 26,
+      "currency": "USD",
+      "image": "/shop/colors/490057449-baby-pink.png",
+      "back": null,
+      "sizes": [],
+      "colors": [
+        {
+          "name": "Baby Pink",
+          "hex": "#ffc6cd",
+          "image": "/shop/colors/490057449-baby-pink.png",
+          "back": null
+        },
+        {
+          "name": "Black",
+          "hex": "#0c0c0c",
+          "image": "/shop/colors/490057449-black.png",
+          "back": null
+        }
+      ]
+    },
+    {
+      "id": "490057447",
+      "slug": "affirming-antelope-beanie",
+      "name": "Affirming Antelope Beanie",
+      "price": 26,
+      "currency": "USD",
+      "image": "/shop/colors/490057447-heather-grey.png",
+      "back": null,
+      "sizes": [],
+      "colors": [
+        {
+          "name": "Heather Grey",
+          "hex": "#a19f9b",
+          "image": "/shop/colors/490057447-heather-grey.png",
+          "back": null
+        },
+        {
+          "name": "Navy",
+          "hex": "#212642",
+          "image": "/shop/colors/490057447-navy.png",
+          "back": null
         }
       ]
     },
