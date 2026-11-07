@@ -8,11 +8,12 @@ const design = new URL('design/prime-menagerie-pickleball-cities/', root);
 for (const [key, label] of [['portland', 'PORTLAND, MAINE'], ['new-orleans', 'NEW ORLEANS']]) {
   const out = new URL(`public/shop/designs/pickleball-cities-2026-11/${key}/`, root);
   await mkdir(out, { recursive: true });
-  const source = await readFile(new URL(`${key}-scene${key === 'new-orleans' ? '-v5' : ''}.png`, design));
+  const source = await readFile(new URL(`${key}-scene-final.png`, design));
   const { data, info } = await sharp(source).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   let clear = 0;
   for (let i = 3; i < data.length; i += info.channels) if (data[i] === 0) clear++;
-  if (clear / (info.width * info.height) < 0.18) throw Error(`${key}: source has insufficient transparent negative space`);
+  // The requested full-city architecture is denser, but the cutout must retain real transparency.
+  if (clear / (info.width * info.height) < 0.05) throw Error(`${key}: source lacks a transparent cutout background`);
   const scene = source.toString('base64');
   for (const [tone, ink, ground] of [['cream', '#F2E4C4', '#4c6151'], ['forest', '#18392F', '#ffdc8f']]) {
     const text = (words, y, size, spacing = 0) => `<text x="900" y="${y}" text-anchor="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="${size}" letter-spacing="${spacing}" fill="${ink}">${words}</text>`;
