@@ -37,7 +37,9 @@ function photo(c,color,side){
  const m=mocks.find(m=>m.mockup_url.includes(`-${side}-`));if(m)return m.mockup_url;
  throw Error(`Missing ${c.key} ${color} ${side} mockup`);
 }
-for(const c of configs){
+const only=args.find(a=>a.startsWith('--only='))?.slice(7).split(',');
+if(only?.some(key=>!configs.some(c=>c.key===key)))throw Error('Unknown product selection');
+for(const c of configs.filter(c=>!only||only.includes(c.key))){
  const s=state[c.key]??={tasks:{}};
  if(args.includes('--mockups')){
   s.before??=await pf(`/store/products/${c.id}`);identity(c,s.before);await save();

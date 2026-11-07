@@ -1,0 +1,50 @@
+---
+import catalog from '../data/catalog.json';
+import { pickleballCityOptions } from '../lib/pickleballCities';
+import type { ShopProduct } from '../lib/productPages';
+interface Props { product: ShopProduct }
+const { product } = Astro.props;
+const cities = pickleballCityOptions(product, catalog.products as ShopProduct[]);
+---
+{cities.length > 1 && (
+  <div class="mb-5" data-city-picker data-product={product.id}>
+    <p class="text-xs font-700 uppercase tracking-wide text-fox-text-light mb-2">City</p>
+    <nav aria-label="Choose your Pickleball Club city" class="flex flex-wrap gap-2">
+      {cities.map(city => (
+        <a
+          href={`${city.href}?view=back`}
+          data-city-choice={city.product.id}
+          aria-current={city.product.id === product.id ? 'page' : undefined}
+          class:list={[
+            'px-3 py-2.5 rounded-xl border text-sm font-700 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fox-pink-deep',
+            city.product.id === product.id
+              ? 'bg-fox-pink-deep border-fox-pink-deep text-white'
+              : 'bg-white/80 border-fox-pink/20 text-fox-text hover:border-fox-pink-deep',
+          ]}
+        >{city.label}</a>
+      ))}
+    </nav>
+  </div>
+)}
+
+<script>
+  import catalog from '../data/catalog.json';
+  import { citySelectionUrl } from '../lib/pickleballCities';
+  import type { ShopProduct } from '../lib/productPages';
+  document.querySelectorAll<HTMLElement>('[data-city-picker]').forEach(picker => {
+    const id = picker.dataset.product;
+    const refresh = () => {
+      const color = (document.getElementById(`color-${id}`) as HTMLInputElement | null)?.value;
+      const size = (document.getElementById(`size-${id}`) as HTMLSelectElement | null)?.value;
+      picker.querySelectorAll<HTMLAnchorElement>('[data-city-choice]').forEach(link => {
+        const product = (catalog.products as ShopProduct[]).find(p => p.id === link.dataset.cityChoice);
+        if (product) link.href = citySelectionUrl(product, { color, size });
+      });
+    };
+    // Refresh the actual href so opening a city in another tab also preserves the options.
+    picker.addEventListener('pointerover', refresh);
+    picker.addEventListener('focusin', refresh);
+    picker.addEventListener('click', refresh);
+    refresh();
+  });
+</script>

@@ -1,0 +1,1 @@
+Mode: edit. Source: previous approved final scene. Remove all background haze, fog, glow fields and corner blocks. Preserve exact character designs, props, one rat tail and two arms, pink fox inner ears and black tips, full scene. Output true alpha transparency.

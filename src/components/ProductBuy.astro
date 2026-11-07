@@ -3,7 +3,9 @@ import { kitSlugForName, kitForColour, isOrnamentName } from '../lib/kits.mjs';
 // @ts-ignore - plain-JS module shared with the ornament renderer
 import { CITY_MAX } from '../lib/ornamentArt.mjs';
 import { cartLive } from '../lib/snipcart';
-import { SITE, type ShopProduct } from '../lib/productPages';
+import { SITE, productPath, type ShopProduct } from '../lib/productPages';
+import { pickleballCity } from '../lib/pickleballCities';
+import ProductCityPicker from './ProductCityPicker.astro';
 
 // Colour, size and personalisation pickers plus the add-to-cart button; ShopCart.astro wires them up.
 interface Props { product: ShopProduct }
@@ -13,6 +15,7 @@ const limitedSizes = p.colors?.some(c => c.sizes);
 const initialSizes = p.colors?.[0]?.sizes ?? p.sizes;
 const cityInput = 'flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/80 px-3 py-2 text-sm font-700 text-fox-text uppercase placeholder:normal-case placeholder:font-600 placeholder:text-fox-text-light/60 focus:outline-none focus:border-fox-pink';
 ---
+<ProductCityPicker product={p} />
 {p.colors && p.colors.length > 0 && (
   <div class="mb-3">
     <div class="flex items-center justify-between mb-1.5">
@@ -96,7 +99,7 @@ const cityInput = 'flex-1 min-w-0 rounded-lg border border-fox-pink/20 bg-white/
     data-item-id={p.id}
     data-item-name={p.name}
     data-item-price={p.price}
-    data-item-url="/shop/"
+    data-item-url={pickleballCity(p) ? productPath(p) : '/shop/'}
     data-item-image={`${SITE}${p.image}`}
     data-item-description={p.name}
     data-item-custom1-name={p.sizes?.length ? 'Size' : undefined}
