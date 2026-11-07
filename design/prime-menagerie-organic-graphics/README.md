@@ -1,0 +1,16 @@
+# Organic scene graphics — 2026-11-07
+
+The user approved the Pickleball cutout concept and requested publication. Apply the same treatment to the Bowling crewneck. Both remain Comfort Colors 1566, $59, four colorways, S–3XL, 15-inch back print. Preserve chest badges.
+
+Mode: built-in image generation/edit tool. The concept image is a visual direction, not a print file. Production uses separate transparent scene artwork and native typography.
+
+## Approved concept prompt
+
++Use case: precise-object-edit.
+Asset type: merchandise concept preview, full back of the existing Blue Spruce Comfort Colors crewneck.
+Inputs: Image 1 is the actual existing crewneck back mockup. Image 2 is its approved detailed Pickleball Club scene.
+Primary request: change ONLY the outer shape and surrounding negative space of the printed illustration so it looks organically integrated into the garment instead of like a rectangular picture pasted on it. Produce ONE polished full-garment back mockup, matching Image 1's garment silhouette, washed green fabric, lighting, scale and camera angle.
+Design treatment: a confident irregular silhouette cutout with areas of visible green shirt fabric. Remove all four straight cropped illustration edges and corners. Cut away the continuous pink perimeter court border, most empty surrounding floor, and the continuous rectangular sunset sky. Keep a compact connected court surface under the players and net, but taper and break its outer edges into a few sparse opaque screenprint dots. Let the outer outline follow the elephant ears, rat and umpire chair, fox tail, goose, flowering planters, water towers and skyline peaks, with substantial shirt-colored negative space between peripheral elements. Skyline buildings and the warm sun should emerge as distinct silhouettes above the scene; keep the NYC setting identifiable. Do not enclose the entire scene in a cloud border, oval, shield, frame, cream sticker outline or rectangular haze. Make the silhouette visibly irregular, not just round the corners. Preserve the sense of one integrated doubles scene and its legible net and court lines.
+Invariants: preserve all six approved characters, their poses, faces, scale relative to each other, illustration style and colors. Dark chestnut antelope with blue scarf remains the moss-green elephant's teammate on the far side of the net. Fox and Yak remain on the near side; goose in foreground; lounging purple rat in chair to right with fries, joint and visible smoke, heavy lids and very bloodshot red-veined eyes. Fox has smooth head, NO tuft, both ears black tipped. Yak viewer-left body AND leg green, viewer-right half red, gray hooves, white upper viewer-right forehead, X eye, ivory horns. Do not add or remove limbs, distort characters or invent new figures.
+Keep the exact cream typography from Image 1, in the same positions: PRIME MENAGERIE above PICKLEBALL CLUB with short side rules; primemenagerie.com beneath. Keep the overall graphic at the existing generous 15-inch-wide visual scale, not smaller.
+Keep the whole crewneck visible from collar to waistband and sleeve cuffs. Preserve transparent background outside the garment. Within the garment, removed ink reveals realistic green fabric, not transparent holes in the clothing. No comparison panels, labels, captions, watermark or extra text.
