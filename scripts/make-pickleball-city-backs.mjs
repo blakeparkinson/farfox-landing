@@ -8,7 +8,7 @@ const design = new URL('design/prime-menagerie-pickleball-cities/', root);
 for (const [key, label] of [['portland', 'PORTLAND, MAINE'], ['new-orleans', 'NEW ORLEANS']]) {
   const out = new URL(`public/shop/designs/pickleball-cities-2026-11/${key}/`, root);
   await mkdir(out, { recursive: true });
-  const source = await readFile(new URL(`${key}-scene.png`, design));
+  const source = await readFile(new URL(`${key}-scene${key === 'new-orleans' ? '-v2' : ''}.png`, design));
   const { data, info } = await sharp(source).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   let clear = 0;
   for (let i = 3; i < data.length; i += info.channels) if (data[i] === 0) clear++;

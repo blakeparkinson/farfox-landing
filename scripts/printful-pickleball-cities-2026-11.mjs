@@ -1,9 +1,11 @@
 /** Authorized club release: updates catalog products and mockups, never places orders. */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 const root=new URL('../',import.meta.url);
-const stateFile=new URL('design/pickleball-cities-release.json',root);
-const state=JSON.parse(await readFile(stateFile,'utf8').catch(()=>'{}'));
 const args=process.argv.slice(2);
+const stateName=args.find(a=>a.startsWith('--state-file='))?.slice(13)||'pickleball-cities-release.json';
+if(!/^[a-z0-9-]+\.json$/.test(stateName))throw Error('Invalid release state filename');
+const stateFile=new URL('design/'+stateName,root);
+const state=JSON.parse(await readFile(stateFile,'utf8').catch(()=>'{}'));
 const base=args.find(a=>a.startsWith('--files-base='))?.slice(13)||state.filesBase;
 if(!base||!process.env.PRINTFUL_TOKEN)throw Error('Artwork URL and printer access required');
 if(state.filesBase&&state.filesBase!==base)throw Error('Immutable artwork base mismatch');
@@ -11,6 +13,7 @@ const sizes=['S','M','L','XL','2XL','3XL'];
 const configs=[
   {
     "key": "portland",
+    "productId": 490719865,
     "catalog": 839,
     "name": "Prime Menagerie Pickleball Club Crewneck — Portland, Maine",
     "price": "59.00",
@@ -30,6 +33,7 @@ const configs=[
   },
   {
     "key": "new-orleans",
+    "productId": 490719872,
     "catalog": 839,
     "name": "Prime Menagerie Pickleball Club Crewneck — New Orleans",
     "price": "59.00",
@@ -71,7 +75,9 @@ function photo(c,color,side){
  if(match)return match.mockup_url;
  throw Error(`No unambiguous ${side} photo for ${c.key} ${color}`);
 }
-for(const c of configs){
+const only=args.find(a=>a.startsWith('--only='))?.slice(7);
+if(only&&!configs.some(c=>c.key===only))throw Error('Unknown city');
+for(const c of configs.filter(c=>!only||c.key===only)){
  const s=state[c.key]??=( {productId:c.productId,tasks:{}} );
  if(args.includes('--mockups')){
   s.variants=await catalog(c);const spec=await pf(`/mockup-generator/printfiles/${c.catalog}?technique=${c.technique}`);
