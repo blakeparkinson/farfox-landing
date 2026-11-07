@@ -4,7 +4,7 @@
  */
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 const root=new URL('../',import.meta.url),args=process.argv.slice(2);
-const stateFile=new URL('design/purple-rat-release.json',root);
+const stateFile=new URL(args.find(a=>a.startsWith('--state-file='))?.slice(13)||'design/purple-rat-release.json',root);
 const state=JSON.parse(await readFile(stateFile,'utf8').catch(()=>'{}'));
 const base=args.find(a=>a.startsWith('--files-base='))?.slice(13)||state.base;
 if(!base||!process.env.PRINTFUL_TOKEN)throw Error('Immutable artwork base and printer access required');
