@@ -18,6 +18,7 @@
     "test:post-ideas": "node scripts/test-post-ideas.mjs",
     "test:ldr-routes": "node scripts/test-ldr-routes.mjs",
     "test:product-pages": "node scripts/test-product-pages.mjs",
+    "test:pickleball-cities": "node scripts/test-pickleball-cities.mjs",
     "make:jersey-kits": "node scripts/make-jersey-kits.mjs",
     "launch:acquisition": "node scripts/make-user-acquisition-videos.mjs",
     "launch:assets": "node scripts/make-launch-assets.mjs",

@@ -8,6 +8,7 @@ import ShopCart from '../../components/ShopCart.astro';
 import ProductImage from '../../components/ProductImage.astro';
 import ProductBuy from '../../components/ProductBuy.astro';
 import { cartLive } from '../../lib/snipcart';
+import { PICKLEBALL_CITIES, pickleballCity } from '../../lib/pickleballCities';
 import { kitSlugForName } from '../../lib/kits.mjs';
 import { SITE, PAIRS, formatPrice, kindOf, productPath, productBrand, productStory, productTitle, productUrl, relatedProducts, shopCategoryOf, type ShopProduct } from '../../lib/productPages';
 
@@ -18,6 +19,8 @@ export function getStaticPaths() {
 }
 
 const { product: p } = Astro.props as { product: ShopProduct };
+const city = pickleballCity(p);
+const displayName = city ? PICKLEBALL_CITIES[0].name : p.name;
 const kind = kindOf(p);
 const story = productStory(p, stories as Record<string, string>);
 const pair = PRODUCTS.find((o) => o.id === PAIRS[p.id]);
@@ -86,7 +89,7 @@ const breadcrumbs = {
         <ProductImage product={p} eager class="rounded-3xl border border-fox-pink/10" />
 
         <div class="flex flex-col">
-          <h1 class="text-3xl sm:text-4xl font-900 tracking-tight leading-tight mb-2">{p.name}</h1>
+          <h1 class="text-3xl sm:text-4xl font-900 tracking-tight leading-tight mb-2">{displayName}</h1>
           <p class="text-2xl font-900 text-fox-pink-deep mb-5">{formatPrice(p.price)}</p>
           <p class="text-fox-text-light leading-relaxed mb-6">{story}</p>
           <ProductBuy product={p} />

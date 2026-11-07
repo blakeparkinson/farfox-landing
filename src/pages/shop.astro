@@ -9,6 +9,7 @@ import ShopCart from '../components/ShopCart.astro';
 import ProductImage from '../components/ProductImage.astro';
 import ProductBuy from '../components/ProductBuy.astro';
 import { cartLive } from '../lib/snipcart';
+import { showInShop } from '../lib/pickleballCities';
 import { SITE, SHOP_CATEGORIES, shopCategoryOf, formatPrice as fmt, productPath, productBrand, productUrl, type ShopProduct } from '../lib/productPages';
 
 /**
@@ -25,15 +26,15 @@ import { SITE, SHOP_CATEGORIES, shopCategoryOf, formatPrice as fmt, productPath,
  * (we show a small "preview" notice instead of a broken checkout).
  *
  * Snipcart validates prices by crawling each item's `data-item-url`. Every
- * product uses /shop as its url, even on its own product page, because this
- * page holds every button, so validation always resolves here. Prices are the
+ * ordinary product uses /shop as its url. City editions use their own product
+ * page so the shop can show one club card with a city picker. Prices are the
  * single source of truth in the PRODUCTS array below.
  */
 
 // Catalog is generated from Printful (and Printify, for the flannel) at build time (scripts/sync-catalog.mjs):
 // every sync product in the store, with its price, sizes and mockup. Add,
 // edit or remove products in the Printful dashboard — nothing here changes.
-const PRODUCTS = catalog.products as ShopProduct[];
+const PRODUCTS = (catalog.products as ShopProduct[]).filter(showInShop);
 
 const grouped = [...SHOP_CATEGORIES.map((c) => c.title), 'More']
   .map((title) => ({ title, items: PRODUCTS.filter((p) => shopCategoryOf(p.name) === title) }))

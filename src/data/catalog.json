@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T23:31:27.392Z",
+  "generatedAt": "2026-11-07T14:31:00.168Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -36,6 +36,92 @@
           "hex": "#b22a2e",
           "image": "/shop/colors/6ac56a091644af57a506ee5b-red-black.png",
           "back": "/shop/backs/6ac56a091644af57a506ee5b-red-black.png"
+        }
+      ]
+    },
+    {
+      "id": "490719872",
+      "slug": "prime-menagerie-pickleball-club-crewneck-new-orleans",
+      "name": "Prime Menagerie Pickleball Club Crewneck — New Orleans",
+      "price": 59,
+      "currency": "USD",
+      "image": "/shop/colors/490719872-butter.png",
+      "back": "/shop/backs/490719872.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        {
+          "name": "Butter",
+          "hex": "#ffdc8f",
+          "image": "/shop/colors/490719872-butter.png",
+          "back": "/shop/backs/490719872-butter.png"
+        },
+        {
+          "name": "Blue Spruce",
+          "hex": "#4c6151",
+          "image": "/shop/colors/490719872-blue-spruce.png",
+          "back": "/shop/backs/490719872-blue-spruce.png"
+        },
+        {
+          "name": "Pepper",
+          "hex": "#514f4c",
+          "image": "/shop/colors/490719872-pepper.png",
+          "back": "/shop/backs/490719872-pepper.png"
+        },
+        {
+          "name": "True Navy",
+          "hex": "#202845",
+          "image": "/shop/colors/490719872-true-navy.png",
+          "back": "/shop/backs/490719872-true-navy.png"
+        }
+      ]
+    },
+    {
+      "id": "490719865",
+      "slug": "prime-menagerie-pickleball-club-crewneck-portland-maine",
+      "name": "Prime Menagerie Pickleball Club Crewneck — Portland, Maine",
+      "price": 59,
+      "currency": "USD",
+      "image": "/shop/colors/490719865-butter.png",
+      "back": "/shop/backs/490719865.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        {
+          "name": "Butter",
+          "hex": "#ffdc8f",
+          "image": "/shop/colors/490719865-butter.png",
+          "back": "/shop/backs/490719865-butter.png"
+        },
+        {
+          "name": "Blue Spruce",
+          "hex": "#4c6151",
+          "image": "/shop/colors/490719865-blue-spruce.png",
+          "back": "/shop/backs/490719865-blue-spruce.png"
+        },
+        {
+          "name": "Pepper",
+          "hex": "#514f4c",
+          "image": "/shop/colors/490719865-pepper.png",
+          "back": "/shop/backs/490719865-pepper.png"
+        },
+        {
+          "name": "True Navy",
+          "hex": "#202845",
+          "image": "/shop/colors/490719865-true-navy.png",
+          "back": "/shop/backs/490719865-true-navy.png"
         }
       ]
     },
