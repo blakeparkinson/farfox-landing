@@ -132,7 +132,7 @@ async function main() {
       // Yupoong 1501KC beanie, from Printful's catalog colour codes.
       'Spruce':'#005234','Heather Grey':'#a19f9b','Baby Pink':'#ffc6cd',
     };
-    const DARKISH = new Set(['Black','Navy','Maroon','Forest','Heather Navy','True Royal','Team Purple','Heather Midnight Navy','True Navy','Berry','Spruce','Blue Spruce','Pepper','Blue Jean']);
+    const DARKISH = new Set(['Black','Navy','Maroon','Forest','Heather Navy','True Royal','Team Purple','Heather Midnight Navy','True Navy','Berry','Spruce','Blue Spruce','Pepper','Blue Jean','Crimson']);
     const colorNames = [...new Set(variants.map((v) => variantColor(v)).filter(Boolean))];
     colorNames.sort((a, b) => (DARKISH.has(a) ? 1 : 0) - (DARKISH.has(b) ? 1 : 0));
     const colorSlug = (s) => s.toLowerCase().replace(/ /g, '-');
@@ -143,7 +143,7 @@ async function main() {
       // A colour may have its own back photo (colourway products); otherwise the product back is used.
       const back = existsSync(join(BACKS_DIR, file)) ? `/shop/backs/${file}` : null;
       const colorSizes = sizes.filter(size => variants.some(v => variantColor(v) === name && v.size === size));
-      const clubHex = /Prime Menagerie (Bowling|Pickleball) Club Crewneck/i.test(p.name) ? { Butter:'#ffdc8f', 'True Navy':'#202845' } : {};
+      const clubHex = /Prime Menagerie (Bowling|Pickleball) Club Crewneck/i.test(p.name) ? { Butter:'#ffdc8f', 'True Navy':'#202845', 'Blue Jean':'#717b8d', Crimson:'#bb5151', Orchid:'#ead3f2', Seafoam:'#69a999', Grey:'#92928f' } : {};
       return { name, hex: clubHex[name] || COLOR_HEX[name] || colorwayHex || '#cccccc', image: hasImg ? `/shop/colors/${file}` : null, back,
         ...(colorSizes.length !== sizes.length ? { sizes: colorSizes } : {}) };
     });

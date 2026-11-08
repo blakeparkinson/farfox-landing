@@ -1,0 +1,519 @@
+{
+  "approvedScene": "Livingston with The Mint and moose",
+  "kids": "on hold",
+  "products": [
+    {
+      "id": 490151911,
+      "name": "Prime Menagerie Bowling Club Crewneck",
+      "catalog": 839,
+      "price": "59.00",
+      "addedColors": [
+        "Blue Jean",
+        "Crimson",
+        "Orchid",
+        "Seafoam",
+        "Grey"
+      ],
+      "previousVariantIds": [
+        5624390995,
+        5624391008,
+        5624391030,
+        5624391032,
+        5624391033,
+        5624391034,
+        5624509095,
+        5624509280,
+        5624509476,
+        5624509634,
+        5624509800,
+        5624510172,
+        5624510320,
+        5624510448,
+        5624510584,
+        5624510628,
+        5624510726,
+        5624511052,
+        5624511306,
+        5624511837,
+        5624512195,
+        5624512530,
+        5624512632,
+        5624512807
+      ],
+      "newCatalogVariantIds": [
+        21926,
+        21927,
+        21928,
+        21929,
+        21930,
+        21931,
+        21944,
+        21945,
+        21946,
+        21947,
+        21948,
+        21949,
+        21974,
+        21975,
+        21976,
+        21977,
+        21978,
+        21979,
+        21986,
+        21987,
+        21988,
+        21989,
+        21990,
+        21991,
+        21962,
+        21963,
+        21964,
+        21965,
+        21966,
+        21967
+      ],
+      "artwork": {
+        "cream": [
+          {
+            "type": "front_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/ed675df/public/shop/designs/menagerie-clubs-2026-11/bowling/front-cream.png",
+            "width": 1800,
+            "height": 2400
+          },
+          {
+            "type": "back_large_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/60922aa/public/shop/designs/purple-rat-paws-2026-11/bowling/back-cream.png",
+            "width": 2250,
+            "height": 2700
+          }
+        ],
+        "forest": [
+          {
+            "type": "front_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/ed675df/public/shop/designs/menagerie-clubs-2026-11/bowling/front-forest.png",
+            "width": 1800,
+            "height": 2400
+          },
+          {
+            "type": "back_large_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/60922aa/public/shop/designs/purple-rat-paws-2026-11/bowling/back-forest.png",
+            "width": 2250,
+            "height": 2700
+          }
+        ]
+      },
+      "verifiedAt": "2026-11-08T16:00:39.762Z"
+    },
+    {
+      "id": 490239643,
+      "name": "Prime Menagerie Pickleball Club Crewneck",
+      "catalog": 839,
+      "price": "59.00",
+      "addedColors": [
+        "Blue Jean",
+        "Crimson",
+        "Orchid",
+        "Seafoam",
+        "Grey"
+      ],
+      "previousVariantIds": [
+        5624643963,
+        5624643965,
+        5624643969,
+        5624643970,
+        5624643972,
+        5624643973,
+        5624643976,
+        5624643978,
+        5624643979,
+        5624643981,
+        5624643986,
+        5624643989,
+        5624643991,
+        5624643992,
+        5624643993,
+        5624643994,
+        5624643995,
+        5624643997,
+        5624643998,
+        5624643999,
+        5624644004,
+        5624644018,
+        5624644024,
+        5624644033
+      ],
+      "newCatalogVariantIds": [
+        21926,
+        21927,
+        21928,
+        21929,
+        21930,
+        21931,
+        21944,
+        21945,
+        21946,
+        21947,
+        21948,
+        21949,
+        21974,
+        21975,
+        21976,
+        21977,
+        21978,
+        21979,
+        21986,
+        21987,
+        21988,
+        21989,
+        21990,
+        21991,
+        21962,
+        21963,
+        21964,
+        21965,
+        21966,
+        21967
+      ],
+      "artwork": {
+        "cream": [
+          {
+            "type": "front_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11/pickleball/front-cream.png",
+            "width": 1800,
+            "height": 2400
+          },
+          {
+            "type": "back_large_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/60922aa/public/shop/designs/purple-rat-paws-2026-11/pickleball/back-cream.png",
+            "width": 2250,
+            "height": 2700
+          }
+        ],
+        "forest": [
+          {
+            "type": "front_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11/pickleball/front-forest.png",
+            "width": 1800,
+            "height": 2400
+          },
+          {
+            "type": "back_large_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/60922aa/public/shop/designs/purple-rat-paws-2026-11/pickleball/back-forest.png",
+            "width": 2250,
+            "height": 2700
+          }
+        ]
+      },
+      "verifiedAt": "2026-11-08T16:00:40.423Z"
+    },
+    {
+      "id": 490719865,
+      "name": "Prime Menagerie Pickleball Club Crewneck — Portland, Maine",
+      "catalog": 839,
+      "price": "59.00",
+      "addedColors": [
+        "Blue Jean",
+        "Crimson",
+        "Orchid",
+        "Seafoam",
+        "Grey"
+      ],
+      "previousVariantIds": [
+        5625963488,
+        5625963491,
+        5625963493,
+        5625963500,
+        5625963502,
+        5625963504,
+        5625963506,
+        5625963507,
+        5625963508,
+        5625963509,
+        5625963510,
+        5625963536,
+        5625963537,
+        5625963538,
+        5625963539,
+        5625963540,
+        5625963541,
+        5625963542,
+        5625963549,
+        5625963550,
+        5625963551,
+        5625963552,
+        5625963553,
+        5625963554
+      ],
+      "newCatalogVariantIds": [
+        21926,
+        21927,
+        21928,
+        21929,
+        21930,
+        21931,
+        21944,
+        21945,
+        21946,
+        21947,
+        21948,
+        21949,
+        21974,
+        21975,
+        21976,
+        21977,
+        21978,
+        21979,
+        21986,
+        21987,
+        21988,
+        21989,
+        21990,
+        21991,
+        21962,
+        21963,
+        21964,
+        21965,
+        21966,
+        21967
+      ],
+      "artwork": {
+        "cream": [
+          {
+            "type": "front_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11/pickleball/front-cream.png",
+            "width": 1800,
+            "height": 2400
+          },
+          {
+            "type": "back_large_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/f358507/public/shop/designs/portland-court-2026-11/portland/back-cream.png",
+            "width": 2250,
+            "height": 2700
+          }
+        ],
+        "forest": [
+          {
+            "type": "front_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11/pickleball/front-forest.png",
+            "width": 1800,
+            "height": 2400
+          },
+          {
+            "type": "back_large_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/f358507/public/shop/designs/portland-court-2026-11/portland/back-forest.png",
+            "width": 2250,
+            "height": 2700
+          }
+        ]
+      },
+      "verifiedAt": "2026-11-08T16:00:40.853Z"
+    },
+    {
+      "id": 490719872,
+      "name": "Prime Menagerie Pickleball Club Crewneck — New Orleans",
+      "catalog": 839,
+      "price": "59.00",
+      "addedColors": [
+        "Blue Jean",
+        "Crimson",
+        "Orchid",
+        "Seafoam",
+        "Grey"
+      ],
+      "previousVariantIds": [
+        5625963561,
+        5625963562,
+        5625963563,
+        5625963571,
+        5625963572,
+        5625963573,
+        5625963574,
+        5625963575,
+        5625963580,
+        5625963587,
+        5625963588,
+        5625963589,
+        5625963590,
+        5625963592,
+        5625963593,
+        5625963600,
+        5625963601,
+        5625963603,
+        5625963604,
+        5625963606,
+        5625963608,
+        5625963615,
+        5625963616,
+        5625963618
+      ],
+      "newCatalogVariantIds": [
+        21926,
+        21927,
+        21928,
+        21929,
+        21930,
+        21931,
+        21944,
+        21945,
+        21946,
+        21947,
+        21948,
+        21949,
+        21974,
+        21975,
+        21976,
+        21977,
+        21978,
+        21979,
+        21986,
+        21987,
+        21988,
+        21989,
+        21990,
+        21991,
+        21962,
+        21963,
+        21964,
+        21965,
+        21966,
+        21967
+      ],
+      "artwork": {
+        "cream": [
+          {
+            "type": "front_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11/pickleball/front-cream.png",
+            "width": 1800,
+            "height": 2400
+          },
+          {
+            "type": "back_large_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/60922aa/public/shop/designs/purple-rat-paws-2026-11/new-orleans/back-cream.png",
+            "width": 2250,
+            "height": 2700
+          }
+        ],
+        "forest": [
+          {
+            "type": "front_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11/pickleball/front-forest.png",
+            "width": 1800,
+            "height": 2400
+          },
+          {
+            "type": "back_large_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/60922aa/public/shop/designs/purple-rat-paws-2026-11/new-orleans/back-forest.png",
+            "width": 2250,
+            "height": 2700
+          }
+        ]
+      },
+      "verifiedAt": "2026-11-08T16:00:41.280Z"
+    },
+    {
+      "id": 491121693,
+      "name": "Prime Menagerie Pickleball Club Crewneck — Livingston, Montana",
+      "catalog": 839,
+      "price": "59.00",
+      "addedColors": [
+        "Blue Spruce",
+        "Pepper",
+        "True Navy",
+        "Butter",
+        "Blue Jean",
+        "Crimson",
+        "Orchid",
+        "Seafoam",
+        "Grey"
+      ],
+      "previousVariantIds": [],
+      "newCatalogVariantIds": [
+        21932,
+        21933,
+        21934,
+        21935,
+        21936,
+        21937,
+        21980,
+        21981,
+        21982,
+        21983,
+        21984,
+        21985,
+        21992,
+        21993,
+        21994,
+        21995,
+        21996,
+        21997,
+        21938,
+        21939,
+        21940,
+        21941,
+        21942,
+        21943,
+        21926,
+        21927,
+        21928,
+        21929,
+        21930,
+        21931,
+        21944,
+        21945,
+        21946,
+        21947,
+        21948,
+        21949,
+        21974,
+        21975,
+        21976,
+        21977,
+        21978,
+        21979,
+        21986,
+        21987,
+        21988,
+        21989,
+        21990,
+        21991,
+        21962,
+        21963,
+        21964,
+        21965,
+        21966,
+        21967
+      ],
+      "artwork": {
+        "cream": [
+          {
+            "type": "front_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11/pickleball/front-cream.png",
+            "width": 1800,
+            "height": 2400
+          },
+          {
+            "type": "back_large_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33f25ad/public/shop/designs/pickleball-cities-2026-11/livingston/back-cream.png",
+            "width": 2250,
+            "height": 2700
+          }
+        ],
+        "forest": [
+          {
+            "type": "front_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11/pickleball/front-forest.png",
+            "width": 1800,
+            "height": 2400
+          },
+          {
+            "type": "back_large_dtf",
+            "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33f25ad/public/shop/designs/pickleball-cities-2026-11/livingston/back-forest.png",
+            "width": 2250,
+            "height": 2700
+          }
+        ]
+      },
+      "verifiedAt": "2026-11-08T16:06:23.893Z"
+    }
+  ]
+}
