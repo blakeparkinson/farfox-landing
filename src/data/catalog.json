@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T14:31:00.168Z",
+  "generatedAt": "2026-11-08T16:06:42.663Z",
   "products": [
     {
       "id": "6ac56a091644af57a506ee5b",
@@ -40,6 +40,79 @@
       ]
     },
     {
+      "id": "491121693",
+      "slug": "prime-menagerie-pickleball-club-crewneck-livingston-montana",
+      "name": "Prime Menagerie Pickleball Club Crewneck — Livingston, Montana",
+      "price": 59,
+      "currency": "USD",
+      "image": "/shop/colors/491121693-butter.png",
+      "back": "/shop/backs/491121693.png",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "colors": [
+        {
+          "name": "Butter",
+          "hex": "#ffdc8f",
+          "image": "/shop/colors/491121693-butter.png",
+          "back": "/shop/backs/491121693-butter.png"
+        },
+        {
+          "name": "Orchid",
+          "hex": "#ead3f2",
+          "image": "/shop/colors/491121693-orchid.png",
+          "back": "/shop/backs/491121693-orchid.png"
+        },
+        {
+          "name": "Seafoam",
+          "hex": "#69a999",
+          "image": "/shop/colors/491121693-seafoam.png",
+          "back": "/shop/backs/491121693-seafoam.png"
+        },
+        {
+          "name": "Grey",
+          "hex": "#92928f",
+          "image": "/shop/colors/491121693-grey.png",
+          "back": "/shop/backs/491121693-grey.png"
+        },
+        {
+          "name": "Blue Spruce",
+          "hex": "#4c6151",
+          "image": "/shop/colors/491121693-blue-spruce.png",
+          "back": "/shop/backs/491121693-blue-spruce.png"
+        },
+        {
+          "name": "Pepper",
+          "hex": "#514f4c",
+          "image": "/shop/colors/491121693-pepper.png",
+          "back": "/shop/backs/491121693-pepper.png"
+        },
+        {
+          "name": "True Navy",
+          "hex": "#202845",
+          "image": "/shop/colors/491121693-true-navy.png",
+          "back": "/shop/backs/491121693-true-navy.png"
+        },
+        {
+          "name": "Blue Jean",
+          "hex": "#717b8d",
+          "image": "/shop/colors/491121693-blue-jean.png",
+          "back": "/shop/backs/491121693-blue-jean.png"
+        },
+        {
+          "name": "Crimson",
+          "hex": "#bb5151",
+          "image": "/shop/colors/491121693-crimson.png",
+          "back": "/shop/backs/491121693-crimson.png"
+        }
+      ]
+    },
+    {
       "id": "490719872",
       "slug": "prime-menagerie-pickleball-club-crewneck-new-orleans",
       "name": "Prime Menagerie Pickleball Club Crewneck — New Orleans",
@@ -63,6 +136,24 @@
           "back": "/shop/backs/490719872-butter.png"
         },
         {
+          "name": "Orchid",
+          "hex": "#ead3f2",
+          "image": "/shop/colors/490719872-orchid.png",
+          "back": "/shop/backs/490719872-orchid.png"
+        },
+        {
+          "name": "Seafoam",
+          "hex": "#69a999",
+          "image": "/shop/colors/490719872-seafoam.png",
+          "back": "/shop/backs/490719872-seafoam.png"
+        },
+        {
+          "name": "Grey",
+          "hex": "#92928f",
+          "image": "/shop/colors/490719872-grey.png",
+          "back": "/shop/backs/490719872-grey.png"
+        },
+        {
           "name": "Blue Spruce",
           "hex": "#4c6151",
           "image": "/shop/colors/490719872-blue-spruce.png",
@@ -79,6 +170,18 @@
           "hex": "#202845",
           "image": "/shop/colors/490719872-true-navy.png",
           "back": "/shop/backs/490719872-true-navy.png"
+        },
+        {
+          "name": "Blue Jean",
+          "hex": "#717b8d",
+          "image": "/shop/colors/490719872-blue-jean.png",
+          "back": "/shop/backs/490719872-blue-jean.png"
+        },
+        {
+          "name": "Crimson",
+          "hex": "#bb5151",
+          "image": "/shop/colors/490719872-crimson.png",
+          "back": "/shop/backs/490719872-crimson.png"
         }
       ]
     },
@@ -106,6 +209,24 @@
           "back": "/shop/backs/490719865-butter.png"
         },
         {
+          "name": "Orchid",
+          "hex": "#ead3f2",
+          "image": "/shop/colors/490719865-orchid.png",
+          "back": "/shop/backs/490719865-orchid.png"
+        },
+        {
+          "name": "Seafoam",
+          "hex": "#69a999",
+          "image": "/shop/colors/490719865-seafoam.png",
+          "back": "/shop/backs/490719865-seafoam.png"
+        },
+        {
+          "name": "Grey",
+          "hex": "#92928f",
+          "image": "/shop/colors/490719865-grey.png",
+          "back": "/shop/backs/490719865-grey.png"
+        },
+        {
           "name": "Blue Spruce",
           "hex": "#4c6151",
           "image": "/shop/colors/490719865-blue-spruce.png",
@@ -122,6 +243,18 @@
           "hex": "#202845",
           "image": "/shop/colors/490719865-true-navy.png",
           "back": "/shop/backs/490719865-true-navy.png"
+        },
+        {
+          "name": "Blue Jean",
+          "hex": "#717b8d",
+          "image": "/shop/colors/490719865-blue-jean.png",
+          "back": "/shop/backs/490719865-blue-jean.png"
+        },
+        {
+          "name": "Crimson",
+          "hex": "#bb5151",
+          "image": "/shop/colors/490719865-crimson.png",
+          "back": "/shop/backs/490719865-crimson.png"
         }
       ]
     },
@@ -149,6 +282,24 @@
           "back": "/shop/backs/490239643-butter.png"
         },
         {
+          "name": "Orchid",
+          "hex": "#ead3f2",
+          "image": "/shop/colors/490239643-orchid.png",
+          "back": "/shop/backs/490239643-orchid.png"
+        },
+        {
+          "name": "Seafoam",
+          "hex": "#69a999",
+          "image": "/shop/colors/490239643-seafoam.png",
+          "back": "/shop/backs/490239643-seafoam.png"
+        },
+        {
+          "name": "Grey",
+          "hex": "#92928f",
+          "image": "/shop/colors/490239643-grey.png",
+          "back": "/shop/backs/490239643-grey.png"
+        },
+        {
           "name": "Blue Spruce",
           "hex": "#4c6151",
           "image": "/shop/colors/490239643-blue-spruce.png",
@@ -165,6 +316,18 @@
           "hex": "#202845",
           "image": "/shop/colors/490239643-true-navy.png",
           "back": "/shop/backs/490239643-true-navy.png"
+        },
+        {
+          "name": "Blue Jean",
+          "hex": "#717b8d",
+          "image": "/shop/colors/490239643-blue-jean.png",
+          "back": "/shop/backs/490239643-blue-jean.png"
+        },
+        {
+          "name": "Crimson",
+          "hex": "#bb5151",
+          "image": "/shop/colors/490239643-crimson.png",
+          "back": "/shop/backs/490239643-crimson.png"
         }
       ]
     },
@@ -192,6 +355,24 @@
           "back": "/shop/backs/490151911-butter.png"
         },
         {
+          "name": "Orchid",
+          "hex": "#ead3f2",
+          "image": "/shop/colors/490151911-orchid.png",
+          "back": "/shop/backs/490151911-orchid.png"
+        },
+        {
+          "name": "Seafoam",
+          "hex": "#69a999",
+          "image": "/shop/colors/490151911-seafoam.png",
+          "back": "/shop/backs/490151911-seafoam.png"
+        },
+        {
+          "name": "Grey",
+          "hex": "#92928f",
+          "image": "/shop/colors/490151911-grey.png",
+          "back": "/shop/backs/490151911-grey.png"
+        },
+        {
           "name": "Blue Spruce",
           "hex": "#4c6151",
           "image": "/shop/colors/490151911-blue-spruce.png",
@@ -208,6 +389,18 @@
           "hex": "#202845",
           "image": "/shop/colors/490151911-true-navy.png",
           "back": "/shop/backs/490151911-true-navy.png"
+        },
+        {
+          "name": "Blue Jean",
+          "hex": "#717b8d",
+          "image": "/shop/colors/490151911-blue-jean.png",
+          "back": "/shop/backs/490151911-blue-jean.png"
+        },
+        {
+          "name": "Crimson",
+          "hex": "#bb5151",
+          "image": "/shop/colors/490151911-crimson.png",
+          "back": "/shop/backs/490151911-crimson.png"
         }
       ]
     },

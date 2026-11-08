@@ -5,10 +5,15 @@ import sharp from 'sharp';
 const root = new URL('../', import.meta.url);
 const font = { fontFiles: [new URL('design/prime-menagerie-pocket-tee/sources/BricolageGrotesque-ExtraBold.ttf', root).pathname], loadSystemFonts: false, defaultFontFamily: 'Bricolage Grotesque' };
 const design = new URL('design/prime-menagerie-pickleball-cities/', root);
-for (const [key, label] of [['portland', 'PORTLAND, MAINE'], ['new-orleans', 'NEW ORLEANS']]) {
+const only = process.argv.find(arg => arg.startsWith('--only='))?.slice(7);
+const cities = [['portland', 'PORTLAND, MAINE'], ['new-orleans', 'NEW ORLEANS'], ['livingston', 'LIVINGSTON, MONTANA']];
+if (only && !cities.some(([key]) => key === only)) throw Error('Unknown city');
+for (const [key, label] of cities.filter(([key]) => !only || key === only)) {
   const out = new URL(`public/shop/designs/pickleball-cities-2026-11/${key}/`, root);
   await mkdir(out, { recursive: true });
-  const source = await readFile(new URL(`${key}-scene-final.png`, design));
+  const source = await readFile(key === 'livingston'
+    ? new URL('design/livingston-pickleball-2026-11/scene-approved.png', root)
+    : new URL(`${key}-scene-final.png`, design));
   const { data, info } = await sharp(source).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   let clear = 0;
   for (let i = 3; i < data.length; i += info.channels) if (data[i] === 0) clear++;
