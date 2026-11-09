@@ -6,6 +6,7 @@ export const PICKLEBALL_CITIES = [
   { key: 'portland', label: 'Portland, Maine', name: `${baseName} — Portland, Maine` },
   { key: 'new-orleans', label: 'New Orleans', name: `${baseName} — New Orleans` },
   { key: 'livingston', label: 'Livingston, MT', name: `${baseName} — Livingston, Montana` },
+  { key: 'skowhegan', label: 'Skowhegan, Maine', name: `${baseName} — Skowhegan, Maine` },
 ] as const;
 
 export const pickleballCity = (product: Pick<ShopProduct, 'name'>) => PICKLEBALL_CITIES.find(city => city.name === product.name);

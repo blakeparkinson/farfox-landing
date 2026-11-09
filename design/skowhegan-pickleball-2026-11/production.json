@@ -1,0 +1,64 @@
+{
+  "productId": 491554888,
+  "name": "Prime Menagerie Pickleball Club Crewneck — Skowhegan, Maine",
+  "catalogId": 839,
+  "blank": "Comfort Colors 1566",
+  "price": "59.00",
+  "colors": [
+    "Blue Spruce",
+    "Pepper",
+    "True Navy",
+    "Butter",
+    "Blue Jean",
+    "Crimson",
+    "Orchid",
+    "Seafoam",
+    "Grey"
+  ],
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+  ],
+  "variantCount": 54,
+  "art": {
+    "cream": [
+      {
+        "type": "front_dtf",
+        "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11/pickleball/front-cream.png",
+        "width": 1800,
+        "height": 2400
+      },
+      {
+        "type": "back_large_dtf",
+        "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/1831564/public/shop/designs/pickleball-cities-2026-11/skowhegan/back-cream.png",
+        "width": 2250,
+        "height": 2700
+      }
+    ],
+    "forest": [
+      {
+        "type": "front_dtf",
+        "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/33eab86/public/shop/designs/pickleball-crewneck-2026-11/pickleball/front-forest.png",
+        "width": 1800,
+        "height": 2400
+      },
+      {
+        "type": "back_large_dtf",
+        "url": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/1831564/public/shop/designs/pickleball-cities-2026-11/skowhegan/back-forest.png",
+        "width": 2250,
+        "height": 2700
+      }
+    ]
+  },
+  "filesBase": "https://raw.githubusercontent.com/blakeparkinson/farfox-landing/1831564/public/shop/designs/pickleball-cities-2026-11/skowhegan",
+  "createdAt": "2026-11-09T15:22:16.781Z",
+  "verifiedAt": "2026-11-09T15:22:58.411Z",
+  "photos": "Printful Flat front/back mockups for all nine colors",
+  "source": "scene-approved.png",
+  "gooseDetail": "Small loose gummies with one leaf shape under the magnifier; no container",
+  "kids": "On hold at user request"
+}

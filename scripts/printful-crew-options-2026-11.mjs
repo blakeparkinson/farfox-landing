@@ -1,6 +1,6 @@
 /** Adds approved crew options. Idempotent, preserves old variant IDs, never places orders.
  * Run with --prepare, --mockups, --poll, --preview, --publish-adults, --publish-kids or --verify.
- * Livingston's Mint-and-moose scene was approved by the user; youth products remain on hold.
+ * Livingston and Skowhegan use the user-requested scenes; youth products remain on hold.
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
