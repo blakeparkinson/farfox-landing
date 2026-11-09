@@ -1,6 +1,6 @@
 /** Adds approved crew options. Idempotent, preserves old variant IDs, never places orders.
  * Run with --prepare, --mockups, --poll, --preview, --publish-adults, --publish-kids or --verify.
- * Livingston's Mint-and-moose scene was approved by the user; youth products remain on hold.
+ * Livingston and Skowhegan use the user-requested scenes; youth products remain on hold.
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
@@ -43,17 +43,19 @@ function photo(p, color, side) {
   }
   throw Error(`Missing ${p.name} ${color} ${side} mockup`);
 }
-if (args.includes('--prepare-livingston')) {
+if (args.includes('--prepare-livingston') || args.includes('--prepare-skowhegan')) {
+  const city = args.includes('--prepare-skowhegan') ? 'skowhegan' : 'livingston';
+  const cityName = city === 'skowhegan' ? 'Skowhegan, Maine' : 'Livingston, Montana';
   const base = args.find(arg => arg.startsWith('--files-base='))?.slice(13);
   if (!base?.startsWith('https://raw.githubusercontent.com/blakeparkinson/farfox-landing/')) throw Error('Use a committed immutable artwork URL');
-  const p = state.products['livingston-adult'] ??= { tasks: {}, before: null };
+  const p = state.products[`${city}-adult`] ??= { tasks: {}, before: null };
   if (p.filesBase && p.filesBase !== base) throw Error('Do not replace the approved artwork URLs');
   const source = await pf('/store/products/490719865');
   p.filesBase = base;
-  p.parentId = 'livingston';
+  p.parentId = city;
   p.kids = false;
   p.catalog = 839;
-  p.name = 'Prime Menagerie Pickleball Club Crewneck — Livingston, Montana';
+  p.name = `Prime Menagerie Pickleball Club Crewneck — ${cityName}`;
   p.price = '59.00';
   p.colors = ['Blue Spruce', 'Pepper', 'True Navy', 'Butter', ...extra];
   p.art = Object.fromEntries([['cream', 'Blue Spruce'], ['forest', 'Butter']].map(([tone, color]) => {

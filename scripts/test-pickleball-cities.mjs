@@ -5,12 +5,12 @@ import { merchantFeedItems, productPath, kindOf } from '../src/lib/productPages.
 
 const products = JSON.parse(readFileSync(new URL('../src/data/catalog.json', import.meta.url), 'utf8')).products;
 const editions = PICKLEBALL_CITIES.map(city => products.find(p => p.name === city.name));
-assert.ok(editions.every(Boolean), 'all four city editions exist');
-assert.equal(new Set(editions.map(p => p.id)).size, 4, 'each city routes to a distinct fulfillment product');
+assert.ok(editions.every(Boolean), 'all five city editions exist');
+assert.equal(new Set(editions.map(p => p.id)).size, 5, 'each city routes to a distinct fulfillment product');
 assert.equal(editions[0].id, '490239643', 'existing New York product and past orders keep their identity');
 assert.equal(editions.filter(showInShop).length, 1, 'one Pickleball Club card in the shop');
 for (const product of editions) {
-  assert.equal(pickleballCityOptions(product, products).length, 4);
+  assert.equal(pickleballCityOptions(product, products).length, 5);
   assert.equal(product.price, 59);
   assert.match(kindOf(product).facts.join(' '), /Comfort Colors 1566/);
   assert.deepEqual(product.colors.map(c => c.name).sort(), ['Blue Jean', 'Blue Spruce', 'Butter', 'Crimson', 'Grey', 'Orchid', 'Pepper', 'Seafoam', 'True Navy']);
